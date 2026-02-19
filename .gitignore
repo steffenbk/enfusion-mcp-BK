@@ -1,0 +1,9 @@
+node_modules/
+dist/
+*.js.map
+.env
+enfusion-mcp.config.json
+.scraper-cache/
+*.tsbuildinfo
+*.pdf
+.claude/

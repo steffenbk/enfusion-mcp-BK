@@ -1,0 +1,25 @@
+{
+  "name": "Custom Vehicle",
+  "description": "New vehicle variant with custom behavior or properties",
+  "tags": ["vehicle", "transport", "driving"],
+  "scripts": [
+    {
+      "className": "{PREFIX}_VehicleController",
+      "scriptType": "component",
+      "parentClass": "ScriptComponent",
+      "methods": ["void OnEngineStart()", "void OnEngineStop()", "void OnSpeedChanged(float speed)"],
+      "description": "Custom vehicle behavior controller"
+    }
+  ],
+  "prefabs": [
+    {
+      "name": "{PREFIX}_Vehicle",
+      "prefabType": "vehicle",
+      "parentPrefab": "",
+      "components": [],
+      "description": "Custom vehicle prefab"
+    }
+  ],
+  "configs": [],
+  "instructions": "1. Find a base vehicle prefab to inherit from (e.g., M151A2, UAZ469)\n2. Create your vehicle prefab inheriting from the base\n3. Modify vehicle properties (speed, armor, fuel capacity) in the prefab\n4. Add the custom VehicleController component for special behavior\n5. Place the vehicle in a world or use Game Master to spawn it\n6. Test driving, collision, and vehicle entry/exit"
+}

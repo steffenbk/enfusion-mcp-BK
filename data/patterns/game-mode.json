@@ -1,0 +1,37 @@
+{
+  "name": "Custom Game Mode",
+  "description": "Custom game mode with scoring, win conditions, and respawn logic",
+  "tags": ["gamemode", "scoring", "respawn", "multiplayer"],
+  "scripts": [
+    {
+      "className": "{PREFIX}_GameMode",
+      "scriptType": "gamemode",
+      "parentClass": "SCR_BaseGameMode",
+      "methods": [],
+      "description": "Custom game mode with scoring and win conditions"
+    },
+    {
+      "className": "{PREFIX}_ScoringSystem",
+      "scriptType": "component",
+      "parentClass": "ScriptComponent",
+      "methods": ["void AddScore(int playerId, int points)", "int GetScore(int playerId)", "int GetWinningPlayer()"],
+      "description": "Score tracking component for the game mode"
+    }
+  ],
+  "prefabs": [
+    {
+      "name": "{PREFIX}_GameMode",
+      "prefabType": "gamemode",
+      "parentPrefab": "",
+      "components": [],
+      "description": "Game mode prefab with scoring"
+    }
+  ],
+  "configs": [
+    {
+      "name": "{PREFIX}_MissionHeader",
+      "content": "SCR_MissionHeader {\n m_sName \"{PREFIX} Scenario\"\n m_sDescription \"Custom game mode scenario\"\n m_sWorldFile \"\"\n m_sIcon \"\"\n m_bIsModded 1\n}"
+    }
+  ],
+  "instructions": "1. Edit the GameMode script to define round logic, win conditions, and player flow\n2. Edit the ScoringSystem to implement your scoring rules\n3. Create the game mode prefab and attach both components\n4. Create a test world with the game mode prefab placed\n5. Add spawn points for each faction\n6. Test with 'Play' in Workbench"
+}

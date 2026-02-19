@@ -1,0 +1,17 @@
+{
+  "name": "Custom Component",
+  "description": "Reusable ScriptComponent that can be attached to any entity",
+  "tags": ["component", "reusable", "entity", "behavior"],
+  "scripts": [
+    {
+      "className": "{PREFIX}_CustomComponent",
+      "scriptType": "component",
+      "parentClass": "ScriptComponent",
+      "methods": [],
+      "description": "Reusable custom component"
+    }
+  ],
+  "prefabs": [],
+  "configs": [],
+  "instructions": "1. Edit the component script to add your member variables and logic\n2. Use [Attribute()] to expose configuration in Workbench\n3. Override EOnInit for initialization, OnPostInit for post-setup\n4. Override OnDelete for cleanup\n5. Attach the component to entity prefabs via their 'components' block\n6. Access the component at runtime: entity.FindComponent(YourComponent)"
+}

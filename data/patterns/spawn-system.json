@@ -1,0 +1,32 @@
+{
+  "name": "Spawn System",
+  "description": "Custom spawn manager with configurable spawn points",
+  "tags": ["spawn", "respawn", "multiplayer", "gamemode"],
+  "scripts": [
+    {
+      "className": "{PREFIX}_SpawnManager",
+      "scriptType": "component",
+      "parentClass": "ScriptComponent",
+      "methods": ["void RegisterSpawnPoint(IEntity point)", "IEntity GetBestSpawnPoint(int playerId)", "void OnPlayerRequestRespawn(int playerId)"],
+      "description": "Custom spawn point manager with selection logic"
+    },
+    {
+      "className": "{PREFIX}_SpawnPointComponent",
+      "scriptType": "component",
+      "parentClass": "ScriptComponent",
+      "methods": ["bool IsAvailable()", "vector GetSpawnPosition()", "void OnPlayerSpawned(int playerId)"],
+      "description": "Component for individual spawn point entities"
+    }
+  ],
+  "prefabs": [
+    {
+      "name": "{PREFIX}_SpawnPoint",
+      "prefabType": "spawnpoint",
+      "parentPrefab": "",
+      "components": [],
+      "description": "Custom spawn point prefab"
+    }
+  ],
+  "configs": [],
+  "instructions": "1. Edit SpawnManager to implement spawn point selection logic\n2. Edit SpawnPointComponent to define availability rules\n3. Create the spawn point prefab with prefab_create\n4. Attach SpawnManager to your game mode prefab\n5. Place spawn point prefabs in the world\n6. Mod the SCR_RespawnSystemComponent to use your custom manager\n7. Test with multiple players connecting and respawning"
+}

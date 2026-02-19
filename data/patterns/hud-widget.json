@@ -1,0 +1,17 @@
+{
+  "name": "HUD Widget",
+  "description": "Custom HUD element with UI layout and script logic",
+  "tags": ["hud", "ui", "widget", "overlay"],
+  "scripts": [
+    {
+      "className": "{PREFIX}_HudComponent",
+      "scriptType": "component",
+      "parentClass": "ScriptComponent",
+      "methods": ["void ShowWidget()", "void HideWidget()", "void UpdateDisplay(string text)"],
+      "description": "HUD manager component that controls the custom widget"
+    }
+  ],
+  "prefabs": [],
+  "configs": [],
+  "instructions": "1. Create a .layout file in UI/layouts/ for the widget visual design\n2. Edit the HudComponent to load and manage the layout\n3. Use GetGame().GetHUDManager() to register your widget\n4. Implement UpdateDisplay to show dynamic content\n5. Attach the component to the player controller prefab\n6. NOTE: UI layout files (.layout) must be created in Workbench's Resource Manager\n7. Test by joining a game and verifying the widget appears"
+}

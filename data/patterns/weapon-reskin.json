@@ -1,0 +1,25 @@
+{
+  "name": "Weapon Reskin",
+  "description": "Modded weapon with different properties (damage, rate of fire, magazine size)",
+  "tags": ["weapon", "modded", "reskin", "balance"],
+  "scripts": [
+    {
+      "className": "{PREFIX}_WeaponMod",
+      "scriptType": "modded",
+      "parentClass": "SCR_WeaponAttachmentsStorageComponent",
+      "methods": ["void OnInit(IEntity owner)"],
+      "description": "Modded weapon component for custom properties"
+    }
+  ],
+  "prefabs": [
+    {
+      "name": "{PREFIX}_CustomWeapon",
+      "prefabType": "weapon",
+      "parentPrefab": "",
+      "components": [],
+      "description": "Custom weapon variant"
+    }
+  ],
+  "configs": [],
+  "instructions": "1. Find the base weapon prefab you want to modify using api_search\n2. Create a new weapon prefab inheriting from the base weapon\n3. Modify weapon properties (damage, rate of fire, recoil) in the prefab\n4. Optionally add the modded script for runtime behavior changes\n5. Add the weapon to a loadout or spawn it in Game Master for testing"
+}

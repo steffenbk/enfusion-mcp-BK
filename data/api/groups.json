@@ -1,0 +1,2799 @@
+[
+  {
+    "name": "Attributes",
+    "description": "",
+    "classes": [
+      "Attribute",
+      "CommonEditorProps",
+      "ComponentEditorProps",
+      "EntityEditorProps",
+      "BaseContainerProps",
+      "BaseContainer",
+      "BaseContainerCustomTitleField",
+      "CallbackMethod",
+      "CallbackContext",
+      "SortAttribute",
+      "EnumLinear",
+      "EnumBitFlag"
+    ]
+  },
+  {
+    "name": "Audio",
+    "description": "",
+    "classes": [
+      "AudioSystem",
+      "AudioHandle",
+      "int"
+    ]
+  },
+  {
+    "name": "Character",
+    "description": "",
+    "classes": []
+  },
+  {
+    "name": "ColorsConstants",
+    "description": "",
+    "classes": []
+  },
+  {
+    "name": "Components",
+    "description": "",
+    "classes": [
+      "AnimationControllerComponentClass",
+      "AnimationControllerComponent",
+      "AnimationPlayerComponentClass",
+      "AnimationPlayerComponent",
+      "BaseMaterialParamsComponentClass",
+      "BaseMaterialParamsComponent",
+      "BaseProcAnimComponentClass",
+      "BaseProcAnimComponent",
+      "BaseRplComponentClass",
+      "BaseRplComponent",
+      "BaseSoundComponentClass",
+      "BaseSoundComponent",
+      "CharacterMovementComponentClass",
+      "GenericComponent",
+      "MaterialParamsComponentClass",
+      "MaterialParamsComponent",
+      "PawnMovementComponent",
+      "PawnMovementComponentClass",
+      "RplComponentClass",
+      "RplComponent",
+      "ScriptComponent",
+      "SimpleSignalComponent",
+      "SimpleSignalComponentClass",
+      "SndComponent",
+      "SndComponentClass",
+      "SoundOutputStateComponentClass",
+      "SoundOutputStateComponent",
+      "TouchComponentClass",
+      "TouchComponent",
+      "WorldSubsceneComponent"
+    ]
+  },
+  {
+    "name": "Components_Character",
+    "description": "",
+    "classes": [
+      "CharacterAnimGraphComponent",
+      "CharacterFSMComponent",
+      "CharacterFSMComponentClass",
+      "CharacterFSMState",
+      "CharacterFSMStateActivateParams",
+      "CharacterMovementComponent",
+      "CharacterPhysicsComponent",
+      "CharacterSndComponentClass",
+      "CharacterSndComponent"
+    ]
+  },
+  {
+    "name": "Constants",
+    "description": "",
+    "classes": []
+  },
+  {
+    "name": "Containers",
+    "description": "",
+    "classes": [
+      "BaseContainer",
+      "BaseContainerList",
+      "BaseContainerTools",
+      "IEntityComponentSource",
+      "IEntitySource",
+      "UserSettings",
+      "WidgetSource"
+    ]
+  },
+  {
+    "name": "Core",
+    "description": "",
+    "classes": [
+      "GameLibMaterial"
+    ]
+  },
+  {
+    "name": "Debug utilitiesConstants",
+    "description": "",
+    "classes": [
+      "DbgUI",
+      "Debug",
+      "DebugText",
+      "DebugTextScreenSpace",
+      "DebugTextWorldSpace",
+      "DiagMenu",
+      "Shape",
+      "ShapeUtils",
+      "string"
+    ]
+  },
+  {
+    "name": "Diag menu API definitionConstants » Debug utilities",
+    "description": "",
+    "classes": [
+      "DiagMenu"
+    ]
+  },
+  {
+    "name": "Dialogue",
+    "description": "",
+    "classes": [
+      "AnimationDialogueData",
+      "AudioDialogueData",
+      "AudioGlobalData",
+      "BaseDialogueInterface",
+      "BiggerOrEqualToFloat",
+      "BiggerOrEqualToInt",
+      "BiggerThanFloat",
+      "BiggerThanToInt",
+      "Dialogue",
+      "DialogueBaseElement",
+      "DialogueBaseFloatRule",
+      "DialogueBaseIntegerRule",
+      "DialogueController",
+      "DialogueData",
+      "DialogueGlobalData",
+      "DialogueID",
+      "DialogueNode",
+      "DialogueSpeaker",
+      "DialogueSystem",
+      "DialogueTransitionRule",
+      "DialogueVariableMappingObject",
+      "DynamicAudioDialogueData",
+      "EqualToFloat",
+      "EqualToInt",
+      "ObsoleteSentenceDialogueData",
+      "SentenceDialogueData",
+      "TextDialogueData",
+      "TimedDialogueData"
+    ]
+  },
+  {
+    "name": "Enforce script essentials",
+    "description": "",
+    "classes": [
+      "Obsolete",
+      "Friend",
+      "Attribute",
+      "Restrict",
+      "string"
+    ]
+  },
+  {
+    "name": "Entities",
+    "description": "",
+    "classes": [
+      "EntityComponentPrefabData",
+      "EntityPrefabData",
+      "IEntity",
+      "BaseWeatherManagerEntityClass",
+      "BaseWeatherManagerEntity",
+      "CharacterEntity",
+      "CharacterEntityClass",
+      "CinematicEntityClass",
+      "CinematicEntity",
+      "DecalEntityClass",
+      "DecalEntity",
+      "DeferredDecalEntityClass",
+      "DeferredDecalEntity",
+      "EnvironmentProbeEntityClass",
+      "EnvironmentProbeEntity",
+      "GeneratorBaseEntityClass",
+      "GeneratorBaseEntity",
+      "GenericControllerClass",
+      "GenericController",
+      "GenericEntity",
+      "GenericTerrainEntityClass",
+      "GenericTerrainEntity",
+      "GenericWorldEntityClass",
+      "GenericWorldEntity",
+      "GenericWorldFogEntityClass",
+      "GenericWorldFogEntity",
+      "GenericWorldLightEntityClass",
+      "GenericWorldLightEntity",
+      "GenericWorldPPEffectClass",
+      "GenericWorldPPEffect",
+      "GenericWorldRainEntityClass",
+      "GenericWorldRainEntity",
+      "GenericWorldWindEntityClass",
+      "GenericWorldWindEntity",
+      "LakeGeneratorEntityClass",
+      "LakeGeneratorEntity",
+      "LightEntityClass",
+      "LightEntity",
+      "PawnEntity",
+      "PawnEntityClass",
+      "PawnRelatedEntity",
+      "PawnRelatedEntityClass",
+      "PolylineShapeEntityClass",
+      "PolylineShapeEntity",
+      "ProbeVolumeClass",
+      "ProbeVolume",
+      "RagdollTestEntityClass",
+      "RagdollTestEntity",
+      "RiverEntityClass",
+      "RiverEntity",
+      "RiverPartEntityClass",
+      "RiverPartEntity",
+      "RoadEntityClass",
+      "RoadEntity",
+      "RplTestEntityClass",
+      "RplTestEntity",
+      "ShapeEntityClass",
+      "ShapeEntity",
+      "SplineShapeEntityClass",
+      "SplineShapeEntity",
+      "SplineTerrainGeneratorEntityBaseClass",
+      "SplineTerrainGeneratorEntityBase",
+      "StaticModelEntityClass",
+      "StaticModelEntity",
+      "TreeEntity",
+      "TreeEntityClass",
+      "VolumeEntityClass",
+      "VolumeEntity",
+      "VolumeReceiverEntityClass",
+      "VolumeReceiverEntity",
+      "WorldOccluderEntityClass",
+      "WorldOccluderEntity",
+      "Game"
+    ]
+  },
+  {
+    "name": "Entity system",
+    "description": "",
+    "classes": [
+      "EntityID",
+      "NativeComponent",
+      "BoneMask",
+      "int"
+    ]
+  },
+  {
+    "name": "Event System",
+    "description": "",
+    "classes": [
+      "EventAttribute",
+      "EventProvider",
+      "Class",
+      "ReceiverAttribute"
+    ]
+  },
+  {
+    "name": "Events",
+    "description": "",
+    "classes": [
+      "Event"
+    ]
+  },
+  {
+    "name": "Graph",
+    "description": "",
+    "classes": [
+      "GenericGraphModel",
+      "GraphGraphicsItem",
+      "GraphNode",
+      "GraphNodeScene",
+      "GraphNodeView",
+      "IGraphModel"
+    ]
+  },
+  {
+    "name": "Graph_Connections",
+    "description": "",
+    "classes": [
+      "GraphNodeConnectionBase",
+      "GraphNodeConnectionCurve",
+      "GraphNodeConnectionLine"
+    ]
+  },
+  {
+    "name": "Graph_Ports",
+    "description": "",
+    "classes": [
+      "GraphNodePortBase",
+      "GraphNodePortCircle",
+      "GraphNodePortRect"
+    ]
+  },
+  {
+    "name": "Input",
+    "description": "",
+    "classes": [
+      "ActionManager",
+      "InputBinding",
+      "InputManager"
+    ]
+  },
+  {
+    "name": "Input deviceConstants",
+    "description": "",
+    "classes": []
+  },
+  {
+    "name": "Math",
+    "description": "",
+    "classes": [
+      "CurveColor",
+      "Color",
+      "CurveFloat",
+      "CurveVector",
+      "Math",
+      "Math2D",
+      "Math3D"
+    ]
+  },
+  {
+    "name": "Menu",
+    "description": "",
+    "classes": [
+      "MenuBase",
+      "MenuManager"
+    ]
+  },
+  {
+    "name": "NetApi",
+    "description": "",
+    "classes": [
+      "NetApiHandler"
+    ]
+  },
+  {
+    "name": "Particles",
+    "description": "",
+    "classes": [
+      "ParticleEffectEntityClass",
+      "ParticleEffectEntity",
+      "ParticleEffectEntitySpawnParams",
+      "ReplicatedParticleEffectEntityClass",
+      "ReplicatedParticleEffectEntity"
+    ]
+  },
+  {
+    "name": "Physics",
+    "description": "",
+    "classes": [
+      "Contact",
+      "Physics",
+      "Physics6DOFJoint",
+      "Physics6DOFSpringJoint",
+      "PhysicsBallSocketJoint",
+      "PhysicsBlock",
+      "PhysicsConeTwistJoint",
+      "PhysicsFixedJoint",
+      "PhysicsGeom",
+      "PhysicsGeomDef",
+      "PhysicsHingeJoint",
+      "PhysicsJoint",
+      "PhysicsMaterial",
+      "PhysicsRagdoll",
+      "PhysicsSliderJoint",
+      "PhysicsWorld",
+      "SurfaceProperties",
+      "PhysicsUtils"
+    ]
+  },
+  {
+    "name": "VehiclesPhysics",
+    "description": "",
+    "classes": [
+      "ContactSurface"
+    ]
+  },
+  {
+    "name": "Replication",
+    "description": "",
+    "classes": [
+      "Replication",
+      "RplConnectionStats",
+      "RplId",
+      "RplIdentity",
+      "RplNode",
+      "ScriptCtx",
+      "RplProp",
+      "RplRpc",
+      "OnRpl",
+      "RplBeforeInjected",
+      "RplBeforeExtracted",
+      "ScriptBitWriter",
+      "ScriptBitReader",
+      "ScriptBitSerializer",
+      "SSnapSerializerBase",
+      "SSnapshot",
+      "SSnapSerializer",
+      "RplSessionCallbacks",
+      "int"
+    ]
+  },
+  {
+    "name": "plugin",
+    "description": "",
+    "classes": []
+  },
+  {
+    "name": "Resources",
+    "description": "",
+    "classes": [
+      "AnimationSource",
+      "BaseResourceObject",
+      "MeshObject",
+      "Resource",
+      "ResourceDatabase",
+      "VObject"
+    ]
+  },
+  {
+    "name": "Road",
+    "description": "",
+    "classes": []
+  },
+  {
+    "name": "Screenshot autotest",
+    "description": "",
+    "classes": [
+      "Screenshot_AutotestClass",
+      "Screenshot_WaypointClass",
+      "Screenshot_Autotest",
+      "Screenshot_Waypoint"
+    ]
+  },
+  {
+    "name": "Script Testing Framework",
+    "description": "Introduction\n\nProvides a unified and simple interface that emphasizes the smallest amount of boiler plate code possible.\nThe collection and instantiation of its primitives is performed right after the script compilation.\nWithin the framework a SINGLE test harness derived class can exist. The harness runs the tests and contains API to access them.\nThe test units are compiled to Suites. These provide additional API for environmental control.\n\n\nSimple tests\nCan be perfomed in form of annotated free functions.\nNote: Notice the Suite name in the attribute.\n[Test(\"MyFirstTestSuite\")]\nTestResultBase MyFooBarTest() { return TestBoolResult(5 > 3); }\nTestResultBaseBase class for test results.Definition TestingFramework.c:198\nTestAttribute used for tests annotation and assignment to Suites.Definition TestingFramework.c:97\n\nStateful tests\nMore elaborate tests that need some state and will run for several ticks have to be defined as TestBase derived classes. Your logic has to be ran through step methods.\n\nStep methods\n\nYou can name your step methods however you like.\nThey have to be annotated by the [Step(Stage)] attribute which pairs the step with a stage.\n\n\nStages\n\nThey divide the steps into groups that express the initialization and finalization process.\nStages are executed in order Setup -> Main -> TearDown.\nMethods in stages are executed in order of definition.\n\n\nReturn values\n\nvoid -> Will get executed only once.\nbool -> Will get executed every tick until true is returned.\n\n\nResult\n\nResult is set via API member method of TestBase SetResult(TestResultBase).\nSetting a result which evaluates to failure will terminate the stage.\n\n\nFailure unwind\n\nIf the Setup stage fails the test only terminates and TearDown is not called.\nMain stage failure will trigger the TearDown.\nTearDown failure will do nothing.\n\n\nTimeout\n\nThe tests won't timeout by default. The value may be specified via Test attribute.\nThe timeout counter resets for every stage method.\nIf the stage method times out the TimeoutResult is set (it evaluates to failure and the failure unwind process starts).\n\n[Test(\"MyFirstTestSuite\", timeoutS: 2, timeoutMs: 250)]\nclass MyAsyncTest : TestBase\n{\n    // Simple blocking initialization.\n    [Step(EStage.Setup)]\n    void Initialize() { ... }\n \n    // Async test which is waiting for result for several frames.\n    [Step(EStage.Main)]\n    bool Pool() { ... }\n \n    // Finalization process waiting for result for several frames.\n    [Step(EStage.TearDown)]\n    bool FinalizeA() { ... }\n \n    // Simple blocking finalization call.\n    [Step(EStage.TearDown)]\n    void FinalizeB() { ... }\n}\nEStageEStageStage definition used in conjunction with Step attribute.Definition TestingFramework.c:115\nStepAttribute which marks a method as part of the testing process.Definition TestingFramework.c:124\nTestBaseTest base class.Definition TestingFramework.c:178",
+    "classes": [
+      "Test",
+      "Attribute",
+      "Step",
+      "TestHarness",
+      "TestSuite",
+      "TestBase",
+      "TestResultBase",
+      "TestResultTimeout"
+    ]
+  },
+  {
+    "name": "Serialization",
+    "description": "",
+    "classes": [
+      "BaseJsonSerializationSaveContainer",
+      "BaseSerializationContainer",
+      "BaseSerializationContext",
+      "BaseSerializationLoadContainer",
+      "BaseSerializationLoadContext",
+      "BaseSerializationSaveContainer",
+      "BaseSerializationSaveContext",
+      "BinSerializationContainer",
+      "BinSerializationLoadContainer",
+      "BinSerializationSaveContainer",
+      "BufferSerializationSaveContext",
+      "ContainerSerializationLoadContext",
+      "ContainerSerializationSaveContext",
+      "JsonLoadContainer",
+      "JsonSaveContainer",
+      "PrettyJsonSaveContainer",
+      "ScriptedSerializationLoadContainer",
+      "ScriptedSerializationSaveContainer"
+    ]
+  },
+  {
+    "name": "Sound",
+    "description": "",
+    "classes": [
+      "AudioSourceConfig",
+      "InteriorRequestCallback",
+      "SndBaseModule",
+      "SndSystem",
+      "SndWorldClass",
+      "SndWorld",
+      "SoundManagerModule"
+    ]
+  },
+  {
+    "name": "String constantsConstants",
+    "description": "",
+    "classes": []
+  },
+  {
+    "name": "System",
+    "description": "",
+    "classes": [
+      "FileHandle",
+      "FileIO",
+      "FilePath",
+      "GameProject",
+      "GameSessionStorage",
+      "ParseHandle",
+      "PixelRawData",
+      "RandomGenerator",
+      "ScreenshotTextureData",
+      "ScriptModule",
+      "System",
+      "SearchResourcesFilter",
+      "MemoryStatsSnapshot",
+      "ProcessHandle",
+      "func",
+      "ResourceName",
+      "string",
+      "int"
+    ]
+  },
+  {
+    "name": "Tools",
+    "description": "",
+    "classes": [
+      "Tuple",
+      "Tuple1< Class T1 >",
+      "Tuple2< Class T1, Class T2 >",
+      "Tuple3< Class T1, Class T2, Class T3 >",
+      "Tuple4< Class T1, Class T2, Class T3, Class T4 >",
+      "Tuple5< Class T1, Class T2, Class T3, Class T4, Class T5 >",
+      "Tuple6< Class T1, Class T2, Class T3, Class T4, Class T5, Class T6 >"
+    ]
+  },
+  {
+    "name": "Types",
+    "description": "",
+    "classes": [
+      "bool",
+      "float",
+      "int",
+      "ResourceName",
+      "SharedItemRef",
+      "StaticArray",
+      "string",
+      "TypeName",
+      "UUID",
+      "vector",
+      "Class",
+      "Managed",
+      "ScriptAndConfig",
+      "pointer",
+      "global_pointer",
+      "handle64",
+      "func",
+      "TypeID",
+      "array< Class T >",
+      "set< Class T >",
+      "map"
+    ]
+  },
+  {
+    "name": "UI",
+    "description": "",
+    "classes": [
+      "AlignableSlot",
+      "BaseListboxWidget",
+      "BasicGraphWidget",
+      "BlurWidget",
+      "ButtonSlot",
+      "ButtonWidget",
+      "CanvasWidget",
+      "CanvasWidgetBase",
+      "CheckBoxWidget",
+      "ContentWidget",
+      "EditBoxWidget",
+      "FrameSlot",
+      "FrameWidget",
+      "GenericListboxWidget",
+      "GridLayoutWidget",
+      "GridSlot",
+      "HorizontalLayoutSlot",
+      "HorizontalLayoutWidget",
+      "ImageWidget",
+      "LayoutSlot",
+      "LayoutWidgetBase",
+      "MultilineEditBoxWidget",
+      "OverlaySlot",
+      "OverlayWidget",
+      "PanelSlot",
+      "PanelWidget",
+      "ProgressBarWidget",
+      "RenderTargetWidget",
+      "RichTextWidget",
+      "RingBufferGraphWidget",
+      "RTTextureSlot",
+      "RTTextureWidget",
+      "ScaleWidget",
+      "ScriptedWidgetComponent",
+      "ScriptedWidgetEventHandler",
+      "ScrollLayoutSlot",
+      "ScrollLayoutWidget",
+      "SimpleListboxWidget",
+      "SizeLayoutSlot",
+      "SizeLayoutWidget",
+      "SliderWidget",
+      "SocketWidget",
+      "TextListboxWidget",
+      "TextWidget",
+      "Widget",
+      "ThreeStateCheckboxWidget",
+      "TimeBasedGraphWidget",
+      "TimeBasedGraphWithAxesWidget",
+      "UIWidget",
+      "UniformGridLayoutWidget",
+      "UniformGridSlot",
+      "UniversalListboxWidget",
+      "UserWidget",
+      "VerticalLayoutSlot",
+      "VerticalLayoutWidget",
+      "VideoWidget",
+      "WidgetManager",
+      "Class",
+      "WindowSlot",
+      "WindowWidget",
+      "WorkspaceSlot",
+      "WorkspaceWidget",
+      "XComboBoxWidget",
+      "GameLibWidgetType",
+      "GameConsoleWidget",
+      "GraphWidget",
+      "SmartPanelWidget"
+    ]
+  },
+  {
+    "name": "Visual",
+    "description": "",
+    "classes": [
+      "Animation",
+      "Color",
+      "Material",
+      "Particles"
+    ]
+  },
+  {
+    "name": "Widget UI system",
+    "description": "",
+    "classes": [
+      "WidgetType",
+      "CanvasWidgetCommand",
+      "TextDrawCommand",
+      "LineDrawCommand",
+      "PolygonDrawCommand",
+      "TriMeshDrawCommand",
+      "ImageDrawCommand",
+      "CompositeDrawCommand",
+      "TypeID",
+      "func",
+      "bool",
+      "Widget"
+    ]
+  },
+  {
+    "name": "WorkbenchAPI",
+    "description": "",
+    "classes": [
+      "WorldEditorAPI",
+      "BuildResourceContext",
+      "GeneratedResources",
+      "MetaFile",
+      "TexTools",
+      "WBProgressDialog",
+      "Workbench",
+      "World"
+    ]
+  },
+  {
+    "name": "WorkbenchAPI_GeoShapes",
+    "description": "",
+    "classes": [
+      "GeoAttribCollection",
+      "GeoShape",
+      "GeoMultiPoint",
+      "GeoPoint",
+      "GeoPolygon",
+      "GeoPolyline",
+      "GeoShapeCollection",
+      "GeoShapeLoader",
+      "GeoVertexCollection",
+      "Shape"
+    ]
+  },
+  {
+    "name": "WorkbenchAPI_Modules",
+    "description": "",
+    "classes": [
+      "AnimEditor",
+      "AudioEditor",
+      "BehaviorEditor",
+      "LocalizationEditor",
+      "NavmeshGeneratorMain",
+      "ParticleEditor",
+      "ProcAnimEditor",
+      "ResourceManager",
+      "ScriptEditor",
+      "WBModuleDef",
+      "WorldEditor"
+    ]
+  },
+  {
+    "name": "WorkbenchAPI_Plugins",
+    "description": "",
+    "classes": [
+      "LocalizationEditorPlugin",
+      "ResourceManagerPlugin",
+      "WorkbenchPlugin",
+      "WorldEditorPlugin",
+      "WorldEditorTool",
+      "World"
+    ]
+  },
+  {
+    "name": "WorkbenchAPI_Terrain",
+    "description": "",
+    "classes": [
+      "TerrainToolDesc",
+      "TerrainToolDesc_HeightAdd",
+      "TerrainToolDesc_HeightExact",
+      "TerrainToolDesc_HeightNoise",
+      "TerrainToolDesc_HeightSmooth",
+      "TerrainToolDesc_HeightUser",
+      "TerrainToolDesc_LayerAdd"
+    ]
+  },
+  {
+    "name": "World",
+    "description": "",
+    "classes": [
+      "BaseWorld",
+      "Decal",
+      "LightHandle",
+      "TraceBox",
+      "TraceOBB",
+      "TraceParam",
+      "TraceSphere",
+      "TrackDecal",
+      "WorldTimestamp",
+      "SharedItem",
+      "World",
+      "func",
+      "bool",
+      "IEntity",
+      "vector",
+      "float"
+    ]
+  },
+  {
+    "name": "World Systems",
+    "description": "",
+    "classes": [
+      "AnimationPlayerSystem",
+      "NearbyEntitiesSystem",
+      "ParticleEffectsSystem",
+      "RplSchedulerDebugController",
+      "RplSchedulerDebugSystem",
+      "WorldController",
+      "WorldControllerInfo",
+      "WorldOneTimePointArgs",
+      "WorldSystem",
+      "WorldSystemInfo",
+      "WorldSystems",
+      "WorldUpdatePointArgs"
+    ]
+  },
+  {
+    "name": "Online",
+    "description": "",
+    "classes": [
+      "BackendApi",
+      "BackendAuthenticatorApi",
+      "BackendCallback",
+      "BackendDebugApi",
+      "BackendImage",
+      "BanListPageParams",
+      "JsonApiStruct",
+      "BanServiceApi",
+      "BaseWorkshopItem",
+      "BlockListItem",
+      "BohemiaAccountApi",
+      "Game",
+      "ClientLobbyApi",
+      "Dependency",
+      "DSSession",
+      "DSSessionCallback",
+      "GroupApplication",
+      "GroupCatalogue",
+      "GroupData",
+      "GroupManifest",
+      "GroupMemberCatalogue",
+      "GroupMemberRole",
+      "GroupMembership",
+      "ImageScale",
+      "MissionWorkshopItem",
+      "NewsFeedItem",
+      "OnlineBanListData",
+      "PopupFeedItem",
+      "RestApi",
+      "RestCallback",
+      "RestContext",
+      "Revision",
+      "Room",
+      "ServerCatalogueApi",
+      "ServerCatalogueFilters",
+      "ServerConfigApi",
+      "ServerConfigMeta",
+      "ServerInfo",
+      "ServiceStatusItem",
+      "SessionStorage",
+      "WorkshopApi",
+      "WorkshopAuthor",
+      "WorkshopCatalogue",
+      "WorkshopItem",
+      "WorkshopTag",
+      "WorldSaveItem",
+      "WorldSaveManifest"
+    ]
+  },
+  {
+    "name": "AI",
+    "description": "",
+    "classes": [
+      "AIActionBase",
+      "AIAgentClass",
+      "AIAgent",
+      "AIAnimalClass",
+      "AIAnimal",
+      "AIAnimalManagerReactToCloseEntitiesMovement",
+      "AIAnimalReactToDanger",
+      "AIBaseAimingComponentClass",
+      "AIBaseAimingComponent",
+      "AIBaseMovementComponentClass",
+      "AIBaseMovementComponent",
+      "AIBaseUtilityComponentClass",
+      "AIBaseUtilityComponent",
+      "AIBehaviorTreeComponentClass",
+      "AIBehaviorTreeComponent",
+      "AIBehaviorTreeComponentBaseClass",
+      "AIBehaviorTreeComponentBase",
+      "AICarMovementComponent",
+      "AICarMovementComponentClass",
+      "AIChimeraBehaviorTreeComponentClass",
+      "AIChimeraBehaviorTreeComponent",
+      "AICombatPropertiesComponent",
+      "AICombatPropertiesComponentClass",
+      "AICommunicationComponentClass",
+      "AICommunicationComponent",
+      "AIComponent",
+      "AIComponentClass",
+      "AIComponentEntityClass",
+      "AIComponentEntity",
+      "AIControlComponentClass",
+      "AIControlComponent",
+      "AIDangerEvent",
+      "AIDangerEventWeaponFire",
+      "AIDiagSystem",
+      "AIEvent",
+      "AIExtraMoveParams",
+      "AIFlockClass",
+      "AIFlock",
+      "AIFormationComponent",
+      "AIFormationComponentClass",
+      "AIFormationDefinition",
+      "AIGroupClass",
+      "AIGroup",
+      "AIGroupMovementComponentClass",
+      "AIGroupMovementComponent",
+      "AIMessage",
+      "AimPoint",
+      "AIOnMessage",
+      "AIOrder",
+      "AIPathfindingComponentClass",
+      "AIPathfindingComponent",
+      "AISpawnerGroupClass",
+      "AISpawnerGroup",
+      "AITask",
+      "AITaskAim",
+      "AITaskCallMethod",
+      "AITaskChangeStance",
+      "AITaskCharacterAim",
+      "AITaskCharacterRaiseWeapon",
+      "AITaskCharacterSetMovementSpeed",
+      "AITaskCharacterStop",
+      "AITaskClearDanger",
+      "AITaskCreateGroup",
+      "AITaskCreatePosition",
+      "AITaskCurrentOrder",
+      "AITaskFindEntity",
+      "AITaskFindSmartAction",
+      "AITaskFinishOrder",
+      "AITaskFire",
+      "AITaskGetAimingPosition",
+      "AITaskGetControlledEntity",
+      "AITaskGetCurrentSmartAction",
+      "AITaskGetFormationOffset",
+      "AITaskGetGroupChildren",
+      "AITaskGetInVehicle",
+      "AITaskGetOutVehicle",
+      "AITaskGetSmartActionParams",
+      "AITaskGetWaypoint",
+      "AITaskGroupMove",
+      "AITaskGroupMoveToEntity",
+      "AITaskGroupSetMovementSpeed",
+      "AITaskIdle",
+      "AITaskMove",
+      "AITaskMoveInFormation",
+      "AITaskMoveToEntity",
+      "AITaskMoveToWaypoint",
+      "AITaskOrient",
+      "AITaskPerformObjectAction",
+      "AITaskPerformSmartAction",
+      "AITaskPickTarget",
+      "AITaskPlayGesture",
+      "AITaskReload",
+      "AITaskRequestAction",
+      "AITaskResetPathfindingFilters",
+      "AITaskReturnState",
+      "AITaskScripted",
+      "AITaskSendOrder",
+      "AITaskSetADS",
+      "AITaskSetMovementSpeed",
+      "AITaskSetPathfindingFilters",
+      "AITaskSetVariable",
+      "AITaskStop",
+      "AITaskThrowGrenade",
+      "AIWaypointClass",
+      "AIWaypoint",
+      "AIWaypointCycleClass",
+      "AIWaypointCycle",
+      "AIWeaponTargetSelector",
+      "AIWorldClass",
+      "AIWorld",
+      "AIWorldSystem",
+      "AssignmentSolver",
+      "BaseAimPoint",
+      "BaseDecoratorTest",
+      "BaseSinglePortContainer",
+      "BehaviorTree",
+      "BtVariable",
+      "ChimeraAIAgentClass",
+      "ChimeraAIAgent",
+      "ChimeraAIControlComponentClass",
+      "ChimeraAIControlComponent",
+      "ChimeraAIGroupClass",
+      "ChimeraAIGroup",
+      "ChimeraAIPathfindingComponentClass",
+      "ChimeraAIPathfindingComponent",
+      "ChimeraAIVehicleControlComponentClass",
+      "ChimeraAIVehicleControlComponent",
+      "ChimeraAIWorldClass",
+      "ChimeraAIWorld",
+      "ChimeraCoverManagerComponentClass",
+      "ChimeraCoverManagerComponent",
+      "CoverManagerComponentClass",
+      "CoverManagerComponent",
+      "DecoAiming",
+      "DecoCheckLOD",
+      "DecoDangerEvent",
+      "DecoIsInVehicle",
+      "Decorator",
+      "DecoratorEntity",
+      "DecoratorPathCompletedTest",
+      "DecoratorScripted",
+      "DecoratorTestCanPerformSmartActions",
+      "DecoratorTestDamageIsAlive",
+      "DecoratorTestHasAimRequest",
+      "DecoratorTestHasAmmo",
+      "DecoratorTestHasMoveRequest",
+      "DecoratorTestHasWeapon",
+      "DecoratorTestIsPerformingSmartAction",
+      "DecoratorTestIsWeaponRaised",
+      "DecoratorTestScripted",
+      "DecoratorTimedBase",
+      "DecoratorTimedDangerPerception",
+      "DecoratorWeaponObstructed",
+      "DecoTestDistanceToEntity",
+      "DecoTestOrder",
+      "DecoTestVariable",
+      "ForEachChild",
+      "InsectFlyMovementComponentClass",
+      "InsectFlyMovementComponent",
+      "MineManagerComponentClass",
+      "MineManagerComponent",
+      "NavmeshCustomLinkComponent",
+      "NavmeshCustomLinkComponentClass",
+      "NavmeshWorldComponentClass",
+      "NavmeshWorldComponent",
+      "Node",
+      "NodePortsContainer",
+      "OnEvent",
+      "Parallel",
+      "PathVisualizerClass",
+      "PathVisualizer",
+      "Repeater",
+      "RoadNetworkBridgeComponent",
+      "RoadNetworkBridgeComponentClass",
+      "RootNode",
+      "RunBT",
+      "RunOnce",
+      "RunOnEntity",
+      "Selector",
+      "Sequence",
+      "SingleInputPortContainer",
+      "SingleOutputPortContainer",
+      "Switch"
+    ]
+  },
+  {
+    "name": "AILib",
+    "description": "",
+    "classes": [
+      "BtVariableObject",
+      "BtVariableEntity",
+      "BtVariableString",
+      "BtVariableResourceName",
+      "BtVariableScalar",
+      "BtVariableInteger",
+      "BtVariableBool",
+      "BtVariableVector",
+      "BtVariableTypename"
+    ]
+  },
+  {
+    "name": "AI_Animals",
+    "description": "",
+    "classes": [
+      "AIFlockMovementComponentClass",
+      "AIFlockMovementComponent"
+    ]
+  },
+  {
+    "name": "AI_Character",
+    "description": "",
+    "classes": [
+      "AICharacterMovementComponentClass",
+      "AICharacterMovementComponent"
+    ]
+  },
+  {
+    "name": "AI_SmartActions",
+    "description": "",
+    "classes": [
+      "AISmartActionComponent",
+      "AISmartActionComponentClass"
+    ]
+  },
+  {
+    "name": "Animal",
+    "description": "",
+    "classes": [
+      "AnimalAnimationComponentClass",
+      "AnimalAnimationComponent",
+      "AnimalCommandHandlerComponentClass",
+      "AnimalCommandHandlerComponent",
+      "AnimalControllerComponentClass",
+      "AnimalControllerComponent",
+      "BirdAnimationComponent",
+      "BirdAnimationComponentClass"
+    ]
+  },
+  {
+    "name": "Animation",
+    "description": "",
+    "classes": [
+      "GadgetAnimationComponentClass",
+      "GadgetAnimationComponent"
+    ]
+  },
+  {
+    "name": "Base",
+    "description": "",
+    "classes": [
+      "BaseAnimPhysComponent",
+      "BaseAnimPhysComponentClass",
+      "BaseAttachmentType",
+      "BaseCommandHandlerComponentClass",
+      "BaseCommandHandlerComponent",
+      "BaseStaminaComponentClass",
+      "BaseStaminaComponent",
+      "FlattenGrassParametersObject",
+      "HidingCloth",
+      "MeshesVisibilitySwitchConfig",
+      "ScriptedCommand"
+    ]
+  },
+  {
+    "name": "Batch Prefabs Operations Tool",
+    "description": "",
+    "classes": [
+      "SCR_BatchPrefabsOperationsTool"
+    ]
+  },
+  {
+    "name": "Building",
+    "description": "",
+    "classes": [
+      "BaseBuildingClass",
+      "BaseBuilding",
+      "Building",
+      "BuildingClass"
+    ]
+  },
+  {
+    "name": "Buildings",
+    "description": "",
+    "classes": [
+      "BaseSlotComponent",
+      "BaseSlotComponentClass",
+      "ClimbingDataComponent",
+      "ClimbingDataComponentClass",
+      "DoorSlotComponent",
+      "DoorSlotComponentClass",
+      "LadderComponent",
+      "LadderComponentClass",
+      "MapDescriptorComponentClass",
+      "SlotBoneMappingObject"
+    ]
+  },
+  {
+    "name": "Camera",
+    "description": "",
+    "classes": [
+      "BaseScriptedCameraItem",
+      "BaseScriptedCameraSet",
+      "CameraBaseClass",
+      "CameraBase",
+      "CameraHandlerComponent",
+      "CameraHandlerComponentClass",
+      "CameraManagerClass",
+      "CameraManager",
+      "PlayerCameraClass",
+      "PlayerCamera",
+      "ScriptedCameraBaseClass",
+      "ScriptedCameraBase"
+    ]
+  },
+  {
+    "name": "Character",
+    "description": "",
+    "classes": [
+      "CharacterAnimationComponent",
+      "CharacterAnimationComponentClass",
+      "CharacterBuoyancyComponent",
+      "CharacterBuoyancyComponentClass",
+      "CharacterCommand",
+      "CharacterCommandClimb",
+      "CharacterCommandClimbResult",
+      "CharacterCommandClimbSettings",
+      "CharacterCommandDamage",
+      "CharacterCommandDamageFullBody",
+      "CharacterCommandDeath",
+      "CharacterCommandFall",
+      "CharacterCommandGadget",
+      "CharacterCommandHandlerComponent",
+      "CharacterCommandHandlerComponentClass",
+      "CharacterCommandItemChange",
+      "CharacterCommandItemUse",
+      "CharacterCommandLadder",
+      "CharacterCommandMelee",
+      "CharacterCommandMove",
+      "CharacterCommandScripted",
+      "CharacterCommandSlide",
+      "CharacterCommandSwim",
+      "CharacterCommandSwimSettings",
+      "CharacterCommandUnconscious",
+      "CharacterCommandVehicle",
+      "CharacterCommandWeapon",
+      "CharacterHeadAimingComponentClass",
+      "CharacterHeadAimingComponent",
+      "CharacterHeadingAnimComponentClass",
+      "CharacterHeadingAnimComponent",
+      "CharacterIdentityComponentClass",
+      "CharacterIdentityComponent",
+      "CharacterInputContext",
+      "CharacterMovementState",
+      "CharacterStaminaComponentClass",
+      "CharacterStaminaComponent",
+      "ChimeraCharacterClass",
+      "ChimeraCharacter",
+      "DebugShootComponentClass",
+      "DebugShootComponent",
+      "ItemUseParameters",
+      "ScriptCharacterCommandMoveSettings"
+    ]
+  },
+  {
+    "name": "Chat",
+    "description": "",
+    "classes": [
+      "BaseChatChannel",
+      "BaseChatChannelStyle",
+      "PrivateMessageChannel",
+      "VehicleChatChannel"
+    ]
+  },
+  {
+    "name": "Components",
+    "description": "",
+    "classes": [
+      "ActionsPerformerComponentClass",
+      "ActionsPerformerComponent",
+      "AIAnimalManagerComponentClass",
+      "AIAnimalManagerComponent",
+      "AIBirdManagerComponentClass",
+      "AIBirdManagerComponent",
+      "AimingComponent",
+      "AimingComponentClass",
+      "AmbientSoundsComponentClass",
+      "AmbientSoundsComponent",
+      "AnimalSoundComponentClass",
+      "AnimalSoundComponent",
+      "BaseAimingComponentClass",
+      "BaseAimingComponent",
+      "BaseAutopilotHelperComponentClass",
+      "BaseAutopilotHelperComponent",
+      "BaseChatComponentClass",
+      "BaseChatComponent",
+      "BaseControllerComponentClass",
+      "BaseControllerComponent",
+      "BaseDoorComponent",
+      "BaseDoorComponentClass",
+      "BaseItemAnimationComponent",
+      "BaseItemAnimationComponentClass",
+      "BaseLightManagerComponentClass",
+      "BaseLightManagerComponent",
+      "BaseRadioComponentClass",
+      "BaseRadioComponent",
+      "BaseVehicleNodeComponentClass",
+      "BaseVehicleNodeComponent",
+      "CarProcAnimComponentClass",
+      "CarProcAnimComponent",
+      "CharacterAimingComponent",
+      "CharacterAimingComponentClass",
+      "CharacterControllerComponentClass",
+      "CharacterControllerComponent",
+      "CharacterSoundComponent",
+      "CharacterSoundComponentClass",
+      "ColliderHistoryComponentClass",
+      "ColliderHistoryComponent",
+      "CommunicationSoundComponent",
+      "CommunicationSoundComponentClass",
+      "CompartmentAccessComponentClass",
+      "CompartmentAccessComponent",
+      "ControllersManagerComponentClass",
+      "ControllersManagerComponent",
+      "DamageManagerComponent",
+      "DoorComponent",
+      "DoorComponentClass",
+      "ExtendedDamageManagerComponent",
+      "FactionAffiliationComponentClass",
+      "FactionAffiliationComponent",
+      "FuelManagerComponentClass",
+      "FuelManagerComponent",
+      "GameComponent",
+      "GameHierarchyComponentClass",
+      "GameHierarchyComponent",
+      "HelicopterAutopilotHelperComponentClass",
+      "HelicopterAutopilotHelperComponent",
+      "HierarchicalParametricMaterialInstanceComponentClass",
+      "HierarchicalParametricMaterialInstanceComponent",
+      "HitZoneContainerComponent",
+      "LongRangeSoundComponent",
+      "LongRangeSoundComponentClass",
+      "NwkBufferedCarMovementComponentClass",
+      "NwkBufferedCarMovementComponent",
+      "NwkCarMovementComponentClass",
+      "NwkCarMovementComponent",
+      "NwkHeliMovementComponentClass",
+      "NwkHeliMovementComponent",
+      "NwkMovementComponentClass",
+      "NwkMovementComponent",
+      "NwkPhysicsMovementComponentClass",
+      "NwkPhysicsMovementComponent",
+      "NwkSimpleMovementComponentClass",
+      "NwkSimpleMovementComponent",
+      "NwkTrackedMovementComponentClass",
+      "NwkTrackedMovementComponent",
+      "NwkVehicleMovementComponentClass",
+      "NwkVehicleMovementComponent",
+      "ParametricMaterialInstanceComponent",
+      "ParametricMaterialInstanceComponentClass",
+      "PerceptionComponentClass",
+      "PerceptionComponent",
+      "PreviewAnimationComponentClass",
+      "PreviewAnimationComponent",
+      "PrimaryControllerComponentClass",
+      "PrimaryControllerComponent",
+      "ProcAnimComponentClass",
+      "ProcAnimComponent",
+      "ProjectileSoundComponentClass",
+      "ProjectileSoundComponent",
+      "RadioBroadcastComponentClass",
+      "RadioBroadcastComponent",
+      "RadioBroadcastSoundComponentClass",
+      "RadioBroadcastSoundComponent",
+      "RplComponentClass",
+      "RplComponent",
+      "ScriptedRadioComponentClass",
+      "ScriptedRadioComponent",
+      "ScriptGameComponentClass",
+      "ScriptGameComponent",
+      "SignalsComponentClass",
+      "SignalsComponent",
+      "SignalsManagerComponentClass",
+      "SignalsManagerComponent",
+      "SimplePawnControllerComponentClass",
+      "SimplePawnControllerComponent",
+      "SimpleSoundComponentClass",
+      "SimpleSoundComponent",
+      "SlidingDoorComponent",
+      "SlidingDoorComponentClass",
+      "SlotManagerComponentClass",
+      "SlotManagerComponent",
+      "SoundComponentClass",
+      "SoundComponent",
+      "StaticSoundComponent",
+      "StaticSoundComponentClass",
+      "StreetLampComponentClass",
+      "StreetLampComponent",
+      "TurretControllerComponent",
+      "TurretControllerComponentClass",
+      "VehicleAnimationComponent",
+      "VehicleAnimationComponentClass",
+      "VehicleLightPortalComponent",
+      "VehicleLightPortalComponentClass",
+      "VehicleProcAnimComponentClass",
+      "VehicleProcAnimComponent",
+      "VehicleSoundComponentClass",
+      "VehicleSoundComponent",
+      "VolumeDataProviderComponentClass",
+      "VolumeDataProviderComponent",
+      "VoNComponentClass",
+      "VoNComponent",
+      "WeaponSoundComponentClass",
+      "WeaponSoundComponent",
+      "SCR_ExtendedDamageManagerComponentClass",
+      "SCR_ExtendedDamageManagerComponent",
+      "SCR_DamageEffect",
+      "PersistentDamageEffect",
+      "HitZone",
+      "SCR_PersistentDamageEffect"
+    ]
+  },
+  {
+    "name": "Components_InventorySystem",
+    "description": "",
+    "classes": [
+      "InventoryItemComponent",
+      "InventoryItemComponentClass",
+      "InventoryMagazineComponent",
+      "InventoryMagazineComponentClass"
+    ]
+  },
+  {
+    "name": "Core",
+    "description": "",
+    "classes": [
+      "Achievements",
+      "BallisticInfo",
+      "BaseContainerObject",
+      "ChimeraWorld",
+      "ChimeraWorldBase",
+      "GameMaterial",
+      "HitEffectInfo",
+      "ParticleEffectInfo",
+      "PrefabListClass",
+      "PrefabList",
+      "SoundInfo"
+    ]
+  },
+  {
+    "name": "Core_Animations",
+    "description": "",
+    "classes": [
+      "AnimationIKTargetInfo"
+    ]
+  },
+  {
+    "name": "Damage",
+    "description": "",
+    "classes": [
+      "SCR_DamageContext",
+      "BaseDamageContext",
+      "DamageAreaComponentClass",
+      "DamageAreaComponent",
+      "Instigator",
+      "HitZone",
+      "GameMaterial"
+    ]
+  },
+  {
+    "name": "DamageEffects",
+    "description": "",
+    "classes": [
+      "SCR_DamageEffect",
+      "SCR_DotDamageEffect",
+      "SCR_InstantDamageEffect",
+      "SCR_PersistentDamageEffect",
+      "BaseDamageEffect",
+      "DotDamageEffect",
+      "DotDamageEffectTimerToken",
+      "InstantDamageEffect",
+      "PersistentDamageEffect",
+      "UnknownDamageEffect"
+    ]
+  },
+  {
+    "name": "Damage_DamageAreas",
+    "description": "",
+    "classes": [
+      "DamageArea"
+    ]
+  },
+  {
+    "name": "Damage_DamageAreas_Shapes",
+    "description": "",
+    "classes": [
+      "BaseDamageAreaShape",
+      "DamageAreaShapeBox",
+      "DamageAreaShapeSphere"
+    ]
+  },
+  {
+    "name": "Destruction",
+    "description": "",
+    "classes": [
+      "BaseDestructibleData",
+      "BaseDestructionPhase",
+      "DestructibleDebris",
+      "DestructionHeatmapEntry",
+      "DestructionHeatmapRegion"
+    ]
+  },
+  {
+    "name": "Door",
+    "description": "",
+    "classes": [
+      "DoorSystem"
+    ]
+  },
+  {
+    "name": "Editable EntitiesEditor",
+    "description": "",
+    "classes": [
+      "SCR_SlotCompositionComponent",
+      "SCR_EditableCharacterComponent",
+      "SCR_EditableCommentComponent",
+      "SCR_EditableDecalComponent",
+      "SCR_EditableDescriptorComponent",
+      "SCR_EditableEffectsModuleComponent",
+      "SCR_EditableEntityComponent",
+      "SCR_EditableExplosiveChargeComponent",
+      "SCR_EditableFactionComponent",
+      "SCR_EditableGroupComponent",
+      "SCR_EditableMineComponent",
+      "SCR_EditablePlayerDelegateComponent",
+      "SCR_EditablePreviewComponent",
+      "SCR_BasePreviewEntity",
+      "SCR_EditableSpawnPointComponent",
+      "SCR_SpawnPoint",
+      "SCR_EditableSystemComponent",
+      "SCR_EditableTaskComponent",
+      "SCR_EditableVehicleComponent",
+      "SCR_EditableWaypointComponent",
+      "SCR_EditableWorldEntityComponent",
+      "SCR_WorldEntityDelegateEditorComponent",
+      "SCR_EditableEntityBaseChildComponent",
+      "SCR_EditableEntityMaterialChildComponent",
+      "SCR_EditableEntityVisibilityChildComponent",
+      "SCR_EditorCameraDefaultsComponent",
+      "SCR_EditorLinkComponent",
+      "SCR_DelegateFactionManagerComponent",
+      "SCR_EditableEntityCore"
+    ]
+  },
+  {
+    "name": "Editor",
+    "description": "",
+    "classes": []
+  },
+  {
+    "name": "Editor Radial Menu",
+    "description": "",
+    "classes": [
+      "SCR_ActionsRadialMenuEditorComponentClass",
+      "SCR_ActionsRadialMenuEditorComponent",
+      "SCR_EditorActionSelectionMenuEntry",
+      "SCR_SelectionMenuEntry"
+    ]
+  },
+  {
+    "name": "Attribute VariablesEditor » Containers",
+    "description": "",
+    "classes": []
+  },
+  {
+    "name": "Editor ComponentsEditor » Entities",
+    "description": "",
+    "classes": [
+      "SCR_AccessKeysEditorComponent",
+      "SCR_AttributesManagerEditorComponent",
+      "SCR_BaseEditorComponent",
+      "SCR_CameraDataEditorComponent",
+      "SCR_CameraEditorComponent",
+      "SCR_CameraFiltersEditorComponent",
+      "SCR_CameraLimitedEditorComponent",
+      "SCR_CameraParticlesEditorComponent",
+      "SCR_CampaignBuildingCameraEditorComponent",
+      "SCR_CampaignBuildingPlacingObstructionEditorComponent",
+      "SCR_CampaignBuildingTransformingEditorComponent",
+      "SCR_CommandActionsEditorComponent",
+      "SCR_ContentBrowserEditorComponent",
+      "SCR_ContextActionsEditorComponent",
+      "SCR_DebugEditorComponent",
+      "SCR_DynamicSimulationEditorComponent",
+      "SCR_EntitiesManagerEditorComponent",
+      "SCR_FactionWarningManagerEditorComponent",
+      "SCR_HighlightedEditorComponent",
+      "SCR_InputLayoutEditorComponent",
+      "SCR_LayersEditorComponent",
+      "SCR_MapEditorComponent",
+      "SCR_MenuEditorComponent",
+      "SCR_MenuLayoutEditorComponent",
+      "SCR_MenuOverlaysEditorComponent",
+      "SCR_PauseGameTimeEditorComponent",
+      "SCR_PingEditorComponent",
+      "SCR_PlacingEditorComponent",
+      "SCR_PlayerDelegateEditorComponent",
+      "SCR_PlayersManagerEditorComponent",
+      "SCR_PrefabsCacheEditorComponent",
+      "SCR_PreviewEntityEditorComponent",
+      "SCR_StatesEditorComponent",
+      "SCR_TransformingEditorComponent",
+      "SCR_WorldEntityDelegateEditorComponent"
+    ]
+  },
+  {
+    "name": "AttributesEditor » Entities » Editor Components",
+    "description": "",
+    "classes": []
+  },
+  {
+    "name": "Entity ManagersEditor » Containers",
+    "description": "",
+    "classes": [
+      "SCR_BaseEditableEntityFilter",
+      "SCR_CompatibleSlotEditableEntityFilter",
+      "SCR_ControlModeEditableEntityFilter",
+      "SCR_CurrentLayerEditableEntityFilter",
+      "SCR_DestroyedEditableEntityFilter",
+      "SCR_DummyEditableEntityFilter",
+      "SCR_EditedEditableEntityFilter",
+      "SCR_EntityTypesEditableEntityFilter",
+      "SCR_FocusedEditableEntityFilter",
+      "SCR_FriendlyEditableEntityFilter",
+      "SCR_HasFactionEditableEntityFilter",
+      "SCR_HighlightedEditableEntityFilter",
+      "SCR_HoverEditableEntityFilter",
+      "SCR_LayerEditableEntityFilter",
+      "SCR_PingedEditableEntityFilter",
+      "SCR_PlayerDelegateEditableEntityFilter",
+      "SCR_PlayerEditableEntityFilter",
+      "SCR_PreviewEditableEntityFilter",
+      "SCR_SelectedEditableEntityFilter",
+      "SCR_UnlockedEditableEntityFilter",
+      "SCR_VisibleEditableEntityFilter"
+    ]
+  },
+  {
+    "name": "ContainersEditor",
+    "description": "",
+    "classes": [
+      "SCR_EditorPreviewParams"
+    ]
+  },
+  {
+    "name": "BackendEditor » Containers",
+    "description": "",
+    "classes": [
+      "SCR_EditorMetaStruct"
+    ]
+  },
+  {
+    "name": "Root ConfigsEditor » Containers",
+    "description": "",
+    "classes": [
+      "SCR_PlaceableEntitiesMeta",
+      "SCR_PlaceableEntitiesRegistry",
+      "SCR_PlaceableEntitiesRegistryFromCatalog",
+      "SCR_EditorAttributeCategory"
+    ]
+  },
+  {
+    "name": "Context ActionsEditor » Containers",
+    "description": "",
+    "classes": [
+      "SCR_GeneralContextAction",
+      "SCR_SelectedEntitiesContextAction"
+    ]
+  },
+  {
+    "name": "CoreEditor",
+    "description": "",
+    "classes": [
+      "SCR_EditableEntityCore",
+      "SCR_EditableEntityComponent",
+      "SCR_EditorManagerCore",
+      "SCR_EditorManagerEntity"
+    ]
+  },
+  {
+    "name": "Editable Entity UIEditor » Containers",
+    "description": "",
+    "classes": [
+      "SCR_EntitiesEditorUIRule",
+      "SCR_EditableEntityUIRuleTracker",
+      "SCR_EditableEntityUIConfig",
+      "SCR_EditableEntityBaseSlotUIComponent"
+    ]
+  },
+  {
+    "name": "Audio-visual effectsEditor » Containers",
+    "description": "",
+    "classes": [
+      "SCR_EntityEditorEffect",
+      "SCR_BaseEditorEffect",
+      "SCR_ParticleEditorEffect",
+      "SCR_SoundEditorEffect",
+      "SCR_UIEditorEffect"
+    ]
+  },
+  {
+    "name": "EntitiesEditor",
+    "description": "",
+    "classes": [
+      "SCR_SiteSlotEntity",
+      "SCR_EditorBaseEntity",
+      "SCR_EditorImageGeneratorEntity",
+      "SCR_EditorImagePositionEntity",
+      "SCR_EditorManagerEntity",
+      "SCR_EditorModeEntity",
+      "SCR_EditorPingEntity",
+      "SCR_EditorSettingsEntity",
+      "SCR_EditorManagerCore"
+    ]
+  },
+  {
+    "name": "InfoEditor » Containers",
+    "description": "",
+    "classes": []
+  },
+  {
+    "name": "LabelsEditor » Containers",
+    "description": "",
+    "classes": []
+  },
+  {
+    "name": "UIEditor",
+    "description": "",
+    "classes": [
+      "SCR_BaseDuplicatableEditorAttribute",
+      "SCR_AttributeDescriptionUIComponent",
+      "SCR_AttributeTickboxUIComponent",
+      "SCR_BaseEditorAttributeUIComponent",
+      "SCR_ButtonBoxAttributeUIComponent",
+      "SCR_ButtonBoxMultiSelectAttributeUIComponent",
+      "SCR_CheckboxEditorAttributeUIComponent",
+      "SCR_DateAttributeUIComponent",
+      "SCR_DropdownEditorAttributeUIComponent",
+      "SCR_OverrideModesEditorAttributeUIComponent",
+      "SCR_SliderEditorAttributeUIComponent",
+      "SCR_SpinboxEditorAttributeUIComponent",
+      "SCR_VectorSliderEditorAttributeUIComponent",
+      "SCR_AssetBrowserAccessEditorUIComponent",
+      "SCR_AttributesEditorUIComponent",
+      "SCR_BaseEditorUIComponent",
+      "SCR_ContentBrowserEditorUIComponent",
+      "SCR_ContentBrowserFiltersEditorUIComponent",
+      "SCR_CursorEditorUIComponent",
+      "SCR_DialogEditorUIComponent",
+      "SCR_EditAttributesEditorUIComponent",
+      "SCR_EditorToggleUIComponent",
+      "SCR_HideEditorUIComponent",
+      "SCR_ModesEditorUIComponent",
+      "SCR_MouseAreaEditorUIComponent",
+      "SCR_PingEditorUIComponent",
+      "SCR_PlacingEditorUIComponent",
+      "SCR_PlayersListEditorUIComponent",
+      "SCR_PreviewEntityEditorUIComponent",
+      "SCR_QuickPlacingEditorUIComponent",
+      "SCR_SelectionEditorUIComponent",
+      "SCR_TransformingEditorUIComponent",
+      "SCR_BaseEditableEntityUIComponent",
+      "SCR_EditableEntityLinkUIComponent",
+      "SCR_ActionsToolbarEditorUIComponent",
+      "SCR_BaseToolbarEditorUIComponent",
+      "SCR_CommandToolbarEditorUIComponent",
+      "SCR_EntitiesToolbarEditorUIComponent",
+      "SCR_FactionsToolbarEditorUIComponent",
+      "SCR_PlacingToolbarEditorUIComponent",
+      "SCR_TaskToolbarEditorUIComponent",
+      "SCR_TooltipAreaEditorUIComponent",
+      "SCR_TooltipManagerEditorUIComponent",
+      "SCR_BaseTooltipTargetEditorUIComponent",
+      "SCR_CustomTooltipTargetEditorUIComponent",
+      "SCR_LinkTooltipTargetEditorUIComponent",
+      "SCR_ActionTooltipEditorUIComponent",
+      "SCR_BaseTooltipEditorUIComponent",
+      "SCR_EntityTooltipEditorUIComponent",
+      "SCR_EditorPingInfoDisplay",
+      "EditorAttributesDialogUI",
+      "EditorBrowserDialogUI",
+      "EditorMenuBase",
+      "EditorMenuUI",
+      "SCR_AssetCardFrontUIComponent",
+      "SCR_NotificationsLogComponent"
+    ]
+  },
+  {
+    "name": "UI ComponentsEditor » UI",
+    "description": "",
+    "classes": [
+      "SCR_BaseDuplicatableEditorAttribute",
+      "SCR_AttributeDescriptionUIComponent",
+      "SCR_AttributeTickboxUIComponent",
+      "SCR_BaseEditorAttributeUIComponent",
+      "SCR_ButtonBoxAttributeUIComponent",
+      "SCR_ButtonBoxMultiSelectAttributeUIComponent",
+      "SCR_CheckboxEditorAttributeUIComponent",
+      "SCR_DateAttributeUIComponent",
+      "SCR_DropdownEditorAttributeUIComponent",
+      "SCR_OverrideModesEditorAttributeUIComponent",
+      "SCR_SliderEditorAttributeUIComponent",
+      "SCR_SpinboxEditorAttributeUIComponent",
+      "SCR_VectorSliderEditorAttributeUIComponent",
+      "SCR_AssetBrowserAccessEditorUIComponent",
+      "SCR_AttributesEditorUIComponent",
+      "SCR_BaseEditorUIComponent",
+      "SCR_ContentBrowserEditorUIComponent",
+      "SCR_ContentBrowserFiltersEditorUIComponent",
+      "SCR_CursorEditorUIComponent",
+      "SCR_DialogEditorUIComponent",
+      "SCR_EditAttributesEditorUIComponent",
+      "SCR_EditorToggleUIComponent",
+      "SCR_HideEditorUIComponent",
+      "SCR_ModesEditorUIComponent",
+      "SCR_MouseAreaEditorUIComponent",
+      "SCR_PingEditorUIComponent",
+      "SCR_PlacingEditorUIComponent",
+      "SCR_PlayersListEditorUIComponent",
+      "SCR_PreviewEntityEditorUIComponent",
+      "SCR_QuickPlacingEditorUIComponent",
+      "SCR_SelectionEditorUIComponent",
+      "SCR_TransformingEditorUIComponent",
+      "SCR_BaseEditableEntityUIComponent",
+      "SCR_EditableEntityLinkUIComponent",
+      "SCR_ActionsToolbarEditorUIComponent",
+      "SCR_BaseToolbarEditorUIComponent",
+      "SCR_CommandToolbarEditorUIComponent",
+      "SCR_EntitiesToolbarEditorUIComponent",
+      "SCR_FactionsToolbarEditorUIComponent",
+      "SCR_PlacingToolbarEditorUIComponent",
+      "SCR_TaskToolbarEditorUIComponent",
+      "SCR_TooltipAreaEditorUIComponent",
+      "SCR_TooltipManagerEditorUIComponent",
+      "SCR_BaseTooltipTargetEditorUIComponent",
+      "SCR_CustomTooltipTargetEditorUIComponent",
+      "SCR_LinkTooltipTargetEditorUIComponent",
+      "SCR_ActionTooltipEditorUIComponent",
+      "SCR_BaseTooltipEditorUIComponent",
+      "SCR_EntityTooltipEditorUIComponent",
+      "SCR_AssetCardFrontUIComponent",
+      "SCR_NotificationsLogComponent"
+    ]
+  },
+  {
+    "name": "MenusEditor » UI",
+    "description": "",
+    "classes": [
+      "EditorAttributesDialogUI",
+      "EditorBrowserDialogUI",
+      "EditorMenuBase",
+      "EditorMenuUI"
+    ]
+  },
+  {
+    "name": "Effects",
+    "description": "",
+    "classes": [
+      "BaseEffectComponentClass",
+      "BaseEffectComponent",
+      "ExplosionDamageContainer",
+      "HitEffectComponentClass",
+      "HitEffectComponent",
+      "MultiBarrelMuzzleEffectComponentClass",
+      "MultiBarrelMuzzleEffectComponent",
+      "MuzzleEffectComponentClass",
+      "MuzzleEffectComponent",
+      "RocketTraceEffectComponentClass",
+      "RocketTraceEffectComponent",
+      "SpawnDecalEffect",
+      "SpawnDistanceParticleEffect",
+      "SpawnParticleEffect"
+    ]
+  },
+  {
+    "name": "Entities",
+    "description": "",
+    "classes": [
+      "BaseChatEntityClass",
+      "BaseChatEntity",
+      "BaseGameEntityClass",
+      "BaseGameEntity",
+      "DestructibleEntity",
+      "DestructibleEntityClass",
+      "DestructionManagerClass",
+      "DestructionManager",
+      "EntityUtils",
+      "GameEntityClass",
+      "GameEntity",
+      "GameEnvironmentProbeEntityClass",
+      "GameEnvironmentProbeEntity",
+      "MusicManagerClass",
+      "MusicManager",
+      "PowerlineEntityClass",
+      "PowerlineEntity",
+      "PowerPoleEntityClass",
+      "PowerPoleEntity",
+      "RadioManagerEntityClass",
+      "RadioManagerEntity",
+      "RegionalDestructionManagerClass",
+      "RegionalDestructionManager",
+      "SoundWorldClass",
+      "SoundWorld",
+      "TurretClass",
+      "Turret",
+      "VehiclePartPanelClass",
+      "VehiclePartPanel",
+      "VehiclePartRotorClass",
+      "VehiclePartRotor"
+    ]
+  },
+  {
+    "name": "EntityTypes",
+    "description": "",
+    "classes": [
+      "EjectableProjectile",
+      "EjectableProjectileClass",
+      "Projectile",
+      "ProjectileClass",
+      "TracerProjectileClass",
+      "TracerProjectile"
+    ]
+  },
+  {
+    "name": "Events",
+    "description": "",
+    "classes": [
+      "BaseEventHandler",
+      "EventHandlerManagerComponentClass",
+      "EventHandlerManagerComponent"
+    ]
+  },
+  {
+    "name": "Faction",
+    "description": "",
+    "classes": [
+      "Faction",
+      "FactionManagerClass",
+      "FactionManager",
+      "ScriptedFaction"
+    ]
+  },
+  {
+    "name": "Game Core",
+    "description": "",
+    "classes": [
+      "SCR_EditableEntityCore",
+      "SCR_EditableEntityComponent",
+      "SCR_EditorManagerCore",
+      "SCR_EditorManagerEntity",
+      "SCR_DebugCameraCore",
+      "SCR_GameCoresManager"
+    ]
+  },
+  {
+    "name": "Game Mode",
+    "description": "",
+    "classes": [
+      "SCR_GameModeSectorControl",
+      "BaseGameModeClass",
+      "BaseGameMode",
+      "RespawnComponentClass",
+      "RespawnComponent",
+      "PlayerController",
+      "RespawnSystemComponentClass",
+      "RespawnSystemComponent"
+    ]
+  },
+  {
+    "name": "GameStateTransitions",
+    "description": "",
+    "classes": [
+      "GameStateTransitions",
+      "KickCauseCodeAPI"
+    ]
+  },
+  {
+    "name": "Gamepad",
+    "description": "",
+    "classes": [
+      "GadgetGamepadEffectsManagerComponentClass",
+      "GadgetGamepadEffectsManagerComponent",
+      "GamepadEffect",
+      "GamepadEffectContext",
+      "GamepadEffectsManagerComponent",
+      "GamepadEffectsManagerComponentClass",
+      "GamepadIOHandlerComponentClass",
+      "GamepadIOHandlerComponent",
+      "GamepadLightEffect",
+      "GamepadRumbleEffect",
+      "GamepadTriggerEffect",
+      "GamepadVibrationEffect",
+      "VehicleGamepadEffectsManagerComponentClass",
+      "VehicleGamepadEffectsManagerComponent",
+      "WeaponGamepadEffectsManagerComponentClass",
+      "WeaponGamepadEffectsManagerComponent"
+    ]
+  },
+  {
+    "name": "Windows Prefab Generator",
+    "description": "",
+    "classes": [
+      "SCR_GenerateWindowsPrefabsTool"
+    ]
+  },
+  {
+    "name": "Generators",
+    "description": "",
+    "classes": [
+      "ForestGeneratorGrid",
+      "ForestGeneratorTreeBase"
+    ]
+  },
+  {
+    "name": "Graph",
+    "description": "",
+    "classes": [
+      "Graph",
+      "GraphEdge",
+      "GraphNode"
+    ]
+  },
+  {
+    "name": "GridMap",
+    "description": "",
+    "classes": [
+      "AABGridMap",
+      "BaseGridMap",
+      "CircleGridMap",
+      "PointGridMap"
+    ]
+  },
+  {
+    "name": "Heatmap",
+    "description": "",
+    "classes": []
+  },
+  {
+    "name": "HitZone",
+    "description": "",
+    "classes": [
+      "DamageManagerComponentClass",
+      "ExtendedDamageManagerComponentClass",
+      "HitZone",
+      "HitZoneContainerComponentClass"
+    ]
+  },
+  {
+    "name": "Identity",
+    "description": "",
+    "classes": [
+      "FactionIdentity",
+      "Identity",
+      "IdentityBodyMesh",
+      "MeshConfig",
+      "SocialIdentity",
+      "SoundIdentity",
+      "VisualIdentity"
+    ]
+  },
+  {
+    "name": "InventorySystem",
+    "description": "",
+    "classes": [
+      "AimingModifierAttributes",
+      "AttachmentAttributes",
+      "AttachmentsStorageComponentClass",
+      "AttachmentsStorageComponent",
+      "BaseEquipedWeaponStorageComponentClass",
+      "BaseEquipedWeaponStorageComponent",
+      "BaseEquipmentStorageComponentClass",
+      "BaseEquipmentStorageComponent",
+      "BaseInventoryStorageComponentClass",
+      "BaseInventoryStorageComponent",
+      "BaseItemAttributeData",
+      "BaseUniversalInventoryStorageComponentClass",
+      "BaseUniversalInventoryStorageComponent",
+      "CharacterInventoryStorageComponentClass",
+      "CharacterInventoryStorageComponent",
+      "CharacterModifierAttributes",
+      "CharacterVicinityComponent",
+      "CharacterVicinityComponentClass",
+      "ClothNodeStorageComponentClass",
+      "ClothNodeStorageComponent",
+      "EquipedLoadoutStorageComponentClass",
+      "EquipedLoadoutStorageComponent",
+      "HolsteredItemAttributes",
+      "InventoryStorageManagerComponent",
+      "InventoryStorageSlot",
+      "ItemActionAnimAttributes",
+      "ItemAnimationAttributes",
+      "ItemAttributeCollection",
+      "ItemMovementSwayAttributes",
+      "ItemOneHandAnimAttributes",
+      "ItemPhysicalAttributes",
+      "ItemPreviewManagerEntityClass",
+      "ItemPreviewManagerEntity",
+      "LoadoutSlotInfo",
+      "MultiSlotConfiguration",
+      "PreviewRenderAttributes",
+      "SerializerInventoryStorageManagerComponentClass",
+      "SerializerInventoryStorageManagerComponent",
+      "WeaponAttachmentAttributes",
+      "WeaponAttachmentsStorageComponentClass",
+      "WeaponAttachmentsStorageComponent"
+    ]
+  },
+  {
+    "name": "InventorySystem_InventoryTask",
+    "description": "",
+    "classes": [
+      "BaseInventorySearchPredicate",
+      "BaseInventoryTask",
+      "InventoryOperationCallback",
+      "ScriptedInventoryOperationCallback",
+      "ScriptedInventoryTask"
+    ]
+  },
+  {
+    "name": "Loadout",
+    "description": "",
+    "classes": [
+      "BaseLoadoutClothComponent",
+      "BaseLoadoutClothComponentClass",
+      "BaseLoadoutManagerComponentClass",
+      "BaseLoadoutManagerComponent",
+      "LoadoutAreaType",
+      "LoadoutBackpackArea",
+      "LoadoutBootsArea",
+      "LoadoutHandwearSlotArea",
+      "LoadoutHeadCoverArea",
+      "LoadoutJacketArea",
+      "LoadoutPantsArea",
+      "LoadoutVestArea",
+      "LoadoutWatchArea"
+    ]
+  },
+  {
+    "name": "Manual Camera",
+    "description": "",
+    "classes": [
+      "SCR_AccelerationManualCameraComponent",
+      "SCR_AdjustSpeedManualCameraComponent",
+      "SCR_ATLManualCameraComponent",
+      "SCR_AttachManualCameraComponent",
+      "SCR_BaseManualCameraComponent",
+      "SCR_ManualCamera",
+      "SCR_CampaignBuildingLimitCylinderManualCameraComponent",
+      "SCR_ControlPlayerCameraComponent",
+      "SCR_EditorCursorManualCameraComponent",
+      "SCR_EditorHoveredManualCameraComponent",
+      "SCR_EditorSnapManualCameraComponent",
+      "SCR_EditorToggleUIManualCameraComponent",
+      "SCR_FocusManualCameraComponent",
+      "SCR_HideHUDManualCameraComponent",
+      "SCR_InitInputManualCameraComponent",
+      "SCR_LensFlareManualCameraComponent",
+      "SCR_LightManualCameraComponent",
+      "SCR_LimitBoxManualCameraComponent",
+      "SCR_LimitCylinderManualCameraComponent",
+      "SCR_MapDescriptorManualCameraComponent",
+      "SCR_MouseMoveManualCameraComponent",
+      "SCR_MoveManualCameraComponent",
+      "SCR_MovementInertiaManualCameraComponent",
+      "SCR_MoveRelativeManualCameraComponent",
+      "SCR_MoveToCursorManualCameraComponent",
+      "SCR_OrbitingManualCameraComponent",
+      "SCR_RotateManualCameraComponent",
+      "SCR_RotateModifierManualCameraComponent",
+      "SCR_RotateRollManualCameraComponent",
+      "SCR_RotationInertiaManualCameraComponent",
+      "SCR_SaveManualCameraComponent",
+      "SCR_SetSpeedManualCameraComponent",
+      "SCR_SettingsManualCameraComponent",
+      "SCR_SpeedBoostManualCameraComponent",
+      "SCR_SpeedByHeightManualCameraComponent",
+      "SCR_TeleportPlayerManualCameraComponent",
+      "SCR_TeleportToCursorManualCameraComponent",
+      "SCR_TerrainCollisionManualCameraComponent",
+      "SCR_ToggleUIManualCameraComponent",
+      "SCR_UIManualCameraComponent",
+      "SCR_ViewLinkManualCameraComponent",
+      "SCR_ZoomManualCameraComponent",
+      "SCR_ManualCameraParam"
+    ]
+  },
+  {
+    "name": "Map",
+    "description": "",
+    "classes": [
+      "DrawingItem",
+      "MapAreaProperties",
+      "MapBuildingProps",
+      "MapContourProps",
+      "MapDataExporter",
+      "MapDescriptorComponent",
+      "MapDescriptorProps",
+      "MapDrawingProps",
+      "MapEntityClass",
+      "MapEntity",
+      "MapGridProps",
+      "MapHillProps",
+      "MapItem",
+      "MapLayer",
+      "MapLegendProps",
+      "MapLink",
+      "MapLinkProps",
+      "MapPowerLineProps",
+      "MapRoadProps",
+      "MapSelectionProperties",
+      "MapWaterBodyProps"
+    ]
+  },
+  {
+    "name": "Math",
+    "description": "",
+    "classes": [
+      "Curve",
+      "Curve3"
+    ]
+  },
+  {
+    "name": "Mission",
+    "description": "",
+    "classes": [
+      "MissionHeader"
+    ]
+  },
+  {
+    "name": "Music",
+    "description": "",
+    "classes": [
+      "LocationMusic",
+      "Music",
+      "ScriptedMusic"
+    ]
+  },
+  {
+    "name": "Network",
+    "description": "",
+    "classes": [
+      "ChatCommandHandler",
+      "GameStatsApi",
+      "PlayerManager"
+    ]
+  },
+  {
+    "name": "Perception",
+    "description": "",
+    "classes": [
+      "BaseSensor",
+      "BaseTarget",
+      "CharacterPerceivableComponent",
+      "CharacterPerceivableComponentClass",
+      "PerceivableComponent",
+      "PerceivableComponentClass",
+      "PerceptionManagerClass",
+      "PerceptionManager",
+      "VehiclePerceivableComponentClass",
+      "VehiclePerceivableComponent"
+    ]
+  },
+  {
+    "name": "Physics",
+    "description": "",
+    "classes": [
+      "AnimatedColliderComponent",
+      "BuoyancyComponent",
+      "BuoyancyComponentClass",
+      "DampingComponent",
+      "DampingComponentClass",
+      "DynamicPhysicsObstacleComponentClass",
+      "DynamicPhysicsObstacleComponent",
+      "VehicleBuoyancyComponent",
+      "VehicleBuoyancyComponentClass"
+    ]
+  },
+  {
+    "name": "Physiscs",
+    "description": "",
+    "classes": [
+      "AnimatedColliderComponentClass"
+    ]
+  },
+  {
+    "name": "Player",
+    "description": "",
+    "classes": [
+      "PlayerControllerClass",
+      "PlayerController",
+      "SocialComponentClass",
+      "SocialComponent"
+    ]
+  },
+  {
+    "name": "Preload",
+    "description": "",
+    "classes": [
+      "BasePreloadManagerClass",
+      "BasePreloadManager"
+    ]
+  },
+  {
+    "name": "Projectile",
+    "description": "",
+    "classes": [
+      "BaseMissileGuidanceComponentClass",
+      "BaseMissileGuidanceComponent",
+      "BaseProjectileComponentClass",
+      "BaseProjectileComponent",
+      "BaseProjectileEffect",
+      "DistanceParticleEffect",
+      "FlareMoveComponent",
+      "FlareMoveComponentClass",
+      "GrenadeMoveComponent",
+      "GrenadeMoveComponentClass",
+      "MissileMoveComponent",
+      "MissileMoveComponentClass",
+      "ProjectileMoveComponent",
+      "ProjectileMoveComponentClass",
+      "ShellMoveComponent",
+      "ShellMoveComponentClass",
+      "SubDistanceParticleEffect"
+    ]
+  },
+  {
+    "name": "Projectile_Explosions",
+    "description": "",
+    "classes": [
+      "BaseExplosionDamage"
+    ]
+  },
+  {
+    "name": "Projectile_Trigger",
+    "description": "",
+    "classes": [
+      "BaseTriggerComponent",
+      "BaseTriggerComponentClass",
+      "CollisionTriggerComponentClass",
+      "CollisionTriggerComponent",
+      "ProximityTriggerComponent",
+      "ProximityTriggerComponentClass",
+      "TimerTriggerComponentClass",
+      "TimerTriggerComponent"
+    ]
+  },
+  {
+    "name": "Radio",
+    "description": "",
+    "classes": [
+      "BaseRadioMessage",
+      "BaseTransceiver",
+      "EditorFactionTransceiver",
+      "EditorTransceiver",
+      "IntercomTransceiver",
+      "RadioTransceiver",
+      "RelayTransceiver",
+      "ScriptedRadioMessage",
+      "VonRadioMessage"
+    ]
+  },
+  {
+    "name": "RadioBroadcast",
+    "description": "",
+    "classes": [
+      "RadioBroadcastManagerClass",
+      "RadioBroadcastManager"
+    ]
+  },
+  {
+    "name": "RoadNetwork",
+    "description": "",
+    "classes": [
+      "BaseRoad",
+      "RoadNetworkManager"
+    ]
+  },
+  {
+    "name": "SaveGame",
+    "description": "",
+    "classes": [
+      "SaveGame",
+      "SaveGameAddonVersion",
+      "SaveGameManager",
+      "SaveGameOperationCb"
+    ]
+  },
+  {
+    "name": "System",
+    "description": "",
+    "classes": [
+      "AIAmbientLightProbeSystem",
+      "AIFlockUpdateSystem",
+      "AIObstacleAvoidanceSystem",
+      "AISmartActionSystem",
+      "AIVehicleKnowledgeSystem",
+      "AoeDamageSystem",
+      "BirdAnimationsUpdateSystem",
+      "BoidsSystem",
+      "BuoyancySystem",
+      "CamerasSystem",
+      "CharacterIgnoreDamageSystem",
+      "CharacterLeaningSystem",
+      "DecalSystem",
+      "DestructionHeatmapSystem",
+      "DistanceParticleEffectSystem",
+      "FallDamageInspectorSystem",
+      "FlattenGrassSystem",
+      "FuelSystem",
+      "GameSystem",
+      "GarbageSystem",
+      "GarbageSystemConfig",
+      "GarbageSystemConfigComponentClass",
+      "GarbageSystemConfigComponent",
+      "HandleAimingUpdateSystem",
+      "HandleAnimatedColliderSystem",
+      "HandleAnimationsInterpolateSystem",
+      "HandleAnimationsKeyframeNwkSystem",
+      "HandleAnimationsKeyframeSystem",
+      "HandleAnimationsReplaySystem",
+      "HandleClothsPhysicUpdateSystem",
+      "HandleClothsPositionUpdateSystem",
+      "HandleControlsSystem",
+      "HandleDamageSystem",
+      "HandleFireRequestsSystem",
+      "HandleItemAnimationsSystem",
+      "HandlePlayerControllersUpdateSystem",
+      "HandleRagdollSystem",
+      "HitRegistrationSystem",
+      "HUDSystem",
+      "InteractionBlockSystem",
+      "InteractionSystem",
+      "InventoryStreamingSystem",
+      "InventorySystem",
+      "LightManagersSystem",
+      "LongRangeSoundSystem",
+      "NwkMovementConsumerSystem",
+      "NwkMovementProducerSystem",
+      "PerceivableSystem",
+      "PerceptionSystem",
+      "ProcAnimSystem",
+      "ProjectileSimulationSystem",
+      "RecordInactivePhysEntitiesStateSystem",
+      "ReplicatedCamerasSystem",
+      "RespawnSystem",
+      "RestoreInactivePhysEntitiesStateSystem",
+      "RoadNetworkSystem",
+      "RplComponentDebugDrawSystem",
+      "SignalsManagersSystem",
+      "StaminaSystem",
+      "TagSystem",
+      "VehicleDebugDrawSystem",
+      "VehiclePostSimulationSystem",
+      "VehicleSimulationSystem",
+      "VehicleUpdateAnimsSystem",
+      "VehicleUpdateSignalsSystem",
+      "VicinitySystem",
+      "VolumesDebugSystem",
+      "VoNSystem"
+    ]
+  },
+  {
+    "name": "Systems_Persistence",
+    "description": "",
+    "classes": [
+      "PersistenceCallback",
+      "PersistenceDeferredDeserializeTask",
+      "PersistenceIdUtils",
+      "PersistenceLoadRequest",
+      "PersistenceResultCallback",
+      "PersistenceSpawnRequest",
+      "PersistenceStatusCallback",
+      "PersistenceSystem",
+      "PersistenceWhenAvailableTask"
+    ]
+  },
+  {
+    "name": "Systems_Persistence_Bundling",
+    "description": "",
+    "classes": [
+      "BlobBundler",
+      "JsonBundler",
+      "PersistenceBundler"
+    ]
+  },
+  {
+    "name": "Systems_Persistence_Config",
+    "description": "",
+    "classes": [
+      "EntityPersistenceConfig",
+      "PersistenceBundle",
+      "PersistenceCollection",
+      "PersistenceConfig",
+      "PersistenceSystemConfig",
+      "PersistentState",
+      "ScriptedStatePersistenceConfig"
+    ]
+  },
+  {
+    "name": "Systems_Persistence_Config_Entries_Rules",
+    "description": "",
+    "classes": [
+      "ComponentClassPersistenceConfigRule",
+      "EntityClassPersistenceConfigRule",
+      "PersistenceConfigRule",
+      "PlayerPersistenceConfigRule",
+      "PrefabPersistenceConfigRule"
+    ]
+  },
+  {
+    "name": "Systems_Persistence_Databases",
+    "description": "",
+    "classes": [
+      "PersistenceDatabase",
+      "SaveGameDatabase"
+    ]
+  },
+  {
+    "name": "Systems_Persistence_Serializers",
+    "description": "",
+    "classes": [
+      "AICarMovementComponentSerializer",
+      "BaseCompartmentManagerComponentSerializer",
+      "BaseInventoryStorageComponentSerializer",
+      "BaseInventoryStorageComponentSerializerSlot",
+      "BaseLightManagerComponentSerializer",
+      "BaseMuzzleComponentSerializer",
+      "BaseRadioComponentSerializer",
+      "CarControllerComponentSerializer",
+      "CharacterControllerComponentSerializer",
+      "CompartmentAccessComponentSerializer",
+      "DestructionManagerSerializer",
+      "DoorComponentSerializer",
+      "DoorSystemStateSerializer",
+      "EquipedWeaponStorageComponentSerializer",
+      "GarbageSystemStateSerializer",
+      "GenericEntitySerializer",
+      "HelicopterControllerComponentSerializer",
+      "HitZoneContainerComponentSerializer",
+      "MagazineComponentSerializer",
+      "MuzzleComponentSerializer",
+      "MuzzleInMagComponentSerializer",
+      "PerceptionComponentSerializer",
+      "PersistenceSerializerBase",
+      "RocketEjectorMuzzleComponentSerializer",
+      "ScriptedComponentSerializer",
+      "ScriptedEntitySerializer",
+      "ScriptedStateSerializer",
+      "SerializerDefaultSpawnData",
+      "SlotManagerComponentSerializer",
+      "TurretControllerComponentSerializer",
+      "WeaponAttachmentsStorageComponentSerializer",
+      "WeaponComponentSerializer",
+      "WeaponSlotComponentSerializer"
+    ]
+  },
+  {
+    "name": "Systems_Persistence_Serializers_States",
+    "description": "",
+    "classes": [
+      "DoorSystemState",
+      "GarbageSystemState"
+    ]
+  },
+  {
+    "name": "Systems_Persistence_Storages",
+    "description": "",
+    "classes": [
+      "GamemodeStorage",
+      "PersistenceSessionStorage",
+      "PersistenceStorageBase"
+    ]
+  },
+  {
+    "name": "Trigger",
+    "description": "",
+    "classes": [
+      "BaseGameTriggerEntityClass",
+      "BaseGameTriggerEntity",
+      "PrefabFilter",
+      "PreloadEntry",
+      "ScriptedGameTriggerEntityClass",
+      "ScriptedGameTriggerEntity"
+    ]
+  },
+  {
+    "name": "Turrets",
+    "description": "",
+    "classes": [
+      "TurretComponent",
+      "TurretComponentClass",
+      "TurretSlotComponentClass",
+      "TurretSlotComponent"
+    ]
+  },
+  {
+    "name": "UI",
+    "description": "",
+    "classes": [
+      "BaseFuelNode",
+      "ItemPreviewWidget",
+      "MapWidget",
+      "UIInfo",
+      "GameWidgetType"
+    ]
+  },
+  {
+    "name": "UI_Actions",
+    "description": "",
+    "classes": [
+      "ButtonTexture",
+      "InputButtonData",
+      "InputButtonLayoutConfig",
+      "InputButtonLayoutEntry",
+      "InputButtonState",
+      "InputButtonStyle"
+    ]
+  },
+  {
+    "name": "UI_HUD",
+    "description": "",
+    "classes": [
+      "BaseHUDComponentClass",
+      "BaseHUDComponent",
+      "BaseInfoDisplay",
+      "GroupInfoDisplay",
+      "HUDManagerComponentClass",
+      "HUDManagerComponent"
+    ]
+  },
+  {
+    "name": "UI_HUD_SelectionMenu",
+    "description": "",
+    "classes": [
+      "AIMessageSelectionMenuEntry",
+      "BaseScriptedSelectionMenuEntry",
+      "BaseSelectionMenu",
+      "BaseSelectionMenuEntry",
+      "ScriptedSelectionMenu"
+    ]
+  },
+  {
+    "name": "UserAction",
+    "description": "",
+    "classes": [
+      "BaseActionsManagerComponent",
+      "BaseActionsManagerComponentClass",
+      "BaseInteractionHandlerComponentClass",
+      "BaseInteractionHandlerComponent",
+      "BaseLightUserAction",
+      "BaseUserAction",
+      "CompartmentUserAction",
+      "DoorUserAction",
+      "ExtBaseInteractionHandlerComponentClass",
+      "ExtBaseInteractionHandlerComponent",
+      "ScriptedSignalUserAction",
+      "ScriptedUserAction",
+      "TurnOnUserAction",
+      "UserActionContext",
+      "ActionsManagerComponent",
+      "VehicleDoorUserAction"
+    ]
+  },
+  {
+    "name": "UserActions",
+    "description": "",
+    "classes": [
+      "RegionalActionsSystem"
+    ]
+  },
+  {
+    "name": "Utilities",
+    "description": "",
+    "classes": [
+      "LegacyCurve",
+      "MeshObjectVolumeCalculator"
+    ]
+  },
+  {
+    "name": "Vegetation",
+    "description": "",
+    "classes": [
+      "BaseTreeClass",
+      "BaseTree"
+    ]
+  },
+  {
+    "name": "Vehicle",
+    "description": "",
+    "classes": [
+      "AirplaneControllerComponentClass",
+      "AirplaneControllerComponent",
+      "BaseCompartmentManagerComponent",
+      "BaseCompartmentManagerComponentClass",
+      "BaseVehicle",
+      "BaseVehicleClass",
+      "BaseVehicleControllerComponentClass",
+      "BaseVehicleControllerComponent",
+      "CarControllerComponentClass",
+      "CarControllerComponent",
+      "CarControllerComponent_BClass",
+      "CarControllerComponent_B",
+      "CargoCompartmentSlot",
+      "CommonStateV1",
+      "CompartmentAccessibilityContext",
+      "EmissiveLightSurfaceSlot",
+      "ExtBaseCompartmentSlot",
+      "ForceStartEngineParams",
+      "HelicopterControllerComponentClass",
+      "HelicopterControllerComponent",
+      "MotorExhaustEffectComponentClass",
+      "MotorExhaustEffectComponent",
+      "PilotCompartmentSlot",
+      "TrackedControllerComponentClass",
+      "TrackedControllerComponent",
+      "TurretCompartmentSlot",
+      "VehicleBaseSimulationClass",
+      "VehicleBaseSimulation",
+      "VehicleFixedWingSimulationClass",
+      "VehicleFixedWingSimulation",
+      "VehicleHelicopterSimulationClass",
+      "VehicleHelicopterSimulation",
+      "VehicleTrackedSimulationClass",
+      "VehicleTrackedSimulation",
+      "VehicleWheeledSimulationClass",
+      "VehicleWheeledSimulation",
+      "VehicleWheeledSimulation_SA_BClass",
+      "VehicleWheeledSimulation_SA_B",
+      "VehicleWheelSound"
+    ]
+  },
+  {
+    "name": "Weapon",
+    "description": "",
+    "classes": [
+      "AttachmentSlotComponent",
+      "AttachmentSlotComponentClass",
+      "BallisticGenerationConfig",
+      "BallisticTable",
+      "BallisticTableArray",
+      "BaseCollimatorReticleColor",
+      "BaseCollimatorReticleInfo",
+      "BaseCollimatorSightsComponent",
+      "BaseCollimatorSightsComponentClass",
+      "BaseEjectorInterface",
+      "BaseFireMode",
+      "BaseMagazineComponent",
+      "BaseMagazineComponentClass",
+      "BaseMagazineWell",
+      "BaseMuzzleComponent",
+      "BaseMuzzleComponentClass",
+      "BaseSightsComponent",
+      "BaseSightsComponentClass",
+      "BaseWeaponAimModifier",
+      "BaseWeaponComponent",
+      "BaseWeaponComponentClass",
+      "BaseWeaponManagerComponentClass",
+      "BaseWeaponManagerComponent",
+      "BaseWeaponStatsManagerComponentClass",
+      "BaseWeaponStatsManagerComponent",
+      "CaseEjectingEffectComponentClass",
+      "CaseEjectingEffectComponent",
+      "CharacterGrenadeSlotComponentClass",
+      "CharacterGrenadeSlotComponent",
+      "CharacterHandWeaponSlotComponentClass",
+      "CharacterHandWeaponSlotComponent",
+      "CharacterWeaponManagerComponentClass",
+      "CharacterWeaponManagerComponent",
+      "CharacterWeaponSlotComponent",
+      "CharacterWeaponSlotComponentClass",
+      "GrenadeSlotComponentClass",
+      "GrenadeSlotComponent",
+      "MagazineAnimationComponent",
+      "MagazineAnimationComponentClass",
+      "MagazineComponent",
+      "MagazineComponentClass",
+      "MagazineConfig",
+      "MortarAnimationComponent",
+      "MortarAnimationComponentClass",
+      "MortarMuzzleComponent",
+      "MortarMuzzleComponentClass",
+      "MultiFireWeaponManagerComponentClass",
+      "MultiFireWeaponManagerComponent",
+      "MuzzleComponent",
+      "MuzzleComponentClass",
+      "MuzzleInMagComponent",
+      "MuzzleInMagComponentClass",
+      "RocketEjectorMuzzleComponent",
+      "RocketEjectorMuzzleComponentClass",
+      "ScriptedSightsComponentClass",
+      "ScriptedSightsComponent",
+      "ScriptedWeaponAimModifier",
+      "SightRangeInfo",
+      "SuppressorComponentClass",
+      "SuppressorComponent",
+      "SwayWeaponAimModifier",
+      "UGLAnimationComponent",
+      "UGLAnimationComponentClass",
+      "WeaponAnimationComponent",
+      "WeaponAnimationComponentClass",
+      "WeaponComponent",
+      "WeaponComponentClass",
+      "WeaponSlotComponent",
+      "WeaponSlotComponentClass",
+      "ZeroGeneratorAimModifier",
+      "ZeroingMarkInfo"
+    ]
+  },
+  {
+    "name": "Weapons",
+    "description": "",
+    "classes": [
+      "RecoilData",
+      "WeaponAimModifierContext"
+    ]
+  },
+  {
+    "name": "World",
+    "description": "",
+    "classes": [
+      "BaseTimeAndWeatherManagerEntityClass",
+      "BaseTimeAndWeatherManagerEntity",
+      "LocalWeatherSituation"
+    ]
+  },
+  {
+    "name": "WorldSystems",
+    "description": "",
+    "classes": [
+      "AICenterOfMassSystem",
+      "BehaviorTreeSystem",
+      "NavmeshSystem"
+    ]
+  },
+  {
+    "name": "Online",
+    "description": "",
+    "classes": [
+      "BlockedRoomPlayer"
+    ]
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "name": "Modded Behavior",
+  "description": "Override existing class behavior without replacing the original (damage, movement, stamina, etc.)",
+  "tags": ["modded", "override", "behavior", "balance"],
+  "scripts": [
+    {
+      "className": "{PREFIX}_BehaviorMod",
+      "scriptType": "modded",
+      "parentClass": "SCR_CharacterControllerComponent",
+      "methods": ["void OnInit(IEntity owner)"],
+      "description": "Modded behavior override"
+    }
+  ],
+  "prefabs": [],
+  "configs": [],
+  "instructions": "1. Choose the class you want to modify — use api_search to find it\n2. Change the parentClass to the actual class you want to mod\n3. Add override methods for the behaviors you want to change\n4. ALWAYS call super.MethodName() unless you want to completely replace the behavior\n5. Use [Attribute()] for configurable values so balance can be tweaked in Workbench\n6. IMPORTANT: modded classes apply globally — they affect ALL instances of the base class\n7. Test thoroughly, as modded classes can cause conflicts with other mods"
+}

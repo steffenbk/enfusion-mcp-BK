@@ -1,0 +1,24 @@
+{
+  "name": "Admin Tool",
+  "description": "Keybind-triggered admin commands (teleport, spawn, godmode, etc.)",
+  "tags": ["admin", "debug", "keybind", "commands", "server"],
+  "scripts": [
+    {
+      "className": "{PREFIX}_AdminComponent",
+      "scriptType": "component",
+      "parentClass": "ScriptComponent",
+      "methods": ["void ToggleGodMode()", "void TeleportToPosition(vector pos)", "void SpawnEntity(ResourceName prefab)"],
+      "description": "Admin tools component with keybind-triggered commands"
+    },
+    {
+      "className": "{PREFIX}_AdminKeyHandler",
+      "scriptType": "modded",
+      "parentClass": "SCR_PlayerController",
+      "methods": ["void EOnInit(IEntity owner)"],
+      "description": "Modded player controller to intercept admin keybinds"
+    }
+  ],
+  "prefabs": [],
+  "configs": [],
+  "instructions": "1. Edit the AdminComponent to implement your admin commands\n2. Add keybind checks in the AdminKeyHandler\n3. IMPORTANT: Add authority checks — verify the player has admin privileges before executing commands\n4. Use Rpc methods for server-authoritative commands (teleport, spawn)\n5. Attach the AdminComponent to the player controller prefab\n6. Test with host player in a local server"
+}

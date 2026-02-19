@@ -1,0 +1,37 @@
+{
+  "name": "Custom Faction",
+  "description": "New faction with characters, loadouts, and group configuration",
+  "tags": ["faction", "character", "loadout", "multiplayer"],
+  "scripts": [
+    {
+      "className": "{PREFIX}_FactionInit",
+      "scriptType": "basic",
+      "parentClass": "",
+      "methods": ["static void Init()", "static void RegisterFaction()"],
+      "description": "Faction initialization and registration"
+    },
+    {
+      "className": "{PREFIX}_LoadoutConfig",
+      "scriptType": "basic",
+      "parentClass": "",
+      "methods": ["static void GetDefaultLoadout()", "static array<ResourceName> GetWeapons()"],
+      "description": "Loadout configuration for the custom faction"
+    }
+  ],
+  "prefabs": [
+    {
+      "name": "{PREFIX}_FactionCharacter",
+      "prefabType": "character",
+      "parentPrefab": "",
+      "components": [],
+      "description": "Base character for the custom faction"
+    }
+  ],
+  "configs": [
+    {
+      "name": "{PREFIX}_Faction",
+      "content": "SCR_Faction {\n m_sKey \"{PREFIX}_faction\"\n m_sName \"{PREFIX} Faction\"\n m_Color \"0,100,200,255\"\n m_sFlagPath \"\"\n}"
+    }
+  ],
+  "instructions": "1. Edit the FactionInit script to set your faction key, name, and color\n2. Edit the LoadoutConfig to define weapons and equipment\n3. Create the character prefab with prefab_create\n4. Add your faction to the game mode's faction list in a modded SCR_BaseGameMode\n5. Test in Game Master by placing faction spawn points"
+}

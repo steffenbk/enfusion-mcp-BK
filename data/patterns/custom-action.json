@@ -1,0 +1,25 @@
+{
+  "name": "Custom Action",
+  "description": "Interactive object with a scripted UserAction (doors, switches, pickups)",
+  "tags": ["action", "interaction", "useraction", "props"],
+  "scripts": [
+    {
+      "className": "{PREFIX}_InteractAction",
+      "scriptType": "action",
+      "parentClass": "ScriptedUserAction",
+      "methods": [],
+      "description": "Custom interaction action"
+    }
+  ],
+  "prefabs": [
+    {
+      "name": "{PREFIX}_InteractObject",
+      "prefabType": "interactive",
+      "parentPrefab": "",
+      "components": [],
+      "description": "Interactive object with custom action"
+    }
+  ],
+  "configs": [],
+  "instructions": "1. Edit the InteractAction script to define what happens on interaction\n2. Customize CanBePerformedScript to control when the action is available\n3. Customize CanBeShownScript to control visibility\n4. Create the interactive prefab with a mesh and ActionsManagerComponent\n5. Add the action to the ActionsManagerComponent in the prefab\n6. Place the prefab in a world and test interaction"
+}
