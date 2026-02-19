@@ -4,13 +4,75 @@ MCP server for Arma Reforger / Enfusion engine modding. Create working mods from
 
 ## What It Does
 
-Connect this server to any MCP-compatible client and you can say things like:
+Connect this server to any MCP-compatible client and describe what you want:
 
 - *"Create a zombie survival game mode with waves of AI enemies"*
 - *"Add a custom faction with unique loadouts"*
 - *"Make a spawn system with weighted random positions"*
 
-The 12 MCP tools search 8,693 API classes, scaffold the addon, generate scripts/prefabs/configs, validate everything, and build it — all through conversation.
+12 MCP tools search 8,693 API classes, scaffold the addon, generate scripts/prefabs/configs, validate everything, and build it — all through conversation.
+
+## Installation
+
+### npx (no install)
+
+```bash
+npx -y enfusion-mcp
+```
+
+### Global install
+
+```bash
+npm install -g enfusion-mcp
+```
+
+### From source
+
+```bash
+git clone https://github.com/Articulated7/enfusion-mcp.git
+cd enfusion-mcp
+npm install
+npm run scrape        # Build the API index from local Workbench docs
+npm run build
+```
+
+## Setup
+
+### MCP Client Configuration
+
+Add to your MCP client config:
+
+```json
+{
+  "mcpServers": {
+    "enfusion-mcp": {
+      "command": "npx",
+      "args": ["-y", "enfusion-mcp"],
+      "env": {
+        "ENFUSION_PROJECT_PATH": "C:\\path\\to\\your\\mod"
+      }
+    }
+  }
+}
+```
+
+### Local Build
+
+If running from source, point your client at the compiled entry point:
+
+```json
+{
+  "mcpServers": {
+    "enfusion-mcp": {
+      "command": "node",
+      "args": ["C:\\path\\to\\enfusion-mcp\\dist\\index.js"],
+      "env": {
+        "ENFUSION_PROJECT_PATH": "C:\\path\\to\\your\\mod"
+      }
+    }
+  }
+}
+```
 
 ## Tools
 
@@ -29,62 +91,55 @@ The 12 MCP tools search 8,693 API classes, scaffold the addon, generate scripts/
 | `mod_validate` | Static validation (7 checks) without Workbench |
 | `mod_build` | Build addon via Workbench CLI |
 
-Plus 3 prompts (`create-mod`, `add-script`, `add-prefab`) and 3 resources (`enfusion://class/{name}`, `enfusion://pattern/{name}`, `enfusion://group/{name}`).
+Additionally exposes 3 prompts (`create-mod`, `add-script`, `add-prefab`) and 3 resources (`enfusion://class/{name}`, `enfusion://pattern/{name}`, `enfusion://group/{name}`).
 
-## Quick Start
+## Mod Patterns
 
-### MCP Client Configuration
+10 built-in templates for common mod types:
 
-Add to your MCP client config (e.g., `claude_desktop_config.json`):
+| Pattern | Description |
+|---------|-------------|
+| `game-mode` | Custom game mode with scoring and win conditions |
+| `custom-faction` | New faction with characters and loadouts |
+| `custom-action` | Interactive objects with UserAction |
+| `spawn-system` | Custom spawn manager with spawn points |
+| `custom-component` | Reusable ScriptComponent |
+| `modded-behavior` | Override existing class behavior |
+| `admin-tool` | Keybind-triggered admin commands |
+| `custom-vehicle` | New vehicle variant |
+| `weapon-reskin` | Modded weapon properties |
+| `hud-widget` | Custom HUD element |
 
-```json
-{
-  "mcpServers": {
-    "enfusion-mcp": {
-      "command": "npx",
-      "args": ["-y", "enfusion-mcp"],
-      "env": {
-        "ENFUSION_PROJECT_PATH": "C:\\path\\to\\your\\mod"
-      }
-    }
-  }
-}
+Example usage with `mod_create`:
+
+```
+Create a mod called "ZombieDefense" using the game-mode pattern
 ```
 
-### From Source
+## API Index
+
+Pre-built index of the Enfusion/Arma Reforger script API, scraped from Doxygen documentation:
+
+- **8,693 classes** — 812 Enfusion engine + 7,881 Arma Reforger
+- **157 API groups** — Entities, Components, Replication, etc.
+- **7 tutorial pages**
+- Full method signatures, parameters, descriptions, and inheritance trees
+
+To rebuild from your local Arma Reforger Tools installation:
 
 ```bash
-git clone https://github.com/Articulated7/enfusion-mcp.git
-cd enfusion-mcp
-npm install
-npm run scrape        # Build the API index from local Workbench docs
-npm run build
-```
-
-Then point your MCP client at the local build:
-
-```json
-{
-  "mcpServers": {
-    "enfusion-mcp": {
-      "command": "node",
-      "args": ["C:\\path\\to\\enfusion-mcp\\dist\\index.js"],
-      "env": {
-        "ENFUSION_PROJECT_PATH": "C:\\path\\to\\your\\mod"
-      }
-    }
-  }
-}
+npm run scrape          # Auto-detect source
+npm run scrape:local    # Force local zip files
 ```
 
 ## Configuration
 
-Settings are loaded in order (later overrides earlier):
+Settings are loaded in order (later sources override earlier):
 
 1. **Built-in defaults**
 2. **Local config file** — `enfusion-mcp.config.json` next to the package
 3. **User config** — `~/.enfusion-mcp/config.json`
-4. **Environment variables** — override everything
+4. **Environment variables**
 
 ### Environment Variables
 
@@ -105,46 +160,16 @@ Settings are loaded in order (later overrides earlier):
 }
 ```
 
-## API Index
-
-The server includes a pre-built index of the Enfusion/Arma Reforger script API scraped from Doxygen documentation:
-
-- **8,693 classes** (812 Enfusion engine + 7,881 Arma Reforger)
-- **157 API groups** (Entities, Components, Replication, etc.)
-- **7 tutorial pages**
-- Full method signatures, parameters, descriptions, and inheritance trees
-
-To rebuild the index from your local Arma Reforger Tools installation:
+## Development
 
 ```bash
-npm run scrape          # Auto-detect source
-npm run scrape:local    # Force local zip files
+npm run build          # Compile TypeScript
+npm test               # Run tests
+npm run test:watch     # Watch mode
+npm run dev            # Run from source with tsx
 ```
 
-## Mod Patterns
-
-10 built-in patterns for common mod types:
-
-| Pattern | Description |
-|---------|-------------|
-| `game-mode` | Custom game mode with scoring and win conditions |
-| `custom-faction` | New faction with characters and loadouts |
-| `custom-action` | Interactive objects with UserAction |
-| `spawn-system` | Custom spawn manager with spawn points |
-| `custom-component` | Reusable ScriptComponent |
-| `modded-behavior` | Override existing class behavior |
-| `admin-tool` | Keybind-triggered admin commands |
-| `custom-vehicle` | New vehicle variant |
-| `weapon-reskin` | Modded weapon properties |
-| `hud-widget` | Custom HUD element |
-
-Use with `mod_create`:
-
-```
-Create a mod called "ZombieDefense" using the game-mode pattern
-```
-
-## Project Structure
+### Project Structure
 
 ```
 enfusion-mcp/
@@ -169,19 +194,10 @@ enfusion-mcp/
   scripts/                # CLI scripts (scraper)
 ```
 
-## Development
-
-```bash
-npm run build          # Compile TypeScript
-npm test               # Run tests
-npm run test:watch     # Watch mode
-npm run dev            # Run from source with tsx
-```
-
 ## Requirements
 
 - **Node.js 20+**
-- **Arma Reforger Tools** (Steam) — needed for `mod_build` and `scrape:local`. Everything else works without it.
+- **Arma Reforger Tools** (Steam) — required for `mod_build` and `scrape:local`. All other tools work without it.
 
 ## License
 
