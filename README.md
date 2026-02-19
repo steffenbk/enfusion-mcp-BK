@@ -36,11 +36,34 @@ npm run scrape        # Build the API index from local Workbench docs
 npm run build
 ```
 
-## Setup
+## Connecting to Claude
 
-### MCP Client Configuration
+### Claude Code (CLI)
 
-Add to your MCP client config:
+The fastest way to get started. Run one command:
+
+```bash
+claude mcp add enfusion-mcp -- npx -y enfusion-mcp
+```
+
+Or if you installed globally:
+
+```bash
+claude mcp add enfusion-mcp -- enfusion-mcp
+```
+
+To set an environment variable (e.g. your mod project path):
+
+```bash
+claude mcp add enfusion-mcp -e ENFUSION_PROJECT_PATH=/path/to/your/mod -- npx -y enfusion-mcp
+```
+
+After adding, restart Claude Code or start a new session. Verify with `/mcp` — you should see `enfusion-mcp` listed with 12 tools.
+
+### Claude Desktop
+
+1. Open Claude Desktop settings: **Settings > Developer > Edit Config**
+2. This opens `claude_desktop_config.json`. Add the server:
 
 ```json
 {
@@ -56,9 +79,18 @@ Add to your MCP client config:
 }
 ```
 
-### Local Build
+3. Save the file and restart Claude Desktop.
+4. Look for the hammer icon in the chat input — click it to confirm `enfusion-mcp` tools are available.
 
-If running from source, point your client at the compiled entry point:
+> **Note:** `ENFUSION_PROJECT_PATH` is optional. If omitted, tools like `project_browse` and `mod_create` will ask for a path each time.
+
+### Other MCP Clients
+
+Any MCP-compatible client (Cursor, Windsurf, Continue, etc.) can connect using the same JSON config shown above. Consult your client's docs for where to place MCP server configuration.
+
+### From Source (any client)
+
+If running from a local clone instead of npm, point your client at the compiled entry point:
 
 ```json
 {
@@ -73,6 +105,16 @@ If running from source, point your client at the compiled entry point:
   }
 }
 ```
+
+### Verify It Works
+
+Once connected, try asking:
+
+- *"Search the API for SCR_BaseGameMode"*
+- *"Create a mod called ZombieDefense using the game-mode pattern"*
+- *"Validate my mod for errors"*
+
+If the tools respond, you're all set.
 
 ## Tools
 
