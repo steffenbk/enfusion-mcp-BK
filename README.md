@@ -71,12 +71,15 @@ Or use the guided prompts for structured workflows:
 
 Claude will:
 
-1. **Research** the Enfusion API (8,693 indexed classes) to find the right parent classes and methods
-2. **Scaffold** the full addon — `.gproj`, scripts, prefabs, configs, UI layouts
-3. **Launch Workbench** if it's not already running
-4. **Load the project**, reload scripts, register resources
-5. **Validate and build** the addon
-6. **Enter play mode** so you can test in-game
+1. **Assess complexity** — simple mods are built in one pass; large mods (e.g., a DayZ-style overhaul) get broken into phases with a plan you approve before any code is written
+2. **Research** the Enfusion API (8,693 indexed classes) to find the right parent classes and methods
+3. **Scaffold** the full addon — `.gproj`, scripts, prefabs, configs, UI layouts
+4. **Launch Workbench** if it's not already running
+5. **Load the project**, reload scripts, register resources
+6. **Validate and build** the addon
+7. **Enter play mode** so you can test in-game
+
+For complex mods, a `MODPLAN.md` is written to the project root tracking the full vision, completed phases, and what's next — so any future session can pick up right where the last one left off via `/modify-mod`.
 
 ## Tools
 
