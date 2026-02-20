@@ -39,9 +39,13 @@ export function registerWikiSearch(server: McpServer, searchEngine: SearchEngine
       const parts = results.map((page) => {
         const lines: string[] = [];
         lines.push(`## ${page.title}`);
-        lines.push(
-          `Source: ${page.source === "enfusion" ? "Enfusion Engine" : "Arma Reforger"} docs`
-        );
+        const sourceLabel =
+          page.source === "bistudio-wiki"
+            ? "BI Community Wiki"
+            : page.source === "enfusion"
+              ? "Enfusion Engine docs"
+              : "Arma Reforger docs";
+        lines.push(`Source: ${sourceLabel}${page.url ? ` — ${page.url}` : ""}`);
         lines.push("");
 
         // For short pages show everything, for long ones show a truncated excerpt

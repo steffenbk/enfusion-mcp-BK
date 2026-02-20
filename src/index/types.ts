@@ -53,10 +53,11 @@ export interface HierarchyNode {
   children: string[];
 }
 
-/** A tutorial/guide page from Doxygen docs */
+/** A tutorial/guide page from Doxygen or BI Community Wiki */
 export interface WikiPage {
   title: string;
-  source: "enfusion" | "arma";
+  source: "enfusion" | "arma" | "bistudio-wiki";
   content: string;
-  filename: string;
+  filename?: string;
+  url?: string;
 }
