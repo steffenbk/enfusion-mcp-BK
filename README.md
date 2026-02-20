@@ -179,6 +179,10 @@ npm run build
 npm test         # 163 tests
 ```
 
+## Documentation
+
+Full documentation is on the [GitHub Wiki](https://github.com/Articulated7/enfusion-mcp/wiki).
+
 ## License
 
 MIT
