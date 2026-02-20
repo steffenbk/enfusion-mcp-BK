@@ -160,11 +160,16 @@ export class WorkbenchClient {
     if (resolvedGproj) {
       args.push("-gproj", resolvedGproj);
     }
-    logger.info(`Launching Workbench: ${exePath}${args.length ? ` ${args.join(" ")}` : ""}`);
+
+    // Use the game install directory as CWD so Workbench finds base game addons
+    // (data/ArmaReforger.gproj with GUID 58D0FB3206B6F859) via ./addons resolution.
+    const cwd = this.findGameDir() || dirname(exePath);
+
+    logger.info(`Launching Workbench: ${exePath}${args.length ? ` ${args.join(" ")}` : ""} (cwd: ${cwd})`);
     const proc = spawn(exePath, args, {
       detached: true,
       stdio: "ignore",
-      cwd: dirname(exePath),
+      cwd,
     });
     proc.unref();
 
@@ -209,6 +214,31 @@ export class WorkbenchClient {
       logger.info(`Using fallback gproj to skip launcher: ${handlerGproj}`);
       return handlerGproj;
     }
+    return null;
+  }
+
+  /**
+   * Derive the Arma Reforger game install directory from the Workbench Tools path.
+   * Workbench is at `.../Arma Reforger Tools`, game is sibling `.../Arma Reforger`.
+   * The game dir has `addons/data/ArmaReforger.gproj` (GUID 58D0FB3206B6F859).
+   */
+  private findGameDir(): string | null {
+    const toolsDir = this.config!.workbenchPath;
+    const gameDir = resolve(toolsDir, "..", "Arma Reforger");
+    if (existsSync(join(gameDir, "addons"))) {
+      logger.info(`Using game directory as CWD: ${gameDir}`);
+      return gameDir;
+    }
+    // Try common Steam alternative paths
+    const steamCommon = dirname(toolsDir);
+    for (const candidate of ["ArmaReforger", "Arma Reforger"]) {
+      const altPath = join(steamCommon, candidate);
+      if (existsSync(join(altPath, "addons"))) {
+        logger.info(`Using game directory as CWD: ${altPath}`);
+        return altPath;
+      }
+    }
+    logger.warn("Could not find Arma Reforger game directory. Workbench may fail to resolve base game addon.");
     return null;
   }
 
