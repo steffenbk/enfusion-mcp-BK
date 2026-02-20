@@ -95,11 +95,10 @@ This file is the handoff document. A future Claude instance with zero context wi
 8. Use **mod_validate** to check for structural issues.
 
 9. **Workbench Setup** (MANDATORY — do not skip, do not tell the user to do this):
-   a. **wb_launch** — Start Workbench (auto-detects if already running)
-   b. **wb_projects** (action: "open") — Load the .gproj
+   a. **wb_launch** with \`gprojPath\` set to the addon's .gproj file — this skips the Workbench launcher and opens the project directly in the World Editor
+   b. **wb_reload** (target: "scripts") — Compile all scripts
    c. **wb_resources** (action: "register") — Register every new prefab, config, and layout file
-   d. **wb_reload** (target: "scripts") — Compile all scripts
-   e. If compilation fails, fix with **project_write** and reload again
+   d. If compilation fails, fix with **project_write** and reload again
 
 10. **wb_play** — Launch the mod in-game to test. Use **wb_stop** to return to editor.
 

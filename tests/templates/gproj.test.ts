@@ -42,7 +42,7 @@ describe("generateGproj", () => {
     expect(deps!.values).toContain("BBBBBBBBBBBBBBBB");
   });
 
-  it("includes script configurations by default", () => {
+  it("includes platform configurations", () => {
     const text = generateGproj({ name: "TestMod" });
     const node = parse(text);
     const configs = node.children.find((c) => c.type === "Configurations");
@@ -50,13 +50,13 @@ describe("generateGproj", () => {
     const pcConfig = configs!.children.find((c) => c.id === "PC");
     expect(pcConfig).toBeDefined();
     expect(pcConfig!.type).toBe("GameProjectConfig");
+    const headlessConfig = configs!.children.find((c) => c.id === "HEADLESS");
+    expect(headlessConfig).toBeDefined();
   });
 
-  it("skips script configurations when disabled", () => {
-    const text = generateGproj({ name: "TestMod", includeScriptConfig: false });
-    const node = parse(text);
-    const configs = node.children.find((c) => c.type === "Configurations");
-    expect(configs).toBeUndefined();
+  it("does not include ScriptProjectManagerSettings", () => {
+    const text = generateGproj({ name: "TestMod" });
+    expect(text).not.toContain("ScriptProjectManagerSettings");
   });
 
   it("contains GameProject as root", () => {

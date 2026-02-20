@@ -54,11 +54,10 @@ Follow this workflow — every step is mandatory:
 6. **Validate** — Use **mod_validate** to check for issues.
 
 7. **Workbench Setup** (MANDATORY — do not skip, do not tell the user to do this):
-   a. **wb_launch** — Start Workbench (auto-detects if already running)
-   b. **wb_projects** (action: "open") — Load the .gproj if not already loaded
+   a. **wb_launch** with \`gprojPath\` set to the addon's .gproj file — this skips the Workbench launcher and opens the project directly in the World Editor
+   b. **wb_reload** (target: "scripts") — Compile all scripts
    c. **wb_resources** (action: "register") — Register any new prefabs, configs, or layouts
-   d. **wb_reload** (target: "scripts") — Compile all scripts
-   e. If compilation fails, fix and reload again
+   d. If compilation fails, fix and reload again
 
 8. **wb_play** — Test the changes in-game. Use **wb_stop** to return to editor.
 

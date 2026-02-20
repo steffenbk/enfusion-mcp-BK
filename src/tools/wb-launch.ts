@@ -20,9 +20,15 @@ export function registerWbLaunch(
           .describe(
             "Maximum seconds to wait for Workbench to start and NET API to respond (default 60)."
           ),
+        gprojPath: z
+          .string()
+          .optional()
+          .describe(
+            "Path to a .gproj file to open directly. Skips the Workbench launcher screen and goes straight into the World Editor. If omitted, Workbench opens to its launcher."
+          ),
       },
     },
-    async () => {
+    async ({ gprojPath }) => {
       try {
         const alreadyRunning = await client.ping();
         if (alreadyRunning) {
@@ -36,7 +42,7 @@ export function registerWbLaunch(
           };
         }
 
-        await client.ensureRunning();
+        await client.ensureRunning(gprojPath);
 
         return {
           content: [

@@ -89,8 +89,9 @@ export class WorkbenchClient {
   /**
    * Ensure Workbench is running. Installs handler scripts, launches exe,
    * and waits for NET API. Safe to call concurrently — deduplicates launches.
+   * @param gprojPath Optional .gproj file path to open directly (skips launcher).
    */
-  async ensureRunning(): Promise<void> {
+  async ensureRunning(gprojPath?: string): Promise<void> {
     if (!this.config) {
       throw new WorkbenchError("No config provided — cannot auto-launch Workbench.", "LAUNCH_FAILED");
     }
@@ -100,7 +101,7 @@ export class WorkbenchClient {
     }
 
     this.launching = true;
-    this.launchPromise = this.launchWorkbench();
+    this.launchPromise = this.launchWorkbench(gprojPath);
 
     try {
       await this.launchPromise;
@@ -131,7 +132,7 @@ export class WorkbenchClient {
   // Private
   // ---------------------------------------------------------------------------
 
-  private async launchWorkbench(): Promise<void> {
+  private async launchWorkbench(gprojPath?: string): Promise<void> {
     // 1. Install handler scripts
     this.installHandlerScripts();
 
@@ -153,9 +154,14 @@ export class WorkbenchClient {
       );
     }
 
-    // 4. Spawn
-    logger.info(`Launching Workbench: ${exePath}`);
-    const proc = spawn(exePath, [], {
+    // 4. Spawn with -gproj to skip the launcher
+    const resolvedGproj = gprojPath || this.findFallbackGproj();
+    const args: string[] = [];
+    if (resolvedGproj) {
+      args.push("-gproj", resolvedGproj);
+    }
+    logger.info(`Launching Workbench: ${exePath}${args.length ? ` ${args.join(" ")}` : ""}`);
+    const proc = spawn(exePath, args, {
       detached: true,
       stdio: "ignore",
       cwd: dirname(exePath),
@@ -186,6 +192,23 @@ export class WorkbenchClient {
     const rootPath = join(this.config!.workbenchPath, WORKBENCH_EXE);
     if (existsSync(rootPath)) return rootPath;
 
+    return null;
+  }
+
+  /**
+   * Find a .gproj to pass via -gproj so Workbench skips the launcher.
+   * Uses the EnfusionMCP handler addon (always installed before launch).
+   */
+  private findFallbackGproj(): string | null {
+    const handlerGproj = join(
+      this.config!.projectPath,
+      HANDLER_FOLDER,
+      `${HANDLER_FOLDER}.gproj`
+    );
+    if (existsSync(handlerGproj)) {
+      logger.info(`Using fallback gproj to skip launcher: ${handlerGproj}`);
+      return handlerGproj;
+    }
     return null;
   }
 
@@ -221,7 +244,6 @@ export class WorkbenchClient {
         generateGproj({
           name: HANDLER_FOLDER,
           title: "EnfusionMCP Handler Scripts",
-          includeScriptConfig: true,
         }),
         "utf-8"
       );
