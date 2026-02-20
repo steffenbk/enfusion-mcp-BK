@@ -1,245 +1,159 @@
 # enfusion-mcp
 
-MCP server for Arma Reforger / Enfusion engine modding. Create working mods from natural language — no modding experience required.
+MCP server for Arma Reforger modding. Describe what you want to build, and Claude handles everything — API research, code generation, project scaffolding, Workbench control, and in-editor testing. Zero modding experience required.
 
-## What It Does
+## Install
 
-Connect this server to any MCP-compatible client and describe what you want:
-
-- *"Create a zombie survival game mode with waves of AI enemies"*
-- *"Add a custom faction with unique loadouts"*
-- *"Make a spawn system with weighted random positions"*
-
-12 MCP tools search 8,693 API classes, scaffold the addon, generate scripts/prefabs/configs, validate everything, and build it — all through conversation.
-
-## Installation
-
-### npx (no install)
+### Claude Code
 
 ```bash
-npx -y enfusion-mcp
+claude mcp add --scope user enfusion-mcp -- npx -y enfusion-mcp
 ```
 
-### Global install
-
-```bash
-npm install -g enfusion-mcp
-```
-
-### From source
-
-```bash
-git clone https://github.com/Articulated7/enfusion-mcp.git
-cd enfusion-mcp
-npm install
-npm run scrape        # Build the API index from local Workbench docs
-npm run build
-```
-
-## Connecting to Claude
-
-### Claude Code (CLI)
-
-The fastest way to get started. Run one command:
-
-```bash
-claude mcp add enfusion-mcp -- npx -y enfusion-mcp
-```
-
-Or if you installed globally:
-
-```bash
-claude mcp add enfusion-mcp -- enfusion-mcp
-```
-
-To set an environment variable (e.g. your mod project path):
-
-```bash
-claude mcp add enfusion-mcp -e ENFUSION_PROJECT_PATH=/path/to/your/mod -- npx -y enfusion-mcp
-```
-
-After adding, restart Claude Code or start a new session. Verify with `/mcp` — you should see `enfusion-mcp` listed with 12 tools.
+Restart Claude Code. Verify with `/mcp`.
 
 ### Claude Desktop
 
-1. Open Claude Desktop settings: **Settings > Developer > Edit Config**
-2. This opens `claude_desktop_config.json`. Add the server:
+Add to your `claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
     "enfusion-mcp": {
       "command": "npx",
-      "args": ["-y", "enfusion-mcp"],
-      "env": {
-        "ENFUSION_PROJECT_PATH": "C:\\path\\to\\your\\mod"
-      }
+      "args": ["-y", "enfusion-mcp"]
     }
   }
 }
 ```
 
-3. Save the file and restart Claude Desktop.
-4. Look for the hammer icon in the chat input — click it to confirm `enfusion-mcp` tools are available.
+### Workbench Plugin
 
-> **Note:** `ENFUSION_PROJECT_PATH` is optional. If omitted, tools like `project_browse` and `mod_create` will ask for a path each time.
+The live Workbench tools (`wb_*`) require handler scripts running inside Workbench. These ship with the package in `mod/Scripts/WorkbenchGame/EnfusionMCP/` and are installed automatically when Claude launches Workbench via `wb_launch`.
 
-### Other MCP Clients
+## Usage
 
-Any MCP-compatible client (Cursor, Windsurf, Continue, etc.) can connect using the same JSON config shown above. Consult your client's docs for where to place MCP server configuration.
+Just ask Claude to make a mod:
 
-### From Source (any client)
+- *"Create a HUD widget that shows player health and stamina"*
+- *"Make a zombie survival game mode with wave spawning"*
+- *"Create a custom faction called CSAT with desert camo soldiers"*
+- *"Add an interactive object that heals the player when used"*
+- *"Override the damage system to add armor mechanics"*
 
-If running from a local clone instead of npm, point your client at the compiled entry point:
+Or use the guided prompts for structured workflows:
 
-```json
-{
-  "mcpServers": {
-    "enfusion-mcp": {
-      "command": "node",
-      "args": ["C:\\path\\to\\enfusion-mcp\\dist\\index.js"],
-      "env": {
-        "ENFUSION_PROJECT_PATH": "C:\\path\\to\\your\\mod"
-      }
-    }
-  }
-}
-```
+| Prompt | Description |
+|--------|-------------|
+| `/create-mod` | Full guided mod creation — from idea to built addon |
+| `/modify-mod` | Modify or extend an existing mod project |
 
-### Verify It Works
+Claude will:
 
-Once connected, try asking:
-
-- *"Search the API for SCR_BaseGameMode"*
-- *"Create a mod called ZombieDefense using the game-mode pattern"*
-- *"Validate my mod for errors"*
-
-If the tools respond, you're all set.
+1. **Research** the Enfusion API (8,693 indexed classes) to find the right parent classes and methods
+2. **Scaffold** the full addon — `.gproj`, scripts, prefabs, configs, UI layouts
+3. **Launch Workbench** if it's not already running
+4. **Load the project**, reload scripts, register resources
+5. **Validate and build** the addon
+6. **Enter play mode** so you can test in-game
 
 ## Tools
 
-| Tool | Description |
+### Offline Tools
+
+Work without Workbench running — API search, mod scaffolding, code generation, validation, and building.
+
+| Tool | What it does |
 |------|-------------|
-| `api_search` | Search Enfusion/Arma Reforger script API (8,693 classes, methods, inheritance) |
-| `wiki_search` | Search tutorial and guide content |
-| `project_browse` | List files in a Workbench project directory |
-| `project_read` | Read files from the project |
-| `project_write` | Write/update files with path traversal protection |
-| `mod_create` | Scaffold a complete addon (directories, .gproj, pattern templates) |
-| `script_create` | Generate Enforce Script (.c) files (7 script types) |
-| `prefab_create` | Generate Entity Template (.et) prefabs (7 prefab types) |
-| `config_create` | Generate config (.conf) files (factions, missions, catalogs) |
+| `api_search` | Search 8,693 Enfusion/Arma Reforger API classes and methods |
+| `wiki_search` | Search tutorial and guide content about Enfusion concepts |
+| `project_browse` | List files in a mod project directory |
+| `project_read` | Read any project file |
+| `project_write` | Write or update project files |
+| `mod_create` | Scaffold a complete addon with directory structure and `.gproj` |
+| `script_create` | Generate Enforce Script (`.c`) files — 7 types: component, gamemode, action, entity, manager, modded, basic |
+| `prefab_create` | Generate Entity Template (`.et`) prefabs — 7 types: character, vehicle, weapon, spawnpoint, gamemode, interactive, generic |
+| `layout_create` | Generate UI layout (`.layout`) files — 5 types: hud, menu, dialog, list, custom |
+| `config_create` | Generate config files — factions, missions, entity catalogs, editor placeables |
 | `server_config` | Generate dedicated server config for local testing |
-| `mod_validate` | Static validation (7 checks) without Workbench |
-| `mod_build` | Build addon via Workbench CLI |
+| `mod_validate` | Validate project structure, scripts, prefabs, configs, and naming |
+| `mod_build` | Build the addon using the Workbench CLI |
 
-Additionally exposes 3 prompts (`create-mod`, `add-script`, `add-prefab`) and 3 resources (`enfusion://class/{name}`, `enfusion://pattern/{name}`, `enfusion://group/{name}`).
+### Live Workbench Tools
 
-## Mod Patterns
+Control a running Workbench instance over TCP. Requires the handler scripts installed (see setup above).
 
-10 built-in templates for common mod types:
+| Tool | What it does |
+|------|-------------|
+| `wb_launch` | Start Workbench if not running, wait for NET API |
+| `wb_connect` | Test connection to Workbench |
+| `wb_state` | Full state snapshot — mode, world, entity count, selection |
+| `wb_play` | Switch to game mode (Play in Editor) |
+| `wb_stop` | Return to edit mode |
+| `wb_save` | Save the current world |
+| `wb_undo_redo` | Undo or redo the last action |
+| `wb_open_resource` | Open a resource in its editor |
+| `wb_reload` | Reload scripts or plugins without restarting |
+| `wb_execute_action` | Run any Workbench menu action by path |
+| `wb_entity_create` | Create entity from prefab at a position |
+| `wb_entity_delete` | Delete entity by name |
+| `wb_entity_list` | List and search entities in the world |
+| `wb_entity_inspect` | Get entity details — properties, components, children |
+| `wb_entity_modify` | Move, rotate, rename, reparent, set properties |
+| `wb_entity_select` | Select, deselect, clear, get current selection |
+| `wb_component` | Add, remove, list entity components |
+| `wb_terrain` | Query terrain height and world bounds |
+| `wb_layers` | Create, delete, rename layers, set visibility/active |
+| `wb_resources` | Register resources, rebuild database |
+| `wb_prefabs` | Create templates, save, GUID lookup |
+| `wb_clipboard` | Copy, cut, paste, duplicate entities |
+| `wb_script_editor` | Read/write lines in the open script file |
+| `wb_localization` | String table CRUD for localization |
+| `wb_projects` | List loaded projects, open `.gproj` files |
+| `wb_validate` | Material and texture validation |
 
-| Pattern | Description |
-|---------|-------------|
-| `game-mode` | Custom game mode with scoring and win conditions |
-| `custom-faction` | New faction with characters and loadouts |
-| `custom-action` | Interactive objects with UserAction |
-| `spawn-system` | Custom spawn manager with spawn points |
-| `custom-component` | Reusable ScriptComponent |
-| `modded-behavior` | Override existing class behavior |
-| `admin-tool` | Keybind-triggered admin commands |
-| `custom-vehicle` | New vehicle variant |
-| `weapon-reskin` | Modded weapon properties |
-| `hud-widget` | Custom HUD element |
+### Mod Patterns
 
-Example usage with `mod_create`:
+10 built-in templates for `mod_create`:
 
-```
-Create a mod called "ZombieDefense" using the game-mode pattern
-```
+`game-mode` `custom-faction` `custom-action` `spawn-system` `custom-component` `modded-behavior` `admin-tool` `custom-vehicle` `weapon-reskin` `hud-widget`
 
-## API Index
+### MCP Resources
 
-Pre-built index of the Enfusion/Arma Reforger script API, scraped from Doxygen documentation:
-
-- **8,693 classes** — 812 Enfusion engine + 7,881 Arma Reforger
-- **157 API groups** — Entities, Components, Replication, etc.
-- **7 tutorial pages**
-- Full method signatures, parameters, descriptions, and inheritance trees
-
-To rebuild from your local Arma Reforger Tools installation:
-
-```bash
-npm run scrape          # Auto-detect source
-npm run scrape:local    # Force local zip files
-```
+| URI | Description |
+|-----|-------------|
+| `enfusion://class/{className}` | Full class docs with inheritance, methods, ancestors/descendants |
+| `enfusion://pattern/{patternName}` | Mod pattern definition with all templates |
+| `enfusion://group/{groupName}` | API group with class list |
 
 ## Configuration
 
-Settings are loaded in order (later sources override earlier):
+All optional. Sensible defaults are used when nothing is set.
 
-1. **Built-in defaults**
-2. **Local config file** — `enfusion-mcp.config.json` next to the package
-3. **User config** — `~/.enfusion-mcp/config.json`
-4. **Environment variables**
-
-### Environment Variables
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `ENFUSION_PROJECT_PATH` | Default mod project directory | *(none)* |
+| Environment Variable | Description | Default |
+|---------------------|-------------|---------|
+| `ENFUSION_PROJECT_PATH` | Default mod output directory | `~/Documents/My Games/ArmaReforgerWorkbench/addons` |
 | `ENFUSION_WORKBENCH_PATH` | Path to Arma Reforger Tools | `C:\Program Files (x86)\Steam\steamapps\common\Arma Reforger Tools` |
-| `ENFUSION_MCP_DATA_DIR` | Path to scraped API data | `./data` |
+| `ENFUSION_WORKBENCH_HOST` | NET API host | `127.0.0.1` |
+| `ENFUSION_WORKBENCH_PORT` | NET API port | `5775` |
 
-### Config File
-
-```json
-{
-  "workbenchPath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Arma Reforger Tools",
-  "projectPath": "C:\\Users\\you\\Documents\\My Games\\ArmaReforger\\addons\\MyMod",
-  "dataDir": "./data",
-  "patternsDir": "./data/patterns"
-}
-```
-
-## Development
-
-```bash
-npm run build          # Compile TypeScript
-npm test               # Run tests
-npm run test:watch     # Watch mode
-npm run dev            # Run from source with tsx
-```
-
-### Project Structure
-
-```
-enfusion-mcp/
-  src/
-    index.ts              # Entry point (stdio MCP server)
-    server.ts             # Tool/prompt/resource registration
-    config.ts             # Multi-layer config loading
-    formats/              # Enfusion text serialization parser
-    templates/            # Code generators (script, prefab, config, etc.)
-    tools/                # MCP tool implementations
-    prompts/              # MCP prompt definitions
-    resources/            # MCP resource templates
-    index/                # Search engine + type definitions
-    patterns/             # Pattern library loader
-    scraper/              # Doxygen HTML scraper
-    utils/                # Logger, path validation
-  data/
-    api/                  # Scraped class data (~44 MB JSON)
-    wiki/                 # Tutorial pages
-    patterns/             # 10 mod pattern definitions
-  tests/                  # Vitest test suite
-  scripts/                # CLI scripts (scraper)
-```
+Config can also be loaded from `~/.enfusion-mcp/config.json`. Environment variables take priority.
 
 ## Requirements
 
 - **Node.js 20+**
-- **Arma Reforger Tools** (Steam) — required for `mod_build` and `scrape:local`. All other tools work without it.
+- **Arma Reforger Tools** (Steam) — needed for `mod_build` and all `wb_*` tools
+
+## Development
+
+```bash
+git clone https://github.com/Articulated7/enfusion-mcp.git
+cd enfusion-mcp
+npm install
+npm run scrape   # Build API index from Workbench docs
+npm run build
+npm test         # 163 tests
+```
 
 ## License
 

@@ -220,12 +220,7 @@ export function registerModCreate(
         lines.push("  UI/");
         lines.push("  Worlds/");
         lines.push("");
-        lines.push("### Next Steps");
-        lines.push("1. Use `script_create` to add scripts to the mod");
-        lines.push("2. Use `prefab_create` to add prefabs");
-        lines.push("3. Use `config_create` for faction configs, mission headers, or entity catalogs");
-        lines.push("4. Use `server_config` to generate a test server configuration");
-        lines.push("5. Open the .gproj in Workbench to compile and test");
+        lines.push("Addon scaffold is ready. Proceeding with file generation and Workbench integration automatically.");
 
         if (patternName) {
           const patternDef = patterns.get(patternName);

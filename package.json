@@ -1,13 +1,14 @@
 {
   "name": "enfusion-mcp",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "type": "module",
   "description": "MCP server for Arma Reforger / Enfusion engine modding — create mods from natural language",
   "bin": {
     "enfusion-mcp": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "npm run clean && tsc -p tsconfig.build.json",
     "dev": "tsx src/index.ts",
     "scrape": "tsx scripts/scrape.ts",
     "scrape:remote": "tsx scripts/scrape.ts --source remote",
@@ -35,6 +36,7 @@
   "files": [
     "dist",
     "data",
+    "mod",
     "README.md",
     "LICENSE"
   ],

@@ -146,9 +146,12 @@ function generateModded(className: string, parent: string, methods?: string[]): 
 
   if (methods && methods.length > 0) {
     for (const method of methods) {
-      lines.push(`  override ${method}`);
+      const clean = stripOverride(method);
+      const name = extractMethodName(clean);
+      const params = extractParamNames(clean);
+      lines.push(`  override ${clean}`);
       lines.push("  {");
-      lines.push(`    super.${extractMethodName(method)}();`);
+      lines.push(`    super.${name}(${params});`);
       lines.push("  }");
       lines.push("");
     }
@@ -170,7 +173,10 @@ function generateComponent(className: string, parent: string, methods?: string[]
   lines.push("");
 
   const methodList = methods?.length
-    ? methods.map((m) => ({ signature: `override ${m}`, body: `    // TODO: implement ${extractMethodName(m)}` }))
+    ? methods.map((m) => {
+        const clean = stripOverride(m);
+        return { signature: `override ${clean}`, body: `    // TODO: implement ${extractMethodName(clean)}` };
+      })
     : COMPONENT_METHODS;
 
   for (const m of methodList) {
@@ -193,7 +199,12 @@ function generateGamemode(className: string, parent: string, methods?: string[])
   lines.push("");
 
   const methodList = methods?.length
-    ? methods.map((m) => ({ signature: `override ${m}`, body: `    super.${extractMethodName(m)}();\n    // TODO: implement` }))
+    ? methods.map((m) => {
+        const clean = stripOverride(m);
+        const name = extractMethodName(clean);
+        const params = extractParamNames(clean);
+        return { signature: `override ${clean}`, body: `    super.${name}(${params});\n    // TODO: implement` };
+      })
     : GAMEMODE_METHODS;
 
   for (const m of methodList) {
@@ -214,7 +225,10 @@ function generateAction(className: string, parent: string, methods?: string[]): 
   lines.push("{");
 
   const methodList = methods?.length
-    ? methods.map((m) => ({ signature: `override ${m}`, body: `    // TODO: implement ${extractMethodName(m)}` }))
+    ? methods.map((m) => {
+        const clean = stripOverride(m);
+        return { signature: `override ${clean}`, body: `    // TODO: implement ${extractMethodName(clean)}` };
+      })
     : ACTION_METHODS;
 
   for (const m of methodList) {
@@ -237,7 +251,10 @@ function generateEntity(className: string, parent: string, methods?: string[]): 
   lines.push("");
 
   const methodList = methods?.length
-    ? methods.map((m) => ({ signature: `override ${m}`, body: `    // TODO: implement ${extractMethodName(m)}` }))
+    ? methods.map((m) => {
+        const clean = stripOverride(m);
+        return { signature: `override ${clean}`, body: `    // TODO: implement ${extractMethodName(clean)}` };
+      })
     : ENTITY_METHODS;
 
   for (const m of methodList) {
@@ -291,8 +308,9 @@ function generateBasic(className: string, parent: string, methods?: string[]): s
 
   if (methods && methods.length > 0) {
     for (const method of methods) {
+      const clean = stripOverride(method);
       const keyword = parent ? "override " : "";
-      lines.push(`  ${keyword}${method}`);
+      lines.push(`  ${keyword}${clean}`);
       lines.push("  {");
       lines.push("    // TODO: implement");
       lines.push("  }");
@@ -307,10 +325,33 @@ function generateBasic(className: string, parent: string, methods?: string[]): s
   return lines;
 }
 
+/** Strip leading "override" keyword if already present */
+function stripOverride(sig: string): string {
+  return sig.replace(/^\s*override\s+/, "");
+}
+
 /** Extract the method name from a signature like "void OnInit(int x)" → "OnInit" */
 function extractMethodName(sig: string): string {
-  const match = sig.match(/(\w+)\s*\(/);
-  return match ? match[1] : sig;
+  const clean = stripOverride(sig);
+  const match = clean.match(/(\w+)\s*\(/);
+  return match ? match[1] : clean;
+}
+
+/** Extract parameter names from a signature for super forwarding.
+ *  "void OnDamage(float damage, int type)" → "damage, type"
+ *  "void OnInit()" → ""
+ */
+function extractParamNames(sig: string): string {
+  const match = sig.match(/\(([^)]*)\)/);
+  if (!match || !match[1].trim()) return "";
+  return match[1]
+    .split(",")
+    .map((p) => {
+      // Each param is like "float damage" or "IEntity owner" — take the last word
+      const parts = p.trim().split(/\s+/);
+      return parts[parts.length - 1];
+    })
+    .join(", ");
 }
 
 /**

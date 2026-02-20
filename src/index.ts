@@ -10,7 +10,7 @@ const config = loadConfig();
 
 const server = new McpServer({
   name: "enfusion-mcp",
-  version: "0.1.0",
+  version: "0.3.0",
 });
 
 registerTools(server, config);

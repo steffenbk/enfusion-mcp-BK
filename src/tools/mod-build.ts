@@ -9,13 +9,13 @@ const WORKBENCH_DIAG_EXE = "ArmaReforgerWorkbenchSteamDiag.exe";
 const BUILD_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
 
 function findWorkbenchExe(workbenchPath: string): string | null {
-  // The Diag exe is in the root of the tools directory
-  const exePath = join(workbenchPath, WORKBENCH_DIAG_EXE);
-  if (existsSync(exePath)) return exePath;
+  // Check Workbench subdirectory first (standard Steam layout: "Arma Reforger Tools/Workbench/")
+  const subPath = join(workbenchPath, "Workbench", WORKBENCH_DIAG_EXE);
+  if (existsSync(subPath)) return subPath;
 
-  // Also check one level up (in case workbenchPath points to a subdirectory)
-  const parentPath = resolve(workbenchPath, "..", WORKBENCH_DIAG_EXE);
-  if (existsSync(parentPath)) return parentPath;
+  // Check root (in case config points directly to Workbench/)
+  const rootPath = join(workbenchPath, WORKBENCH_DIAG_EXE);
+  if (existsSync(rootPath)) return rootPath;
 
   return null;
 }

@@ -14,6 +14,58 @@ describe("generateScript", () => {
     expect(code).toContain("super.OnGameStart();");
   });
 
+  it("does not double-prefix override in modded methods", () => {
+    const code = generateScript({
+      className: "SCR_CharacterDamageManagerComponent",
+      scriptType: "modded",
+      parentClass: "SCR_CharacterDamageManagerComponent",
+      methods: ["override bool OnDamage(BaseDamageContext damageContext)"],
+    });
+    expect(code).toContain("override bool OnDamage(BaseDamageContext damageContext)");
+    expect(code).not.toContain("override override");
+    expect(code).toContain("super.OnDamage(damageContext);");
+  });
+
+  it("forwards parameters in super calls for modded scripts", () => {
+    const code = generateScript({
+      className: "SCR_CharacterControllerComponent",
+      scriptType: "modded",
+      parentClass: "SCR_CharacterControllerComponent",
+      methods: ["void OnControlledByPlayer(IEntity owner, bool controlled)"],
+    });
+    expect(code).toContain("super.OnControlledByPlayer(owner, controlled);");
+  });
+
+  it("does not double-prefix override in component custom methods", () => {
+    const code = generateScript({
+      className: "TAG_MyComp",
+      scriptType: "component",
+      methods: ["override void EOnInit(IEntity owner)"],
+    });
+    expect(code).toContain("override void EOnInit(IEntity owner)");
+    expect(code).not.toContain("override override");
+  });
+
+  it("does not double-prefix override in gamemode custom methods", () => {
+    const code = generateScript({
+      className: "TAG_GM",
+      scriptType: "gamemode",
+      methods: ["override void OnGameStart()"],
+    });
+    expect(code).toContain("override void OnGameStart()");
+    expect(code).not.toContain("override override");
+    expect(code).toContain("super.OnGameStart();");
+  });
+
+  it("forwards params in gamemode super calls", () => {
+    const code = generateScript({
+      className: "TAG_GM",
+      scriptType: "gamemode",
+      methods: ["void OnPlayerSpawned(int playerId, IEntity controlledEntity)"],
+    });
+    expect(code).toContain("super.OnPlayerSpawned(playerId, controlledEntity);");
+  });
+
   it("modded requires parentClass", () => {
     expect(() =>
       generateScript({ className: "Test", scriptType: "modded" })

@@ -1,5 +1,5 @@
 import { readFileSync, existsSync } from "node:fs";
-import { resolve, dirname } from "node:path";
+import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { homedir } from "node:os";
 import { logger } from "./utils/logger.js";
@@ -13,12 +13,16 @@ export interface Config {
   dataDir: string;
   /** Directory containing mod pattern definitions */
   patternsDir: string;
+  /** Workbench NET API host (default 127.0.0.1) */
+  workbenchHost: string;
+  /** Workbench NET API port (default 5775) */
+  workbenchPort: number;
 }
 
 const DEFAULTS: Config = {
   workbenchPath:
     "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Arma Reforger Tools",
-  projectPath: "",
+  projectPath: join(homedir(), "Documents", "My Games", "ArmaReforgerWorkbench", "addons"),
   dataDir: resolve(
     dirname(fileURLToPath(import.meta.url)),
     "..",
@@ -30,6 +34,8 @@ const DEFAULTS: Config = {
     "data",
     "patterns"
   ),
+  workbenchHost: "127.0.0.1",
+  workbenchPort: 5775,
 };
 
 function loadJsonFile(path: string): Partial<Config> {
@@ -69,6 +75,15 @@ export function loadConfig(): Config {
   }
   if (process.env.ENFUSION_MCP_DATA_DIR) {
     config.dataDir = process.env.ENFUSION_MCP_DATA_DIR;
+  }
+  if (process.env.ENFUSION_WORKBENCH_HOST) {
+    config.workbenchHost = process.env.ENFUSION_WORKBENCH_HOST;
+  }
+  if (process.env.ENFUSION_WORKBENCH_PORT) {
+    const port = parseInt(process.env.ENFUSION_WORKBENCH_PORT, 10);
+    if (!isNaN(port) && port > 0 && port < 65536) {
+      config.workbenchPort = port;
+    }
   }
 
   logger.debug("Config loaded", config);

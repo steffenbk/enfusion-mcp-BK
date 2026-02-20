@@ -4,14 +4,14 @@
   "tags": ["modded", "override", "behavior", "balance"],
   "scripts": [
     {
-      "className": "{PREFIX}_BehaviorMod",
-      "scriptType": "modded",
-      "parentClass": "SCR_CharacterControllerComponent",
-      "methods": ["void OnInit(IEntity owner)"],
-      "description": "Modded behavior override"
+      "className": "{PREFIX}_Config",
+      "scriptType": "basic",
+      "parentClass": "",
+      "methods": [],
+      "description": "Centralized config constants — put all tuning values here so they're easy to adjust"
     }
   ],
   "prefabs": [],
   "configs": [],
-  "instructions": "1. Choose the class you want to modify — use api_search to find it\n2. Change the parentClass to the actual class you want to mod\n3. Add override methods for the behaviors you want to change\n4. ALWAYS call super.MethodName() unless you want to completely replace the behavior\n5. Use [Attribute()] for configurable values so balance can be tweaked in Workbench\n6. IMPORTANT: modded classes apply globally — they affect ALL instances of the base class\n7. Test thoroughly, as modded classes can cause conflicts with other mods"
+  "instructions": "This pattern scaffolds a config constants class. You need to add the actual modded scripts yourself:\n1. Use api_search to find the class you want to modify\n2. Use script_create with scriptType 'modded' and the target class as parentClass\n3. Reference constants from the {PREFIX}_Config class for tunable values\n4. ALWAYS call super.MethodName() in overrides unless you want to completely replace the behavior\n5. Use [Attribute()] for values you want editable in Workbench\n6. IMPORTANT: modded classes apply globally — they affect ALL instances of the base class\n7. Only ONE modded class per target class — do not create multiple files modding the same parent"
 }
