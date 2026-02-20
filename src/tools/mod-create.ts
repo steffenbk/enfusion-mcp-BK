@@ -136,7 +136,7 @@ export function registerModCreate(
         // Generate and write .gproj
         const gprojContent = generateGproj({
           name,
-          title: description,
+          title: name,
         });
         const gprojPath = join(addonDir, `${name}.gproj`);
         writeFileSync(gprojPath, gprojContent, "utf-8");
