@@ -72,7 +72,7 @@ Or use the guided prompts for structured workflows:
 Claude will:
 
 1. **Assess complexity** — simple mods are built in one pass; large mods (e.g., a DayZ-style overhaul) get broken into phases with a plan you approve before any code is written
-2. **Research** the Enfusion API (8,693 indexed classes) to find the right parent classes and methods
+2. **Research** the Enfusion API (8,693 indexed classes) and the Arma Reforger wiki (250+ guides and tutorials) to find the right approach
 3. **Scaffold** the full addon — `.gproj`, scripts, prefabs, configs, UI layouts
 4. **Launch Workbench** if it's not already running
 5. **Load the project**, reload scripts, register resources
@@ -90,7 +90,7 @@ Work without Workbench running — API search, mod scaffolding, code generation,
 | Tool | What it does |
 |------|-------------|
 | `api_search` | Search 8,693 Enfusion/Arma Reforger API classes and methods |
-| `wiki_search` | Search tutorial and guide content about Enfusion concepts |
+| `wiki_search` | Search 250+ tutorials and guides from the Enfusion engine docs and BI Community Wiki |
 | `project_browse` | List files in a mod project directory |
 | `project_read` | Read any project file |
 | `project_write` | Write or update project files |
