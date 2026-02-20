@@ -10,7 +10,7 @@
  */
 
 import { Socket } from "node:net";
-import { existsSync, mkdirSync, copyFileSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, copyFileSync, readdirSync, writeFileSync, readFileSync } from "node:fs";
 import { generateGproj } from "../templates/gproj.js";
 import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -124,6 +124,17 @@ export class WorkbenchClient {
     }
   }
 
+  /**
+   * Remove the EnfusionMCP handler dependency from a mod's .gproj.
+   * Call this after Workbench work is done, before publishing the mod.
+   * Safe to call even if the dependency was never injected.
+   */
+  cleanupHandlerDependency(gprojPath: string): boolean {
+    const handlerGuid = this.getHandlerGuid();
+    if (!handlerGuid) return false;
+    return removeGprojDependency(gprojPath, handlerGuid);
+  }
+
   toString(): string {
     return `WorkbenchClient(${this.host}:${this.port})`;
   }
@@ -154,8 +165,13 @@ export class WorkbenchClient {
       );
     }
 
-    // 4. Spawn with -gproj to skip the launcher
+    // 4. Inject EnfusionMCP handler as dependency of target mod so NET API handlers compile
     const resolvedGproj = gprojPath || this.findFallbackGproj();
+    if (resolvedGproj) {
+      this.injectHandlerDependency(resolvedGproj);
+    }
+
+    // 5. Spawn with -gproj to skip the launcher
     const args: string[] = [];
     if (resolvedGproj) {
       args.push("-gproj", resolvedGproj);
@@ -173,7 +189,7 @@ export class WorkbenchClient {
     });
     proc.unref();
 
-    // 5. Wait for NET API
+    // 6. Wait for NET API
     const deadline = Date.now() + LAUNCH_TIMEOUT_MS;
     while (Date.now() < deadline) {
       if (await this.ping()) {
@@ -240,6 +256,35 @@ export class WorkbenchClient {
     }
     logger.warn("Could not find Arma Reforger game directory. Workbench may fail to resolve base game addon.");
     return null;
+  }
+
+  /**
+   * Read the GUID from the EnfusionMCP handler addon's .gproj.
+   */
+  private getHandlerGuid(): string | null {
+    const handlerGproj = join(
+      this.config!.projectPath,
+      HANDLER_FOLDER,
+      `${HANDLER_FOLDER}.gproj`
+    );
+    if (!existsSync(handlerGproj)) return null;
+    return readGprojGuid(handlerGproj);
+  }
+
+  /**
+   * Add the EnfusionMCP handler addon as a dependency of the target mod's .gproj.
+   * This makes Workbench compile the handler scripts when opening the target mod,
+   * enabling all wb_* NET API tools.
+   */
+  private injectHandlerDependency(targetGproj: string): void {
+    const handlerGuid = this.getHandlerGuid();
+    if (!handlerGuid) {
+      logger.warn("Cannot inject handler dependency — handler GUID not found.");
+      return;
+    }
+    if (addGprojDependency(targetGproj, handlerGuid)) {
+      logger.info(`Injected EnfusionMCP dependency (${handlerGuid}) into ${targetGproj}`);
+    }
   }
 
   private installHandlerScripts(): void {
@@ -406,5 +451,78 @@ export class WorkbenchClient {
         socket.end();
       });
     });
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Module-level helpers for .gproj dependency management
+// ---------------------------------------------------------------------------
+
+/** Extract the GUID from a .gproj file via regex. */
+function readGprojGuid(gprojPath: string): string | null {
+  try {
+    const content = readFileSync(gprojPath, "utf-8");
+    const match = content.match(/^\s*GUID\s+"([A-Fa-f0-9]+)"/m);
+    return match ? match[1] : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Add a dependency GUID to a .gproj's Dependencies block. Returns true if added. */
+function addGprojDependency(gprojPath: string, guid: string): boolean {
+  try {
+    let content = readFileSync(gprojPath, "utf-8");
+    // Already present?
+    if (content.includes(`"${guid}"`)) return false;
+
+    // Find the Dependencies block and insert the GUID
+    const depsMatch = content.match(/(Dependencies\s*\{)([\s\S]*?)(\})/);
+    if (depsMatch) {
+      const [fullMatch, open, body, close] = depsMatch;
+      const newBody = body.trimEnd() + `\n  "${guid}"\n `;
+      content = content.replace(fullMatch, open + newBody + close);
+    } else {
+      // No Dependencies block — insert one before Configurations
+      const configMatch = content.match(/(\s*Configurations\s*\{)/);
+      if (configMatch) {
+        const insertion = ` Dependencies {\n  "${guid}"\n }\n`;
+        content = content.replace(configMatch[1], insertion + configMatch[1]);
+      } else {
+        // Last resort: insert before closing brace
+        const lastBrace = content.lastIndexOf("}");
+        if (lastBrace === -1) return false;
+        content =
+          content.slice(0, lastBrace) +
+          ` Dependencies {\n  "${guid}"\n }\n` +
+          content.slice(lastBrace);
+      }
+    }
+
+    writeFileSync(gprojPath, content, "utf-8");
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** Remove a dependency GUID from a .gproj's Dependencies block. Returns true if removed. */
+function removeGprojDependency(gprojPath: string, guid: string): boolean {
+  try {
+    let content = readFileSync(gprojPath, "utf-8");
+    if (!content.includes(`"${guid}"`)) return false;
+
+    // Remove the GUID line from the Dependencies block
+    const guidLine = new RegExp(`\\s*"${guid}"\\s*\\n?`);
+    content = content.replace(guidLine, "\n");
+
+    // Clean up any double-newlines in Dependencies block
+    content = content.replace(/(Dependencies\s*\{)\n\n+/g, "$1\n");
+
+    writeFileSync(gprojPath, content, "utf-8");
+    logger.info(`Removed EnfusionMCP dependency (${guid}) from ${gprojPath}`);
+    return true;
+  } catch {
+    return false;
   }
 }

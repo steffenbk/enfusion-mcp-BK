@@ -95,12 +95,14 @@ This file is the handoff document. A future Claude instance with zero context wi
 8. Use **mod_validate** to check for structural issues.
 
 9. **Workbench Setup** (MANDATORY — do not skip, do not tell the user to do this):
-   a. **wb_launch** with \`gprojPath\` set to the addon's .gproj file — this skips the Workbench launcher and opens the project directly in the World Editor
+   a. **wb_launch** with \`gprojPath\` set to the addon's .gproj file — this automatically injects the EnfusionMCP handler addon as a temporary dependency, skips the launcher, and opens the project in the World Editor with full NET API access
    b. **wb_reload** (target: "scripts") — Compile all scripts
    c. **wb_resources** (action: "register") — Register every new prefab, config, and layout file
    d. If compilation fails, fix with **project_write** and reload again
 
 10. **wb_play** — Launch the mod in-game to test. Use **wb_stop** to return to editor.
+
+11. **wb_cleanup** with the addon's .gproj path — Remove the temporary EnfusionMCP dependency before the user publishes. NEVER skip this step.
 
 ## STEP 2: SUMMARIZE
 

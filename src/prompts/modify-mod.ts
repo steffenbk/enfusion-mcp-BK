@@ -54,20 +54,22 @@ Follow this workflow — every step is mandatory:
 6. **Validate** — Use **mod_validate** to check for issues.
 
 7. **Workbench Setup** (MANDATORY — do not skip, do not tell the user to do this):
-   a. **wb_launch** with \`gprojPath\` set to the addon's .gproj file — this skips the Workbench launcher and opens the project directly in the World Editor
+   a. **wb_launch** with \`gprojPath\` set to the addon's .gproj file — this automatically injects the EnfusionMCP handler addon as a temporary dependency, skips the launcher, and opens the project in the World Editor with full NET API access
    b. **wb_reload** (target: "scripts") — Compile all scripts
    c. **wb_resources** (action: "register") — Register any new prefabs, configs, or layouts
    d. If compilation fails, fix and reload again
 
 8. **wb_play** — Test the changes in-game. Use **wb_stop** to return to editor.
 
-9. **Update the plan** — If a \`MODPLAN.md\` exists, use **project_read** then **project_write** to update it:
+9. **wb_cleanup** with the addon's .gproj path — Remove the temporary EnfusionMCP dependency before the user publishes. NEVER skip this step.
+
+10. **Update the plan** — If a \`MODPLAN.md\` exists, use **project_read** then **project_write** to update it:
    - Mark completed phases as \`COMPLETE\` with a list of files created/modified
    - Keep pending phases unchanged (unless the user asked to adjust them)
    - Add any new architecture notes or design decisions made during this session
    - If the task was unplanned (not part of any phase), add it to a "Changes Outside Plan" section
 
-10. Summarize what changed and how the mod works now.
+11. Summarize what changed and how the mod works now.
 
 Enfusion rules:
 - Read existing code BEFORE modifying it. Understand what's there first.
