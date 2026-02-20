@@ -10,8 +10,7 @@
  */
 
 import { Socket } from "node:net";
-import { existsSync, mkdirSync, copyFileSync, readdirSync, writeFileSync, readFileSync } from "node:fs";
-import { generateGproj } from "../templates/gproj.js";
+import { existsSync, mkdirSync, copyFileSync, readdirSync, rmSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
@@ -125,14 +124,27 @@ export class WorkbenchClient {
   }
 
   /**
-   * Remove the EnfusionMCP handler dependency from a mod's .gproj.
+   * Remove injected handler scripts from a mod's directory.
    * Call this after Workbench work is done, before publishing the mod.
-   * Safe to call even if the dependency was never injected.
+   * Deletes Scripts/WorkbenchGame/EnfusionMCP/ from the mod.
+   * Safe to call even if scripts were never injected.
    */
-  cleanupHandlerDependency(gprojPath: string): boolean {
-    const handlerGuid = this.getHandlerGuid();
-    if (!handlerGuid) return false;
-    return removeGprojDependency(gprojPath, handlerGuid);
+  cleanupHandlerScripts(modDir: string): boolean {
+    const handlerDir = join(modDir, "Scripts", "WorkbenchGame", HANDLER_FOLDER);
+    if (!existsSync(handlerDir)) return false;
+    try {
+      rmSync(handlerDir, { recursive: true, force: true });
+      logger.info(`Removed handler scripts from ${handlerDir}`);
+      // Clean up empty parent dirs
+      const wbGameDir = join(modDir, "Scripts", "WorkbenchGame");
+      if (existsSync(wbGameDir) && readdirSync(wbGameDir).length === 0) {
+        rmSync(wbGameDir);
+      }
+      return true;
+    } catch (e) {
+      logger.warn(`Failed to clean up handler scripts: ${e}`);
+      return false;
+    }
   }
 
   toString(): string {
@@ -144,13 +156,22 @@ export class WorkbenchClient {
   // ---------------------------------------------------------------------------
 
   private async launchWorkbench(gprojPath?: string): Promise<void> {
-    // 1. Install handler scripts
-    this.installHandlerScripts();
-
-    // 2. Check if already running (maybe it came up between the failed call and now)
+    // 1. Check if already running (maybe it came up between the failed call and now)
     if (await this.ping()) {
       logger.info("Workbench is already running.");
       return;
+    }
+
+    // 2. Resolve the target .gproj and inject handler scripts into that mod
+    const resolvedGproj = gprojPath || this.findFallbackGproj();
+    if (resolvedGproj) {
+      // Copy handler scripts directly into the target mod so they compile
+      // as part of the mod — no separate addon or dependency needed.
+      const modDir = dirname(resolvedGproj);
+      this.installHandlerScripts(modDir);
+    } else {
+      // Fallback: install to default project path as a standalone addon
+      this.installHandlerScripts();
     }
 
     // 3. Find executable
@@ -165,13 +186,7 @@ export class WorkbenchClient {
       );
     }
 
-    // 4. Inject EnfusionMCP handler as dependency of target mod so NET API handlers compile
-    const resolvedGproj = gprojPath || this.findFallbackGproj();
-    if (resolvedGproj) {
-      this.injectHandlerDependency(resolvedGproj);
-    }
-
-    // 5. Spawn with -gproj to skip the launcher
+    // 4. Spawn with -gproj to skip the launcher
     const args: string[] = [];
     if (resolvedGproj) {
       args.push("-gproj", resolvedGproj);
@@ -189,7 +204,7 @@ export class WorkbenchClient {
     });
     proc.unref();
 
-    // 6. Wait for NET API
+    // 5. Wait for NET API
     const deadline = Date.now() + LAUNCH_TIMEOUT_MS;
     while (Date.now() < deadline) {
       if (await this.ping()) {
@@ -218,18 +233,21 @@ export class WorkbenchClient {
 
   /**
    * Find a .gproj to pass via -gproj so Workbench skips the launcher.
-   * Uses the EnfusionMCP handler addon (always installed before launch).
+   * Looks for any .gproj in the default project path.
    */
   private findFallbackGproj(): string | null {
-    const handlerGproj = join(
-      this.config!.projectPath,
-      HANDLER_FOLDER,
-      `${HANDLER_FOLDER}.gproj`
-    );
-    if (existsSync(handlerGproj)) {
-      logger.info(`Using fallback gproj to skip launcher: ${handlerGproj}`);
-      return handlerGproj;
-    }
+    try {
+      const addonsDir = this.config!.projectPath;
+      if (!existsSync(addonsDir)) return null;
+      for (const entry of readdirSync(addonsDir, { withFileTypes: true })) {
+        if (!entry.isDirectory()) continue;
+        const gprojPath = join(addonsDir, entry.name, `${entry.name}.gproj`);
+        if (existsSync(gprojPath)) {
+          logger.info(`Using fallback gproj to skip launcher: ${gprojPath}`);
+          return gprojPath;
+        }
+      }
+    } catch { /* ignore */ }
     return null;
   }
 
@@ -259,35 +277,10 @@ export class WorkbenchClient {
   }
 
   /**
-   * Read the GUID from the EnfusionMCP handler addon's .gproj.
+   * Copy handler scripts into a mod directory so they compile as part of that mod.
+   * If no modDir given, installs to default project path (standalone, less useful).
    */
-  private getHandlerGuid(): string | null {
-    const handlerGproj = join(
-      this.config!.projectPath,
-      HANDLER_FOLDER,
-      `${HANDLER_FOLDER}.gproj`
-    );
-    if (!existsSync(handlerGproj)) return null;
-    return readGprojGuid(handlerGproj);
-  }
-
-  /**
-   * Add the EnfusionMCP handler addon as a dependency of the target mod's .gproj.
-   * This makes Workbench compile the handler scripts when opening the target mod,
-   * enabling all wb_* NET API tools.
-   */
-  private injectHandlerDependency(targetGproj: string): void {
-    const handlerGuid = this.getHandlerGuid();
-    if (!handlerGuid) {
-      logger.warn("Cannot inject handler dependency — handler GUID not found.");
-      return;
-    }
-    if (addGprojDependency(targetGproj, handlerGuid)) {
-      logger.info(`Injected EnfusionMCP dependency (${handlerGuid}) into ${targetGproj}`);
-    }
-  }
-
-  private installHandlerScripts(): void {
+  private installHandlerScripts(modDir?: string): void {
     const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
     const bundledDir = join(packageRoot, "mod", "Scripts", "WorkbenchGame", HANDLER_FOLDER);
     if (!existsSync(bundledDir)) {
@@ -295,8 +288,8 @@ export class WorkbenchClient {
       return;
     }
 
-    const targetAddon = join(this.config!.projectPath, HANDLER_FOLDER);
-    const targetScriptsDir = join(targetAddon, "Scripts", "WorkbenchGame", HANDLER_FOLDER);
+    const targetBase = modDir || join(this.config!.projectPath, HANDLER_FOLDER);
+    const targetScriptsDir = join(targetBase, "Scripts", "WorkbenchGame", HANDLER_FOLDER);
 
     // Already installed?
     if (existsSync(join(targetScriptsDir, "EMCP_WB_Ping.c"))) {
@@ -309,19 +302,6 @@ export class WorkbenchClient {
     const files = readdirSync(bundledDir).filter((f) => f.endsWith(".c"));
     for (const file of files) {
       copyFileSync(join(bundledDir, file), join(targetScriptsDir, file));
-    }
-
-    // Create .gproj in proper Enfusion GameProject format
-    const gprojPath = join(targetAddon, `${HANDLER_FOLDER}.gproj`);
-    if (!existsSync(gprojPath)) {
-      writeFileSync(
-        gprojPath,
-        generateGproj({
-          name: HANDLER_FOLDER,
-          title: "EnfusionMCP Handler Scripts",
-        }),
-        "utf-8"
-      );
     }
 
     logger.info(`Installed ${files.length} handler scripts.`);
@@ -454,75 +434,3 @@ export class WorkbenchClient {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Module-level helpers for .gproj dependency management
-// ---------------------------------------------------------------------------
-
-/** Extract the GUID from a .gproj file via regex. */
-function readGprojGuid(gprojPath: string): string | null {
-  try {
-    const content = readFileSync(gprojPath, "utf-8");
-    const match = content.match(/^\s*GUID\s+"([A-Fa-f0-9]+)"/m);
-    return match ? match[1] : null;
-  } catch {
-    return null;
-  }
-}
-
-/** Add a dependency GUID to a .gproj's Dependencies block. Returns true if added. */
-function addGprojDependency(gprojPath: string, guid: string): boolean {
-  try {
-    let content = readFileSync(gprojPath, "utf-8");
-    // Already present?
-    if (content.includes(`"${guid}"`)) return false;
-
-    // Find the Dependencies block and insert the GUID
-    const depsMatch = content.match(/(Dependencies\s*\{)([\s\S]*?)(\})/);
-    if (depsMatch) {
-      const [fullMatch, open, body, close] = depsMatch;
-      const newBody = body.trimEnd() + `\n  "${guid}"\n `;
-      content = content.replace(fullMatch, open + newBody + close);
-    } else {
-      // No Dependencies block — insert one before Configurations
-      const configMatch = content.match(/(\s*Configurations\s*\{)/);
-      if (configMatch) {
-        const insertion = ` Dependencies {\n  "${guid}"\n }\n`;
-        content = content.replace(configMatch[1], insertion + configMatch[1]);
-      } else {
-        // Last resort: insert before closing brace
-        const lastBrace = content.lastIndexOf("}");
-        if (lastBrace === -1) return false;
-        content =
-          content.slice(0, lastBrace) +
-          ` Dependencies {\n  "${guid}"\n }\n` +
-          content.slice(lastBrace);
-      }
-    }
-
-    writeFileSync(gprojPath, content, "utf-8");
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-/** Remove a dependency GUID from a .gproj's Dependencies block. Returns true if removed. */
-function removeGprojDependency(gprojPath: string, guid: string): boolean {
-  try {
-    let content = readFileSync(gprojPath, "utf-8");
-    if (!content.includes(`"${guid}"`)) return false;
-
-    // Remove the GUID line from the Dependencies block
-    const guidLine = new RegExp(`\\s*"${guid}"\\s*\\n?`);
-    content = content.replace(guidLine, "\n");
-
-    // Clean up any double-newlines in Dependencies block
-    content = content.replace(/(Dependencies\s*\{)\n\n+/g, "$1\n");
-
-    writeFileSync(gprojPath, content, "utf-8");
-    logger.info(`Removed EnfusionMCP dependency (${guid}) from ${gprojPath}`);
-    return true;
-  } catch {
-    return false;
-  }
-}

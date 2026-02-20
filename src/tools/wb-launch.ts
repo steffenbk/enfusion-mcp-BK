@@ -1,5 +1,6 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
+import { dirname } from "node:path";
 import type { WorkbenchClient } from "../workbench/client.js";
 
 export function registerWbLaunch(
@@ -10,12 +11,12 @@ export function registerWbLaunch(
     "wb_launch",
     {
       description:
-        "Launch Arma Reforger Workbench (Arma Reforger Tools). Automatically installs handler scripts, " +
-        "injects the EnfusionMCP handler addon as a temporary dependency of the target mod (so NET API " +
-        "handlers compile), starts the Workbench executable, and waits for the NET API to become available. " +
+        "Launch Arma Reforger Workbench (Arma Reforger Tools). Automatically copies handler scripts " +
+        "into the target mod's Scripts/WorkbenchGame/ directory (so NET API handlers compile as part " +
+        "of the mod), starts the Workbench executable, and waits for the NET API to become available. " +
         "All other wb_* tools call this automatically if Workbench is not running, so you rarely need to " +
         "call this directly. IMPORTANT: When done working with Workbench, call wb_cleanup to remove the " +
-        "temporary EnfusionMCP dependency from the mod's .gproj before the user publishes.",
+        "handler scripts from the mod before the user publishes.",
       inputSchema: {
         timeoutSeconds: z
           .number()
@@ -30,8 +31,8 @@ export function registerWbLaunch(
           .optional()
           .describe(
             "Path to a .gproj file to open directly. Skips the Workbench launcher screen and goes straight " +
-            "into the World Editor. The EnfusionMCP handler addon is automatically injected as a dependency " +
-            "so all wb_* tools work. If omitted, Workbench opens to its launcher."
+            "into the World Editor. Handler scripts are copied into the mod so all wb_* tools work. " +
+            "If omitted, Workbench opens to its launcher."
           ),
       },
     },
@@ -51,9 +52,10 @@ export function registerWbLaunch(
 
         await client.ensureRunning(gprojPath);
 
-        const note = gprojPath
-          ? `\n\nNote: EnfusionMCP handler dependency was temporarily added to the mod's .gproj. ` +
-            `Call **wb_cleanup** with this gprojPath when done to remove it before publishing.`
+        const modDir = gprojPath ? dirname(gprojPath) : null;
+        const note = modDir
+          ? `\n\nNote: Handler scripts were copied to ${modDir}/Scripts/WorkbenchGame/EnfusionMCP/. ` +
+            `Call **wb_cleanup** with the mod directory path when done to remove them before publishing.`
           : "";
 
         return {
@@ -78,28 +80,29 @@ export function registerWbLaunch(
     }
   );
 
-  // Cleanup tool to remove EnfusionMCP dependency after Workbench work is done
+  // Cleanup tool to remove handler scripts after Workbench work is done
   server.registerTool(
     "wb_cleanup",
     {
       description:
-        "Remove the temporary EnfusionMCP handler dependency from a mod's .gproj file. " +
+        "Remove the temporary EnfusionMCP handler scripts from a mod's directory. " +
+        "Deletes Scripts/WorkbenchGame/EnfusionMCP/ from the mod. " +
         "Call this after finishing Workbench work and before the user publishes their mod. " +
-        "This is safe to call even if the dependency was never injected.",
+        "Safe to call even if scripts were never installed.",
       inputSchema: {
-        gprojPath: z
+        modDir: z
           .string()
-          .describe("Path to the mod's .gproj file to clean up."),
+          .describe("Path to the mod's root directory (the folder containing the .gproj file)."),
       },
     },
-    async ({ gprojPath }) => {
-      const removed = client.cleanupHandlerDependency(gprojPath);
+    async ({ modDir }) => {
+      const removed = client.cleanupHandlerScripts(modDir);
       if (removed) {
         return {
           content: [
             {
               type: "text" as const,
-              text: "**Cleanup Complete** — EnfusionMCP handler dependency removed from the mod's .gproj. The mod is ready to publish.",
+              text: "**Cleanup Complete** — EnfusionMCP handler scripts removed from the mod. The mod is ready to publish.",
             },
           ],
         };
@@ -108,7 +111,7 @@ export function registerWbLaunch(
         content: [
           {
             type: "text" as const,
-            text: "**No Cleanup Needed** — EnfusionMCP dependency was not present in the .gproj.",
+            text: "**No Cleanup Needed** — Handler scripts were not present in the mod directory.",
           },
         ],
       };
