@@ -4,7 +4,13 @@ MCP server for Arma Reforger modding. Describe what you want to build, and Claud
 
 ## Install
 
-### Claude Code
+### Claude Code (Windows)
+
+```bash
+claude mcp add --scope user enfusion-mcp -- cmd /c npx -y enfusion-mcp
+```
+
+### Claude Code (macOS / Linux)
 
 ```bash
 claude mcp add --scope user enfusion-mcp -- npx -y enfusion-mcp
@@ -15,6 +21,21 @@ Restart Claude Code. Verify with `/mcp`.
 ### Claude Desktop
 
 Add to your `claude_desktop_config.json`:
+
+**Windows:**
+
+```json
+{
+  "mcpServers": {
+    "enfusion-mcp": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "enfusion-mcp"]
+    }
+  }
+}
+```
+
+**macOS / Linux:**
 
 ```json
 {
