@@ -88,6 +88,21 @@ Before writing ANY script that calls an Enfusion API method, you MUST:
 
 If you cannot find a method via api_search, it probably does not exist. Do NOT write code that calls unverified methods — it will fail to compile silently in Workbench.
 
+## CRITICAL: VISIBLE ENTITIES NEED A MESH
+
+Any entity that should be visible in the game world MUST have a **MeshObject** component with its \`Object\` property set to an actual 3D model (\`.xob\` file) from the base game. Without this, the entity will be **completely invisible** — no model, no collision, nothing.
+
+You don't need to create custom models. Just borrow one from the base game that looks reasonable:
+- Use **api_search** or **project_browse** on the base Arma Reforger data to find \`.xob\` paths
+- Example paths (format: \`{GUID}path/to/model.xob\`):
+  - Military barrel: \`{5F4C4181F065B447}Assets/Props/Military/Barrels/BarrelGreen_01.xob\`
+  - Ammo crate: \`{1E648E8B6B28E837}Assets/Props/Military/AmmoBoxes/AmmoBox_545x39_60rnd.xob\`
+  - Medical box: \`{D26ABAE8B017EC4E}Assets/Props/Military/CasualtyBag/CasualtyBag_01.xob\`
+- Pick something that vaguely fits the purpose — a healing station could use a medical box, a terminal could use a radio, etc.
+- After creating a prefab with **prefab_create**, use **project_read** + **project_write** to set the MeshObject \`Object\` property to a real model path
+
+This applies to ALL physical in-game objects: interactive props, spawn points with markers, placed items, vehicles, weapons, etc.
+
 ## STEP 1: BUILD
 
 1. Use **api_search** to find the relevant Enfusion API classes AND verify that the methods you plan to use actually exist. Search every class you intend to call methods on. Do this BEFORE writing any scripts.

@@ -78,6 +78,7 @@ Enfusion rules:
 - All scripts go in Scripts/Game/ (other folders are silently ignored)
 - modded classes affect ALL instances globally
 - Always call super.MethodName() in overrides unless intentionally replacing
+- VISIBLE ENTITIES NEED A MESH: Any entity placed in the world MUST have a MeshObject component with its \`Object\` property set to a base game \`.xob\` model path. Without this, the entity is invisible. You don't need custom models — just pick any existing base game model that roughly fits (e.g., a medical box for a healing station, a radio for a terminal). After creating a prefab, always set the MeshObject Object property to a real path like \`{5F4C4181F065B447}Assets/Props/Military/Barrels/BarrelGreen_01.xob\`.
 
 YOUR FINAL SUMMARY MUST ONLY contain:
 - What files were changed/added and what each change does
