@@ -21,5 +21,5 @@
     }
   ],
   "configs": [],
-  "instructions": "1. Edit the InteractAction script to define what happens on interaction\n2. Customize CanBePerformedScript to control when the action is available\n3. Customize CanBeShownScript to control visibility\n4. Create the interactive prefab with a mesh and ActionsManagerComponent\n5. Add the action to the ActionsManagerComponent in the prefab\n6. Place the prefab in a world and test interaction"
+  "instructions": "CRITICAL: Use api_search to verify EVERY method you call on Enfusion classes. Never guess method names.\n1. Use api_search to find ScriptedUserAction methods and any other classes your action interacts with (e.g., damage managers, inventory, etc.)\n2. Edit the InteractAction script to define what happens on interaction — ONLY use methods confirmed by api_search\n3. Customize CanBePerformedScript to control when the action is available\n4. Customize CanBeShownScript to control visibility\n5. Create the interactive prefab — the MeshObject component MUST reference a base game .xob model or the entity will be invisible\n6. Add the action to the ActionsManagerComponent in the prefab\n7. Place the prefab in a world and test interaction"
 }

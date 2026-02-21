@@ -89,7 +89,8 @@ const PREFAB_CONFIGS: Record<PrefabType, PrefabTypeConfig> = {
     defaultParent: "",
     subdirectory: "Prefabs/Props",
     defaultComponents: [
-      { type: "MeshObject", properties: {} },
+      { type: "MeshObject", properties: { Object: "" } },
+      { type: "RigidBody", properties: { ModelGeometry: "1" } },
       { type: "ActionsManagerComponent", properties: {} },
     ],
   },

@@ -33,5 +33,5 @@
       "content": "SCR_Faction {\n m_sKey \"{PREFIX}_faction\"\n m_sName \"{PREFIX} Faction\"\n m_Color \"0,100,200,255\"\n m_sFlagPath \"\"\n}"
     }
   ],
-  "instructions": "1. Edit the FactionInit script to set your faction key, name, and color\n2. Edit the LoadoutConfig to define weapons and equipment\n3. Create the character prefab with prefab_create\n4. Add your faction to the game mode's faction list in a modded SCR_BaseGameMode\n5. Test in Game Master by placing faction spawn points"
+  "instructions": "CRITICAL: Use api_search to verify EVERY method you call. Never guess Enfusion API method names — they are non-standard and many obvious-sounding methods don't exist.\n1. Use api_search to look up SCR_Faction, SCR_BaseGameMode, SCR_LoadoutManager, and any faction/loadout classes — verify methods exist before using them\n2. Edit the FactionInit script to set your faction key, name, and color — only call methods confirmed by api_search\n3. Edit the LoadoutConfig to define weapons and equipment\n4. Create the character prefab with prefab_create — characters MUST inherit from a base game character prefab for animations and physics\n5. Add your faction to the game mode's faction list in a modded SCR_BaseGameMode — verify the override method exists first\n6. Test in Game Master by placing faction spawn points"
 }

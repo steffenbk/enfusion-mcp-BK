@@ -40,9 +40,9 @@ Follow this workflow — every step is mandatory:
    - Read existing scripts, prefabs, configs, and layouts
    - Identify the class prefix convention in use
 
-3. **Research the API** — Use **api_search** to find relevant classes and methods.
+3. **Research the API** — Use **api_search** to find relevant classes and methods. **CRITICAL: NEVER guess or assume Enfusion API method names.** The API is non-standard — methods that seem obvious often don't exist (e.g., \`HitZone.SetHealth()\`, \`IEntity.GetVelocity()\`). You MUST search every class you plan to call methods on and verify the methods exist in the search results. If a method isn't listed, it does not exist — find an alternative.
 
-4. **Plan the changes** — Determine what to modify, create, or remove. For phased projects, verify your plan aligns with the MODPLAN.
+4. **Plan the changes** — Determine what to modify, create, or remove. For phased projects, verify your plan aligns with the MODPLAN. Only use API methods verified via api_search.
 
 5. **Implement** — Make all modifications:
    - Existing files: **project_read** then **project_write**
@@ -72,6 +72,7 @@ Follow this workflow — every step is mandatory:
 11. Summarize what changed and how the mod works now.
 
 Enfusion rules:
+- NEVER guess API methods — if you didn't verify it via api_search, assume it doesn't exist
 - Read existing code BEFORE modifying it. Understand what's there first.
 - Match existing code style, class prefix, and naming conventions.
 - All scripts go in Scripts/Game/ (other folders are silently ignored)

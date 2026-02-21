@@ -33,5 +33,5 @@
       "content": "SCR_MissionHeader {\n m_sName \"{PREFIX} Scenario\"\n m_sDescription \"Custom game mode scenario\"\n m_sWorldFile \"\"\n m_sIcon \"\"\n m_bIsModded 1\n}"
     }
   ],
-  "instructions": "1. Edit the GameMode script to define round logic, win conditions, and player flow\n2. Edit the ScoringSystem to implement your scoring rules\n3. Create the game mode prefab and attach both components\n4. Create a test world with the game mode prefab placed\n5. Add spawn points for each faction\n6. Test with 'Play' in Workbench"
+  "instructions": "CRITICAL: Use api_search to verify EVERY method you call. Never guess Enfusion API method names.\n1. Use api_search to look up SCR_BaseGameMode, SCR_RespawnSystemComponent, and any other classes you need — verify methods exist before using them\n2. Edit the GameMode script to define round logic, win conditions, and player flow\n3. Edit the ScoringSystem to implement your scoring rules\n4. Create the game mode prefab and attach both components\n5. Create a test world with the game mode prefab placed\n6. Add spawn points for each faction\n7. Test with 'Play' in Workbench"
 }

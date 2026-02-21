@@ -20,5 +20,5 @@
   ],
   "prefabs": [],
   "configs": [],
-  "instructions": "1. Edit the AdminComponent to implement your admin commands\n2. Add keybind checks in the AdminKeyHandler\n3. IMPORTANT: Add authority checks — verify the player has admin privileges before executing commands\n4. Use Rpc methods for server-authoritative commands (teleport, spawn)\n5. Attach the AdminComponent to the player controller prefab\n6. Test with host player in a local server"
+  "instructions": "CRITICAL: Use api_search to verify EVERY method you call. Never guess Enfusion API method names — they are non-standard and many obvious-sounding methods don't exist.\n1. Use api_search to look up SCR_PlayerController, InputManager, and any other classes you need — verify methods exist before using them\n2. Edit the AdminComponent to implement your admin commands — only call methods confirmed by api_search\n3. Add keybind checks in the AdminKeyHandler — verify input handling methods via api_search\n4. IMPORTANT: Add authority checks — verify the player has admin privileges before executing commands\n5. Use Rpc methods for server-authoritative commands (teleport, spawn)\n6. Attach the AdminComponent to the player controller prefab\n7. Test with host player in a local server"
 }

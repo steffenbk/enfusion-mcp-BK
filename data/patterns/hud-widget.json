@@ -13,5 +13,5 @@
   ],
   "prefabs": [],
   "configs": [],
-  "instructions": "1. Create a .layout file in UI/layouts/ for the widget visual design\n2. Edit the HudComponent to load and manage the layout\n3. Use GetGame().GetHUDManager() to register your widget\n4. Implement UpdateDisplay to show dynamic content\n5. Attach the component to the player controller prefab\n6. NOTE: UI layout files (.layout) must be created in Workbench's Resource Manager\n7. Test by joining a game and verifying the widget appears"
+  "instructions": "CRITICAL: Use api_search to verify EVERY method you call. Never guess Enfusion API method names — they are non-standard.\n1. Use api_search to look up HUD-related classes and verify available methods before writing code\n2. Create a .layout file using layout_create for the widget visual design\n3. Edit the HudComponent to load and manage the layout\n4. Implement UpdateDisplay to show dynamic content\n5. Attach the component to the player controller prefab\n6. Test by joining a game and verifying the widget appears"
 }

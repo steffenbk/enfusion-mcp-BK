@@ -21,5 +21,5 @@
     }
   ],
   "configs": [],
-  "instructions": "1. Find the base weapon prefab you want to modify using api_search\n2. Create a new weapon prefab inheriting from the base weapon\n3. Modify weapon properties (damage, rate of fire, recoil) in the prefab\n4. Optionally add the modded script for runtime behavior changes\n5. Add the weapon to a loadout or spawn it in Game Master for testing"
+  "instructions": "CRITICAL: Use api_search to verify EVERY method you call. Never guess Enfusion API method names — they are non-standard and many obvious-sounding methods don't exist.\n1. Use api_search to look up SCR_WeaponAttachmentsStorageComponent, BaseWeaponComponent, and weapon-related classes — verify methods exist before using them\n2. Find the base weapon prefab you want to modify\n3. Create a new weapon prefab inheriting from the base weapon — weapons MUST inherit from a base game weapon prefab or they won't function\n4. Modify weapon properties (damage, rate of fire, recoil) in the prefab\n5. Optionally add the modded script for runtime behavior changes — only override methods confirmed by api_search\n6. Add the weapon to a loadout or spawn it in Game Master for testing"
 }

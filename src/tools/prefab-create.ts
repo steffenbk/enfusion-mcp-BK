@@ -17,7 +17,7 @@ export function registerPrefabCreate(server: McpServer, config: Config): void {
     "prefab_create",
     {
       description:
-        "Create a new Entity Template (.et) prefab file for an Arma Reforger mod. Generates a properly structured prefab with components in valid Enfusion text serialization format.",
+        "Create a new Entity Template (.et) prefab file for an Arma Reforger mod. Generates a properly structured prefab with components in valid Enfusion text serialization format. IMPORTANT: For 'interactive' and other visible prefabs, the MeshObject component MUST have its 'Object' property set to a base game .xob model path (e.g., '{5F4C4181F065B447}Assets/Props/Military/Barrels/BarrelGreen_01.xob') or the entity will be invisible in-game. Use api_search to find model paths.",
       inputSchema: {
         name: z
           .string()
@@ -101,11 +101,15 @@ export function registerPrefabCreate(server: McpServer, config: Config): void {
 
           writeFileSync(targetPath, content, "utf-8");
 
+          const meshWarning = (prefabType === "interactive" || prefabType === "generic")
+            ? "\n\n⚠️ IMPORTANT: The MeshObject 'Object' property is empty. You MUST set it to a base game .xob model path (e.g., '{5F4C4181F065B447}Assets/Props/Military/Barrels/BarrelGreen_01.xob') or the entity will be INVISIBLE in-game. Use project_write to update the prefab."
+            : "";
+
           return {
             content: [
               {
                 type: "text",
-                text: `Prefab created: ${subdir}/${filename}\n\n\`\`\`\n${content}\n\`\`\``,
+                text: `Prefab created: ${subdir}/${filename}\n\n\`\`\`\n${content}\n\`\`\`${meshWarning}`,
               },
             ],
           };

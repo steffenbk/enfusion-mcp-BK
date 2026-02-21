@@ -13,5 +13,5 @@
   ],
   "prefabs": [],
   "configs": [],
-  "instructions": "1. Edit the component script to add your member variables and logic\n2. Use [Attribute()] to expose configuration in Workbench\n3. Override EOnInit for initialization, OnPostInit for post-setup\n4. Override OnDelete for cleanup\n5. Attach the component to entity prefabs via their 'components' block\n6. Access the component at runtime: entity.FindComponent(YourComponent)"
+  "instructions": "CRITICAL: Use api_search to verify EVERY method you call. Never guess Enfusion API method names — they are non-standard and many obvious-sounding methods don't exist.\n1. Use api_search to look up ScriptComponent and any classes your component interacts with — verify methods exist before using them\n2. Edit the component script to add your member variables and logic — only call methods confirmed by api_search\n3. Use [Attribute()] to expose configuration in Workbench\n4. Override EOnInit for initialization, OnPostInit for post-setup — verify these exist on your parent class via api_search\n5. Override OnDelete for cleanup\n6. Attach the component to entity prefabs via their 'components' block\n7. Access the component at runtime: entity.FindComponent(YourComponent)"
 }

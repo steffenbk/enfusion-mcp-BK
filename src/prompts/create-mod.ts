@@ -74,15 +74,30 @@ Before writing any code, assess the scope of what the user is asking for. Think 
 
 This file is the handoff document. A future Claude instance with zero context will read this file and know exactly what the mod is, what's done, and what to build next. Be specific — list actual file names, class names, and system relationships. The user can then use \`/modify-mod\` to continue with subsequent phases.
 
+## CRITICAL: API VERIFICATION RULE
+
+**NEVER guess, assume, or invent Enfusion API method names.** The Enfusion scripting API is non-standard and poorly documented. Methods that seem obvious often do not exist (e.g., \`HitZone.SetHealth()\`, \`IEntity.GetVelocity()\`, \`AIWorld.GetAIGroups()\`).
+
+Before writing ANY script that calls an Enfusion API method, you MUST:
+1. Use **api_search** to find the class
+2. Read the method list in the results
+3. Only use methods that appear in the search results
+4. If the method you need doesn't exist, search for alternative classes or approaches
+5. For damage/health: use \`SCR_CharacterDamageManagerComponent.FullHeal()\`, NOT per-hitzone SetHealth
+6. For any class interaction: search the class first, read its methods, then write code
+
+If you cannot find a method via api_search, it probably does not exist. Do NOT write code that calls unverified methods — it will fail to compile silently in Workbench.
+
 ## STEP 1: BUILD
 
-1. Use **api_search** to find the relevant Enfusion API classes needed.
+1. Use **api_search** to find the relevant Enfusion API classes AND verify that the methods you plan to use actually exist. Search every class you intend to call methods on. Do this BEFORE writing any scripts.
 
 2. Use **mod_create** to scaffold the addon project. Pick a good name, class prefix, and pattern based on the description.
 
 3. Use **script_create** for each script:
    - Correct scriptType (component, gamemode, action, modded, etc.)
    - Proper method stubs and description comments
+   - ONLY call methods verified via api_search
 
 4. Use **prefab_create** for any prefabs needed (spawn points, entities, game mode, etc.)
 
@@ -107,6 +122,7 @@ This file is the handoff document. A future Claude instance with zero context wi
 ## STEP 2: SUMMARIZE
 
 Enfusion rules:
+- NEVER guess API methods — if you didn't find it via api_search, it doesn't exist
 - All scripts go in Scripts/Game/ (other folders are silently ignored)
 - Use a consistent class prefix (e.g., ZS_ for Zombie Survival)
 - modded classes affect ALL instances globally
