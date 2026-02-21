@@ -126,11 +126,12 @@ This applies to ALL physical in-game objects: interactive props, spawn points wi
 
 9. **Workbench Setup** (MANDATORY — do not skip, do not tell the user to do this):
    a. **wb_launch** with \`gprojPath\` set to the addon's .gproj file — this copies handler scripts into the mod, skips the launcher, and opens the project in the World Editor with full NET API access
-   b. **wb_reload** (target: "scripts") — Compile all scripts
-   c. **wb_resources** (action: "register") — Register every new prefab, config, and layout file
-   d. If compilation fails, fix with **project_write** and reload again
+   b. **wb_play** — This compiles ALL scripts (including the handler scripts) and enters game mode. This is the FIRST compilation step and MUST happen before wb_reload will work.
+   c. **wb_stop** — Return to the World Editor after verifying the game launched successfully
+   d. If compilation failed (errors in the Workbench console), fix with **project_write**, then use **wb_reload** (target: "scripts") to recompile, and try **wb_play** again
+   e. **wb_resources** (action: "register") — Register every new prefab, config, and layout file
 
-10. **wb_play** — Launch the mod in-game to test. Use **wb_stop** to return to editor.
+10. **wb_play** again if needed for further testing. Use **wb_stop** to return to editor.
 
 11. **wb_cleanup** with the addon's root directory path — Remove the temporary handler scripts before the user publishes. NEVER skip this step.
 

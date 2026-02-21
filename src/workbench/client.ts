@@ -130,8 +130,12 @@ export class WorkbenchClient {
    * Safe to call even if scripts were never injected.
    */
   cleanupHandlerScripts(modDir: string): boolean {
-    const handlerDir = join(modDir, "Scripts", "WorkbenchGame", HANDLER_FOLDER);
-    if (!existsSync(handlerDir)) return false;
+    const handlerDir = resolve(modDir, "Scripts", "WorkbenchGame", HANDLER_FOLDER);
+    logger.info(`Checking for handler scripts at: ${handlerDir}`);
+    if (!existsSync(handlerDir)) {
+      logger.info(`Handler scripts not found at ${handlerDir}`);
+      return false;
+    }
     try {
       rmSync(handlerDir, { recursive: true, force: true });
       logger.info(`Removed handler scripts from ${handlerDir}`);

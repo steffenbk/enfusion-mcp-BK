@@ -55,11 +55,12 @@ Follow this workflow — every step is mandatory:
 
 7. **Workbench Setup** (MANDATORY — do not skip, do not tell the user to do this):
    a. **wb_launch** with \`gprojPath\` set to the addon's .gproj file — this copies handler scripts into the mod, skips the launcher, and opens the project in the World Editor with full NET API access
-   b. **wb_reload** (target: "scripts") — Compile all scripts
-   c. **wb_resources** (action: "register") — Register any new prefabs, configs, or layouts
-   d. If compilation fails, fix and reload again
+   b. **wb_play** — This compiles ALL scripts (including the handler scripts) and enters game mode. This is the FIRST compilation step and MUST happen before wb_reload will work.
+   c. **wb_stop** — Return to the World Editor after verifying the game launched successfully
+   d. If compilation failed, fix with **project_write**, then use **wb_reload** (target: "scripts") to recompile, and try **wb_play** again
+   e. **wb_resources** (action: "register") — Register any new prefabs, configs, or layouts
 
-8. **wb_play** — Test the changes in-game. Use **wb_stop** to return to editor.
+8. **wb_play** again if needed for further testing. Use **wb_stop** to return to editor.
 
 9. **wb_cleanup** with the addon's root directory path — Remove the temporary handler scripts before the user publishes. NEVER skip this step.
 

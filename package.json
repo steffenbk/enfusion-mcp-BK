@@ -1,6 +1,6 @@
 {
   "name": "enfusion-mcp",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "type": "module",
   "description": "MCP server for Arma Reforger / Enfusion engine modding — create mods from natural language",
   "bin": {

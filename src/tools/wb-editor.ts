@@ -96,7 +96,12 @@ export function registerWbEditorTools(server: McpServer, client: WorkbenchClient
         };
         if (path) params.path = path;
 
-        const result = await client.call<Record<string, unknown>>("EMCP_WB_EditorControl", params);
+        // Save can open a modal dialog for unsaved worlds — use longer timeout
+        const result = await client.call<Record<string, unknown>>(
+          "EMCP_WB_EditorControl",
+          params,
+          { timeout: 30_000 }
+        );
 
         const label = path ? `Saved as: ${path}` : "World saved.";
         return {
@@ -109,6 +114,16 @@ export function registerWbEditorTools(server: McpServer, client: WorkbenchClient
         };
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
+        if (msg.includes("timed out")) {
+          return {
+            content: [
+              {
+                type: "text" as const,
+                text: `**Save Pending** — Workbench opened a save dialog that requires user confirmation. The world will be saved once the user clicks OK in Workbench. This is normal for worlds that haven't been saved before.`,
+              },
+            ],
+          };
+        }
         return {
           content: [{ type: "text" as const, text: `Error saving: ${msg}` }],
         };

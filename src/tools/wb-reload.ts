@@ -17,23 +17,13 @@ export function registerWbReload(server: McpServer, client: WorkbenchClient): vo
     },
     async ({ target }) => {
       try {
-        const results: string[] = [];
-
-        if (target === "scripts" || target === "both") {
-          await client.call("ReloadScripts");
-          results.push("Scripts reloaded successfully.");
-        }
-
-        if (target === "plugins" || target === "both") {
-          await client.call("ReloadPlugins");
-          results.push("Plugins reloaded successfully.");
-        }
+        const result = await client.call<Record<string, unknown>>("EMCP_WB_Reload", { target });
 
         return {
           content: [
             {
               type: "text" as const,
-              text: `**Reload Complete**\n\n${results.join("\n")}`,
+              text: `**Reload Complete**\n\n${result.message || "Reload triggered."}`,
             },
           ],
         };
