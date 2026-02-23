@@ -9,6 +9,8 @@ export interface Config {
   workbenchPath: string;
   /** Default project directory for project_browse */
   projectPath: string;
+  /** Path to base game installation (auto-derived from workbenchPath) */
+  gamePath: string;
   /** Directory containing scraped data index */
   dataDir: string;
   /** Directory containing mod pattern definitions */
@@ -19,10 +21,13 @@ export interface Config {
   workbenchPort: number;
 }
 
+const DEFAULT_WORKBENCH_PATH =
+  "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Arma Reforger Tools";
+
 const DEFAULTS: Config = {
-  workbenchPath:
-    "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Arma Reforger Tools",
+  workbenchPath: DEFAULT_WORKBENCH_PATH,
   projectPath: join(homedir(), "Documents", "My Games", "ArmaReforgerWorkbench", "addons"),
+  gamePath: resolve(DEFAULT_WORKBENCH_PATH, "..", "Arma Reforger"),
   dataDir: resolve(
     dirname(fileURLToPath(import.meta.url)),
     "..",
@@ -73,6 +78,9 @@ export function loadConfig(): Config {
   if (process.env.ENFUSION_PROJECT_PATH) {
     config.projectPath = process.env.ENFUSION_PROJECT_PATH;
   }
+  if (process.env.ENFUSION_GAME_PATH) {
+    config.gamePath = process.env.ENFUSION_GAME_PATH;
+  }
   if (process.env.ENFUSION_MCP_DATA_DIR) {
     config.dataDir = process.env.ENFUSION_MCP_DATA_DIR;
   }
@@ -84,6 +92,11 @@ export function loadConfig(): Config {
     if (!isNaN(port) && port > 0 && port < 65536) {
       config.workbenchPort = port;
     }
+  }
+
+  // Auto-derive gamePath from workbenchPath if not explicitly set
+  if (!process.env.ENFUSION_GAME_PATH && config.workbenchPath !== DEFAULT_WORKBENCH_PATH) {
+    config.gamePath = resolve(config.workbenchPath, "..", "Arma Reforger");
   }
 
   logger.debug("Config loaded", config);

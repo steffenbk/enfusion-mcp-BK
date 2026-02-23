@@ -1,5 +1,5 @@
 import { loadIndex } from "./loader.js";
-import type { ClassInfo, MethodInfo, WikiPage, GroupInfo } from "./types.js";
+import type { ClassInfo, MethodInfo, EnumInfo, PropertyInfo, WikiPage, GroupInfo } from "./types.js";
 
 export interface MethodSearchResult {
   className: string;
@@ -8,17 +8,35 @@ export interface MethodSearchResult {
   method: MethodInfo;
 }
 
+export interface EnumSearchResult {
+  className: string;
+  classSource: "enfusion" | "arma";
+  classGroup: string;
+  enumInfo: EnumInfo;
+}
+
+export interface PropertySearchResult {
+  className: string;
+  classSource: "enfusion" | "arma";
+  classGroup: string;
+  property: PropertyInfo;
+}
+
 export interface SearchResult {
-  type: "class" | "method";
+  type: "class" | "method" | "enum" | "property";
   score: number;
   classInfo?: ClassInfo;
   methodResult?: MethodSearchResult;
+  enumResult?: EnumSearchResult;
+  propertyResult?: PropertySearchResult;
 }
 
 export class SearchEngine {
   private classByName: Map<string, ClassInfo> = new Map();
   private classNames: string[] = [];
   private methodIndex: Map<string, MethodSearchResult[]> = new Map();
+  private enumIndex: Map<string, EnumSearchResult[]> = new Map();
+  private propertyIndex: Map<string, PropertySearchResult[]> = new Map();
   private wikiPages: WikiPage[] = [];
   private groups: GroupInfo[] = [];
   private loaded = false;
@@ -39,8 +57,13 @@ export class SearchEngine {
       this.classByName.set(key, cls);
       this.classNames.push(cls.name);
 
-      // Index methods
-      for (const method of [...cls.methods, ...cls.protectedMethods]) {
+      // Index methods (public + protected + static)
+      const allMethods = [
+        ...(cls.methods || []),
+        ...(cls.protectedMethods || []),
+        ...(cls.staticMethods || []),
+      ];
+      for (const method of allMethods) {
         const methodKey = method.name.toLowerCase();
         let entries = this.methodIndex.get(methodKey);
         if (!entries) {
@@ -52,6 +75,57 @@ export class SearchEngine {
           classSource: cls.source,
           classGroup: cls.group,
           method,
+        });
+      }
+
+      // Index enums
+      for (const enumInfo of cls.enums || []) {
+        const enumKey = enumInfo.name.toLowerCase();
+        let entries = this.enumIndex.get(enumKey);
+        if (!entries) {
+          entries = [];
+          this.enumIndex.set(enumKey, entries);
+        }
+        entries.push({
+          className: cls.name,
+          classSource: cls.source,
+          classGroup: cls.group,
+          enumInfo,
+        });
+
+        // Also index by enum value names for searching
+        for (const val of enumInfo.values) {
+          const valKey = val.name.toLowerCase();
+          let valEntries = this.enumIndex.get(valKey);
+          if (!valEntries) {
+            valEntries = [];
+            this.enumIndex.set(valKey, valEntries);
+          }
+          // Only add if not already referencing same enum
+          if (!valEntries.some((e) => e.enumInfo.name === enumInfo.name && e.className === cls.name)) {
+            valEntries.push({
+              className: cls.name,
+              classSource: cls.source,
+              classGroup: cls.group,
+              enumInfo,
+            });
+          }
+        }
+      }
+
+      // Index properties (public + protected)
+      for (const prop of [...(cls.properties || []), ...(cls.protectedProperties || [])]) {
+        const propKey = prop.name.toLowerCase();
+        let entries = this.propertyIndex.get(propKey);
+        if (!entries) {
+          entries = [];
+          this.propertyIndex.set(propKey, entries);
+        }
+        entries.push({
+          className: cls.name,
+          classSource: cls.source,
+          classGroup: cls.group,
+          property: prop,
         });
       }
     }
@@ -137,6 +211,71 @@ export class SearchEngine {
     return results.slice(0, limit).map((r) => r.result);
   }
 
+  searchEnums(
+    query: string,
+    source: "enfusion" | "arma" | "all" = "all",
+    limit = 10
+  ): EnumSearchResult[] {
+    const q = query.toLowerCase();
+    const results: Array<{ result: EnumSearchResult; score: number }> = [];
+    const seen = new Set<string>();
+
+    for (const [enumKey, entries] of this.enumIndex) {
+      let score = 0;
+      if (enumKey === q) {
+        score = 100;
+      } else if (enumKey.startsWith(q)) {
+        score = 80;
+      } else if (enumKey.includes(q)) {
+        score = 60;
+      }
+
+      if (score > 0) {
+        for (const entry of entries) {
+          if (source !== "all" && entry.classSource !== source) continue;
+          // Deduplicate by className+enumName
+          const dedup = `${entry.className}::${entry.enumInfo.name}`;
+          if (seen.has(dedup)) continue;
+          seen.add(dedup);
+          results.push({ result: entry, score });
+        }
+      }
+    }
+
+    results.sort((a, b) => b.score - a.score);
+    return results.slice(0, limit).map((r) => r.result);
+  }
+
+  searchProperties(
+    query: string,
+    source: "enfusion" | "arma" | "all" = "all",
+    limit = 10
+  ): PropertySearchResult[] {
+    const q = query.toLowerCase();
+    const results: Array<{ result: PropertySearchResult; score: number }> = [];
+
+    for (const [propName, entries] of this.propertyIndex) {
+      let score = 0;
+      if (propName === q) {
+        score = 100;
+      } else if (propName.startsWith(q)) {
+        score = 80;
+      } else if (propName.includes(q)) {
+        score = 60;
+      }
+
+      if (score > 0) {
+        for (const entry of entries) {
+          if (source !== "all" && entry.classSource !== source) continue;
+          results.push({ result: entry, score });
+        }
+      }
+    }
+
+    results.sort((a, b) => b.score - a.score);
+    return results.slice(0, limit).map((r) => r.result);
+  }
+
   searchAny(
     query: string,
     source: "enfusion" | "arma" | "all" = "all",
@@ -161,7 +300,27 @@ export class SearchEngine {
         }) satisfies SearchResult
     );
 
-    const combined = [...classResults, ...methodResults];
+    const enumResults = this.searchEnums(query, source, limit).map(
+      (er) =>
+        ({
+          type: "enum" as const,
+          score:
+            er.enumInfo.name.toLowerCase() === query.toLowerCase() ? 95 : 45,
+          enumResult: er,
+        }) satisfies SearchResult
+    );
+
+    const propertyResults = this.searchProperties(query, source, limit).map(
+      (pr) =>
+        ({
+          type: "property" as const,
+          score:
+            pr.property.name.toLowerCase() === query.toLowerCase() ? 85 : 35,
+          propertyResult: pr,
+        }) satisfies SearchResult
+    );
+
+    const combined = [...classResults, ...methodResults, ...enumResults, ...propertyResults];
     combined.sort((a, b) => b.score - a.score);
     return combined.slice(0, limit);
   }
@@ -264,6 +423,56 @@ export class SearchEngine {
   }
 
   /**
+   * Get all inherited members by walking the inheritance chain.
+   * Returns methods, properties, and enums from all ancestor classes.
+   */
+  getInheritedMembers(name: string): {
+    methods: MethodSearchResult[];
+    properties: PropertySearchResult[];
+    enums: EnumSearchResult[];
+  } {
+    const methods: MethodSearchResult[] = [];
+    const properties: PropertySearchResult[] = [];
+    const enums: EnumSearchResult[] = [];
+
+    const chain = this.getInheritanceChain(name);
+    // Skip the class itself — only include ancestors
+    for (const ancestorName of chain.slice(0, -1)) {
+      const cls = this.getClass(ancestorName);
+      if (!cls) continue;
+
+      for (const method of [...(cls.methods || []), ...(cls.protectedMethods || []), ...(cls.staticMethods || [])]) {
+        methods.push({
+          className: cls.name,
+          classSource: cls.source,
+          classGroup: cls.group,
+          method,
+        });
+      }
+
+      for (const prop of [...(cls.properties || []), ...(cls.protectedProperties || [])]) {
+        properties.push({
+          className: cls.name,
+          classSource: cls.source,
+          classGroup: cls.group,
+          property: prop,
+        });
+      }
+
+      for (const enumInfo of cls.enums || []) {
+        enums.push({
+          className: cls.name,
+          classSource: cls.source,
+          classGroup: cls.group,
+          enumInfo,
+        });
+      }
+    }
+
+    return { methods, properties, enums };
+  }
+
+  /**
    * Get all classes that inherit from ScriptComponent (directly or indirectly).
    * Useful for finding available components to attach to entities.
    */
@@ -288,10 +497,18 @@ export class SearchEngine {
     return this.loaded;
   }
 
-  getStats(): { totalClasses: number; totalMethods: number; totalWikiPages: number } {
+  getStats(): {
+    totalClasses: number;
+    totalMethods: number;
+    totalEnums: number;
+    totalProperties: number;
+    totalWikiPages: number;
+  } {
     return {
       totalClasses: this.classByName.size,
       totalMethods: this.methodIndex.size,
+      totalEnums: this.enumIndex.size,
+      totalProperties: this.propertyIndex.size,
       totalWikiPages: this.wikiPages.length,
     };
   }

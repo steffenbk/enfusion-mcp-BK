@@ -4,6 +4,9 @@ import type {
   ClassInfo,
   MethodInfo,
   ParamInfo,
+  EnumInfo,
+  EnumValue,
+  PropertyInfo,
   GroupInfo,
   HierarchyNode,
   WikiPage,
@@ -159,6 +162,28 @@ export function parseClassPage(
   // Parse protected member functions
   const protectedMethods = parseMemberTable($, "pro-methods");
 
+  // Parse static member functions
+  const staticMethods = parseMemberTable($, "pub-static-methods");
+
+  // Parse public member variables (attributes)
+  const properties = parsePropertyTable($, "pub-attribs");
+
+  // Parse protected member variables
+  const protectedProperties = parsePropertyTable($, "pro-attribs");
+
+  // Parse static public attributes (constants, enum values in Enfusion)
+  const staticAttribs = parsePropertyTable($, "pub-static-attribs");
+  // Merge static attribs into properties
+  properties.push(...staticAttribs);
+
+  // Parse enum types (standard Doxygen pub-types — rare in Enfusion)
+  const enums = parseEnumSection($);
+
+  // Enhance method descriptions with detailed docs
+  enrichMethodDescriptions($, methods);
+  enrichMethodDescriptions($, protectedMethods);
+  enrichMethodDescriptions($, staticMethods);
+
   // Extract source file if available
   const sourceFile = extractSourceFile($);
 
@@ -180,6 +205,10 @@ export function parseClassPage(
     sourceFile,
     methods,
     protectedMethods,
+    staticMethods,
+    enums,
+    properties,
+    protectedProperties,
     docsUrl,
   };
 }
@@ -296,6 +325,265 @@ function parseParamsFromSignature(
   }
 
   return params;
+}
+
+/**
+ * Parse a member variable (attribute) table section.
+ * Attributes have the same row structure as methods but without parenthesized params.
+ * Section IDs: "pub-attribs", "pro-attribs"
+ */
+function parsePropertyTable(
+  $: cheerio.CheerioAPI,
+  sectionId: string
+): PropertyInfo[] {
+  const properties: PropertyInfo[] = [];
+
+  const headingAnchor = $(`a#${sectionId}`);
+  if (!headingAnchor.length) return properties;
+
+  const table = headingAnchor.closest("table.memberdecls");
+  if (!table.length) return properties;
+
+  let inSection = false;
+
+  table.find("tr").each((_i, row) => {
+    const $row = $(row);
+    const rowClass = $row.attr("class") || "";
+
+    if (rowClass === "heading") {
+      const anchor = $row.find(`a#${sectionId}`);
+      if (anchor.length) {
+        inSection = true;
+        return;
+      }
+      if (inSection) {
+        inSection = false;
+        return false; // break
+      }
+      return;
+    }
+
+    if (!inSection) return;
+
+    if (rowClass.startsWith("memitem:")) {
+      const propType = $row.find("td.memItemLeft").text().trim();
+      const rightCell = $row.find("td.memItemRight");
+      const nameLink = rightCell.find("a.el");
+      const propName = nameLink.text().trim() || rightCell.text().trim();
+
+      if (!propName) return;
+
+      // Get description from memdesc row
+      const hash = rowClass.split(":")[1];
+      const descRow = table.find(`tr.memdesc\\:${hash}`);
+      const desc = descRow.find("td.mdescRight").text().trim();
+
+      properties.push({
+        name: propName,
+        type: propType,
+        description: desc,
+      });
+    }
+  });
+
+  return properties;
+}
+
+/**
+ * Parse enum type definitions from the pub-types section and their detail docs.
+ * Doxygen lists enum names in the pub-types member table, and their values
+ * appear in detail sections with <table class="fieldtable"> or <dl> lists.
+ */
+function parseEnumSection($: cheerio.CheerioAPI): EnumInfo[] {
+  const enums: EnumInfo[] = [];
+
+  // Look for pub-types section (could also be pro-types)
+  for (const sectionId of ["pub-types", "pro-types"]) {
+    const headingAnchor = $(`a#${sectionId}`);
+    if (!headingAnchor.length) continue;
+
+    const table = headingAnchor.closest("table.memberdecls");
+    if (!table.length) continue;
+
+    let inSection = false;
+
+    table.find("tr").each((_i, row) => {
+      const $row = $(row);
+      const rowClass = $row.attr("class") || "";
+
+      if (rowClass === "heading") {
+        const anchor = $row.find(`a#${sectionId}`);
+        if (anchor.length) {
+          inSection = true;
+          return;
+        }
+        if (inSection) {
+          inSection = false;
+          return false; // break
+        }
+        return;
+      }
+
+      if (!inSection) return;
+
+      if (rowClass.startsWith("memitem:")) {
+        const leftText = $row.find("td.memItemLeft").text().trim();
+        const rightCell = $row.find("td.memItemRight");
+        const nameLink = rightCell.find("a.el");
+        const enumName = nameLink.text().trim();
+
+        // Only process enum types (skip typedefs, classes)
+        if (!enumName || !leftText.includes("enum")) return;
+
+        const hash = rowClass.split(":")[1];
+
+        // Get brief description
+        const descRow = table.find(`tr.memdesc\\:${hash}`);
+        const desc = descRow.find("td.mdescRight").text().trim();
+
+        // Try to parse enum values from the right cell text
+        // Doxygen often shows: EnumName { VAL1, VAL2, VAL3 }
+        const values = parseEnumValuesFromBrief($, hash, rightCell.text());
+
+        enums.push({
+          name: enumName,
+          description: desc,
+          values,
+        });
+      }
+    });
+  }
+
+  return enums;
+}
+
+/**
+ * Parse enum values. First tries the detailed documentation section (fieldtable),
+ * then falls back to parsing the inline { VAL1, VAL2 } text from the member table.
+ */
+function parseEnumValuesFromBrief(
+  $: cheerio.CheerioAPI,
+  memberHash: string,
+  briefText: string
+): EnumValue[] {
+  const values: EnumValue[] = [];
+
+  // Strategy 1: Look for detailed documentation with fieldtable
+  // Doxygen puts enum detail in a memdoc div keyed by the member anchor hash
+  const detailAnchor = $(`a#${memberHash}`).closest("div.memdoc");
+  // Fallback: try memtitle sibling
+  const memtitle = $(`a[id="${memberHash}"]`).closest("h2.memtitle");
+  const memdoc = detailAnchor.length
+    ? detailAnchor
+    : memtitle.next("div.memdoc");
+
+  if (memdoc.length) {
+    const fieldTable = memdoc.find("table.fieldtable");
+    if (fieldTable.length) {
+      fieldTable.find("tr").each((_i, tr) => {
+        const $tr = $(tr);
+        const cells = $tr.find("td");
+        if (cells.length >= 1) {
+          // First cell: enum value name (often contains an anchor + name)
+          const valName = cells.eq(0).find("em").text().trim()
+            || cells.eq(0).text().trim();
+          const valDesc = cells.length >= 2 ? cells.eq(1).text().trim() : "";
+
+          if (valName && valName !== "Enumerator") {
+            values.push({ name: valName, value: "", description: valDesc });
+          }
+        }
+      });
+      if (values.length > 0) return values;
+    }
+
+    // Also try <dl> definition lists (alternative Doxygen format)
+    const dl = memdoc.find("dl");
+    if (dl.length) {
+      let currentName = "";
+      dl.find("dt").each((_i, dt) => {
+        currentName = $(dt).find("em").text().trim() || $(dt).text().trim();
+        const dd = $(dt).next("dd");
+        if (dd.length && currentName) {
+          values.push({ name: currentName, value: "", description: dd.text().trim() });
+          currentName = "";
+        }
+      });
+      if (values.length > 0) return values;
+    }
+  }
+
+  // Strategy 2: Parse the inline enum { VAL1, VAL2 } text from member table
+  const braceMatch = briefText.match(/\{([^}]*)\}/);
+  if (braceMatch) {
+    const valStr = braceMatch[1];
+    const parts = valStr.split(",");
+    for (const part of parts) {
+      const trimmed = part.trim();
+      if (!trimmed) continue;
+
+      // Handle "NAME = value" assignments
+      const eqIdx = trimmed.indexOf("=");
+      if (eqIdx !== -1) {
+        values.push({
+          name: trimmed.slice(0, eqIdx).trim(),
+          value: trimmed.slice(eqIdx + 1).trim(),
+          description: "",
+        });
+      } else {
+        values.push({ name: trimmed, value: "", description: "" });
+      }
+    }
+  }
+
+  return values;
+}
+
+/**
+ * Enrich method descriptions with detailed documentation from memdoc sections.
+ * Doxygen puts detailed method docs in sections with:
+ *   <h2 class="memtitle"><span class="permalink">...</span>MethodName()</h2>
+ *   <div class="memdoc"> ... detailed text ... </div>
+ * We match by method name and replace the brief description if the detailed one is longer.
+ */
+function enrichMethodDescriptions(
+  $: cheerio.CheerioAPI,
+  methods: MethodInfo[]
+): void {
+  if (methods.length === 0) return;
+
+  // Build a map of method names to their memdoc contents
+  $("h2.memtitle").each((_i, heading) => {
+    const $heading = $(heading);
+    const memdoc = $heading.next("div.memdoc");
+    if (!memdoc.length) return;
+
+    // Extract method name from the heading text (strip permalink spans)
+    const headingClone = $heading.clone();
+    headingClone.find("span.permalink").remove();
+    const headingText = headingClone.text().trim();
+
+    // The heading typically shows "MethodName()" — extract just the name
+    const nameMatch = headingText.match(/^(\w+)\s*\(/);
+    if (!nameMatch) return;
+    const methodName = nameMatch[1];
+
+    // Find the matching method(s) and enrich their description
+    const detailedText = memdoc.text().trim();
+    if (!detailedText) return;
+
+    // Trim to a reasonable length to avoid massive descriptions
+    const maxLen = 500;
+    const trimmedDetail = detailedText.length > maxLen
+      ? detailedText.slice(0, maxLen) + "..."
+      : detailedText;
+
+    for (const method of methods) {
+      if (method.name === methodName && trimmedDetail.length > method.description.length) {
+        method.description = trimmedDetail;
+      }
+    }
+  });
 }
 
 function extractSourceFile($: cheerio.CheerioAPI): string {

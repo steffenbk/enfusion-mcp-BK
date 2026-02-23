@@ -39,6 +39,7 @@ export function registerClassResource(
 
       const tree = searchEngine.getClassTree(name);
       const chain = searchEngine.getInheritanceChain(name);
+      const inherited = searchEngine.getInheritedMembers(name);
 
       return {
         contents: [
@@ -56,8 +57,15 @@ export function registerClassResource(
                 inheritanceChain: chain,
                 ancestors: tree.ancestors,
                 descendants: tree.descendants,
+                enums: cls.enums || [],
+                staticMethods: cls.staticMethods || [],
                 methods: cls.methods,
                 protectedMethods: cls.protectedMethods,
+                properties: cls.properties || [],
+                protectedProperties: cls.protectedProperties || [],
+                inheritedMethods: inherited.methods,
+                inheritedProperties: inherited.properties,
+                inheritedEnums: inherited.enums,
                 docsUrl: cls.docsUrl,
               },
               null,

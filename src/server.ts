@@ -37,6 +37,10 @@ import { registerWbLocalization } from "./tools/wb-localization.js";
 import { registerWbProjects } from "./tools/wb-projects.js";
 import { registerWbValidate } from "./tools/wb-validate.js";
 import { registerWbState } from "./tools/wb-state.js";
+import { registerGameBrowse } from "./tools/game-browse.js";
+import { registerGameRead } from "./tools/game-read.js";
+import { registerAssetSearch } from "./tools/asset-search.js";
+import { registerWorkshopInfo } from "./tools/workshop-info.js";
 import type { Config } from "./config.js";
 
 export function registerTools(server: McpServer, config: Config): void {
@@ -87,6 +91,12 @@ export function registerTools(server: McpServer, config: Config): void {
   registerWbProjects(server, wbClient);
   registerWbValidate(server, wbClient);
   registerWbState(server, wbClient);
+
+  // Base game access tools
+  registerGameBrowse(server, config);
+  registerGameRead(server, config);
+  registerAssetSearch(server, config);
+  registerWorkshopInfo(server, config);
 
   // MCP Prompts
   registerCreateModPrompt(server, patterns);

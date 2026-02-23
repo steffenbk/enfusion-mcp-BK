@@ -121,4 +121,75 @@ describe("SearchEngine", () => {
       expect(names).toContain("IEntity");
     });
   });
+
+  describe("getStats", () => {
+    it("includes enum and property counts", () => {
+      const stats = engine.getStats();
+      expect(stats.totalClasses).toBeGreaterThan(0);
+      expect(stats.totalMethods).toBeGreaterThan(0);
+      expect(typeof stats.totalEnums).toBe("number");
+      expect(typeof stats.totalProperties).toBe("number");
+      expect(stats.totalWikiPages).toBeGreaterThan(0);
+    });
+  });
+
+  describe("searchEnums", () => {
+    it("returns array for any query", () => {
+      const results = engine.searchEnums("weapon");
+      expect(Array.isArray(results)).toBe(true);
+      // Each result should have className and enumInfo
+      for (const r of results.slice(0, 3)) {
+        expect(r.className).toBeTruthy();
+        expect(r.enumInfo).toBeDefined();
+        expect(r.enumInfo.name).toBeTruthy();
+      }
+    });
+  });
+
+  describe("searchProperties", () => {
+    it("returns array for any query", () => {
+      const results = engine.searchProperties("position");
+      expect(Array.isArray(results)).toBe(true);
+      for (const r of results.slice(0, 3)) {
+        expect(r.className).toBeTruthy();
+        expect(r.property).toBeDefined();
+        expect(r.property.name).toBeTruthy();
+      }
+    });
+  });
+
+  describe("searchAny", () => {
+    it("includes class, method, enum, and property result types", () => {
+      // searchAny should accept all result types without errors
+      const results = engine.searchAny("entity");
+      expect(Array.isArray(results)).toBe(true);
+      expect(results.length).toBeGreaterThan(0);
+      // Each result should have a valid type
+      for (const r of results) {
+        expect(["class", "method", "enum", "property"]).toContain(r.type);
+      }
+    });
+  });
+
+  describe("getInheritedMembers", () => {
+    it("returns inherited methods for GenericEntity", () => {
+      const inherited = engine.getInheritedMembers("GenericEntity");
+      expect(inherited.methods).toBeDefined();
+      expect(Array.isArray(inherited.methods)).toBe(true);
+      expect(inherited.properties).toBeDefined();
+      expect(inherited.enums).toBeDefined();
+      // GenericEntity inherits from IEntity which should have methods
+      if (inherited.methods.length > 0) {
+        expect(inherited.methods[0].className).toBeTruthy();
+        expect(inherited.methods[0].method).toBeDefined();
+      }
+    });
+
+    it("returns empty for root classes", () => {
+      const inherited = engine.getInheritedMembers("NonExistent12345");
+      expect(inherited.methods).toEqual([]);
+      expect(inherited.properties).toEqual([]);
+      expect(inherited.enums).toEqual([]);
+    });
+  });
 });

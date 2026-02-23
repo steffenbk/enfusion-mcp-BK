@@ -1,4 +1,4 @@
-import { writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { writeFileSync, readFileSync, mkdirSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { logger } from "../utils/logger.js";
 import type {
@@ -39,9 +39,23 @@ export function writeOutput(dataDir: string, output: ScrapeOutput): void {
   );
   writeJson(resolve(apiDir, "hierarchy.json"), output.hierarchy);
   writeJson(resolve(apiDir, "groups.json"), output.groups);
-  writeJson(resolve(wikiDir, "pages.json"), output.wikiPages);
+  // Merge wiki pages: preserve existing BI wiki pages, replace only Doxygen-sourced pages
+  const pagesPath = resolve(wikiDir, "pages.json");
+  let existingPages: WikiPage[] = [];
+  if (existsSync(pagesPath)) {
+    try {
+      existingPages = JSON.parse(readFileSync(pagesPath, "utf-8")) as WikiPage[];
+    } catch {
+      // Corrupted file — will be overwritten
+    }
+  }
+  // Keep pages from sources NOT in the current scrape output
+  const scrapedSources = new Set(output.wikiPages.map((p) => p.source));
+  const preservedPages = existingPages.filter((p) => !scrapedSources.has(p.source));
+  const mergedPages = [...preservedPages, ...output.wikiPages];
+  writeJson(pagesPath, mergedPages);
 
   logger.info(
-    `Scrape complete: ${output.enfusionClasses.length} enfusion classes, ${output.armaClasses.length} arma classes, ${output.hierarchy.length} hierarchy nodes, ${output.groups.length} groups, ${output.wikiPages.length} wiki pages`
+    `Scrape complete: ${output.enfusionClasses.length} enfusion classes, ${output.armaClasses.length} arma classes, ${output.hierarchy.length} hierarchy nodes, ${output.groups.length} groups, ${mergedPages.length} wiki pages (${output.wikiPages.length} from Doxygen + ${preservedPages.length} preserved)`
   );
 }

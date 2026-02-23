@@ -1,6 +1,11 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import type { SearchEngine, MethodSearchResult } from "../index/search-engine.js";
+import type {
+  SearchEngine,
+  MethodSearchResult,
+  EnumSearchResult,
+  PropertySearchResult,
+} from "../index/search-engine.js";
 import type { ClassInfo } from "../index/types.js";
 
 function formatClassResult(cls: ClassInfo, verbose = true): string {
@@ -25,6 +30,44 @@ function formatClassResult(cls: ClassInfo, verbose = true): string {
     lines.push(cls.description);
   }
 
+  // Enums
+  const enums = cls.enums || [];
+  if (enums.length > 0) {
+    lines.push("");
+    lines.push(`### Enums (${enums.length})`);
+    for (const e of enums) {
+      const desc = e.description ? ` -- ${e.description}` : "";
+      lines.push(`- **${e.name}**${desc}`);
+      if (verbose && e.values.length > 0) {
+        const shown = e.values.slice(0, 20);
+        for (const v of shown) {
+          const valStr = v.value ? ` = ${v.value}` : "";
+          const valDesc = v.description ? ` -- ${v.description}` : "";
+          lines.push(`  - ${v.name}${valStr}${valDesc}`);
+        }
+        if (e.values.length > 20) {
+          lines.push(`  - ... and ${e.values.length - 20} more values`);
+        }
+      }
+    }
+  }
+
+  // Static methods
+  const staticMethods = cls.staticMethods || [];
+  if (staticMethods.length > 0) {
+    const shown = verbose ? staticMethods : staticMethods.slice(0, 10);
+    lines.push("");
+    lines.push(`### Static Methods (${staticMethods.length})`);
+    for (const m of shown) {
+      const desc = m.description ? ` -- ${m.description}` : "";
+      lines.push(`- ${m.signature}${desc}`);
+    }
+    if (!verbose && staticMethods.length > 10) {
+      lines.push(`  ... and ${staticMethods.length - 10} more`);
+    }
+  }
+
+  // Public methods
   if (cls.methods.length > 0) {
     const shown = verbose ? cls.methods : cls.methods.slice(0, 10);
     lines.push("");
@@ -44,6 +87,33 @@ function formatClassResult(cls: ClassInfo, verbose = true): string {
     for (const m of cls.protectedMethods) {
       const desc = m.description ? ` -- ${m.description}` : "";
       lines.push(`- ${m.signature}${desc}`);
+    }
+  }
+
+  // Properties
+  const properties = cls.properties || [];
+  if (properties.length > 0) {
+    const shown = verbose ? properties : properties.slice(0, 10);
+    lines.push("");
+    lines.push(`### Properties (${properties.length})`);
+    for (const p of shown) {
+      const desc = p.description ? ` -- ${p.description}` : "";
+      lines.push(`- ${p.type} **${p.name}**${desc}`);
+    }
+    if (!verbose && properties.length > 10) {
+      lines.push(`  ... and ${properties.length - 10} more`);
+    }
+  }
+
+  if (verbose) {
+    const protectedProps = cls.protectedProperties || [];
+    if (protectedProps.length > 0) {
+      lines.push("");
+      lines.push(`### Protected Properties (${protectedProps.length})`);
+      for (const p of protectedProps) {
+        const desc = p.description ? ` -- ${p.description}` : "";
+        lines.push(`- ${p.type} **${p.name}**${desc}`);
+      }
     }
   }
 
@@ -76,6 +146,54 @@ function formatMethodResult(results: MethodSearchResult[]): string {
   return lines.join("\n");
 }
 
+function formatEnumResult(results: EnumSearchResult[]): string {
+  const lines: string[] = [];
+  lines.push(`Found ${results.length} enum match${results.length !== 1 ? "es" : ""}:\n`);
+
+  for (let i = 0; i < results.length; i++) {
+    const r = results[i];
+    const sourceLabel = r.classSource === "enfusion" ? "Enfusion Engine" : "Arma Reforger";
+    lines.push(`${i + 1}. **${r.enumInfo.name}** (in ${r.className})`);
+    if (r.enumInfo.description) {
+      lines.push(`   ${r.enumInfo.description}`);
+    }
+    lines.push(`   Source: ${sourceLabel}${r.classGroup ? ` > ${r.classGroup}` : ""}`);
+    if (r.enumInfo.values.length > 0) {
+      lines.push(`   Values:`);
+      const shown = r.enumInfo.values.slice(0, 20);
+      for (const v of shown) {
+        const valStr = v.value ? ` = ${v.value}` : "";
+        const valDesc = v.description ? ` -- ${v.description}` : "";
+        lines.push(`   - ${v.name}${valStr}${valDesc}`);
+      }
+      if (r.enumInfo.values.length > 20) {
+        lines.push(`   - ... and ${r.enumInfo.values.length - 20} more values`);
+      }
+    }
+    lines.push("");
+  }
+
+  return lines.join("\n");
+}
+
+function formatPropertyResult(results: PropertySearchResult[]): string {
+  const lines: string[] = [];
+  lines.push(`Found ${results.length} property match${results.length !== 1 ? "es" : ""}:\n`);
+
+  for (let i = 0; i < results.length; i++) {
+    const r = results[i];
+    const sourceLabel = r.classSource === "enfusion" ? "Enfusion Engine" : "Arma Reforger";
+    lines.push(`${i + 1}. ${r.className}.${r.property.name} : ${r.property.type}`);
+    if (r.property.description) {
+      lines.push(`   ${r.property.description}`);
+    }
+    lines.push(`   Class: ${r.className} (${sourceLabel}${r.classGroup ? ` > ${r.classGroup}` : ""})`);
+    lines.push("");
+  }
+
+  return lines.join("\n");
+}
+
 export function registerApiSearch(server: McpServer, searchEngine: SearchEngine): void {
   server.registerTool(
     "api_search",
@@ -87,9 +205,9 @@ export function registerApiSearch(server: McpServer, searchEngine: SearchEngine)
           .string()
           .describe("Class name, method name, or keyword to search for"),
         type: z
-          .enum(["class", "method", "any"])
+          .enum(["class", "method", "enum", "property", "any"])
           .default("any")
-          .describe("Narrow search to classes or methods"),
+          .describe("Narrow search to classes, methods, enums, or properties"),
         source: z
           .enum(["enfusion", "arma", "all"])
           .default("all")
@@ -121,6 +239,20 @@ export function registerApiSearch(server: McpServer, searchEngine: SearchEngine)
         } else {
           text = formatMethodResult(results);
         }
+      } else if (type === "enum") {
+        const results = searchEngine.searchEnums(query, source, limit);
+        if (results.length === 0) {
+          text = `No enums found matching "${query}".`;
+        } else {
+          text = formatEnumResult(results);
+        }
+      } else if (type === "property") {
+        const results = searchEngine.searchProperties(query, source, limit);
+        if (results.length === 0) {
+          text = `No properties found matching "${query}".`;
+        } else {
+          text = formatPropertyResult(results);
+        }
       } else {
         const results = searchEngine.searchAny(query, source, limit);
         if (results.length === 0) {
@@ -135,6 +267,20 @@ export function registerApiSearch(server: McpServer, searchEngine: SearchEngine)
               const sourceLabel = mr.classSource === "enfusion" ? "Enfusion" : "Arma Reforger";
               parts.push(
                 `**Method:** ${mr.className}.${mr.method.signature}\n${mr.method.description || ""}\n(${sourceLabel}${mr.classGroup ? ` > ${mr.classGroup}` : ""})`
+              );
+            } else if (r.type === "enum" && r.enumResult) {
+              const er = r.enumResult;
+              const sourceLabel = er.classSource === "enfusion" ? "Enfusion" : "Arma Reforger";
+              const valList = er.enumInfo.values.slice(0, 5).map((v) => v.name).join(", ");
+              const suffix = er.enumInfo.values.length > 5 ? ", ..." : "";
+              parts.push(
+                `**Enum:** ${er.className}.${er.enumInfo.name} { ${valList}${suffix} }\n${er.enumInfo.description || ""}\n(${sourceLabel}${er.classGroup ? ` > ${er.classGroup}` : ""})`
+              );
+            } else if (r.type === "property" && r.propertyResult) {
+              const pr = r.propertyResult;
+              const sourceLabel = pr.classSource === "enfusion" ? "Enfusion" : "Arma Reforger";
+              parts.push(
+                `**Property:** ${pr.className}.${pr.property.name} : ${pr.property.type}\n${pr.property.description || ""}\n(${sourceLabel}${pr.classGroup ? ` > ${pr.classGroup}` : ""})`
               );
             }
           }

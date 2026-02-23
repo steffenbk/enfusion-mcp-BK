@@ -14,6 +14,28 @@ export interface MethodInfo {
   description: string;
 }
 
+/** A single enum member value */
+export interface EnumValue {
+  name: string;
+  /** Numeric or expression value, may be empty if not specified */
+  value: string;
+  description: string;
+}
+
+/** An enum type defined within a class or standalone */
+export interface EnumInfo {
+  name: string;
+  description: string;
+  values: EnumValue[];
+}
+
+/** A member variable / property on a class */
+export interface PropertyInfo {
+  name: string;
+  type: string;
+  description: string;
+}
+
 /** A single Enfusion script API class/interface */
 export interface ClassInfo {
   /** Class name exactly as in the API (e.g., "IEntity", "SCR_BaseGameMode") */
@@ -36,6 +58,14 @@ export interface ClassInfo {
   methods: MethodInfo[];
   /** Protected member functions */
   protectedMethods: MethodInfo[];
+  /** Static member functions */
+  staticMethods: MethodInfo[];
+  /** Enum types defined in this class */
+  enums: EnumInfo[];
+  /** Public member variables */
+  properties: PropertyInfo[];
+  /** Protected member variables */
+  protectedProperties: PropertyInfo[];
   /** URL to original documentation page */
   docsUrl: string;
 }
