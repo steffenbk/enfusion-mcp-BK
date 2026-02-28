@@ -4,21 +4,26 @@ MCP server for Arma Reforger modding. Describe what you want to build, and Claud
 
 ## Install
 
-### Claude Code (Windows)
+This is a fork of [enfusion-mcp](https://github.com/Articulated7/enfusion-mcp) with additional fixes and features. Install by cloning and building locally.
+
+### 1. Clone and build
 
 ```bash
-claude mcp add --scope user enfusion-mcp -- cmd /c npx -y enfusion-mcp
+git clone https://github.com/steffenbk/enfusion-mcp-BK.git
+cd enfusion-mcp-BK
+npm install
+npm run build
 ```
 
-### Claude Code (macOS / Linux)
+### 2. Configure Claude
+
+#### Claude Code
 
 ```bash
-claude mcp add --scope user enfusion-mcp -- npx -y enfusion-mcp
+claude mcp add --scope user enfusion-mcp -- node /path/to/enfusion-mcp-BK/dist/index.js
 ```
 
-Restart Claude Code. Verify with `/mcp`.
-
-### Claude Desktop
+#### Claude Desktop
 
 Add to your `claude_desktop_config.json`:
 
@@ -28,8 +33,13 @@ Add to your `claude_desktop_config.json`:
 {
   "mcpServers": {
     "enfusion-mcp": {
-      "command": "cmd",
-      "args": ["/c", "npx", "-y", "enfusion-mcp"]
+      "command": "node",
+      "args": ["C:\\path\\to\\enfusion-mcp-BK\\dist\\index.js"],
+      "env": {
+        "ENFUSION_WORKBENCH_PATH": "G:\\SteamLibrary\\steamapps\\common\\Arma Reforger Tools\\Workbench",
+        "ENFUSION_GAME_PATH": "G:\\SteamLibrary\\steamapps\\common\\Arma Reforger",
+        "ENFUSION_PROJECT_PATH": "C:\\Users\\YourName\\Documents\\My Games\\ArmaReforgerWorkbench\\addons"
+      }
     }
   }
 }
@@ -41,12 +51,19 @@ Add to your `claude_desktop_config.json`:
 {
   "mcpServers": {
     "enfusion-mcp": {
-      "command": "npx",
-      "args": ["-y", "enfusion-mcp"]
+      "command": "node",
+      "args": ["/path/to/enfusion-mcp-BK/dist/index.js"],
+      "env": {
+        "ENFUSION_WORKBENCH_PATH": "/path/to/Arma Reforger Tools",
+        "ENFUSION_GAME_PATH": "/path/to/Arma Reforger",
+        "ENFUSION_PROJECT_PATH": "/path/to/addons"
+      }
     }
   }
 }
 ```
+
+Restart Claude Code / Claude Desktop. Verify with `/mcp`.
 
 ### Workbench Plugin
 
