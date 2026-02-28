@@ -4,26 +4,21 @@ MCP server for Arma Reforger modding. Describe what you want to build, and Claud
 
 ## Install
 
-This is a fork of [enfusion-mcp](https://github.com/Articulated7/enfusion-mcp) with additional fixes and features. Install by cloning and building locally.
-
-### 1. Clone and build
+### Claude Code (Windows)
 
 ```bash
-git clone https://github.com/steffenbk/enfusion-mcp-BK.git
-cd enfusion-mcp-BK
-npm install
-npm run build
+claude mcp add --scope user enfusion-mcp -- cmd /c npx -y enfusion-mcp
 ```
 
-### 2. Configure Claude
-
-#### Claude Code
+### Claude Code (macOS / Linux)
 
 ```bash
-claude mcp add --scope user enfusion-mcp -- node /path/to/enfusion-mcp-BK/dist/index.js
+claude mcp add --scope user enfusion-mcp -- npx -y enfusion-mcp
 ```
 
-#### Claude Desktop
+Restart Claude Code. Verify with `/mcp`.
+
+### Claude Desktop
 
 Add to your `claude_desktop_config.json`:
 
@@ -33,13 +28,8 @@ Add to your `claude_desktop_config.json`:
 {
   "mcpServers": {
     "enfusion-mcp": {
-      "command": "node",
-      "args": ["C:\\path\\to\\enfusion-mcp-BK\\dist\\index.js"],
-      "env": {
-        "ENFUSION_WORKBENCH_PATH": "G:\\SteamLibrary\\steamapps\\common\\Arma Reforger Tools\\Workbench",
-        "ENFUSION_GAME_PATH": "G:\\SteamLibrary\\steamapps\\common\\Arma Reforger",
-        "ENFUSION_PROJECT_PATH": "C:\\Users\\YourName\\Documents\\My Games\\ArmaReforgerWorkbench\\addons"
-      }
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "enfusion-mcp"]
     }
   }
 }
@@ -51,19 +41,14 @@ Add to your `claude_desktop_config.json`:
 {
   "mcpServers": {
     "enfusion-mcp": {
-      "command": "node",
-      "args": ["/path/to/enfusion-mcp-BK/dist/index.js"],
-      "env": {
-        "ENFUSION_WORKBENCH_PATH": "/path/to/Arma Reforger Tools",
-        "ENFUSION_GAME_PATH": "/path/to/Arma Reforger",
-        "ENFUSION_PROJECT_PATH": "/path/to/addons"
-      }
+      "command": "npx",
+      "args": ["-y", "enfusion-mcp"]
     }
   }
 }
 ```
 
-Restart Claude Code / Claude Desktop. Verify with `/mcp`.
+Restart Claude Desktop. Verify with `/mcp`.
 
 ### Workbench Plugin
 
@@ -189,8 +174,8 @@ Config can also be loaded from `~/.enfusion-mcp/config.json`. Environment variab
 ## Development
 
 ```bash
-git clone https://github.com/steffenbk/enfusion-mcp-BK.git
-cd enfusion-mcp-BK
+git clone https://github.com/Articulated7/enfusion-mcp.git
+cd enfusion-mcp
 npm install
 npm run scrape   # Build API index from Workbench docs
 npm run build
