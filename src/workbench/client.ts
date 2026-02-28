@@ -256,24 +256,31 @@ export class WorkbenchClient {
   }
 
   /**
-   * Derive the Arma Reforger game install directory from the Workbench Tools path.
-   * Workbench is at `.../Arma Reforger Tools`, game is sibling `.../Arma Reforger`.
-   * The game dir has `addons/data/ArmaReforger.gproj` (GUID 58D0FB3206B6F859).
+   * Derive the Arma Reforger game install directory.
+   * Checks ENFUSION_GAME_PATH env var first, then walks up from workbenchPath.
+   * workbenchPath may point to the Tools root OR the Workbench subdirectory,
+   * so we try both one and two levels up.
    */
   private findGameDir(): string | null {
-    const toolsDir = this.config!.workbenchPath;
-    const gameDir = resolve(toolsDir, "..", "Arma Reforger");
-    if (existsSync(join(gameDir, "addons"))) {
-      logger.info(`Using game directory as CWD: ${gameDir}`);
-      return gameDir;
+    // Explicit env var takes priority
+    const envGamePath = process.env.ENFUSION_GAME_PATH;
+    if (envGamePath && existsSync(join(envGamePath, "addons"))) {
+      logger.info(`Using game directory from ENFUSION_GAME_PATH: ${envGamePath}`);
+      return envGamePath;
     }
-    // Try common Steam alternative paths
-    const steamCommon = dirname(toolsDir);
-    for (const candidate of ["ArmaReforger", "Arma Reforger"]) {
-      const altPath = join(steamCommon, candidate);
-      if (existsSync(join(altPath, "addons"))) {
-        logger.info(`Using game directory as CWD: ${altPath}`);
-        return altPath;
+
+    const toolsDir = this.config!.workbenchPath;
+    // workbenchPath may be "Arma Reforger Tools" or "Arma Reforger Tools\Workbench"
+    const candidates = [
+      resolve(toolsDir, "..", "Arma Reforger"),
+      resolve(toolsDir, "..", "ArmaReforger"),
+      resolve(toolsDir, "..", "..", "Arma Reforger"),
+      resolve(toolsDir, "..", "..", "ArmaReforger"),
+    ];
+    for (const candidate of candidates) {
+      if (existsSync(join(candidate, "addons"))) {
+        logger.info(`Using game directory as CWD: ${candidate}`);
+        return candidate;
       }
     }
     logger.warn("Could not find Arma Reforger game directory. Workbench may fail to resolve base game addon.");

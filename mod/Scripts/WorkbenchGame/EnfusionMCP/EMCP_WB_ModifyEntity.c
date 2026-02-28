@@ -1,7 +1,8 @@
 /**
  * EMCP_WB_ModifyEntity.c - Modify entity properties and transform
  *
- * Actions: move, rotate, rename, setProperty, clearProperty
+ * Actions: move, rotate, rename, setProperty, clearProperty, getProperty, listProperties,
+ *          addArrayItem, removeArrayItem, setObjectClass
  * Called via NET API TCP protocol: APIFunc = "EMCP_WB_ModifyEntity"
  */
 
@@ -12,6 +13,7 @@ class EMCP_WB_ModifyEntityRequest : JsonApiStruct
 	string value;
 	string propertyPath;
 	string propertyKey;
+	int    memberIndex;
 
 	void EMCP_WB_ModifyEntityRequest()
 	{
@@ -20,6 +22,7 @@ class EMCP_WB_ModifyEntityRequest : JsonApiStruct
 		RegV("value");
 		RegV("propertyPath");
 		RegV("propertyKey");
+		RegV("memberIndex");
 	}
 }
 
@@ -191,6 +194,30 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 				resp.message = "RenameEntity returned false";
 			}
 		}
+		else if (req.action == "reparent")
+		{
+			if (req.value == "")
+			{
+				resp.status = "error";
+				resp.message = "value parameter required for reparent (parent entity name)";
+				return resp;
+			}
+
+			IEntitySource parentSrc = FindEntityByName(api, req.value);
+			if (!parentSrc)
+			{
+				resp.status = "error";
+				resp.message = "Parent entity not found: " + req.value;
+				return resp;
+			}
+
+			api.BeginEntityAction("Reparent entity via NetAPI");
+			api.ParentEntity(parentSrc, entSrc, true);
+			api.EndEntityAction();
+
+			resp.status = "ok";
+			resp.message = "Entity reparented to: " + req.value;
+		}
 		else if (req.action == "setProperty")
 		{
 			if (req.propertyKey == "")
@@ -202,16 +229,7 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 
 			api.BeginEntityAction("Set property via NetAPI");
 
-			BaseContainer entContainer = entSrc.ToBaseContainer();
-			if (!entContainer)
-			{
-				api.EndEntityAction();
-				resp.status = "error";
-				resp.message = "Cannot get BaseContainer for entity";
-				return resp;
-			}
-
-			// Build container path if propertyPath is specified
+			// Build component path: propertyPath is the component class name (e.g. "SCR_ScenarioFrameworkLayerTaskKill")
 			array<ref ContainerIdPathEntry> pathEntries = null;
 			if (req.propertyPath != "")
 			{
@@ -224,7 +242,7 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 				}
 			}
 
-			bool result = api.SetVariableValue(entContainer, pathEntries, req.propertyKey, req.value);
+			bool result = api.SetVariableValue(entSrc, pathEntries, req.propertyKey, req.value);
 			api.EndEntityAction();
 
 			if (result)
@@ -249,15 +267,6 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 
 			api.BeginEntityAction("Clear property via NetAPI");
 
-			BaseContainer entContainer = entSrc.ToBaseContainer();
-			if (!entContainer)
-			{
-				api.EndEntityAction();
-				resp.status = "error";
-				resp.message = "Cannot get BaseContainer for entity";
-				return resp;
-			}
-
 			array<ref ContainerIdPathEntry> pathEntries = null;
 			if (req.propertyPath != "")
 			{
@@ -270,7 +279,7 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 				}
 			}
 
-			bool result = api.ClearVariableValue(entContainer, pathEntries, req.propertyKey);
+			bool result = api.ClearVariableValue(entSrc, pathEntries, req.propertyKey);
 			api.EndEntityAction();
 
 			if (result)
@@ -284,10 +293,213 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 				resp.message = "ClearVariableValue returned false for key: " + req.propertyKey;
 			}
 		}
+		else if (req.action == "getProperty")
+		{
+			if (req.propertyKey == "")
+			{
+				resp.status = "error";
+				resp.message = "propertyKey parameter required for getProperty";
+				return resp;
+			}
+
+			// Find component by class name via GetComponent(), or use entity directly
+			IEntityComponentSource compSrc = null;
+			if (req.propertyPath != "")
+			{
+				int compCount = entSrc.GetComponentCount();
+				for (int ci = 0; ci < compCount; ci++)
+				{
+					IEntityComponentSource c = entSrc.GetComponent(ci);
+					if (c && c.GetClassName() == req.propertyPath)
+					{
+						compSrc = c;
+						break;
+					}
+				}
+				if (!compSrc)
+				{
+					resp.status = "error";
+					resp.message = "Component not found: " + req.propertyPath;
+					return resp;
+				}
+			}
+
+			string val;
+			if (compSrc)
+				compSrc.Get(req.propertyKey, val);
+			else
+				entSrc.Get(req.propertyKey, val);
+
+			resp.status = "ok";
+			resp.message = val;
+		}
+		else if (req.action == "listProperties")
+		{
+			string result = "";
+
+			if (req.propertyPath != "")
+			{
+				IEntityComponentSource compSrc = null;
+				int compCount = entSrc.GetComponentCount();
+				for (int ci = 0; ci < compCount; ci++)
+				{
+					IEntityComponentSource c = entSrc.GetComponent(ci);
+					if (c && c.GetClassName() == req.propertyPath)
+					{
+						compSrc = c;
+						break;
+					}
+				}
+				if (!compSrc)
+				{
+					resp.status = "error";
+					resp.message = "Component not found: " + req.propertyPath;
+					return resp;
+				}
+				int numVars = compSrc.GetNumVars();
+				for (int v = 0; v < numVars; v++)
+				{
+					if (result != "") result += ", ";
+					result += compSrc.GetVarName(v);
+				}
+			}
+			else
+			{
+				int numVars = entSrc.GetNumVars();
+				for (int v = 0; v < numVars; v++)
+				{
+					if (result != "") result += ", ";
+					result += entSrc.GetVarName(v);
+				}
+			}
+
+			resp.status = "ok";
+			resp.message = result;
+		}
+		else if (req.action == "addArrayItem")
+		{
+			// Creates a new element in an array-of-objects property (the + button in the editor).
+			// propertyPath = component class name (or "" for entity level)
+			// propertyKey  = array property name (e.g. "m_aTriggerActions")
+			// value        = class name of the new item (e.g. "SCR_ScenarioFrameworkActionSpawnObjects")
+			// memberIndex  = index to insert at (-1 = append at end)
+			if (req.propertyKey == "" || req.value == "")
+			{
+				resp.status = "error";
+				resp.message = "propertyKey (array name) and value (item class name) required for addArrayItem";
+				return resp;
+			}
+
+			array<ref ContainerIdPathEntry> pathEntries = null;
+			if (req.propertyPath != "")
+			{
+				pathEntries = {};
+				array<string> pathParts = {};
+				req.propertyPath.Split(".", pathParts, true);
+				for (int p = 0; p < pathParts.Count(); p++)
+					pathEntries.Insert(new ContainerIdPathEntry(pathParts[p]));
+			}
+
+			int insertIdx = req.memberIndex;
+			if (insertIdx < 0)
+				insertIdx = -1; // will be treated as append by the API
+
+			api.BeginEntityAction("Add array item via NetAPI");
+			bool result = api.CreateObjectArrayVariableMember(entSrc, pathEntries, req.propertyKey, req.value, insertIdx);
+			api.EndEntityAction();
+
+			if (result)
+			{
+				resp.status = "ok";
+				resp.message = "Added '" + req.value + "' to '" + req.propertyKey + "' at index " + insertIdx;
+			}
+			else
+			{
+				resp.status = "error";
+				resp.message = "CreateObjectArrayVariableMember returned false — check class name and property key";
+			}
+		}
+		else if (req.action == "removeArrayItem")
+		{
+			// Removes an element from an array-of-objects property by index.
+			// propertyPath = component class name (or "" for entity level)
+			// propertyKey  = array property name
+			// memberIndex  = 0-based index to remove
+			if (req.propertyKey == "")
+			{
+				resp.status = "error";
+				resp.message = "propertyKey (array name) required for removeArrayItem";
+				return resp;
+			}
+
+			array<ref ContainerIdPathEntry> pathEntries = null;
+			if (req.propertyPath != "")
+			{
+				pathEntries = {};
+				array<string> pathParts = {};
+				req.propertyPath.Split(".", pathParts, true);
+				for (int p = 0; p < pathParts.Count(); p++)
+					pathEntries.Insert(new ContainerIdPathEntry(pathParts[p]));
+			}
+
+			api.BeginEntityAction("Remove array item via NetAPI");
+			bool result = api.RemoveObjectArrayVariableMember(entSrc, pathEntries, req.propertyKey, req.memberIndex);
+			api.EndEntityAction();
+
+			if (result)
+			{
+				resp.status = "ok";
+				resp.message = "Removed index " + req.memberIndex + " from '" + req.propertyKey + "'";
+			}
+			else
+			{
+				resp.status = "error";
+				resp.message = "RemoveObjectArrayVariableMember returned false — check index and property key";
+			}
+		}
+		else if (req.action == "setObjectClass")
+		{
+			// Changes the class of an existing object property or array element (the dropdown in the editor).
+			// propertyPath = component class name, optionally followed by array index notation
+			//                e.g. "SCR_ScenarioFrameworkArea" to target a component
+			// propertyKey  = property name of the object/array element to change
+			// value        = new class name
+			if (req.propertyKey == "" || req.value == "")
+			{
+				resp.status = "error";
+				resp.message = "propertyKey and value (new class name) required for setObjectClass";
+				return resp;
+			}
+
+			array<ref ContainerIdPathEntry> pathEntries = null;
+			if (req.propertyPath != "")
+			{
+				pathEntries = {};
+				array<string> pathParts = {};
+				req.propertyPath.Split(".", pathParts, true);
+				for (int p = 0; p < pathParts.Count(); p++)
+					pathEntries.Insert(new ContainerIdPathEntry(pathParts[p]));
+			}
+
+			api.BeginEntityAction("Set object class via NetAPI");
+			bool result = api.ChangeObjectClass(entSrc, pathEntries, req.value);
+			api.EndEntityAction();
+
+			if (result)
+			{
+				resp.status = "ok";
+				resp.message = "Changed class of '" + req.propertyKey + "' to '" + req.value + "'";
+			}
+			else
+			{
+				resp.status = "error";
+				resp.message = "ChangeObjectClass returned false — check class name";
+			}
+		}
 		else
 		{
 			resp.status = "error";
-			resp.message = "Unknown action: " + req.action + ". Valid: move, rotate, rename, setProperty, clearProperty";
+			resp.message = "Unknown action: " + req.action + ". Valid: move, rotate, rename, reparent, setProperty, clearProperty, getProperty, listProperties, addArrayItem, removeArrayItem, setObjectClass";
 		}
 
 		return resp;

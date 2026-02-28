@@ -48,6 +48,8 @@ Add to your `claude_desktop_config.json`:
 }
 ```
 
+Restart Claude Desktop. Verify with `/mcp`.
+
 ### Workbench Plugin
 
 The live Workbench tools (`wb_*`) require handler scripts running inside Workbench. These ship with the package in `mod/Scripts/WorkbenchGame/EnfusionMCP/` and are installed automatically when Claude launches Workbench via `wb_launch`.
@@ -123,7 +125,7 @@ Control a running Workbench instance over TCP. Requires the handler scripts inst
 | `wb_entity_delete` | Delete entity by name |
 | `wb_entity_list` | List and search entities in the world |
 | `wb_entity_inspect` | Get entity details — properties, components, children |
-| `wb_entity_modify` | Move, rotate, rename, reparent, set properties |
+| `wb_entity_modify` | Move, rotate, rename, reparent, set/clear/get/list properties |
 | `wb_entity_select` | Select, deselect, clear, get current selection |
 | `wb_component` | Add, remove, list entity components |
 | `wb_terrain` | Query terrain height and world bounds |
@@ -158,6 +160,7 @@ All optional. Sensible defaults are used when nothing is set.
 |---------------------|-------------|---------|
 | `ENFUSION_PROJECT_PATH` | Default mod output directory | `~/Documents/My Games/ArmaReforgerWorkbench/addons` |
 | `ENFUSION_WORKBENCH_PATH` | Path to Arma Reforger Tools | `C:\Program Files (x86)\Steam\steamapps\common\Arma Reforger Tools` |
+| `ENFUSION_GAME_PATH` | Path to the Arma Reforger game install (used as CWD when launching Workbench so base-game addons resolve correctly) | Auto-detected from sibling of `ENFUSION_WORKBENCH_PATH` |
 | `ENFUSION_WORKBENCH_HOST` | NET API host | `127.0.0.1` |
 | `ENFUSION_WORKBENCH_PORT` | NET API port | `5775` |
 

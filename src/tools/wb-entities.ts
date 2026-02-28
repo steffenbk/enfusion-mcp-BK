@@ -245,14 +245,15 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
       inputSchema: {
         name: z.string().describe("Name of the entity to modify"),
         action: z
-          .enum(["move", "rotate", "rename", "reparent", "setProperty", "clearProperty"])
+          .enum(["move", "rotate", "rename", "reparent", "setProperty", "clearProperty", "getProperty", "listProperties", "addArrayItem", "removeArrayItem", "setObjectClass"])
           .describe(
-            "Modification action: move (set position), rotate (set rotation), rename, reparent (change parent entity), setProperty (set a component property), clearProperty (reset to default)"
+            "Modification action: move (set position), rotate (set rotation), rename, reparent (change parent entity), setProperty (set a component property), clearProperty (reset to default), getProperty (read a property value), listProperties (list all property names on entity or component), addArrayItem (append item to array-of-objects property — like the + button), removeArrayItem (remove item from array by index), setObjectClass (change class of an object property — like the dropdown)"
           ),
         value: z
           .string()
+          .default("")
           .describe(
-            "Value for the action: coordinates 'x y z' for move/rotate, new name for rename, parent name for reparent, property value for setProperty (ignored for clearProperty)"
+            "Value for the action: coordinates 'x y z' for move/rotate, new name for rename, parent name for reparent, property value for setProperty (not needed for clearProperty/getProperty/listProperties)"
           ),
         propertyPath: z
           .string()
@@ -261,14 +262,19 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
         propertyKey: z
           .string()
           .optional()
-          .describe("Property key name for setProperty/clearProperty"),
+          .describe("Property key name for setProperty/clearProperty/getProperty/listProperties/addArrayItem/removeArrayItem"),
+        memberIndex: z
+          .number()
+          .default(-1)
+          .describe("Array element index for addArrayItem (insert position, -1 = append) or removeArrayItem (item to remove, 0-based)"),
       },
     },
-    async ({ name, action, value, propertyPath, propertyKey }) => {
+    async ({ name, action, value, propertyPath, propertyKey, memberIndex }) => {
       try {
         const params: Record<string, unknown> = { name, action, value };
         if (propertyPath) params.propertyPath = propertyPath;
         if (propertyKey) params.propertyKey = propertyKey;
+        if (memberIndex !== undefined) params.memberIndex = memberIndex;
 
         const result = await client.call<Record<string, unknown>>("EMCP_WB_ModifyEntity", params);
 
@@ -279,6 +285,11 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
           reparent: `Reparented to "${value}"`,
           setProperty: `Set ${propertyPath || propertyKey || "property"} = ${value}`,
           clearProperty: `Cleared ${propertyPath || propertyKey || "property"}`,
+          getProperty: `Got ${propertyPath ? propertyPath + "." : ""}${propertyKey || "property"}`,
+          listProperties: `Listed properties${propertyPath ? " of " + propertyPath : ""}`,
+          addArrayItem: `Added '${value}' to '${propertyKey || "array"}' at index ${memberIndex ?? -1}`,
+          removeArrayItem: `Removed index ${memberIndex ?? 0} from '${propertyKey || "array"}'`,
+          setObjectClass: `Changed class of '${propertyKey || "property"}' to '${value}'`,
         };
 
         return {
