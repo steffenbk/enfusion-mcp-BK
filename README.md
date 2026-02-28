@@ -123,7 +123,7 @@ Control a running Workbench instance over TCP. Requires the handler scripts inst
 | `wb_entity_delete` | Delete entity by name |
 | `wb_entity_list` | List and search entities in the world |
 | `wb_entity_inspect` | Get entity details — properties, components, children |
-| `wb_entity_modify` | Move, rotate, rename, reparent, set properties |
+| `wb_entity_modify` | Move, rotate, rename, reparent, set/clear/get/list properties |
 | `wb_entity_select` | Select, deselect, clear, get current selection |
 | `wb_component` | Add, remove, list entity components |
 | `wb_terrain` | Query terrain height and world bounds |
@@ -158,6 +158,7 @@ All optional. Sensible defaults are used when nothing is set.
 |---------------------|-------------|---------|
 | `ENFUSION_PROJECT_PATH` | Default mod output directory | `~/Documents/My Games/ArmaReforgerWorkbench/addons` |
 | `ENFUSION_WORKBENCH_PATH` | Path to Arma Reforger Tools | `C:\Program Files (x86)\Steam\steamapps\common\Arma Reforger Tools` |
+| `ENFUSION_GAME_PATH` | Path to the Arma Reforger game install (used as CWD when launching Workbench so base-game addons resolve correctly) | Auto-detected from sibling of `ENFUSION_WORKBENCH_PATH` |
 | `ENFUSION_WORKBENCH_HOST` | NET API host | `127.0.0.1` |
 | `ENFUSION_WORKBENCH_PORT` | NET API port | `5775` |
 
@@ -171,8 +172,8 @@ Config can also be loaded from `~/.enfusion-mcp/config.json`. Environment variab
 ## Development
 
 ```bash
-git clone https://github.com/Articulated7/enfusion-mcp.git
-cd enfusion-mcp
+git clone https://github.com/steffenbk/enfusion-mcp-BK.git
+cd enfusion-mcp-BK
 npm install
 npm run scrape   # Build API index from Workbench docs
 npm run build
