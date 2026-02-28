@@ -245,14 +245,15 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
       inputSchema: {
         name: z.string().describe("Name of the entity to modify"),
         action: z
-          .enum(["move", "rotate", "rename", "reparent", "setProperty", "clearProperty"])
+          .enum(["move", "rotate", "rename", "reparent", "setProperty", "clearProperty", "getProperty", "listProperties"])
           .describe(
-            "Modification action: move (set position), rotate (set rotation), rename, reparent (change parent entity), setProperty (set a component property), clearProperty (reset to default)"
+            "Modification action: move (set position), rotate (set rotation), rename, reparent (change parent entity), setProperty (set a component property), clearProperty (reset to default), getProperty (read a property value), listProperties (list all property names on entity or component)"
           ),
         value: z
           .string()
+          .default("")
           .describe(
-            "Value for the action: coordinates 'x y z' for move/rotate, new name for rename, parent name for reparent, property value for setProperty (ignored for clearProperty)"
+            "Value for the action: coordinates 'x y z' for move/rotate, new name for rename, parent name for reparent, property value for setProperty (not needed for clearProperty/getProperty/listProperties)"
           ),
         propertyPath: z
           .string()
@@ -279,6 +280,8 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
           reparent: `Reparented to "${value}"`,
           setProperty: `Set ${propertyPath || propertyKey || "property"} = ${value}`,
           clearProperty: `Cleared ${propertyPath || propertyKey || "property"}`,
+          getProperty: `Got ${propertyPath ? propertyPath + "." : ""}${propertyKey || "property"}`,
+          listProperties: `Listed properties${propertyPath ? " of " + propertyPath : ""}`,
         };
 
         return {

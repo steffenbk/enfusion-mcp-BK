@@ -1,7 +1,7 @@
 /**
  * EMCP_WB_ModifyEntity.c - Modify entity properties and transform
  *
- * Actions: move, rotate, rename, setProperty, clearProperty
+ * Actions: move, rotate, rename, setProperty, clearProperty, getProperty, listProperties
  * Called via NET API TCP protocol: APIFunc = "EMCP_WB_ModifyEntity"
  */
 
@@ -191,6 +191,30 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 				resp.message = "RenameEntity returned false";
 			}
 		}
+		else if (req.action == "reparent")
+		{
+			if (req.value == "")
+			{
+				resp.status = "error";
+				resp.message = "value parameter required for reparent (parent entity name)";
+				return resp;
+			}
+
+			IEntitySource parentSrc = FindEntityByName(api, req.value);
+			if (!parentSrc)
+			{
+				resp.status = "error";
+				resp.message = "Parent entity not found: " + req.value;
+				return resp;
+			}
+
+			api.BeginEntityAction("Reparent entity via NetAPI");
+			api.ParentEntity(parentSrc, entSrc, true);
+			api.EndEntityAction();
+
+			resp.status = "ok";
+			resp.message = "Entity reparented to: " + req.value;
+		}
 		else if (req.action == "setProperty")
 		{
 			if (req.propertyKey == "")
@@ -202,16 +226,7 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 
 			api.BeginEntityAction("Set property via NetAPI");
 
-			BaseContainer entContainer = entSrc.ToBaseContainer();
-			if (!entContainer)
-			{
-				api.EndEntityAction();
-				resp.status = "error";
-				resp.message = "Cannot get BaseContainer for entity";
-				return resp;
-			}
-
-			// Build container path if propertyPath is specified
+			// Build component path: propertyPath is the component class name (e.g. "SCR_ScenarioFrameworkLayerTaskKill")
 			array<ref ContainerIdPathEntry> pathEntries = null;
 			if (req.propertyPath != "")
 			{
@@ -224,7 +239,7 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 				}
 			}
 
-			bool result = api.SetVariableValue(entContainer, pathEntries, req.propertyKey, req.value);
+			bool result = api.SetVariableValue(entSrc, pathEntries, req.propertyKey, req.value);
 			api.EndEntityAction();
 
 			if (result)
@@ -249,15 +264,6 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 
 			api.BeginEntityAction("Clear property via NetAPI");
 
-			BaseContainer entContainer = entSrc.ToBaseContainer();
-			if (!entContainer)
-			{
-				api.EndEntityAction();
-				resp.status = "error";
-				resp.message = "Cannot get BaseContainer for entity";
-				return resp;
-			}
-
 			array<ref ContainerIdPathEntry> pathEntries = null;
 			if (req.propertyPath != "")
 			{
@@ -270,7 +276,7 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 				}
 			}
 
-			bool result = api.ClearVariableValue(entContainer, pathEntries, req.propertyKey);
+			bool result = api.ClearVariableValue(entSrc, pathEntries, req.propertyKey);
 			api.EndEntityAction();
 
 			if (result)
@@ -284,10 +290,93 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 				resp.message = "ClearVariableValue returned false for key: " + req.propertyKey;
 			}
 		}
+		else if (req.action == "getProperty")
+		{
+			if (req.propertyKey == "")
+			{
+				resp.status = "error";
+				resp.message = "propertyKey parameter required for getProperty";
+				return resp;
+			}
+
+			// Find component by class name via GetComponent(), or use entity directly
+			IEntityComponentSource compSrc = null;
+			if (req.propertyPath != "")
+			{
+				int compCount = entSrc.GetComponentCount();
+				for (int ci = 0; ci < compCount; ci++)
+				{
+					IEntityComponentSource c = entSrc.GetComponent(ci);
+					if (c && c.GetClassName() == req.propertyPath)
+					{
+						compSrc = c;
+						break;
+					}
+				}
+				if (!compSrc)
+				{
+					resp.status = "error";
+					resp.message = "Component not found: " + req.propertyPath;
+					return resp;
+				}
+			}
+
+			string val;
+			if (compSrc)
+				compSrc.Get(req.propertyKey, val);
+			else
+				entSrc.Get(req.propertyKey, val);
+
+			resp.status = "ok";
+			resp.message = val;
+		}
+		else if (req.action == "listProperties")
+		{
+			string result = "";
+
+			if (req.propertyPath != "")
+			{
+				IEntityComponentSource compSrc = null;
+				int compCount = entSrc.GetComponentCount();
+				for (int ci = 0; ci < compCount; ci++)
+				{
+					IEntityComponentSource c = entSrc.GetComponent(ci);
+					if (c && c.GetClassName() == req.propertyPath)
+					{
+						compSrc = c;
+						break;
+					}
+				}
+				if (!compSrc)
+				{
+					resp.status = "error";
+					resp.message = "Component not found: " + req.propertyPath;
+					return resp;
+				}
+				int numVars = compSrc.GetNumVars();
+				for (int v = 0; v < numVars; v++)
+				{
+					if (result != "") result += ", ";
+					result += compSrc.GetVarName(v);
+				}
+			}
+			else
+			{
+				int numVars = entSrc.GetNumVars();
+				for (int v = 0; v < numVars; v++)
+				{
+					if (result != "") result += ", ";
+					result += entSrc.GetVarName(v);
+				}
+			}
+
+			resp.status = "ok";
+			resp.message = result;
+		}
 		else
 		{
 			resp.status = "error";
-			resp.message = "Unknown action: " + req.action + ". Valid: move, rotate, rename, setProperty, clearProperty";
+			resp.message = "Unknown action: " + req.action + ". Valid: move, rotate, rename, reparent, setProperty, clearProperty, getProperty, listProperties";
 		}
 
 		return resp;
