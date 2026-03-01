@@ -302,11 +302,6 @@ export class WorkbenchClient {
     const targetBase = modDir || join(this.config!.projectPath, HANDLER_FOLDER);
     const targetScriptsDir = join(targetBase, "Scripts", "WorkbenchGame", HANDLER_FOLDER);
 
-    // Already installed?
-    if (existsSync(join(targetScriptsDir, "EMCP_WB_Ping.c"))) {
-      return;
-    }
-
     logger.info(`Installing handler scripts to ${targetScriptsDir}`);
     mkdirSync(targetScriptsDir, { recursive: true });
 
