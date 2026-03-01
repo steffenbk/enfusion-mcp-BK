@@ -13,7 +13,7 @@ import { Socket } from "node:net";
 import { existsSync, mkdirSync, copyFileSync, readdirSync, rmSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { spawn } from "node:child_process";
+import { spawn, execSync } from "node:child_process";
 import { encodeRequest, decodeResponse } from "./protocol.js";
 import { logger } from "../utils/logger.js";
 import type { Config } from "../config.js";
@@ -73,13 +73,23 @@ export class WorkbenchClient {
     } catch (err) {
       if (
         err instanceof WorkbenchError &&
-        err.code === "CONNECTION_REFUSED" &&
         !options.skipAutoLaunch &&
         this.config
       ) {
-        logger.info(`Workbench not running, auto-launching...`);
-        await this.ensureRunning();
-        return await this.rawCall<T>(apiFunc, params, options);
+        if (err.code === "CONNECTION_REFUSED") {
+          // Workbench not running — install handlers, launch, retry
+          logger.info(`Workbench not running, auto-launching...`);
+          await this.ensureRunning();
+          return await this.rawCall<T>(apiFunc, params, options);
+        }
+        if (err.code === "API_ERROR" && err.message.includes("not existing")) {
+          // Workbench is running but our custom handler scripts aren't compiled.
+          // This happens when the user opened Workbench manually, or when handlers
+          // were cleaned up but Workbench kept running.
+          logger.info(`Handler scripts not loaded in Workbench, recovering...`);
+          await this.recoverMissingHandlers();
+          return await this.rawCall<T>(apiFunc, params, options);
+        }
       }
       throw err;
     }
@@ -163,6 +173,49 @@ export class WorkbenchClient {
   // ---------------------------------------------------------------------------
   // Private
   // ---------------------------------------------------------------------------
+
+  /**
+   * Recover from "not existing Net API function" errors.
+   * Workbench is running but our handler scripts aren't compiled.
+   * Installs handlers, kills Workbench, relaunches so scripts compile on startup.
+   */
+  private async recoverMissingHandlers(): Promise<void> {
+    if (!this.config) {
+      throw new WorkbenchError("No config provided — cannot recover handlers.", "LAUNCH_FAILED");
+    }
+
+    // Find a .gproj to determine which mod to inject handlers into
+    const gprojPath = this.findFallbackGproj();
+
+    // Install handler scripts (force overwrite in case they're outdated)
+    if (gprojPath) {
+      this.installHandlerScripts(dirname(gprojPath), true);
+    } else {
+      this.installHandlerScripts(undefined, true);
+    }
+
+    // Kill Workbench so it restarts with newly installed handlers
+    this.killWorkbench();
+
+    // Brief delay to ensure the process fully exits and releases the port
+    await new Promise((r) => setTimeout(r, 2_000));
+
+    // Relaunch and wait for NET API + handler scripts to compile
+    await this.launchWorkbench(gprojPath || undefined);
+  }
+
+  /**
+   * Kill any running Workbench process. Windows-only (taskkill).
+   * Safe to call even if Workbench isn't running.
+   */
+  private killWorkbench(): void {
+    try {
+      execSync(`taskkill /IM ${WORKBENCH_EXE} /F`, { stdio: "ignore" });
+      logger.info("Killed running Workbench process.");
+    } catch {
+      // Process might not be running — ignore
+    }
+  }
 
   private async launchWorkbench(gprojPath?: string): Promise<void> {
     // 1. Check if already running (maybe it came up between the failed call and now)
@@ -296,7 +349,7 @@ export class WorkbenchClient {
    * Copy handler scripts into a mod directory so they compile as part of that mod.
    * If no modDir given, installs to default project path (standalone, less useful).
    */
-  private installHandlerScripts(modDir?: string): void {
+  private installHandlerScripts(modDir?: string, force = false): void {
     const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
     const bundledDir = join(packageRoot, "mod", "Scripts", "WorkbenchGame", HANDLER_FOLDER);
     if (!existsSync(bundledDir)) {
@@ -307,8 +360,8 @@ export class WorkbenchClient {
     const targetBase = modDir || join(this.config!.projectPath, HANDLER_FOLDER);
     const targetScriptsDir = join(targetBase, "Scripts", "WorkbenchGame", HANDLER_FOLDER);
 
-    // Already installed?
-    if (existsSync(join(targetScriptsDir, "EMCP_WB_Ping.c"))) {
+    // Already installed? Skip unless force-reinstalling (e.g. recovery after missing handlers)
+    if (!force && existsSync(join(targetScriptsDir, "EMCP_WB_Ping.c"))) {
       return;
     }
 

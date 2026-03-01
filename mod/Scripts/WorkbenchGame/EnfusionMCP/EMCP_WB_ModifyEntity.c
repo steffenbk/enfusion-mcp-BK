@@ -2,7 +2,7 @@
  * EMCP_WB_ModifyEntity.c - Modify entity properties and transform
  *
  * Actions: move, rotate, rename, setProperty, clearProperty, getProperty, listProperties,
- *          addArrayItem, removeArrayItem, setObjectClass
+ *          listArrayItems, addArrayItem, removeArrayItem, setObjectClass
  * Called via NET API TCP protocol: APIFunc = "EMCP_WB_ModifyEntity"
  */
 
@@ -245,12 +245,9 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 				return resp;
 			}
 
-			api.BeginEntityAction("Set property via NetAPI");
-
 			array<ref ContainerIdPathEntry> pathEntries = BuildPathEntries(req.propertyPath);
 
 			bool result = api.SetVariableValue(entSrc, pathEntries, req.propertyKey, req.value);
-			api.EndEntityAction();
 
 			if (result)
 			{
@@ -272,12 +269,9 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 				return resp;
 			}
 
-			api.BeginEntityAction("Clear property via NetAPI");
-
 			array<ref ContainerIdPathEntry> pathEntries = BuildPathEntries(req.propertyPath);
 
 			bool result = api.ClearVariableValue(entSrc, pathEntries, req.propertyKey);
-			api.EndEntityAction();
 
 			if (result)
 			{
@@ -299,22 +293,36 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 				return resp;
 			}
 
-			// Use the same path mechanism as setProperty so nested paths work consistently
-			array<ref ContainerIdPathEntry> pathEntries = BuildPathEntries(req.propertyPath);
+			// WorldEditorAPI has no GetVariableValue — use IEntityComponentSource.Get() instead.
+			IEntityComponentSource compSrc = null;
+			if (req.propertyPath != "")
+			{
+				int compCount = entSrc.GetComponentCount();
+				for (int ci = 0; ci < compCount; ci++)
+				{
+					IEntityComponentSource c = entSrc.GetComponent(ci);
+					if (c && c.GetClassName() == req.propertyPath)
+					{
+						compSrc = c;
+						break;
+					}
+				}
+				if (!compSrc)
+				{
+					resp.status = "error";
+					resp.message = "Component not found: " + req.propertyPath;
+					return resp;
+				}
+			}
 
 			string val;
-			bool result = api.GetVariableValue(entSrc, pathEntries, req.propertyKey, val);
-
-			if (result)
-			{
-				resp.status = "ok";
-				resp.message = val;
-			}
+			if (compSrc)
+				compSrc.Get(req.propertyKey, val);
 			else
-			{
-				resp.status = "error";
-				resp.message = "GetVariableValue returned false for key: " + req.propertyKey;
-			}
+				entSrc.Get(req.propertyKey, val);
+
+			resp.status = "ok";
+			resp.message = val;
 		}
 		else if (req.action == "listProperties")
 		{
@@ -359,6 +367,69 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 			resp.status = "ok";
 			resp.message = result;
 		}
+		else if (req.action == "listArrayItems")
+		{
+			// Reads an array-of-objects property and returns each item's class name and index.
+			// propertyPath = component class name (or "" for entity level)
+			// propertyKey  = array property name (e.g. "Slots", "m_aTriggerActions")
+			if (req.propertyKey == "")
+			{
+				resp.status = "error";
+				resp.message = "propertyKey (array name) required for listArrayItems";
+				return resp;
+			}
+
+			IEntityComponentSource compSrc2 = null;
+			if (req.propertyPath != "")
+			{
+				int cc2 = entSrc.GetComponentCount();
+				for (int ci2 = 0; ci2 < cc2; ci2++)
+				{
+					IEntityComponentSource c2 = entSrc.GetComponent(ci2);
+					if (c2 && c2.GetClassName() == req.propertyPath)
+					{
+						compSrc2 = c2;
+						break;
+					}
+				}
+				if (!compSrc2)
+				{
+					resp.status = "error";
+					resp.message = "Component not found: " + req.propertyPath;
+					return resp;
+				}
+			}
+
+			BaseContainerList itemList = null;
+			if (compSrc2)
+				itemList = compSrc2.GetObjectArray(req.propertyKey);
+			else
+				itemList = entSrc.GetObjectArray(req.propertyKey);
+
+			if (!itemList)
+			{
+				resp.status = "ok";
+				resp.message = "[] (empty or not an object array)";
+				return resp;
+			}
+
+			string listResult = "";
+			int itemCount = itemList.Count();
+			for (int li = 0; li < itemCount; li++)
+			{
+				BaseContainer item = itemList.Get(li);
+				string className = "";
+				if (item)
+					className = item.GetClassName();
+				else
+					className = "(null)";
+				if (listResult != "") listResult += ", ";
+				listResult += li.ToString() + ":" + className;
+			}
+
+			resp.status = "ok";
+			resp.message = "[" + listResult + "] (" + itemCount.ToString() + " items)";
+		}
 		else if (req.action == "addArrayItem")
 		{
 			// Creates a new element in an array-of-objects property (the + button in the editor).
@@ -373,14 +444,34 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 				return resp;
 			}
 
-			array<ref ContainerIdPathEntry> pathEntries = BuildPathEntries(req.propertyPath);
+			// Use component as topLevel if propertyPath is a component class name.
+			// NOTE: CreateObjectArrayVariableMember requires the component as topLevel with null path —
+			// passing the entity with a path entry returns false for component arrays.
+			BaseContainer addTopLevel = entSrc;
+			array<ref ContainerIdPathEntry> pathEntries = null;
+			if (req.propertyPath != "")
+			{
+				int addCC = entSrc.GetComponentCount();
+				for (int addCI = 0; addCI < addCC; addCI++)
+				{
+					IEntityComponentSource addC = entSrc.GetComponent(addCI);
+					if (addC && addC.GetClassName() == req.propertyPath)
+					{
+						addTopLevel = addC;
+						break;
+					}
+				}
+				// If not found as component, fall back to path entries
+				if (addTopLevel == entSrc)
+					pathEntries = BuildPathEntries(req.propertyPath);
+			}
 
 			int insertIdx = req.memberIndex;
 			if (insertIdx < 0)
 				insertIdx = -1; // will be treated as append by the API
 
 			api.BeginEntityAction("Add array item via NetAPI");
-			bool result = api.CreateObjectArrayVariableMember(entSrc, pathEntries, req.propertyKey, req.value, insertIdx);
+			bool result = api.CreateObjectArrayVariableMember(addTopLevel, pathEntries, req.propertyKey, req.value, insertIdx);
 			api.EndEntityAction();
 
 			if (result)
@@ -407,10 +498,29 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 				return resp;
 			}
 
-			array<ref ContainerIdPathEntry> pathEntries = BuildPathEntries(req.propertyPath);
+			// Use component as topLevel if propertyPath is a component class name.
+			// NOTE: RemoveObjectArrayVariableMember requires the component as topLevel with null path —
+			// passing the entity with a path entry returns false for component arrays.
+			BaseContainer removeTopLevel = entSrc;
+			array<ref ContainerIdPathEntry> removePathEntries = null;
+			if (req.propertyPath != "")
+			{
+				int removeCC = entSrc.GetComponentCount();
+				for (int removeCI = 0; removeCI < removeCC; removeCI++)
+				{
+					IEntityComponentSource removeC = entSrc.GetComponent(removeCI);
+					if (removeC && removeC.GetClassName() == req.propertyPath)
+					{
+						removeTopLevel = removeC;
+						break;
+					}
+				}
+				if (removeTopLevel == entSrc)
+					removePathEntries = BuildPathEntries(req.propertyPath);
+			}
 
 			api.BeginEntityAction("Remove array item via NetAPI");
-			bool result = api.RemoveObjectArrayVariableMember(entSrc, pathEntries, req.propertyKey, req.memberIndex);
+			bool result = api.RemoveObjectArrayVariableMember(removeTopLevel, removePathEntries, req.propertyKey, req.memberIndex);
 			api.EndEntityAction();
 
 			if (result)
@@ -464,7 +574,7 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 		else
 		{
 			resp.status = "error";
-			resp.message = "Unknown action: " + req.action + ". Valid: move, rotate, rename, reparent, setProperty, clearProperty, getProperty, listProperties, addArrayItem, removeArrayItem, setObjectClass";
+			resp.message = "Unknown action: " + req.action + ". Valid: move, rotate, rename, reparent, setProperty, clearProperty, getProperty, listProperties, listArrayItems, addArrayItem, removeArrayItem, setObjectClass";
 		}
 
 		return resp;
