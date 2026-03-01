@@ -29,7 +29,7 @@ You'll need **Node.js 20+** and **Arma Reforger Tools** (via Steam) if you want 
 ## Pull Request Guidelines
 
 - Keep PRs focused — one feature or fix per PR
-- Make sure `npm test` passes (163 tests)
+- Make sure `npm test` passes (187 tests)
 - Make sure `npm run build` succeeds with no TypeScript errors
 - Add or update tests for new functionality
 - Follow the existing code style — TypeScript strict mode is enabled

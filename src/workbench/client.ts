@@ -113,10 +113,15 @@ export class WorkbenchClient {
   /**
    * Quick health check. Returns true if Workbench responds, false otherwise.
    * Does NOT auto-launch.
+   *
+   * Uses our custom EMCP_WB_Ping handler (not the built-in GetLoadedProjects)
+   * so the launch poller only succeeds once the mod's handler scripts have
+   * finished compiling — avoiding a race where the NET API socket is up but
+   * custom handlers aren't loaded yet.
    */
   async ping(): Promise<boolean> {
     try {
-      await this.rawCall("GetLoadedProjects", {}, { timeout: 3000, skipAutoLaunch: true });
+      await this.rawCall("EMCP_WB_Ping", {}, { timeout: 3000, skipAutoLaunch: true });
       return true;
     } catch {
       return false;

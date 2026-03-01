@@ -69,6 +69,9 @@ describe("WorkbenchClient", () => {
 
   beforeEach(() => {
     mockServer = createMockWorkbench((apiFunc, params) => {
+      if (apiFunc === "EMCP_WB_Ping") {
+        return { status: "ok", mode: "edit", message: "EnfusionMCP Workbench bridge active" };
+      }
       if (apiFunc === "GetLoadedProjects") {
         return { "Loaded Projects": ["ArmaReforger", "TestMod"] };
       }
