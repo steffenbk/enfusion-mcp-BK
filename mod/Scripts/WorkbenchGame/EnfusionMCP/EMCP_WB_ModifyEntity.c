@@ -574,7 +574,7 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 		else
 		{
 			resp.status = "error";
-			resp.message = "Unknown action: " + req.action + ". Valid: move, rotate, rename, reparent, setProperty, clearProperty, getProperty, listProperties, addArrayItem, removeArrayItem, setObjectClass";
+			resp.message = "Unknown action: " + req.action + ". Valid: move, rotate, rename, reparent, setProperty, clearProperty, getProperty, listProperties, listArrayItems, addArrayItem, removeArrayItem, setObjectClass";
 		}
 
 		return resp;
