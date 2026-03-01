@@ -293,22 +293,36 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 				return resp;
 			}
 
-			// Use the same path mechanism as setProperty so nested paths work consistently
-			array<ref ContainerIdPathEntry> pathEntries = BuildPathEntries(req.propertyPath);
+			// WorldEditorAPI has no GetVariableValue — use IEntityComponentSource.Get() instead.
+			IEntityComponentSource compSrc = null;
+			if (req.propertyPath != "")
+			{
+				int compCount = entSrc.GetComponentCount();
+				for (int ci = 0; ci < compCount; ci++)
+				{
+					IEntityComponentSource c = entSrc.GetComponent(ci);
+					if (c && c.GetClassName() == req.propertyPath)
+					{
+						compSrc = c;
+						break;
+					}
+				}
+				if (!compSrc)
+				{
+					resp.status = "error";
+					resp.message = "Component not found: " + req.propertyPath;
+					return resp;
+				}
+			}
 
 			string val;
-			bool result = api.GetVariableValue(entSrc, pathEntries, req.propertyKey, val);
-
-			if (result)
-			{
-				resp.status = "ok";
-				resp.message = val;
-			}
+			if (compSrc)
+				compSrc.Get(req.propertyKey, val);
 			else
-			{
-				resp.status = "error";
-				resp.message = "GetVariableValue returned false for key: " + req.propertyKey;
-			}
+				entSrc.Get(req.propertyKey, val);
+
+			resp.status = "ok";
+			resp.message = val;
 		}
 		else if (req.action == "listProperties")
 		{
