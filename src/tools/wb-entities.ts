@@ -251,9 +251,9 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
           ),
         value: z
           .string()
-          .default("")
+          .optional()
           .describe(
-            "Value for the action: coordinates 'x y z' for move/rotate, new name for rename, parent name for reparent, property value for setProperty (not needed for clearProperty/getProperty/listProperties)"
+            "Value for the action: coordinates 'x y z' for move/rotate, new name for rename, parent name for reparent, property value for setProperty, item class for addArrayItem, new class for setObjectClass. Not needed for clearProperty/getProperty/listProperties/removeArrayItem."
           ),
         propertyPath: z
           .string()
@@ -262,19 +262,30 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
         propertyKey: z
           .string()
           .optional()
-          .describe("Property key name for setProperty/clearProperty/getProperty/listProperties/addArrayItem/removeArrayItem"),
+          .describe("Property key name for setProperty/clearProperty/getProperty/listProperties/addArrayItem/removeArrayItem/setObjectClass"),
         memberIndex: z
           .number()
-          .default(-1)
+          .optional()
           .describe("Array element index for addArrayItem (insert position, -1 = append) or removeArrayItem (item to remove, 0-based)"),
       },
     },
     async ({ name, action, value, propertyPath, propertyKey, memberIndex }) => {
       try {
-        const params: Record<string, unknown> = { name, action, value };
+        // Validate value is provided for actions that require it
+        const actionsRequiringValue = ["move", "rotate", "rename", "reparent", "setProperty", "addArrayItem", "setObjectClass"];
+        if (actionsRequiringValue.includes(action) && (!value || value.trim() === "")) {
+          return {
+            content: [{ type: "text" as const, text: `Error: "value" parameter is required for the "${action}" action.` }],
+          };
+        }
+
+        const params: Record<string, unknown> = { name, action, value: value ?? "" };
         if (propertyPath) params.propertyPath = propertyPath;
         if (propertyKey) params.propertyKey = propertyKey;
-        if (memberIndex !== undefined) params.memberIndex = memberIndex;
+        // Only send memberIndex for array actions that use it
+        if ((action === "addArrayItem" || action === "removeArrayItem") && memberIndex !== undefined) {
+          params.memberIndex = memberIndex;
+        }
 
         const result = await client.call<Record<string, unknown>>("EMCP_WB_ModifyEntity", params);
 
