@@ -11,6 +11,8 @@ interface AssetEntry {
   path: string;
   /** File extension without dot */
   ext: string;
+  /** Resource GUID from entity catalog, if available (e.g., "657590C1EC9E27D3") */
+  guid?: string;
 }
 
 const ASSET_EXTENSIONS = new Set([".et", ".xob", ".edds", ".c", ".conf", ".emat", ".layout", ".sounds"]);
@@ -28,6 +30,39 @@ const TYPE_FILTER: Record<string, string[]> = {
 /** Cached file index — built once per session */
 let cachedIndex: AssetEntry[] | null = null;
 let cachedBasePath: string | null = null;
+
+/**
+ * Parse entity catalog .conf files to build a map of normalized prefab path → GUID.
+ * Entity catalogs contain lines like:
+ *   m_sEntityPrefab "{657590C1EC9E27D3}Prefabs/Groups/OPFOR/Group_USSR_LightFireTeam.et"
+ */
+function buildGuidIndex(pakVfs: PakVirtualFS): Map<string, string> {
+  const guidMap = new Map<string, string>();
+  const GUID_PATTERN = /\{([0-9A-Fa-f]{16})\}([^\s"]+\.et)/g;
+
+  for (const filePath of pakVfs.allFilePaths()) {
+    // Only scan entity catalog configs
+    const lower = filePath.toLowerCase();
+    if (!lower.endsWith(".conf") || !lower.includes("entitycatalog")) continue;
+
+    try {
+      const content = pakVfs.readTextFile(filePath);
+      let match: RegExpExecArray | null;
+      GUID_PATTERN.lastIndex = 0;
+      while ((match = GUID_PATTERN.exec(content)) !== null) {
+        const guid = match[1].toUpperCase();
+        const prefabPath = match[2].replace(/\\/g, "/");
+        // Normalize to lowercase for lookups
+        guidMap.set(prefabPath.toLowerCase(), guid);
+      }
+    } catch {
+      // Skip unreadable catalog files
+    }
+  }
+
+  logger.info(`GUID index built: ${guidMap.size} prefab→GUID mappings from entity catalogs`);
+  return guidMap;
+}
 
 function buildIndex(basePath: string, gamePath: string): AssetEntry[] {
   const start = Date.now();
@@ -63,9 +98,13 @@ function buildIndex(basePath: string, gamePath: string): AssetEntry[] {
   walk(basePath);
 
   // 2. Add entries from .pak files (skip duplicates already found as loose files)
+  // Also build GUID index from entity catalogs in pak
+  let guidMap: Map<string, string> | null = null;
   try {
     const pakVfs = PakVirtualFS.get(gamePath);
     if (pakVfs) {
+      guidMap = buildGuidIndex(pakVfs);
+
       for (const filePath of pakVfs.allFilePaths()) {
         if (seen.has(filePath.toLowerCase())) continue;
 
@@ -77,6 +116,27 @@ function buildIndex(basePath: string, gamePath: string): AssetEntry[] {
     }
   } catch (e) {
     logger.warn(`Failed to index pak files: ${e}`);
+  }
+
+  // 3. Attach GUIDs to prefab entries
+  if (guidMap && guidMap.size > 0) {
+    for (const entry of entries) {
+      if (entry.ext !== "et") continue;
+      // VFS paths include the DataXXX prefix, catalog paths don't — try stripping it
+      const pathLower = entry.path.toLowerCase();
+      if (guidMap.has(pathLower)) {
+        entry.guid = guidMap.get(pathLower);
+        continue;
+      }
+      // Strip leading DataXXX/ segment (e.g., "data005/prefabs/..." → "prefabs/...")
+      const slashIdx = pathLower.indexOf("/");
+      if (slashIdx !== -1) {
+        const stripped = pathLower.slice(slashIdx + 1);
+        if (guidMap.has(stripped)) {
+          entry.guid = guidMap.get(stripped);
+        }
+      }
+    }
   }
 
   const elapsed = Date.now() - start;
@@ -108,7 +168,7 @@ export function registerAssetSearch(server: McpServer, config: Config): void {
       description:
         "Search for base game assets (prefabs, models, textures, scripts, configs) by name. " +
         "Searches both unpacked files and .pak archives transparently. " +
-        "Returns file paths that can be used in prefab references. " +
+        "Returns file paths and GUIDs (for prefabs) that can be used in prefab references. " +
         "The first search may take a few seconds to build the file index.",
       inputSchema: {
         query: z
@@ -188,7 +248,14 @@ export function registerAssetSearch(server: McpServer, config: Config): void {
         lines.push(`Found ${results.length} match${results.length !== 1 ? "es" : ""} (showing ${shown.length}):\n`);
 
         for (const { entry } of shown) {
-          lines.push(`  ${entry.path}`);
+          if (entry.guid) {
+            // Strip DataXXX/ prefix from display path to match the catalog's relative path
+            const slashIdx = entry.path.indexOf("/");
+            const displayPath = slashIdx !== -1 ? entry.path.slice(slashIdx + 1) : entry.path;
+            lines.push(`  {${entry.guid}}${displayPath}`);
+          } else {
+            lines.push(`  ${entry.path}`);
+          }
         }
 
         if (results.length > limit) {

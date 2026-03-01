@@ -40,6 +40,7 @@ import { registerWbState } from "./tools/wb-state.js";
 import { registerGameBrowse } from "./tools/game-browse.js";
 import { registerGameRead } from "./tools/game-read.js";
 import { registerAssetSearch } from "./tools/asset-search.js";
+import { registerGameDuplicate } from "./tools/game-duplicate.js";
 import { registerWorkshopInfo } from "./tools/workshop-info.js";
 import type { Config } from "./config.js";
 
@@ -96,6 +97,7 @@ export function registerTools(server: McpServer, config: Config): void {
   registerGameBrowse(server, config);
   registerGameRead(server, config);
   registerAssetSearch(server, config);
+  registerGameDuplicate(server, config, wbClient);
   registerWorkshopInfo(server, config);
 
   // MCP Prompts
