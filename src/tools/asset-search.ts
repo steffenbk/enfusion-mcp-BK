@@ -87,6 +87,7 @@ export function registerAssetSearch(server: McpServer, config: Config): void {
     {
       description:
         "Search for base game assets (prefabs, models, textures, scripts, configs) by name. " +
+        "This is the PRIMARY way to find game assets — most assets are packed in .pak files and cannot be found by browsing the filesystem. " +
         "Returns file paths that can be used in prefab references. " +
         "The first search may take a few seconds to build the file index.",
       inputSchema: {

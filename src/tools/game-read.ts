@@ -24,9 +24,10 @@ export function registerGameRead(server: McpServer, config: Config): void {
     "game_read",
     {
       description:
-        "Read a file from the base Arma Reforger game installation. " +
+        "Read an unpacked file from the base game data. " +
         "Use this to read vanilla .c script files to understand what to override, " +
-        "or inspect prefab .et files and config .conf files.",
+        "or inspect prefab .et files and config .conf files. " +
+        "NOTE: Only works on unpacked (loose) files. Most assets are in .pak archives — use asset_search to find them by name.",
       inputSchema: {
         path: z
           .string()

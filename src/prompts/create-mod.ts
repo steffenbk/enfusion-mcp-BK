@@ -74,6 +74,17 @@ Before writing any code, assess the scope of what the user is asking for. Think 
 
 This file is the handoff document. A future Claude instance with zero context will read this file and know exactly what the mod is, what's done, and what to build next. Be specific — list actual file names, class names, and system relationships. The user can then use \`/modify-mod\` to continue with subsequent phases.
 
+## CRITICAL: USE MCP TOOLS FOR ALL RESEARCH
+
+**NEVER try to browse the game installation directory directly or access the Bohemia Interactive Wiki (biki) via the web.** Both will fail and waste time.
+
+- **Game assets are packed in .pak files** and cannot be read from the filesystem. Do NOT try to use filesystem tools (ls, find, cat, etc.) on the Arma Reforger install directory. Instead:
+  - Use **asset_search** to find prefabs, models, textures, scripts, and configs by name
+  - Use **game_browse** and **game_read** to access unpacked game data (scripts, prefabs, configs that are available as loose files)
+  - Use **api_search** to look up class definitions, methods, and properties
+
+- **Wiki content is pre-downloaded** and available via the **wiki_search** tool. Do NOT try to fetch wiki pages from the web or reference URLs on the Bohemia Interactive Wiki. Use **wiki_search** for all tutorial and guide content about Enfusion engine concepts, scripting patterns, and Arma Reforger modding topics.
+
 ## CRITICAL: API VERIFICATION RULE
 
 **NEVER guess, assume, or invent Enfusion API method names.** The Enfusion scripting API is non-standard and poorly documented. Methods that seem obvious often do not exist (e.g., \`HitZone.SetHealth()\`, \`IEntity.GetVelocity()\`, \`AIWorld.GetAIGroups()\`).

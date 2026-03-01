@@ -96,8 +96,9 @@ export function registerGameBrowse(server: McpServer, config: Config): void {
     "game_browse",
     {
       description:
-        "Browse the base Arma Reforger game installation directory. Use this to find vanilla prefabs, models, textures, scripts, and configs. " +
-        "Essential for referencing base game content in mods.",
+        "Browse unpacked base game data files (scripts, prefabs, configs). " +
+        "NOTE: Most game assets are packed in .pak files and will NOT appear here — use asset_search to find assets by name instead. " +
+        "This tool only shows loose (unpacked) files. Do NOT try to use filesystem tools on the game install directory.",
       inputSchema: {
         path: z
           .string()
