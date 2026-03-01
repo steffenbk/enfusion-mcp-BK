@@ -157,6 +157,13 @@ export class PakVirtualFS {
     return this.readFile(virtualPath).toString("utf-8");
   }
 
+  /** Get decompressed file size without reading/inflating. Returns -1 if not found. */
+  fileSize(virtualPath: string): number {
+    const norm = normalizePath(virtualPath);
+    const ref = this.fileIndex.get(norm);
+    return ref ? ref.entry.decompressedLen : -1;
+  }
+
   /** Get all file paths in the VFS (for building the asset search index). */
   allFilePaths(): string[] {
     return Array.from(this.fileIndex.keys());

@@ -145,8 +145,7 @@ export function registerGameBrowse(server: McpServer, config: Config): void {
 
             for (const pe of pakEntries) {
               if (existing.has(pe.name.toLowerCase())) continue;
-              if (pattern) {
-                if (pe.isDirectory) continue;
+              if (pattern && !pe.isDirectory) {
                 const ext = extname(pe.name).toLowerCase();
                 const patternExt = pattern.startsWith("*") ? pattern.slice(1) : pattern;
                 if (ext !== patternExt.toLowerCase()) continue;

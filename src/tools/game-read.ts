@@ -116,18 +116,19 @@ export function registerGameRead(server: McpServer, config: Config): void {
             };
           }
 
-          const content = pakVfs.readTextFile(subPath);
-          if (content.length > 512_000) {
+          const fileSize = pakVfs.fileSize(subPath);
+          if (fileSize > 512_000) {
             return {
               content: [
                 {
                   type: "text",
-                  text: `File too large: ${subPath} (${(content.length / 1024).toFixed(0)} KB). Maximum readable size is 500 KB.`,
+                  text: `File too large: ${subPath} (${(fileSize / 1024).toFixed(0)} KB). Maximum readable size is 500 KB.`,
                 },
               ],
             };
           }
 
+          const content = pakVfs.readTextFile(subPath);
           return {
             content: [
               {
