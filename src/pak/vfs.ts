@@ -53,6 +53,7 @@ export class PakVirtualFS {
     try {
       pakFiles = readdirSync(addonsPath)
         .filter((f) => extname(f).toLowerCase() === ".pak")
+        .sort() // deterministic order — later paks override earlier ones by name
         .map((f) => join(addonsPath, f));
     } catch {
       return null;

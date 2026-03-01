@@ -265,15 +265,21 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
           .describe("Property key name for setProperty/clearProperty/getProperty/listProperties/addArrayItem/removeArrayItem/setObjectClass"),
         memberIndex: z
           .number()
-          .optional()
+          .default(-1)
           .describe("Array element index for addArrayItem (insert position, -1 = append) or removeArrayItem (item to remove, 0-based)"),
       },
     },
     async ({ name, action, value, propertyPath, propertyKey, memberIndex }) => {
       try {
         // Validate value is provided for actions that require it
-        const actionsRequiringValue = ["move", "rotate", "rename", "reparent", "setProperty", "addArrayItem", "setObjectClass"];
+        // Note: setProperty allows empty string as a valid value, so it's validated separately
+        const actionsRequiringValue = ["move", "rotate", "rename", "reparent", "addArrayItem", "setObjectClass"];
         if (actionsRequiringValue.includes(action) && (!value || value.trim() === "")) {
+          return {
+            content: [{ type: "text" as const, text: `Error: "value" parameter is required for the "${action}" action.` }],
+          };
+        }
+        if (action === "setProperty" && value === undefined) {
           return {
             content: [{ type: "text" as const, text: `Error: "value" parameter is required for the "${action}" action.` }],
           };
@@ -282,8 +288,8 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
         const params: Record<string, unknown> = { name, action, value: value ?? "" };
         if (propertyPath) params.propertyPath = propertyPath;
         if (propertyKey) params.propertyKey = propertyKey;
-        // Only send memberIndex for array actions that use it
-        if ((action === "addArrayItem" || action === "removeArrayItem") && memberIndex !== undefined) {
+        // Always send memberIndex for array actions (-1 = append for addArrayItem)
+        if (action === "addArrayItem" || action === "removeArrayItem") {
           params.memberIndex = memberIndex;
         }
 
