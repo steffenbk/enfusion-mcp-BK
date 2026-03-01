@@ -4,6 +4,7 @@ import { readFileSync, existsSync, statSync } from "node:fs";
 import { join, extname } from "node:path";
 import type { Config } from "../config.js";
 import { validateProjectPath } from "../utils/safe-path.js";
+import { PakVirtualFS } from "../pak/vfs.js";
 
 /** Extensions that are safe to read as text */
 const TEXT_EXTENSIONS = new Set([
@@ -24,10 +25,10 @@ export function registerGameRead(server: McpServer, config: Config): void {
     "game_read",
     {
       description:
-        "Read an unpacked file from the base game data. " +
+        "Read a file from the base game data. " +
+        "Reads from both unpacked files and .pak archives transparently. " +
         "Use this to read vanilla .c script files to understand what to override, " +
-        "or inspect prefab .et files and config .conf files. " +
-        "NOTE: Only works on unpacked (loose) files. Most assets are in .pak archives — use asset_search to find them by name.",
+        "or inspect prefab .et files and config .conf files.",
       inputSchema: {
         path: z
           .string()
@@ -52,57 +53,94 @@ export function registerGameRead(server: McpServer, config: Config): void {
       try {
         const filePath = validateProjectPath(basePath, subPath);
 
-        if (!existsSync(filePath)) {
-          return {
-            content: [
-              { type: "text", text: `File not found: ${subPath}` },
-            ],
-          };
-        }
+        // Try loose file first
+        if (existsSync(filePath)) {
+          const stats = statSync(filePath);
+          if (stats.isDirectory()) {
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `"${subPath}" is a directory. Use game_browse to list its contents.`,
+                },
+              ],
+            };
+          }
 
-        const stats = statSync(filePath);
-        if (stats.isDirectory()) {
+          const ext = extname(filePath).toLowerCase();
+          if (!TEXT_EXTENSIONS.has(ext)) {
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Binary file: ${subPath} (${ext}, ${stats.size} bytes). Only text files (.c, .et, .conf, etc.) can be read.`,
+                },
+              ],
+            };
+          }
+
+          if (stats.size > 512_000) {
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `File too large: ${subPath} (${(stats.size / 1024).toFixed(0)} KB). Maximum readable size is 500 KB.`,
+                },
+              ],
+            };
+          }
+
+          const content = readFileSync(filePath, "utf-8");
           return {
             content: [
               {
                 type: "text",
-                text: `"${subPath}" is a directory. Use game_browse to list its contents.`,
+                text: `// ${subPath}\n// ${stats.size} bytes\n\n${content}`,
               },
             ],
           };
         }
 
-        const ext = extname(filePath).toLowerCase();
-        if (!TEXT_EXTENSIONS.has(ext)) {
+        // Fall through to pak VFS
+        const pakVfs = PakVirtualFS.get(config.gamePath);
+        if (pakVfs && pakVfs.exists(subPath)) {
+          const ext = extname(subPath).toLowerCase();
+          if (!TEXT_EXTENSIONS.has(ext)) {
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Binary file: ${subPath} (${ext}). Only text files (.c, .et, .conf, etc.) can be read.`,
+                },
+              ],
+            };
+          }
+
+          const content = pakVfs.readTextFile(subPath);
+          if (content.length > 512_000) {
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `File too large: ${subPath} (${(content.length / 1024).toFixed(0)} KB). Maximum readable size is 500 KB.`,
+                },
+              ],
+            };
+          }
+
           return {
             content: [
               {
                 type: "text",
-                text: `Binary file: ${subPath} (${ext}, ${stats.size} bytes). Only text files (.c, .et, .conf, etc.) can be read.`,
+                text: `// ${subPath} (from .pak)\n// ${content.length} bytes\n\n${content}`,
               },
             ],
           };
         }
 
-        // Cap file size at 500KB to avoid overwhelming context
-        if (stats.size > 512_000) {
-          return {
-            content: [
-              {
-                type: "text",
-                text: `File too large: ${subPath} (${(stats.size / 1024).toFixed(0)} KB). Maximum readable size is 500 KB.`,
-              },
-            ],
-          };
-        }
-
-        const content = readFileSync(filePath, "utf-8");
         return {
           content: [
-            {
-              type: "text",
-              text: `// ${subPath}\n// ${stats.size} bytes\n\n${content}`,
-            },
+            { type: "text", text: `File not found: ${subPath}` },
           ],
         };
       } catch (e) {

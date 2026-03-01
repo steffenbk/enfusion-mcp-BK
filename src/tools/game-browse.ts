@@ -4,6 +4,7 @@ import { readdirSync, statSync, existsSync } from "node:fs";
 import { relative, join, extname } from "node:path";
 import type { Config } from "../config.js";
 import { validateProjectPath } from "../utils/safe-path.js";
+import { PakVirtualFS } from "../pak/vfs.js";
 
 const FILE_TYPE_MAP: Record<string, string> = {
   ".c": "script",
@@ -96,9 +97,9 @@ export function registerGameBrowse(server: McpServer, config: Config): void {
     "game_browse",
     {
       description:
-        "Browse unpacked base game data files (scripts, prefabs, configs). " +
-        "NOTE: Most game assets are packed in .pak files and will NOT appear here — use asset_search to find assets by name instead. " +
-        "This tool only shows loose (unpacked) files. Do NOT try to use filesystem tools on the game install directory.",
+        "Browse base game data files (scripts, prefabs, configs). " +
+        "Shows both unpacked files and contents of .pak archives transparently. " +
+        "Do NOT try to use filesystem tools on the game install directory.",
       inputSchema: {
         path: z
           .string()
@@ -130,7 +131,42 @@ export function registerGameBrowse(server: McpServer, config: Config): void {
           ? validateProjectPath(basePath, subPath)
           : basePath;
 
-        const entries = listDirectory(targetPath, pattern);
+        const entries = existsSync(targetPath)
+          ? listDirectory(targetPath, pattern)
+          : [];
+
+        // Merge entries from .pak archives
+        try {
+          const pakVfs = PakVirtualFS.get(config.gamePath);
+          if (pakVfs) {
+            const virtualPath = subPath || "";
+            const pakEntries = pakVfs.listDir(virtualPath);
+            const existing = new Set(entries.map((e) => e.name.toLowerCase()));
+
+            for (const pe of pakEntries) {
+              if (existing.has(pe.name.toLowerCase())) continue;
+              if (pattern) {
+                if (pe.isDirectory) continue;
+                const ext = extname(pe.name).toLowerCase();
+                const patternExt = pattern.startsWith("*") ? pattern.slice(1) : pattern;
+                if (ext !== patternExt.toLowerCase()) continue;
+              }
+              entries.push({
+                name: pe.name,
+                isDirectory: pe.isDirectory,
+                size: pe.size,
+                type: pe.isDirectory ? "" : getFileType(pe.name),
+              });
+            }
+          }
+        } catch { /* pak VFS unavailable — continue with loose files only */ }
+
+        // Re-sort after merging
+        entries.sort((a, b) => {
+          if (a.isDirectory !== b.isDirectory) return a.isDirectory ? -1 : 1;
+          return a.name.localeCompare(b.name);
+        });
+
         const relPath = relative(basePath, targetPath) || ".";
 
         const lines: string[] = [];

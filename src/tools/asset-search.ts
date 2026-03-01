@@ -4,6 +4,7 @@ import { readdirSync, existsSync } from "node:fs";
 import { join, extname, relative } from "node:path";
 import type { Config } from "../config.js";
 import { logger } from "../utils/logger.js";
+import { PakVirtualFS } from "../pak/vfs.js";
 
 interface AssetEntry {
   /** Relative path from game data root (e.g., "Prefabs/Weapons/Rifles/AK47/AK47.et") */
@@ -28,10 +29,12 @@ const TYPE_FILTER: Record<string, string[]> = {
 let cachedIndex: AssetEntry[] | null = null;
 let cachedBasePath: string | null = null;
 
-function buildIndex(basePath: string): AssetEntry[] {
+function buildIndex(basePath: string, gamePath: string): AssetEntry[] {
   const start = Date.now();
   const entries: AssetEntry[] = [];
+  const seen = new Set<string>();
 
+  // 1. Walk loose (unpacked) files first — they take priority
   function walk(dir: string): void {
     let dirEntries;
     try {
@@ -49,26 +52,43 @@ function buildIndex(basePath: string): AssetEntry[] {
       } else {
         const ext = extname(entry.name).toLowerCase();
         if (ASSET_EXTENSIONS.has(ext)) {
-          entries.push({
-            path: relative(basePath, fullPath).replace(/\\/g, "/"),
-            ext: ext.slice(1),
-          });
+          const relPath = relative(basePath, fullPath).replace(/\\/g, "/");
+          entries.push({ path: relPath, ext: ext.slice(1) });
+          seen.add(relPath.toLowerCase());
         }
       }
     }
   }
 
   walk(basePath);
+
+  // 2. Add entries from .pak files (skip duplicates already found as loose files)
+  try {
+    const pakVfs = PakVirtualFS.get(gamePath);
+    if (pakVfs) {
+      for (const filePath of pakVfs.allFilePaths()) {
+        if (seen.has(filePath.toLowerCase())) continue;
+
+        const ext = extname(filePath).toLowerCase();
+        if (ASSET_EXTENSIONS.has(ext)) {
+          entries.push({ path: filePath, ext: ext.slice(1) });
+        }
+      }
+    }
+  } catch (e) {
+    logger.warn(`Failed to index pak files: ${e}`);
+  }
+
   const elapsed = Date.now() - start;
   logger.info(`Asset index built: ${entries.length} files in ${elapsed}ms`);
   return entries;
 }
 
-function getIndex(basePath: string): AssetEntry[] {
+function getIndex(basePath: string, gamePath: string): AssetEntry[] {
   if (cachedIndex && cachedBasePath === basePath) {
     return cachedIndex;
   }
-  cachedIndex = buildIndex(basePath);
+  cachedIndex = buildIndex(basePath, gamePath);
   cachedBasePath = basePath;
   return cachedIndex;
 }
@@ -87,7 +107,7 @@ export function registerAssetSearch(server: McpServer, config: Config): void {
     {
       description:
         "Search for base game assets (prefabs, models, textures, scripts, configs) by name. " +
-        "This is the PRIMARY way to find game assets — most assets are packed in .pak files and cannot be found by browsing the filesystem. " +
+        "Searches both unpacked files and .pak archives transparently. " +
         "Returns file paths that can be used in prefab references. " +
         "The first search may take a few seconds to build the file index.",
       inputSchema: {
@@ -120,7 +140,7 @@ export function registerAssetSearch(server: McpServer, config: Config): void {
       }
 
       try {
-        const index = getIndex(basePath);
+        const index = getIndex(basePath, config.gamePath);
         const q = query.toLowerCase();
         const allowedExts = type !== "any" ? TYPE_FILTER[type] : null;
 
