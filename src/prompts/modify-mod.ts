@@ -40,7 +40,9 @@ Follow this workflow — every step is mandatory:
    - Read existing scripts, prefabs, configs, and layouts
    - Identify the class prefix convention in use
 
-3. **Research the API** — Use **api_search** to find relevant classes and methods. **CRITICAL: NEVER guess or assume Enfusion API method names.** The API is non-standard — methods that seem obvious often don't exist (e.g., \`HitZone.SetHealth()\`, \`IEntity.GetVelocity()\`). You MUST search every class you plan to call methods on and verify the methods exist in the search results. If a method isn't listed, it does not exist — find an alternative.
+3. **Research the API** — **NEVER try to browse the game install directory directly or access the Bohemia Interactive Wiki via the web.** Use **asset_search** to find assets by name, **game_browse**/**game_read** to browse and read game files (reads .pak archives transparently), and **api_search** for class/method lookups. Wiki content is pre-downloaded — always use **wiki_search** instead of trying to fetch wiki pages from the web.
+
+   Use **api_search** to find relevant classes and methods. **CRITICAL: NEVER guess or assume Enfusion API method names.** The API is non-standard — methods that seem obvious often don't exist (e.g., \`HitZone.SetHealth()\`, \`IEntity.GetVelocity()\`). You MUST search every class you plan to call methods on and verify the methods exist in the search results. If a method isn't listed, it does not exist — find an alternative.
 
 4. **Plan the changes** — Determine what to modify, create, or remove. For phased projects, verify your plan aligns with the MODPLAN. Only use API methods verified via api_search.
 

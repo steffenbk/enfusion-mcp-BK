@@ -74,7 +74,7 @@ Or use the guided prompts for structured workflows:
 Claude will:
 
 1. **Assess complexity** — simple mods are built in one pass; large mods (e.g., a DayZ-style overhaul) get broken into phases with a plan you approve before any code is written
-2. **Research** the Enfusion API (8,693 indexed classes) and the Arma Reforger wiki (250+ guides and tutorials) to find the right approach
+2. **Research** the Enfusion API (8,693 indexed classes), the Arma Reforger wiki (250+ guides), and base game assets (read directly from `.pak` archives) to find the right approach
 3. **Scaffold** the full addon — `.gproj`, scripts, prefabs, configs, UI layouts
 4. **Launch Workbench** if it's not already running
 5. **Load the project**, reload scripts, register resources
@@ -93,6 +93,9 @@ Work without Workbench running — API search, mod scaffolding, code generation,
 |------|-------------|
 | `api_search` | Search 8,693 Enfusion/Arma Reforger API classes and methods |
 | `wiki_search` | Search 250+ tutorials and guides from the Enfusion engine docs and BI Community Wiki |
+| `game_browse` | Browse base game files — loose files and `.pak` archives transparently |
+| `game_read` | Read base game files — scripts, prefabs, configs from loose files or `.pak` |
+| `asset_search` | Search game assets by name across loose files and `.pak` archives |
 | `project_browse` | List files in a mod project directory |
 | `project_read` | Read any project file |
 | `project_write` | Write or update project files |
@@ -179,7 +182,7 @@ cd enfusion-mcp
 npm install
 npm run scrape   # Build API index from Workbench docs
 npm run build
-npm test         # 163 tests
+npm test         # 187 tests
 ```
 
 ## Documentation

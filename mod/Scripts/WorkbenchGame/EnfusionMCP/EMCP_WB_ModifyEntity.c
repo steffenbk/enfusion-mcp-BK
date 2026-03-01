@@ -76,6 +76,24 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 	}
 
 	//------------------------------------------------------------------------------------------------
+	// Build a ContainerIdPathEntry array from a dot-separated path string.
+	// Returns null if the path is empty (meaning target the entity root).
+	static array<ref ContainerIdPathEntry> BuildPathEntries(string propertyPath)
+	{
+		if (propertyPath == "")
+			return null;
+
+		array<ref ContainerIdPathEntry> pathEntries = {};
+		array<string> pathParts = {};
+		propertyPath.Split(".", pathParts, true);
+		for (int p = 0; p < pathParts.Count(); p++)
+		{
+			pathEntries.Insert(new ContainerIdPathEntry(pathParts[p]));
+		}
+		return pathEntries;
+	}
+
+	//------------------------------------------------------------------------------------------------
 	override JsonApiStruct GetRequest()
 	{
 		return new EMCP_WB_ModifyEntityRequest();
@@ -229,18 +247,7 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 
 			api.BeginEntityAction("Set property via NetAPI");
 
-			// Build component path: propertyPath is the component class name (e.g. "SCR_ScenarioFrameworkLayerTaskKill")
-			array<ref ContainerIdPathEntry> pathEntries = null;
-			if (req.propertyPath != "")
-			{
-				pathEntries = {};
-				array<string> pathParts = {};
-				req.propertyPath.Split(".", pathParts, true);
-				for (int p = 0; p < pathParts.Count(); p++)
-				{
-					pathEntries.Insert(new ContainerIdPathEntry(pathParts[p]));
-				}
-			}
+			array<ref ContainerIdPathEntry> pathEntries = BuildPathEntries(req.propertyPath);
 
 			bool result = api.SetVariableValue(entSrc, pathEntries, req.propertyKey, req.value);
 			api.EndEntityAction();
@@ -267,17 +274,7 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 
 			api.BeginEntityAction("Clear property via NetAPI");
 
-			array<ref ContainerIdPathEntry> pathEntries = null;
-			if (req.propertyPath != "")
-			{
-				pathEntries = {};
-				array<string> pathParts = {};
-				req.propertyPath.Split(".", pathParts, true);
-				for (int p = 0; p < pathParts.Count(); p++)
-				{
-					pathEntries.Insert(new ContainerIdPathEntry(pathParts[p]));
-				}
-			}
+			array<ref ContainerIdPathEntry> pathEntries = BuildPathEntries(req.propertyPath);
 
 			bool result = api.ClearVariableValue(entSrc, pathEntries, req.propertyKey);
 			api.EndEntityAction();
@@ -302,36 +299,22 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 				return resp;
 			}
 
-			// Find component by class name via GetComponent(), or use entity directly
-			IEntityComponentSource compSrc = null;
-			if (req.propertyPath != "")
-			{
-				int compCount = entSrc.GetComponentCount();
-				for (int ci = 0; ci < compCount; ci++)
-				{
-					IEntityComponentSource c = entSrc.GetComponent(ci);
-					if (c && c.GetClassName() == req.propertyPath)
-					{
-						compSrc = c;
-						break;
-					}
-				}
-				if (!compSrc)
-				{
-					resp.status = "error";
-					resp.message = "Component not found: " + req.propertyPath;
-					return resp;
-				}
-			}
+			// Use the same path mechanism as setProperty so nested paths work consistently
+			array<ref ContainerIdPathEntry> pathEntries = BuildPathEntries(req.propertyPath);
 
 			string val;
-			if (compSrc)
-				compSrc.Get(req.propertyKey, val);
-			else
-				entSrc.Get(req.propertyKey, val);
+			bool result = api.GetVariableValue(entSrc, pathEntries, req.propertyKey, val);
 
-			resp.status = "ok";
-			resp.message = val;
+			if (result)
+			{
+				resp.status = "ok";
+				resp.message = val;
+			}
+			else
+			{
+				resp.status = "error";
+				resp.message = "GetVariableValue returned false for key: " + req.propertyKey;
+			}
 		}
 		else if (req.action == "listProperties")
 		{
@@ -390,15 +373,7 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 				return resp;
 			}
 
-			array<ref ContainerIdPathEntry> pathEntries = null;
-			if (req.propertyPath != "")
-			{
-				pathEntries = {};
-				array<string> pathParts = {};
-				req.propertyPath.Split(".", pathParts, true);
-				for (int p = 0; p < pathParts.Count(); p++)
-					pathEntries.Insert(new ContainerIdPathEntry(pathParts[p]));
-			}
+			array<ref ContainerIdPathEntry> pathEntries = BuildPathEntries(req.propertyPath);
 
 			int insertIdx = req.memberIndex;
 			if (insertIdx < 0)
@@ -432,15 +407,7 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 				return resp;
 			}
 
-			array<ref ContainerIdPathEntry> pathEntries = null;
-			if (req.propertyPath != "")
-			{
-				pathEntries = {};
-				array<string> pathParts = {};
-				req.propertyPath.Split(".", pathParts, true);
-				for (int p = 0; p < pathParts.Count(); p++)
-					pathEntries.Insert(new ContainerIdPathEntry(pathParts[p]));
-			}
+			array<ref ContainerIdPathEntry> pathEntries = BuildPathEntries(req.propertyPath);
 
 			api.BeginEntityAction("Remove array item via NetAPI");
 			bool result = api.RemoveObjectArrayVariableMember(entSrc, pathEntries, req.propertyKey, req.memberIndex);
@@ -460,10 +427,10 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 		else if (req.action == "setObjectClass")
 		{
 			// Changes the class of an existing object property or array element (the dropdown in the editor).
-			// propertyPath = component class name, optionally followed by array index notation
-			//                e.g. "SCR_ScenarioFrameworkArea" to target a component
-			// propertyKey  = property name of the object/array element to change
+			// propertyPath = component class name (e.g. "SCR_ScenarioFrameworkArea")
+			// propertyKey  = property name of the object whose class is being changed
 			// value        = new class name
+			// The full path to the target is propertyPath + propertyKey.
 			if (req.propertyKey == "" || req.value == "")
 			{
 				resp.status = "error";
@@ -471,15 +438,13 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 				return resp;
 			}
 
-			array<ref ContainerIdPathEntry> pathEntries = null;
-			if (req.propertyPath != "")
-			{
-				pathEntries = {};
-				array<string> pathParts = {};
-				req.propertyPath.Split(".", pathParts, true);
-				for (int p = 0; p < pathParts.Count(); p++)
-					pathEntries.Insert(new ContainerIdPathEntry(pathParts[p]));
-			}
+			// Build path including propertyKey so ChangeObjectClass targets the correct object
+			string fullPath = req.propertyPath;
+			if (fullPath != "")
+				fullPath += ".";
+			fullPath += req.propertyKey;
+
+			array<ref ContainerIdPathEntry> pathEntries = BuildPathEntries(fullPath);
 
 			api.BeginEntityAction("Set object class via NetAPI");
 			bool result = api.ChangeObjectClass(entSrc, pathEntries, req.value);

@@ -7,7 +7,8 @@ export function registerWikiSearch(server: McpServer, searchEngine: SearchEngine
     "wiki_search",
     {
       description:
-        "Search tutorial and guide content about Enfusion engine concepts, scripting patterns, and Arma Reforger modding topics.",
+        "Search pre-downloaded Bohemia Interactive Wiki (BIKI) content, tutorials, and guides about Enfusion engine concepts, scripting patterns, and Arma Reforger modding topics. " +
+        "Always use this tool instead of trying to access the wiki via the web — all wiki content is already available here.",
       inputSchema: {
         query: z
           .string()
