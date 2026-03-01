@@ -1,63 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
-import { join, dirname, extname, basename } from "node:path";
 import type { Config } from "../config.js";
 import type { WorkbenchClient } from "../workbench/client.js";
-import { PakVirtualFS } from "../pak/vfs.js";
-
-/** Text-based prefab/config extensions that can be duplicated. */
-const TEXT_EXTENSIONS = new Set([".et", ".conf", ".c", ".layout"]);
-
-function resolveGameDataPath(config: Config): string | null {
-  const dataPath = join(config.gamePath, "addons", "data");
-  if (existsSync(dataPath)) return dataPath;
-  const addonsPath = join(config.gamePath, "addons");
-  if (existsSync(addonsPath)) return addonsPath;
-  return null;
-}
-
-/**
- * Attempt to read a file from loose game data or pak archives.
- * sourcePath may be a full GUID-reference like "{GUID}Prefabs/Foo.et" or a bare relative path.
- */
-function readGameFile(
-  sourcePath: string,
-  basePath: string,
-  config: Config
-): { content: string; resolvedPath: string } {
-  // Strip leading {GUID} if present
-  const bare = sourcePath.replace(/^\{[0-9A-Fa-f]{16}\}/, "");
-
-  // Try loose file first
-  const looseFullPath = join(basePath, bare);
-  if (existsSync(looseFullPath)) {
-    const content = readFileSync(looseFullPath, "utf-8");
-    return { content, resolvedPath: bare };
-  }
-
-  // Try pak VFS — path may start with DataXXX/ or not
-  const pakVfs = PakVirtualFS.get(config.gamePath);
-  if (pakVfs) {
-    // Normalize the bare path for VFS lookup (lowercase, forward slashes)
-    const bareNorm = bare.replace(/\\/g, "/").toLowerCase();
-
-    if (pakVfs.exists(bareNorm)) {
-      return { content: pakVfs.readTextFile(bareNorm), resolvedPath: bareNorm };
-    }
-
-    // VFS file index keys include DataXXX/ prefix. Search by suffix match.
-    // Use "/" + bareNorm as suffix to avoid partial-segment matches.
-    const suffix = "/" + bareNorm;
-    for (const vfsPath of pakVfs.allFilePaths()) {
-      if (vfsPath === bareNorm || vfsPath.endsWith(suffix)) {
-        return { content: pakVfs.readTextFile(vfsPath), resolvedPath: vfsPath };
-      }
-    }
-  }
-
-  throw new Error(`Source file not found in game data or pak archives: ${bare}`);
-}
 
 export function registerGameDuplicate(
   server: McpServer,
@@ -84,7 +28,7 @@ export function registerGameDuplicate(
           .string()
           .describe(
             "Destination path within your mod folder, relative to the addon root " +
-            "(e.g., 'Prefabs/Groups/MyCustomGroup.et'). Must end in the same extension as the source."
+            "(e.g., 'Prefabs/Groups/MyCustomGroup.et'). Must end in .et"
           ),
         modName: z
           .string()
@@ -103,159 +47,100 @@ export function registerGameDuplicate(
       },
     },
     async ({ sourcePath, destPath, modName, register }) => {
-      const basePath = resolveGameDataPath(config);
-      if (!basePath) {
+      // Use Workbench to do the duplication: place entity → createTemplate → delete entity
+      // This is the most reliable approach — Workbench assigns the GUID correctly.
+
+      if (!register) {
         return {
           content: [
             {
               type: "text",
-              text: `Base game not found at ${config.gamePath}. Set ENFUSION_GAME_PATH or ensure Arma Reforger is installed.`,
+              text: "register=false is not supported for the Workbench-based duplicate workflow. " +
+                "Workbench must be running to duplicate prefabs. Set register=true (default).",
             },
           ],
         };
       }
 
-      // Validate destination extension matches source
-      const srcExt = extname(sourcePath.replace(/^\{[0-9A-Fa-f]{16}\}/, "")).toLowerCase();
-      const dstExt = extname(destPath).toLowerCase();
-      if (srcExt !== dstExt) {
-        return {
-          content: [
-            {
-              type: "text",
-              text: `Extension mismatch: source is "${srcExt}", destination is "${dstExt}". They must match.`,
-            },
-          ],
-        };
-      }
+      const tempName = `_EMCP_Dup_${Date.now()}`;
 
-      if (!TEXT_EXTENSIONS.has(srcExt)) {
-        return {
-          content: [
-            {
-              type: "text",
-              text: `Unsupported file type "${srcExt}". Only ${[...TEXT_EXTENSIONS].join(", ")} files can be duplicated.`,
-            },
-          ],
-        };
-      }
+      try {
+        // Step 1: Place the source prefab in the world temporarily
+        const createResp = await client.call<{ status: string; message?: string }>(
+          "EMCP_WB_CreateEntity",
+          { prefab: sourcePath, name: tempName }
+        );
 
-      // Resolve mod root
-      let modRoot: string;
-      if (modName) {
-        modRoot = join(config.projectPath, modName);
-      } else {
-        // Pick first directory in project path
-        const { readdirSync, statSync } = await import("node:fs");
-        const entries = readdirSync(config.projectPath, { withFileTypes: true });
-        const first = entries.find((e) => e.isDirectory());
-        if (!first) {
+        if (createResp.status !== "ok") {
           return {
             content: [
               {
                 type: "text",
-                text: `No addon directories found in ${config.projectPath}. Specify modName explicitly.`,
+                text: `Failed to place source prefab: ${createResp.message ?? JSON.stringify(createResp)}`,
               },
             ],
           };
         }
-        modRoot = join(config.projectPath, first.name);
-        modName = first.name;
-      }
 
-      if (!existsSync(modRoot)) {
+        // Step 2: Save as template in mod folder
+        let templateResp: { status: string; message?: string; path?: string };
+        try {
+          templateResp = await client.call<{ status: string; message?: string; path?: string }>(
+            "EMCP_WB_Prefabs",
+            { action: "createTemplate", entityName: tempName, templatePath: destPath }
+          );
+        } finally {
+          // Step 3: Always delete the temp entity, even if createTemplate fails
+          try {
+            await client.call("EMCP_WB_DeleteEntity", { name: tempName });
+          } catch {
+            // Best-effort cleanup
+          }
+        }
+
+        if (templateResp!.status !== "ok") {
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Failed to create template: ${templateResp!.message ?? JSON.stringify(templateResp)}`,
+              },
+            ],
+          };
+        }
+
+        const savedPath = templateResp!.path ?? destPath;
         return {
           content: [
             {
               type: "text",
-              text: `Mod directory not found: ${modRoot}`,
+              text: [
+                `**Prefab duplicated successfully**`,
+                `- Source: ${sourcePath}`,
+                `- Saved to: ${savedPath}`,
+                ``,
+                `The prefab now has a new resource GUID assigned by Workbench.`,
+                `Use wb_resources getInfo or wb_prefabs getGuid to look up the new GUID.`,
+                ``,
+                `**Next steps:**`,
+                `1. Edit the .et file to customize it.`,
+                `2. Reference it as {GUID}${destPath} in your prefabs.`,
+              ].join("\n"),
             },
           ],
         };
-      }
-
-      // Block path traversal in destPath
-      if (destPath.includes("..")) {
-        return {
-          content: [
-            { type: "text", text: "Path traversal not allowed in destPath." },
-          ],
-        };
-      }
-
-      const absDestPath = join(modRoot, destPath.replace(/\\/g, "/"));
-      // Safety: must stay within modRoot
-      if (!absDestPath.startsWith(modRoot)) {
-        return {
-          content: [
-            { type: "text", text: "destPath resolves outside the mod root directory." },
-          ],
-        };
-      }
-
-      // Read source
-      let fileContent: string;
-      let resolvedSource: string;
-      try {
-        const result = readGameFile(sourcePath, basePath, config);
-        fileContent = result.content;
-        resolvedSource = result.resolvedPath;
       } catch (e) {
-        const msg = e instanceof Error ? e.message : String(e);
-        return {
-          content: [{ type: "text", text: `Failed to read source: ${msg}` }],
-        };
-      }
-
-      // Write to destination
-      try {
-        mkdirSync(dirname(absDestPath), { recursive: true });
-        writeFileSync(absDestPath, fileContent, "utf-8");
-      } catch (e) {
-        const msg = e instanceof Error ? e.message : String(e);
-        return {
-          content: [{ type: "text", text: `Failed to write destination file: ${msg}` }],
-        };
-      }
-
-      const destRelative = destPath.replace(/\\/g, "/");
-      const lines: string[] = [];
-      lines.push(`**Duplicated prefab to mod folder**`);
-      lines.push(`- Source: ${resolvedSource}`);
-      lines.push(`- Destination: ${modName}/${destRelative}`);
-      lines.push(`- Absolute path: ${absDestPath}`);
-
-      // Register with Workbench if requested
-      if (register) {
+        // Make sure temp entity is cleaned up on unexpected error
         try {
-          // wb_resources uses a path relative to Workbench's virtual FS, which maps addon names.
-          // Pass the relative path within the mod (without DataXXX prefix).
-          await client.call<Record<string, unknown>>("EMCP_WB_Resources", {
-            action: "register",
-            path: destRelative,
-            buildRuntime: false,
-          });
-          lines.push(`- Registered with Workbench: yes`);
-          lines.push(`\nThe file has been registered. Use wb_resources getInfo with the path to retrieve its new GUID,`);
-          lines.push(`or use asset_search on your mod to find it.`);
-        } catch (e) {
-          const msg = e instanceof Error ? e.message : String(e);
-          lines.push(`- Registered with Workbench: FAILED (${msg})`);
-          lines.push(`\nWorkbench registration failed — file was written but has no GUID yet.`);
-          lines.push(`Open Workbench manually and use Resource Browser → right-click → Register to assign a GUID,`);
-          lines.push(`or ensure Workbench is running and try again.`);
+          await client.call("EMCP_WB_DeleteEntity", { name: tempName });
+        } catch {
+          // Ignore
         }
-      } else {
-        lines.push(`- Registered with Workbench: skipped (register=false)`);
-        lines.push(`\nFile written. Open Workbench and register it manually to assign a GUID.`);
+        const msg = e instanceof Error ? e.message : String(e);
+        return {
+          content: [{ type: "text", text: `Error during duplication: ${msg}` }],
+        };
       }
-
-      lines.push(`\n**Next steps:**`);
-      lines.push(`1. Edit ${basename(absDestPath)} to customize it.`);
-      lines.push(`2. Use wb_resources getInfo path="${destRelative}" to get the assigned GUID.`);
-      lines.push(`3. Reference it as {GUID}${destRelative} in your prefabs.`);
-
-      return { content: [{ type: "text", text: lines.join("\n") }] };
     }
   );
 }

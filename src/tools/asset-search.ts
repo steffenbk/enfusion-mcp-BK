@@ -30,22 +30,24 @@ const TYPE_FILTER: Record<string, string[]> = {
 /** Cached file index — built once per session */
 let cachedIndex: AssetEntry[] | null = null;
 let cachedBasePath: string | null = null;
-/** Whether the cached index includes GUID data (used to detect stale pre-GUID cache) */
-let cachedHasGuids = false;
+let cachedGuidDiag = "";
 
 /**
  * Parse entity catalog .conf files to build a map of normalized prefab path → GUID.
  * Entity catalogs contain lines like:
  *   m_sEntityPrefab "{657590C1EC9E27D3}Prefabs/Groups/OPFOR/Group_USSR_LightFireTeam.et"
  */
-function buildGuidIndex(pakVfs: PakVirtualFS): Map<string, string> {
+function buildGuidIndex(pakVfs: PakVirtualFS): { guidMap: Map<string, string>; diag: string } {
   const guidMap = new Map<string, string>();
   const GUID_PATTERN = /\{([0-9A-Fa-f]{16})\}([^\s"]+\.et)/g;
+  const errors: string[] = [];
 
+  let catalogCount = 0;
   for (const filePath of pakVfs.allFilePaths()) {
     // Only scan entity catalog configs
     const lower = filePath.toLowerCase();
     if (!lower.endsWith(".conf") || !lower.includes("entitycatalog")) continue;
+    catalogCount++;
 
     try {
       const content = pakVfs.readTextFile(filePath);
@@ -54,16 +56,20 @@ function buildGuidIndex(pakVfs: PakVirtualFS): Map<string, string> {
       while ((match = GUID_PATTERN.exec(content)) !== null) {
         const guid = match[1].toUpperCase();
         const prefabPath = match[2].replace(/\\/g, "/");
-        // Normalize to lowercase for lookups
         guidMap.set(prefabPath.toLowerCase(), guid);
       }
-    } catch {
-      // Skip unreadable catalog files
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      errors.push(`${filePath}: ${msg}`);
+      logger.warn(`GUID index: failed to read catalog ${filePath}: ${e}`);
     }
   }
 
-  logger.info(`GUID index built: ${guidMap.size} prefab→GUID mappings from entity catalogs`);
-  return guidMap;
+  const diag = errors.length > 0
+    ? `${guidMap.size} GUIDs from ${catalogCount} catalogs; ${errors.length} errors: ${errors[0]}`
+    : `${guidMap.size} GUIDs from ${catalogCount} catalogs`;
+  logger.info(`GUID index built: ${diag}`);
+  return { guidMap, diag };
 }
 
 function buildIndex(basePath: string, gamePath: string): AssetEntry[] {
@@ -105,7 +111,9 @@ function buildIndex(basePath: string, gamePath: string): AssetEntry[] {
   try {
     const pakVfs = PakVirtualFS.get(gamePath);
     if (pakVfs) {
-      guidMap = buildGuidIndex(pakVfs);
+      const { guidMap: gm, diag } = buildGuidIndex(pakVfs);
+      guidMap = gm;
+      cachedGuidDiag = diag;
 
       for (const filePath of pakVfs.allFilePaths()) {
         if (seen.has(filePath.toLowerCase())) continue;
@@ -117,6 +125,8 @@ function buildIndex(basePath: string, gamePath: string): AssetEntry[] {
       }
     }
   } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    cachedGuidDiag = `PAK ERROR: ${msg}`;
     logger.warn(`Failed to index pak files: ${e}`);
   }
 
@@ -150,6 +160,7 @@ function buildIndex(basePath: string, gamePath: string): AssetEntry[] {
 export function invalidateAssetCache(): void {
   cachedIndex = null;
   cachedBasePath = null;
+  cachedGuidDiag = "";
 }
 
 function getIndex(basePath: string, gamePath: string): AssetEntry[] {
@@ -259,8 +270,9 @@ export function registerAssetSearch(server: McpServer, config: Config): void {
           };
         }
 
+        const guidTotal = index.filter((e) => e.guid).length;
         const lines: string[] = [];
-        lines.push(`Found ${results.length} match${results.length !== 1 ? "es" : ""} (showing ${shown.length}):\n`);
+        lines.push(`Found ${results.length} match${results.length !== 1 ? "es" : ""} (showing ${shown.length}) [GUIDs: ${cachedGuidDiag || `${guidTotal} indexed`}]:\n`);
 
         for (const { entry } of shown) {
           if (entry.guid) {
