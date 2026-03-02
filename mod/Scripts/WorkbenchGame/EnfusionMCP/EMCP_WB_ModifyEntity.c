@@ -519,6 +519,36 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 					removePathEntries = BuildPathEntries(req.propertyPath);
 			}
 
+			// Safety check: if the array is only inherited (not set directly on this container),
+			// RemoveObjectArrayVariableMember will crash Workbench. Refuse with a clear error.
+			// We detect this by comparing GetObjectArray count (includes inherited) with
+			// whether the variable is set at this level via IsVariableSetDirectly.
+			BaseContainerList removeCheckList = removeTopLevel.GetObjectArray(req.propertyKey);
+			int removeCheckCount = 0;
+			if (removeCheckList)
+				removeCheckCount = removeCheckList.Count();
+
+			// Build a local-only count by checking the container's ancestor
+			// If items exist in the full list but the variable is not directly set, they are inherited
+			BaseContainer removeAncestor = removeTopLevel.GetAncestor();
+			int ancestorCount = 0;
+			if (removeAncestor)
+			{
+				BaseContainerList ancestorList = removeAncestor.GetObjectArray(req.propertyKey);
+				if (ancestorList)
+					ancestorCount = ancestorList.Count();
+			}
+
+			// If the local count equals the ancestor count and variable is not set directly,
+			// all items are inherited — removing would crash Workbench
+			if (!removeTopLevel.IsVariableSetDirectly(req.propertyKey) && removeCheckCount == ancestorCount)
+			{
+				resp.status = "error";
+				resp.message = "Cannot remove from '" + req.propertyKey + "': all items are inherited from a parent prefab. " +
+					"Edit the .et file directly and set an empty '" + req.propertyKey + " {}' block to override inherited items.";
+				return resp;
+			}
+
 			api.BeginEntityAction("Remove array item via NetAPI");
 			bool result = api.RemoveObjectArrayVariableMember(removeTopLevel, removePathEntries, req.propertyKey, req.memberIndex);
 			api.EndEntityAction();

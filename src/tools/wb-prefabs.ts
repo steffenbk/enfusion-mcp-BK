@@ -10,9 +10,9 @@ export function registerWbPrefabs(server: McpServer, client: WorkbenchClient): v
         "Prefab operations in the Workbench. Create entity templates, save prefab changes, look up prefab GUIDs, or locate prefabs by path.",
       inputSchema: {
         action: z
-          .enum(["createTemplate", "save", "getGuid", "locate"])
+          .enum(["createTemplate", "save", "getGuid", "locate", "getAncestor"])
           .describe(
-            "Action: createTemplate (create .et from entity), save (save prefab changes), getGuid (look up GUID), locate (find prefabs in path)"
+            "Action: createTemplate (create .et from entity), save (save prefab changes), getGuid (look up GUID), locate (find prefabs in path), getAncestor (get the ancestor prefab path of a scene entity)"
           ),
         entityName: z
           .string()
@@ -94,6 +94,21 @@ export function registerWbPrefabs(server: McpServer, client: WorkbenchClient): v
             }
           }
           return { content: [{ type: "text" as const, text: lines.join("\n") }] };
+        }
+
+        if (action === "getAncestor") {
+          if (!entityName) {
+            return { content: [{ type: "text" as const, text: "Error: `entityName` is required for getAncestor." }] };
+          }
+          const result = await client.call<{ status: string; ancestorPath?: string; message?: string }>(
+            "EMCP_WB_Prefabs", { action: "getAncestor", entityName }
+          );
+          return {
+            content: [{
+              type: "text" as const,
+              text: `**Ancestor Prefab**\n\n- **Entity:** ${entityName}\n- **Ancestor:** ${result.ancestorPath || "(none)"}`,
+            }],
+          };
         }
 
         // createTemplate and save use EMCP_WB_Prefabs

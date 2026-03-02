@@ -11,6 +11,10 @@ export interface Config {
   projectPath: string;
   /** Path to base game installation (auto-derived from workbenchPath) */
   gamePath: string;
+  /** Optional path to a pre-extracted game data library (fully flattened prefabs).
+   *  When set, game_duplicate checks here first before falling back to pak loose files.
+   *  Set via ENFUSION_EXTRACTED_PATH env var. */
+  extractedPath?: string;
   /** Directory containing scraped data index */
   dataDir: string;
   /** Directory containing mod pattern definitions */
@@ -80,6 +84,9 @@ export function loadConfig(): Config {
   }
   if (process.env.ENFUSION_GAME_PATH) {
     config.gamePath = process.env.ENFUSION_GAME_PATH;
+  }
+  if (process.env.ENFUSION_EXTRACTED_PATH) {
+    config.extractedPath = process.env.ENFUSION_EXTRACTED_PATH;
   }
   if (process.env.ENFUSION_MCP_DATA_DIR) {
     config.dataDir = process.env.ENFUSION_MCP_DATA_DIR;

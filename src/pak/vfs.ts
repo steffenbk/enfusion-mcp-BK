@@ -1,6 +1,6 @@
 import { openSync, readSync, closeSync, readdirSync, existsSync } from "node:fs";
 import { join, extname } from "node:path";
-import { inflateSync } from "node:zlib";
+import { inflateRawSync } from "node:zlib";
 import { parsePakIndex, type PakIndex, type PakDirEntry, type PakFileEntry } from "./reader.js";
 import { logger } from "../utils/logger.js";
 
@@ -51,10 +51,27 @@ export class PakVirtualFS {
 
     let pakFiles: string[];
     try {
-      pakFiles = readdirSync(addonsPath)
-        .filter((f) => extname(f).toLowerCase() === ".pak")
-        .sort() // deterministic order — first pak alphabetically wins on duplicates
-        .map((f) => join(addonsPath, f));
+      // Scan addons/ directly, then one level deep (e.g. addons/data/, addons/core/)
+      const topEntries = readdirSync(addonsPath, { withFileTypes: true });
+      pakFiles = topEntries
+        .filter((e) => e.isFile() && extname(e.name).toLowerCase() === ".pak")
+        .map((e) => join(addonsPath, e.name));
+
+      for (const entry of topEntries) {
+        if (!entry.isDirectory()) continue;
+        try {
+          const subEntries = readdirSync(join(addonsPath, entry.name), { withFileTypes: true });
+          for (const sub of subEntries) {
+            if (sub.isFile() && extname(sub.name).toLowerCase() === ".pak") {
+              pakFiles.push(join(addonsPath, entry.name, sub.name));
+            }
+          }
+        } catch {
+          // Skip unreadable subdirectories
+        }
+      }
+
+      pakFiles.sort(); // deterministic order — first pak alphabetically wins on duplicates
     } catch {
       return null;
     }
@@ -144,7 +161,7 @@ export class PakVirtualFS {
       }
 
       if (entry.compressed) {
-        return inflateSync(buf);
+        return inflateRawSync(buf);
       }
       return buf;
     } finally {

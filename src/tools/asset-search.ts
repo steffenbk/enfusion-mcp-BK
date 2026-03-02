@@ -1,6 +1,6 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { readdirSync, existsSync } from "node:fs";
+import { readdirSync, readFileSync, existsSync } from "node:fs";
 import { join, extname, relative } from "node:path";
 import type { Config } from "../config.js";
 import { logger } from "../utils/logger.js";
@@ -34,40 +34,49 @@ let cachedGuidDiag = "";
 
 /**
  * Parse entity catalog .conf files to build a map of normalized prefab path → GUID.
+ * Scans loose files under basePath (e.g. addons/data/DataXXX/Configs/EntityCatalog/).
  * Entity catalogs contain lines like:
  *   m_sEntityPrefab "{657590C1EC9E27D3}Prefabs/Groups/OPFOR/Group_USSR_LightFireTeam.et"
  */
-function buildGuidIndex(pakVfs: PakVirtualFS): { guidMap: Map<string, string>; diag: string } {
+function buildGuidIndex(basePath: string): { guidMap: Map<string, string>; diag: string } {
   const guidMap = new Map<string, string>();
   const GUID_PATTERN = /\{([0-9A-Fa-f]{16})\}([^\s"]+\.et)/g;
-  const errors: string[] = [];
 
   let catalogCount = 0;
-  for (const filePath of pakVfs.allFilePaths()) {
-    // Only scan entity catalog configs
-    const lower = filePath.toLowerCase();
-    if (!lower.endsWith(".conf") || !lower.includes("entitycatalog")) continue;
-    catalogCount++;
 
+  function walkCatalogs(dir: string): void {
+    let entries;
     try {
-      const content = pakVfs.readTextFile(filePath);
-      let match: RegExpExecArray | null;
-      GUID_PATTERN.lastIndex = 0;
-      while ((match = GUID_PATTERN.exec(content)) !== null) {
-        const guid = match[1].toUpperCase();
-        const prefabPath = match[2].replace(/\\/g, "/");
-        guidMap.set(prefabPath.toLowerCase(), guid);
+      entries = readdirSync(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const entry of entries) {
+      const fullPath = join(dir, entry.name);
+      if (entry.isDirectory()) {
+        walkCatalogs(fullPath);
+      } else if (entry.name.toLowerCase().endsWith(".conf") &&
+                 dir.toLowerCase().includes("entitycatalog")) {
+        catalogCount++;
+        try {
+          const content = readFileSync(fullPath, "utf-8");
+          let match: RegExpExecArray | null;
+          GUID_PATTERN.lastIndex = 0;
+          while ((match = GUID_PATTERN.exec(content)) !== null) {
+            const guid = match[1].toUpperCase();
+            const prefabPath = match[2].replace(/\\/g, "/");
+            guidMap.set(prefabPath.toLowerCase(), guid);
+          }
+        } catch (e) {
+          logger.warn(`GUID index: failed to read catalog ${fullPath}: ${e}`);
+        }
       }
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e);
-      errors.push(`${filePath}: ${msg}`);
-      logger.warn(`GUID index: failed to read catalog ${filePath}: ${e}`);
     }
   }
 
-  const diag = errors.length > 0
-    ? `${guidMap.size} GUIDs from ${catalogCount} catalogs; ${errors.length} errors: ${errors[0]}`
-    : `${guidMap.size} GUIDs from ${catalogCount} catalogs`;
+  walkCatalogs(basePath);
+
+  const diag = `${guidMap.size} GUIDs from ${catalogCount} catalogs (loose files)`;
   logger.info(`GUID index built: ${diag}`);
   return { guidMap, diag };
 }
@@ -105,19 +114,24 @@ function buildIndex(basePath: string, gamePath: string): AssetEntry[] {
 
   walk(basePath);
 
-  // 2. Add entries from .pak files (skip duplicates already found as loose files)
-  // Also build GUID index from entity catalogs in pak
+  // 2. Build GUID index from loose entity catalog files
   let guidMap: Map<string, string> | null = null;
+  try {
+    const { guidMap: gm, diag } = buildGuidIndex(basePath);
+    guidMap = gm;
+    cachedGuidDiag = diag;
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    cachedGuidDiag = `GUID INDEX ERROR: ${msg}`;
+    logger.warn(`Failed to build GUID index: ${e}`);
+  }
+
+  // 3. Add entries from .pak files (skip duplicates already found as loose files)
   try {
     const pakVfs = PakVirtualFS.get(gamePath);
     if (pakVfs) {
-      const { guidMap: gm, diag } = buildGuidIndex(pakVfs);
-      guidMap = gm;
-      cachedGuidDiag = diag;
-
       for (const filePath of pakVfs.allFilePaths()) {
         if (seen.has(filePath.toLowerCase())) continue;
-
         const ext = extname(filePath).toLowerCase();
         if (ASSET_EXTENSIONS.has(ext)) {
           entries.push({ path: filePath, ext: ext.slice(1) });
@@ -125,12 +139,10 @@ function buildIndex(basePath: string, gamePath: string): AssetEntry[] {
       }
     }
   } catch (e) {
-    const msg = e instanceof Error ? e.message : String(e);
-    cachedGuidDiag = `PAK ERROR: ${msg}`;
     logger.warn(`Failed to index pak files: ${e}`);
   }
 
-  // 3. Attach GUIDs to prefab entries
+  // 4. Attach GUIDs to prefab entries
   if (guidMap && guidMap.size > 0) {
     for (const entry of entries) {
       if (entry.ext !== "et") continue;
@@ -272,7 +284,8 @@ export function registerAssetSearch(server: McpServer, config: Config): void {
 
         const guidTotal = index.filter((e) => e.guid).length;
         const lines: string[] = [];
-        lines.push(`Found ${results.length} match${results.length !== 1 ? "es" : ""} (showing ${shown.length}) [GUIDs: ${cachedGuidDiag || `${guidTotal} indexed`}]:\n`);
+        const diagInfo = `GUIDs:${cachedGuidDiag || `0(empty)`}|basePath:${basePath}|gamePath:${config.gamePath}|indexSize:${index.length}`;
+        lines.push(`Found ${results.length} match${results.length !== 1 ? "es" : ""} (showing ${shown.length}) [${diagInfo}]:\n`);
 
         for (const { entry } of shown) {
           if (entry.guid) {
