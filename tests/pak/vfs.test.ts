@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { writeFileSync, mkdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { deflateSync } from "node:zlib";
+import { deflateRawSync } from "node:zlib";
 import { PakVirtualFS } from "../../src/pak/vfs.js";
 
 /**
@@ -18,7 +18,7 @@ function buildTestPak(files: Array<{ path: string; content: string; compress: bo
 
   for (const file of files) {
     const raw = Buffer.from(file.content, "utf-8");
-    const stored = file.compress ? deflateSync(raw) : raw;
+    const stored = file.compress ? deflateRawSync(raw) : raw;
 
     const parts = file.path.split("/");
     const fileName = parts.pop()!;
