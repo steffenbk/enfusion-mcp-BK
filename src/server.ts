@@ -43,6 +43,7 @@ import { registerAssetSearch } from "./tools/asset-search.js";
 import { registerGameDuplicate } from "./tools/game-duplicate.js";
 import { registerWbEntityDuplicate } from "./tools/wb-entity-duplicate.js";
 import { registerWorkshopInfo } from "./tools/workshop-info.js";
+import { registerScenarioTools } from "./tools/wb-scenario.js";
 import type { Config } from "./config.js";
 
 export function registerTools(server: McpServer, config: Config): void {
@@ -93,6 +94,7 @@ export function registerTools(server: McpServer, config: Config): void {
   registerWbProjects(server, wbClient);
   registerWbValidate(server, wbClient);
   registerWbState(server, wbClient);
+  registerScenarioTools(server, wbClient);
 
   // Base game access tools
   registerGameBrowse(server, config);
