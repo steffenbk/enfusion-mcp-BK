@@ -26,6 +26,14 @@ const HANDLER_FOLDER = "EnfusionMCP";
 const LAUNCH_POLL_INTERVAL_MS = 3_000;
 const LAUNCH_TIMEOUT_MS = 90_000;
 
+export type WorkbenchMode = "edit" | "play" | "unknown";
+
+export interface WorkbenchState {
+  connected: boolean;
+  mode: WorkbenchMode;
+  lastUpdated: number;
+}
+
 export interface WorkbenchCallOptions {
   /** Timeout in milliseconds (default 10 000). */
   timeout?: number;
@@ -51,6 +59,12 @@ export class WorkbenchError extends Error {
 export class WorkbenchClient {
   private launching = false;
   private launchPromise: Promise<void> | null = null;
+  private _state: WorkbenchState = { connected: false, mode: "unknown", lastUpdated: 0 };
+
+  /** Current cached connection state. Updated after every successful call. */
+  get state(): Readonly<WorkbenchState> {
+    return this._state;
+  }
 
   constructor(
     private readonly host: string,
@@ -69,29 +83,55 @@ export class WorkbenchClient {
     options: WorkbenchCallOptions = {}
   ): Promise<T> {
     try {
-      return await this.rawCall<T>(apiFunc, params, options);
+      const result = await this.rawCall<T>(apiFunc, params, options);
+      this._state.connected = true;
+      this._state.lastUpdated = Date.now();
+      this.extractMode(result);
+      return result;
     } catch (err) {
-      if (
-        err instanceof WorkbenchError &&
-        !options.skipAutoLaunch &&
-        this.config
-      ) {
+      if (err instanceof WorkbenchError) {
         if (err.code === "CONNECTION_REFUSED") {
-          // Workbench not running — install handlers, launch, retry
-          logger.info(`Workbench not running, auto-launching...`);
-          await this.ensureRunning();
-          return await this.rawCall<T>(apiFunc, params, options);
+          this._state = { connected: false, mode: "unknown", lastUpdated: Date.now() };
         }
-        if (err.code === "API_ERROR" && err.message.includes("not existing")) {
-          // Workbench is running but our custom handler scripts aren't compiled.
-          // This happens when the user opened Workbench manually, or when handlers
-          // were cleaned up but Workbench kept running.
-          logger.info(`Handler scripts not loaded in Workbench, recovering...`);
-          await this.recoverMissingHandlers();
-          return await this.rawCall<T>(apiFunc, params, options);
+        if (!options.skipAutoLaunch && this.config) {
+          if (err.code === "CONNECTION_REFUSED") {
+            // Workbench not running — install handlers, launch, retry
+            logger.info(`Workbench not running, auto-launching...`);
+            await this.ensureRunning();
+            const result = await this.rawCall<T>(apiFunc, params, options);
+            this._state.connected = true;
+            this._state.lastUpdated = Date.now();
+            this.extractMode(result);
+            return result;
+          }
+          if (err.code === "API_ERROR" && err.message.includes("not existing")) {
+            // Workbench is running but our custom handler scripts aren't compiled.
+            // This happens when the user opened Workbench manually, or when handlers
+            // were cleaned up but Workbench kept running.
+            logger.info(`Handler scripts not loaded in Workbench, recovering...`);
+            await this.recoverMissingHandlers();
+            const result = await this.rawCall<T>(apiFunc, params, options);
+            this._state.connected = true;
+            this._state.lastUpdated = Date.now();
+            this.extractMode(result);
+            return result;
+          }
         }
       }
       throw err;
+    }
+  }
+
+  /**
+   * Explicitly refresh cached state by calling EMCP_WB_GetState.
+   */
+  async refreshState(): Promise<WorkbenchState> {
+    try {
+      await this.call<Record<string, unknown>>("EMCP_WB_GetState");
+      return { ...this._state };
+    } catch {
+      this._state = { connected: false, mode: "unknown", lastUpdated: Date.now() };
+      return { ...this._state };
     }
   }
 
@@ -173,6 +213,16 @@ export class WorkbenchClient {
   // ---------------------------------------------------------------------------
   // Private
   // ---------------------------------------------------------------------------
+
+  /** Extract mode from a response object if it contains a `mode` field. */
+  private extractMode(result: unknown): void {
+    if (result && typeof result === "object" && "mode" in result) {
+      const mode = (result as Record<string, unknown>).mode;
+      if (mode === "edit" || mode === "play") {
+        this._state.mode = mode;
+      }
+    }
+  }
 
   /**
    * Recover from "not existing Net API function" errors.

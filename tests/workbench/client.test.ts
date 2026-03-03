@@ -162,4 +162,95 @@ describe("WorkbenchClient", () => {
     expect(client.toString()).toContain("127.0.0.1");
     expect(client.toString()).toContain(String(mockServer.port));
   });
+
+  // -- State caching tests --
+
+  it("state starts as disconnected/unknown", () => {
+    const freshClient = new WorkbenchClient("127.0.0.1", 1);
+    expect(freshClient.state.connected).toBe(false);
+    expect(freshClient.state.mode).toBe("unknown");
+    expect(freshClient.state.lastUpdated).toBe(0);
+  });
+
+  it("state.connected becomes true after successful call", async () => {
+    expect(client.state.connected).toBe(false);
+    await client.call("ReloadScripts");
+    expect(client.state.connected).toBe(true);
+    expect(client.state.lastUpdated).toBeGreaterThan(0);
+  });
+
+  it("state.mode is extracted from response with mode field", async () => {
+    // EMCP_WB_Ping returns { mode: "edit" }
+    await client.call("EMCP_WB_Ping");
+    expect(client.state.mode).toBe("edit");
+    expect(client.state.connected).toBe(true);
+  });
+
+  it("state.mode stays unknown for responses without mode field", async () => {
+    // ReloadScripts returns { status: "ok" } — no mode field
+    await client.call("ReloadScripts");
+    expect(client.state.mode).toBe("unknown");
+    expect(client.state.connected).toBe(true);
+  });
+
+  it("state.connected becomes false on connection refused", async () => {
+    // First connect successfully
+    await client.call("ReloadScripts");
+    expect(client.state.connected).toBe(true);
+
+    // Now try a dead client
+    const badClient = new WorkbenchClient("127.0.0.1", 1);
+    try {
+      await badClient.call("ReloadScripts", {}, { skipAutoLaunch: true });
+    } catch { /* expected */ }
+    expect(badClient.state.connected).toBe(false);
+    expect(badClient.state.mode).toBe("unknown");
+  });
+
+  it("state tracks mode changes across calls", async () => {
+    // Set up a server that changes mode based on the API call
+    await mockServer.close();
+    mockServer = createMockWorkbench((apiFunc) => {
+      if (apiFunc === "EMCP_WB_EditorControl") {
+        return { status: "ok", mode: "play" };
+      }
+      if (apiFunc === "EMCP_WB_GetState") {
+        return { mode: "edit", entityCount: 5 };
+      }
+      return { status: "ok" };
+    });
+    const stateClient = new WorkbenchClient("127.0.0.1", mockServer.port);
+
+    // Start with "play" mode from EditorControl
+    await stateClient.call("EMCP_WB_EditorControl", { action: "play" });
+    expect(stateClient.state.mode).toBe("play");
+
+    // Then "edit" mode from GetState
+    await stateClient.call("EMCP_WB_GetState");
+    expect(stateClient.state.mode).toBe("edit");
+  });
+
+  it("refreshState updates cached state", async () => {
+    await mockServer.close();
+    mockServer = createMockWorkbench((apiFunc) => {
+      if (apiFunc === "EMCP_WB_GetState") {
+        return { mode: "play", entityCount: 10 };
+      }
+      return { status: "ok" };
+    });
+    const stateClient = new WorkbenchClient("127.0.0.1", mockServer.port);
+
+    expect(stateClient.state.mode).toBe("unknown");
+    const state = await stateClient.refreshState();
+    expect(state.mode).toBe("play");
+    expect(state.connected).toBe(true);
+    expect(stateClient.state.mode).toBe("play");
+  });
+
+  it("refreshState returns disconnected on failure", async () => {
+    const badClient = new WorkbenchClient("127.0.0.1", 1);
+    const state = await badClient.refreshState();
+    expect(state.connected).toBe(false);
+    expect(state.mode).toBe("unknown");
+  });
 });

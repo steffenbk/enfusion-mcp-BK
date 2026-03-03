@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { WorkbenchClient } from "../workbench/client.js";
+import { formatConnectionStatus } from "../workbench/status.js";
 
 export function registerWbLocalization(server: McpServer, client: WorkbenchClient): void {
   server.registerTool(
@@ -64,7 +65,7 @@ export function registerWbLocalization(server: McpServer, client: WorkbenchClien
           if (entries.length === 0) {
             return {
               content: [
-                { type: "text" as const, text: "**Localization Table:** Empty (no entries)" },
+                { type: "text" as const, text: `**Localization Table:** Empty (no entries)${formatConnectionStatus(client)}` },
               ],
             };
           }
@@ -80,7 +81,7 @@ export function registerWbLocalization(server: McpServer, client: WorkbenchClien
             lines.push(`| ${id} | ${enUs} | ${target} |`);
           }
 
-          return { content: [{ type: "text" as const, text: lines.join("\n") }] };
+          return { content: [{ type: "text" as const, text: lines.join("\n") + formatConnectionStatus(client) }] };
         }
 
         const actionLabels: Record<string, string> = {
@@ -93,7 +94,7 @@ export function registerWbLocalization(server: McpServer, client: WorkbenchClien
           content: [
             {
               type: "text" as const,
-              text: `**Localization Updated**\n\n${actionLabels[action]}${result.message ? `\n${result.message}` : ""}`,
+              text: `**Localization Updated**\n\n${actionLabels[action]}${result.message ? `\n${result.message}` : ""}${formatConnectionStatus(client)}`,
             },
           ],
         };
@@ -103,7 +104,7 @@ export function registerWbLocalization(server: McpServer, client: WorkbenchClien
           content: [
             {
               type: "text" as const,
-              text: `Error in localization (${action}): ${msg}`,
+              text: `Error in localization (${action}): ${msg}${formatConnectionStatus(client)}`,
             },
           ],
         };

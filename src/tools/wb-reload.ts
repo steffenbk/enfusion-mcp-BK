@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { WorkbenchClient } from "../workbench/client.js";
+import { formatConnectionStatus } from "../workbench/status.js";
 
 export function registerWbReload(server: McpServer, client: WorkbenchClient): void {
   server.registerTool(
@@ -23,14 +24,14 @@ export function registerWbReload(server: McpServer, client: WorkbenchClient): vo
           content: [
             {
               type: "text" as const,
-              text: `**Reload Complete**\n\n${result.message || "Reload triggered."}`,
+              text: `**Reload Complete**\n\n${result.message || "Reload triggered."}${formatConnectionStatus(client)}`,
             },
           ],
         };
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         return {
-          content: [{ type: "text" as const, text: `Error reloading: ${msg}` }],
+          content: [{ type: "text" as const, text: `Error reloading: ${msg}${formatConnectionStatus(client)}` }],
         };
       }
     }

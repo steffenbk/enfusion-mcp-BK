@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { WorkbenchClient } from "../workbench/client.js";
+import { formatConnectionStatus } from "../workbench/status.js";
 
 export function registerWbTerrain(server: McpServer, client: WorkbenchClient): void {
   server.registerTool(
@@ -49,7 +50,7 @@ export function registerWbTerrain(server: McpServer, client: WorkbenchClient): v
             content: [
               {
                 type: "text" as const,
-                text: `**Terrain Height**\n\n- **Position:** (${x}, ${zCoord})\n- **Height (Y):** ${height}`,
+                text: `**Terrain Height**\n\n- **Position:** (${x}, ${zCoord})\n- **Height (Y):** ${height}${formatConnectionStatus(client)}`,
               },
             ],
           };
@@ -70,11 +71,11 @@ export function registerWbTerrain(server: McpServer, client: WorkbenchClient): v
           lines.push(JSON.stringify(result, null, 2));
         }
 
-        return { content: [{ type: "text" as const, text: lines.join("\n") }] };
+        return { content: [{ type: "text" as const, text: lines.join("\n") + formatConnectionStatus(client) }] };
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         return {
-          content: [{ type: "text" as const, text: `Error querying terrain: ${msg}` }],
+          content: [{ type: "text" as const, text: `Error querying terrain: ${msg}${formatConnectionStatus(client)}` }],
         };
       }
     }

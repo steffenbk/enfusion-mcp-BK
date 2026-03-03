@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { WorkbenchClient } from "../workbench/client.js";
+import { formatConnectionStatus, requireEditMode } from "../workbench/status.js";
 
 function formatEntityDetails(data: Record<string, unknown>): string {
   const lines: string[] = [];
@@ -61,7 +62,7 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
     "wb_entity_create",
     {
       description:
-        "Create a new entity in the World Editor from a prefab. Optionally set position, rotation, name, and target layer.",
+        "Create a new entity in the World Editor from a prefab. Optionally set position, rotation, name, and target layer. Only works in edit mode (not play mode).",
       inputSchema: {
         prefab: z
           .string()
@@ -85,6 +86,10 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
       },
     },
     async ({ prefab, position, rotation, name, layerPath }) => {
+      const modeErr = requireEditMode(client, "create entity");
+      if (modeErr) {
+        return { content: [{ type: "text" as const, text: modeErr + formatConnectionStatus(client) }] };
+      }
       try {
         const params: Record<string, unknown> = { prefab };
         if (position) params.position = position;
@@ -102,11 +107,11 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
         if (layerPath) lines.push(`- **Layer:** ${layerPath}`);
         if (result.id) lines.push(`- **ID:** ${result.id}`);
 
-        return { content: [{ type: "text" as const, text: lines.join("\n") }] };
+        return { content: [{ type: "text" as const, text: lines.join("\n") + formatConnectionStatus(client) }] };
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         return {
-          content: [{ type: "text" as const, text: `Error creating entity: ${msg}` }],
+          content: [{ type: "text" as const, text: `Error creating entity: ${msg}${formatConnectionStatus(client)}` }],
         };
       }
     }
@@ -116,12 +121,16 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
   server.registerTool(
     "wb_entity_delete",
     {
-      description: "Delete an entity from the World Editor by name.",
+      description: "Delete an entity from the World Editor by name. Only works in edit mode.",
       inputSchema: {
         name: z.string().describe("Name of the entity to delete"),
       },
     },
     async ({ name }) => {
+      const modeErr = requireEditMode(client, "delete entity");
+      if (modeErr) {
+        return { content: [{ type: "text" as const, text: modeErr + formatConnectionStatus(client) }] };
+      }
       try {
         await client.call("EMCP_WB_DeleteEntity", { name });
 
@@ -129,14 +138,14 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
           content: [
             {
               type: "text" as const,
-              text: `**Entity Deleted**\n\nRemoved entity: ${name}`,
+              text: `**Entity Deleted**\n\nRemoved entity: ${name}${formatConnectionStatus(client)}`,
             },
           ],
         };
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         return {
-          content: [{ type: "text" as const, text: `Error deleting entity "${name}": ${msg}` }],
+          content: [{ type: "text" as const, text: `Error deleting entity "${name}": ${msg}${formatConnectionStatus(client)}` }],
         };
       }
     }
@@ -171,12 +180,12 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
         const result = await client.call<Record<string, unknown>>("EMCP_WB_ListEntities", params);
 
         return {
-          content: [{ type: "text" as const, text: formatEntityList(result) }],
+          content: [{ type: "text" as const, text: formatEntityList(result) + formatConnectionStatus(client) }],
         };
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         return {
-          content: [{ type: "text" as const, text: `Error listing entities: ${msg}` }],
+          content: [{ type: "text" as const, text: `Error listing entities: ${msg}${formatConnectionStatus(client)}` }],
         };
       }
     }
@@ -223,14 +232,14 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
           content: [
             {
               type: "text" as const,
-              text: `**Entity: ${result.name || label}**\n\n${formatEntityDetails(result)}`,
+              text: `**Entity: ${result.name || label}**\n\n${formatEntityDetails(result)}${formatConnectionStatus(client)}`,
             },
           ],
         };
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         return {
-          content: [{ type: "text" as const, text: `Error inspecting entity: ${msg}` }],
+          content: [{ type: "text" as const, text: `Error inspecting entity: ${msg}${formatConnectionStatus(client)}` }],
         };
       }
     }
@@ -241,7 +250,7 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
     "wb_entity_modify",
     {
       description:
-        "Modify an entity in the World Editor. Supports moving, rotating, renaming, reparenting, and setting or clearing component properties.",
+        "Modify an entity in the World Editor. Supports moving, rotating, renaming, reparenting, and setting or clearing component properties. Only works in edit mode.",
       inputSchema: {
         name: z.string().describe("Name of the entity to modify"),
         action: z
@@ -270,6 +279,10 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
       },
     },
     async ({ name, action, value, propertyPath, propertyKey, memberIndex }) => {
+      const modeErr = requireEditMode(client, "modify entity");
+      if (modeErr) {
+        return { content: [{ type: "text" as const, text: modeErr + formatConnectionStatus(client) }] };
+      }
       try {
         // Validate value is provided for actions that require it
         // Note: setProperty allows empty string as a valid value, so it's validated separately
@@ -314,7 +327,7 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
           content: [
             {
               type: "text" as const,
-              text: `**Entity Modified**\n\n- **Entity:** ${name}\n- **Action:** ${actionLabels[action] || action}${result.message ? `\n- **Note:** ${result.message}` : ""}`,
+              text: `**Entity Modified**\n\n- **Entity:** ${name}\n- **Action:** ${actionLabels[action] || action}${result.message ? `\n- **Note:** ${result.message}` : ""}${formatConnectionStatus(client)}`,
             },
           ],
         };
@@ -324,7 +337,7 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
           content: [
             {
               type: "text" as const,
-              text: `Error modifying entity "${name}": ${msg}`,
+              text: `Error modifying entity "${name}": ${msg}${formatConnectionStatus(client)}`,
             },
           ],
         };
@@ -370,7 +383,7 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
           const selected = Array.isArray(result.selected) ? result.selected : [];
           if (selected.length === 0) {
             return {
-              content: [{ type: "text" as const, text: "**No entities selected.**" }],
+              content: [{ type: "text" as const, text: `**No entities selected.**${formatConnectionStatus(client)}` }],
             };
           }
           const lines = ["**Selected Entities**\n"];
@@ -378,7 +391,7 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
             const e = ent as Record<string, unknown>;
             lines.push(`- ${e.name || "(unnamed)"}`);
           }
-          return { content: [{ type: "text" as const, text: lines.join("\n") }] };
+          return { content: [{ type: "text" as const, text: lines.join("\n") + formatConnectionStatus(client) }] };
         }
 
         const labels: Record<string, string> = {
@@ -391,7 +404,7 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
           content: [
             {
               type: "text" as const,
-              text: `**${labels[action]}**${result.message ? `\n\n${result.message}` : ""}`,
+              text: `**${labels[action]}**${result.message ? `\n\n${result.message}` : ""}${formatConnectionStatus(client)}`,
             },
           ],
         };
@@ -399,7 +412,7 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
         const msg = e instanceof Error ? e.message : String(e);
         return {
           content: [
-            { type: "text" as const, text: `Error with selection (${action}): ${msg}` },
+            { type: "text" as const, text: `Error with selection (${action}): ${msg}${formatConnectionStatus(client)}` },
           ],
         };
       }

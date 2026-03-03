@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { WorkbenchClient } from "../workbench/client.js";
+import { formatConnectionStatus } from "../workbench/status.js";
 
 export function registerWbValidate(server: McpServer, client: WorkbenchClient): void {
   server.registerTool(
@@ -69,14 +70,14 @@ export function registerWbValidate(server: McpServer, client: WorkbenchClient): 
           lines.push(typeof result.info === "string" ? result.info : JSON.stringify(result.info, null, 2));
         }
 
-        return { content: [{ type: "text" as const, text: lines.join("\n") }] };
+        return { content: [{ type: "text" as const, text: lines.join("\n") + formatConnectionStatus(client) }] };
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         return {
           content: [
             {
               type: "text" as const,
-              text: `Error validating ${action} "${path}": ${msg}`,
+              text: `Error validating ${action} "${path}": ${msg}${formatConnectionStatus(client)}`,
             },
           ],
         };

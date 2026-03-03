@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { WorkbenchClient } from "../workbench/client.js";
+import { formatConnectionStatus } from "../workbench/status.js";
 
 export function registerWbExecuteAction(server: McpServer, client: WorkbenchClient): void {
   server.registerTool(
@@ -26,7 +27,7 @@ export function registerWbExecuteAction(server: McpServer, client: WorkbenchClie
           content: [
             {
               type: "text" as const,
-              text: `**Action Executed**\n\nMenu path: ${menuPath}${result.message ? `\n${result.message}` : ""}${result.result ? `\nResult: ${JSON.stringify(result.result)}` : ""}`,
+              text: `**Action Executed**\n\nMenu path: ${menuPath}${result.message ? `\n${result.message}` : ""}${result.result ? `\nResult: ${JSON.stringify(result.result)}` : ""}${formatConnectionStatus(client)}`,
             },
           ],
         };
@@ -36,7 +37,7 @@ export function registerWbExecuteAction(server: McpServer, client: WorkbenchClie
           content: [
             {
               type: "text" as const,
-              text: `Error executing action "${menuPath}": ${msg}`,
+              text: `Error executing action "${menuPath}": ${msg}${formatConnectionStatus(client)}`,
             },
           ],
         };
