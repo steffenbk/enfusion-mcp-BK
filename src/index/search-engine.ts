@@ -31,6 +31,13 @@ export interface SearchResult {
   propertyResult?: PropertySearchResult;
 }
 
+export interface ComponentSearchResult {
+  component: ClassInfo;
+  categories: string[];
+  eventHandlers: string[];
+  score: number;
+}
+
 export class SearchEngine {
   private classByName: Map<string, ClassInfo> = new Map();
   private classNames: string[] = [];
@@ -40,6 +47,7 @@ export class SearchEngine {
   private wikiPages: WikiPage[] = [];
   private wikiPageByTitle: Map<string, WikiPage> = new Map();
   private groups: GroupInfo[] = [];
+  private componentIndex: ClassInfo[] = [];
   private loaded = false;
 
   constructor(private dataDir: string) {
@@ -182,6 +190,32 @@ export class SearchEngine {
           valEntries.push(enumEntry);
         }
       }
+    }
+
+    // Build component index: collect all ScriptComponent descendants
+    // Use multiple strategies since scraped inheritance chains are often broken
+    const componentNames = new Set<string>();
+
+    // Strategy 1: Walk descendants from known component base classes
+    for (const baseName of ["ScriptComponent", "GenericComponent", "GameComponent", "ScriptGameComponent"]) {
+      if (this.classByName.has(baseName.toLowerCase())) {
+        const tree = this.getClassTree(baseName);
+        for (const name of tree.descendants) {
+          componentNames.add(name.toLowerCase());
+        }
+      }
+    }
+
+    // Strategy 2: Name-based heuristic — classes ending in "Component" but not "ComponentClass"
+    for (const cls of allClasses) {
+      if (cls.name.endsWith("Component") && !cls.name.endsWith("ComponentClass")) {
+        componentNames.add(cls.name.toLowerCase());
+      }
+    }
+
+    for (const key of componentNames) {
+      const cls = this.classByName.get(key);
+      if (cls) this.componentIndex.push(cls);
     }
 
     this.loaded = true;
@@ -614,6 +648,111 @@ export class SearchEngine {
   }
 
   /**
+   * Infer categories for a component based on class name and group keywords.
+   */
+  private inferComponentCategories(cls: ClassInfo): string[] {
+    const categories: string[] = [];
+    const nameLower = cls.name.toLowerCase();
+    const groupLower = (cls.group || "").toLowerCase();
+    const combined = nameLower + " " + groupLower;
+
+    if (combined.includes("character")) categories.push("character");
+    if (combined.includes("vehicle")) categories.push("vehicle");
+    if (combined.includes("weapon")) categories.push("weapon");
+    if (combined.includes("damage") || combined.includes("hitzone")) categories.push("damage");
+    if (combined.includes("inventory") || combined.includes("storage")) categories.push("inventory");
+    if (combined.includes("aigroup") || combined.includes("aibehavior") || combined.includes("aicomponent") || /\bai[A-Z_]/.test(cls.name) || /\bai\b/.test(groupLower)) categories.push("ai");
+    if (combined.includes("widget") || combined.includes("layout") || combined.includes("hud") || combined.includes("menu")) categories.push("ui");
+    if (combined.includes("editor") || combined.includes("workbench")) categories.push("editor");
+    if (combined.includes("camera")) categories.push("camera");
+    if (combined.includes("sound") || combined.includes("audio")) categories.push("sound");
+
+    if (categories.length === 0) categories.push("general");
+    return categories;
+  }
+
+  /**
+   * Extract event handler method names from a component class.
+   * Looks for methods starting with "EOn" or "On" (Enfusion event naming conventions).
+   */
+  private getEventHandlers(cls: ClassInfo): string[] {
+    const handlers: string[] = [];
+    const allMethods = [
+      ...(cls.methods || []),
+      ...(cls.protectedMethods || []),
+    ];
+
+    for (const method of allMethods) {
+      if (/^(EOn|On)[A-Z]/.test(method.name)) {
+        handlers.push(method.name);
+      }
+    }
+
+    return handlers;
+  }
+
+  /**
+   * Search for ScriptComponent descendants with optional filtering.
+   * Supports filtering by name/keyword, entity category, and event handlers.
+   */
+  searchComponents(options: {
+    query?: string;
+    category?: string;
+    event?: string;
+    source?: "enfusion" | "arma" | "all";
+    limit?: number;
+  } = {}): ComponentSearchResult[] {
+    const { query, category = "any", event, source = "all", limit = 20 } = options;
+    const q = query?.toLowerCase();
+    const eventLower = event?.toLowerCase();
+    const results: ComponentSearchResult[] = [];
+
+    for (const cls of this.componentIndex) {
+      // Source filter
+      if (source !== "all" && cls.source !== source) continue;
+
+      // Category filter
+      const categories = this.inferComponentCategories(cls);
+      if (category !== "any" && !categories.includes(category)) continue;
+
+      // Event filter
+      const eventHandlers = this.getEventHandlers(cls);
+      if (eventLower) {
+        const hasMatch = eventHandlers.some((h) => h.toLowerCase().includes(eventLower));
+        if (!hasMatch) continue;
+      }
+
+      // Query scoring (same pattern as searchClasses)
+      let score = 0;
+      if (q) {
+        const nameLower = cls.name.toLowerCase();
+        if (nameLower === q) {
+          score = 100;
+        } else if (nameLower.startsWith(q)) {
+          score = 80;
+        } else if (nameLower.includes(q)) {
+          score = 60;
+        } else if (cls.brief.toLowerCase().includes(q)) {
+          score = 30;
+        } else if (cls.description.toLowerCase().includes(q)) {
+          score = 20;
+        } else {
+          // Query didn't match anything on this component
+          continue;
+        }
+      } else {
+        // No query — give a base score so category/event-only filters work
+        score = 10;
+      }
+
+      results.push({ component: cls, categories, eventHandlers, score });
+    }
+
+    results.sort((a, b) => b.score - a.score || a.component.name.localeCompare(b.component.name));
+    return results.slice(0, limit);
+  }
+
+  /**
    * Check if a class name exists in the index (case-insensitive).
    */
   hasClass(name: string): boolean {
@@ -630,6 +769,7 @@ export class SearchEngine {
     totalEnums: number;
     totalProperties: number;
     totalWikiPages: number;
+    totalComponents: number;
   } {
     return {
       totalClasses: this.classByName.size,
@@ -637,6 +777,7 @@ export class SearchEngine {
       totalEnums: this.enumIndex.size,
       totalProperties: this.propertyIndex.size,
       totalWikiPages: this.wikiPages.length,
+      totalComponents: this.componentIndex.length,
     };
   }
 }

@@ -291,6 +291,82 @@ describe("SearchEngine", () => {
     });
   });
 
+  describe("searchComponents", () => {
+    it("returns components for a broad query", () => {
+      const results = engine.searchComponents({ query: "damage" });
+      expect(results.length).toBeGreaterThan(0);
+      for (const r of results) {
+        expect(r.component.name).toBeTruthy();
+        expect(r.categories).toBeDefined();
+        expect(Array.isArray(r.categories)).toBe(true);
+        expect(r.eventHandlers).toBeDefined();
+        expect(Array.isArray(r.eventHandlers)).toBe(true);
+        expect(r.score).toBeGreaterThan(0);
+      }
+    });
+
+    it("filters by category", () => {
+      const results = engine.searchComponents({ category: "character" });
+      expect(results.length).toBeGreaterThan(0);
+      for (const r of results) {
+        expect(r.categories).toContain("character");
+      }
+    });
+
+    it("filters by event handler", () => {
+      const results = engine.searchComponents({ event: "EOnInit" });
+      expect(results.length).toBeGreaterThan(0);
+      for (const r of results) {
+        expect(r.eventHandlers.some((h) => h.toLowerCase().includes("eoninit"))).toBe(true);
+      }
+    });
+
+    it("combines query + category + event filters", () => {
+      const queryOnly = engine.searchComponents({ query: "character" });
+      const combined = engine.searchComponents({ query: "character", category: "character" });
+      // Combined filter should be a subset of query-only results
+      expect(combined.length).toBeLessThanOrEqual(queryOnly.length);
+      for (const r of combined) {
+        expect(r.categories).toContain("character");
+      }
+    });
+
+    it("returns empty for nonsense query", () => {
+      const results = engine.searchComponents({ query: "xyzzynonexistent99999" });
+      expect(results).toEqual([]);
+    });
+
+    it("respects limit parameter", () => {
+      const results = engine.searchComponents({ limit: 3 });
+      expect(results.length).toBeLessThanOrEqual(3);
+    });
+
+    it("returns components without query when category is specified", () => {
+      const results = engine.searchComponents({ category: "vehicle" });
+      expect(results.length).toBeGreaterThan(0);
+      for (const r of results) {
+        expect(r.categories).toContain("vehicle");
+        expect(r.component.name.endsWith("Component")).toBe(true);
+      }
+    });
+
+    it("includes component index in stats", () => {
+      const stats = engine.getStats();
+      expect(stats.totalComponents).toBeGreaterThan(100);
+    });
+
+    it("filters by source", () => {
+      const enfusionOnly = engine.searchComponents({ source: "enfusion", limit: 5 });
+      for (const r of enfusionOnly) {
+        expect(r.component.source).toBe("enfusion");
+      }
+      const armaOnly = engine.searchComponents({ source: "arma", limit: 5 });
+      for (const r of armaOnly) {
+        expect(r.component.source).toBe("arma");
+      }
+    });
+  });
+
   describe("getInheritedMembers", () => {
     it("returns inherited methods for GenericEntity", () => {
       const inherited = engine.getInheritedMembers("GenericEntity");

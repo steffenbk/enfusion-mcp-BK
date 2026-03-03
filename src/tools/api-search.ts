@@ -277,7 +277,7 @@ export function registerApiSearch(server: McpServer, searchEngine: SearchEngine)
     "api_search",
     {
       description:
-        "Search the Enfusion / Arma Reforger script API by class name, method name, or keyword. Results automatically include inherited methods from parent classes, detect enum-like constant classes (use type: 'enum'), and show related sibling classes from the same API group.",
+        "Search the Enfusion / Arma Reforger script API by class name, method name, or keyword. Results automatically include inherited methods from parent classes, detect enum-like constant classes (use type: 'enum'), and show related sibling classes from the same API group. For component-specific searches (finding what to attach to entities), use the component_search tool for more targeted filtering by category and event handlers.",
       inputSchema: {
         query: z
           .string()

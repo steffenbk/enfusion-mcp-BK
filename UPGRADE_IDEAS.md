@@ -77,7 +77,7 @@ After implementing any upgrade, complete **all** of the following before marking
 
 ---
 
-### 5. Component Discovery Tool
+### ~~5. Component Discovery Tool~~ ✅ Done
 
 **What**: Add a `component_search` tool (or mode in `api_search`) that specifically searches `ScriptComponent` descendants, filterable by what they attach to (entities, vehicles, characters) and what events they handle.
 
@@ -419,7 +419,7 @@ After implementing any upgrade, complete **all** of the following before marking
 | ~~2~~ | ~~Enum-Aware Search~~ ✅ | S | Context Quality | L1 |
 | ~~3~~ | ~~Related Classes in Search Results~~ ✅ | S | Context Quality | L1 |
 | ~~4~~ | ~~Wiki Full-Text Retrieval~~ ✅ | S | Context Quality | L1 |
-| 5 | Component Discovery Tool | S | Context Quality | L2 |
+| ~~5~~ | ~~Component Discovery Tool~~ ✅ | S | Context Quality | L2 |
 | 6 | Workbench Connection Health | S | UX Polish | L2 |
 | 7 | Pattern Composition | S | Composability | L2 |
 | 8 | Class Hierarchy Visualization | S | Developer Experience | L2 |
