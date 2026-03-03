@@ -128,23 +128,23 @@ export function registerScenarioTools(server: McpServer, client: WorkbenchClient
         await client.call("EMCP_WB_CreateEntity", { prefab: AREA_PREFAB, name: names.area, position: resolvedPosition });
         placed.push(names.area);
 
-        // 2. Place LayerTask (world root, then reparent)
-        await client.call("EMCP_WB_CreateEntity", { prefab: p.layerTask, name: names.layerTask });
+        // 2. Place LayerTask at same world pos, then reparent (keeps local pos 0 0 0 relative to parent)
+        await client.call("EMCP_WB_CreateEntity", { prefab: p.layerTask, name: names.layerTask, position: resolvedPosition });
         placed.push(names.layerTask);
         await client.call("EMCP_WB_ModifyEntity", { action: "reparent", name: names.layerTask, value: names.area });
 
-        // 3. Place Layer_AI (world root, then reparent under LayerTask)
-        await client.call("EMCP_WB_CreateEntity", { prefab: LAYER_PREFAB, name: names.layerAI });
+        // 3. Place Layer_AI at same world pos, then reparent under LayerTask
+        await client.call("EMCP_WB_CreateEntity", { prefab: LAYER_PREFAB, name: names.layerAI, position: resolvedPosition });
         placed.push(names.layerAI);
         await client.call("EMCP_WB_ModifyEntity", { action: "reparent", name: names.layerAI, value: names.layerTask });
 
-        // 4. Place Slot (SlotKill/SlotDestroy/SlotClearArea) under Layer_AI
-        await client.call("EMCP_WB_CreateEntity", { prefab: p.slot, name: names.slot });
+        // 4. Place Slot at same world pos, then reparent under Layer_AI
+        await client.call("EMCP_WB_CreateEntity", { prefab: p.slot, name: names.slot, position: resolvedPosition });
         placed.push(names.slot);
         await client.call("EMCP_WB_ModifyEntity", { action: "reparent", name: names.slot, value: names.layerAI });
 
-        // 5. Place SlotAI under Layer_AI
-        await client.call("EMCP_WB_CreateEntity", { prefab: SLOT_AI_PREFAB, name: names.slotAI });
+        // 5. Place SlotAI at same world pos, then reparent under Layer_AI
+        await client.call("EMCP_WB_CreateEntity", { prefab: SLOT_AI_PREFAB, name: names.slotAI, position: resolvedPosition });
         placed.push(names.slotAI);
         await client.call("EMCP_WB_ModifyEntity", { action: "reparent", name: names.slotAI, value: names.layerAI });
 
