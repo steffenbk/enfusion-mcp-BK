@@ -91,12 +91,13 @@ This file is the handoff document. A future Claude instance with zero context wi
 **NEVER guess, assume, or invent Enfusion API method names.** The Enfusion scripting API is non-standard and poorly documented. Methods that seem obvious often do not exist (e.g., \`HitZone.SetHealth()\`, \`IEntity.GetVelocity()\`, \`AIWorld.GetAIGroups()\`).
 
 Before writing ANY script that calls an Enfusion API method, you MUST:
-1. Use **api_search** to find the class
-2. Read the method list in the results
+1. Use **api_search** to find the class — inherited methods from parent classes are included automatically, so one lookup is usually enough
+2. Read the method list in the results (includes both own and inherited methods)
 3. Only use methods that appear in the search results
-4. If the method you need doesn't exist, search for alternative classes or approaches
-5. For damage/health: use \`SCR_CharacterDamageManagerComponent.FullHeal()\`, NOT per-hitzone SetHealth
-6. For any class interaction: search the class first, read its methods, then write code
+4. If the method you need doesn't exist, search for alternative classes or approaches — check the **Related Classes** section for sibling classes in the same API group
+5. For enums/constants: use \`api_search(type: "enum")\` — this detects enum-like constant classes even when formal enum data is missing
+6. For damage/health: use \`SCR_CharacterDamageManagerComponent.FullHeal()\`, NOT per-hitzone SetHealth
+7. For any class interaction: search the class first, read its methods, then write code
 
 If you cannot find a method via api_search, it probably does not exist. Do NOT write code that calls unverified methods — it will fail to compile silently in Workbench.
 
