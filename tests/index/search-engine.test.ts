@@ -171,6 +171,49 @@ describe("SearchEngine", () => {
     });
   });
 
+  describe("getInheritedMembersLimited", () => {
+    it("returns members from only the nearest N parents", () => {
+      const chain = engine.getInheritanceChain("GenericEntity");
+      // GenericEntity should have multiple ancestors
+      expect(chain.length).toBeGreaterThanOrEqual(2);
+
+      const limited = engine.getInheritedMembersLimited("GenericEntity", 1);
+      // parentClassNames should have at most 1 entry
+      expect(limited.parentClassNames.length).toBeLessThanOrEqual(1);
+      // All methods should come from the same class
+      const uniqueClasses = new Set(limited.methods.map((m) => m.className));
+      expect(uniqueClasses.size).toBeLessThanOrEqual(1);
+    });
+
+    it("orders immediate parent first", () => {
+      const chain = engine.getInheritanceChain("GenericEntity");
+      if (chain.length >= 3) {
+        const limited = engine.getInheritedMembersLimited("GenericEntity", 3);
+        // First parentClassName should be the immediate parent
+        expect(limited.parentClassNames[0]).toBe(chain[chain.length - 2]);
+      }
+    });
+
+    it("returns empty for unknown classes", () => {
+      const limited = engine.getInheritedMembersLimited("NonExistent12345", 3);
+      expect(limited.methods).toEqual([]);
+      expect(limited.properties).toEqual([]);
+      expect(limited.enums).toEqual([]);
+      expect(limited.parentClassNames).toEqual([]);
+    });
+
+    it("defaults to 3 parent classes", () => {
+      const limited = engine.getInheritedMembersLimited("GenericEntity");
+      expect(limited.parentClassNames.length).toBeLessThanOrEqual(3);
+    });
+
+    it("respects maxParents parameter", () => {
+      const limited2 = engine.getInheritedMembersLimited("GenericEntity", 2);
+      const limited1 = engine.getInheritedMembersLimited("GenericEntity", 1);
+      expect(limited1.parentClassNames.length).toBeLessThanOrEqual(limited2.parentClassNames.length);
+    });
+  });
+
   describe("getInheritedMembers", () => {
     it("returns inherited methods for GenericEntity", () => {
       const inherited = engine.getInheritedMembers("GenericEntity");

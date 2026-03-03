@@ -473,6 +473,74 @@ export class SearchEngine {
   }
 
   /**
+   * Get inherited members from only the N nearest parent classes.
+   * Returns members ordered from immediate parent outward.
+   */
+  getInheritedMembersLimited(
+    name: string,
+    maxParents = 3
+  ): {
+    methods: MethodSearchResult[];
+    properties: PropertySearchResult[];
+    enums: EnumSearchResult[];
+    parentClassNames: string[];
+  } {
+    const methods: MethodSearchResult[] = [];
+    const properties: PropertySearchResult[] = [];
+    const enums: EnumSearchResult[] = [];
+    const parentClassNames: string[] = [];
+
+    const chain = this.getInheritanceChain(name);
+    // chain is [root, ..., parent, className]
+    // Take the nearest N ancestors (excluding the class itself), then reverse so immediate parent is first
+    const ancestors = chain.slice(0, -1);
+    const nearest = ancestors.slice(-maxParents).reverse();
+
+    for (const ancestorName of nearest) {
+      const cls = this.getClass(ancestorName);
+      if (!cls) continue;
+
+      parentClassNames.push(cls.name);
+
+      for (const method of [
+        ...(cls.methods || []),
+        ...(cls.protectedMethods || []),
+        ...(cls.staticMethods || []),
+      ]) {
+        methods.push({
+          className: cls.name,
+          classSource: cls.source,
+          classGroup: cls.group,
+          method,
+        });
+      }
+
+      for (const prop of [
+        ...(cls.properties || []),
+        ...(cls.protectedProperties || []),
+      ]) {
+        properties.push({
+          className: cls.name,
+          classSource: cls.source,
+          classGroup: cls.group,
+          property: prop,
+        });
+      }
+
+      for (const enumInfo of cls.enums || []) {
+        enums.push({
+          className: cls.name,
+          classSource: cls.source,
+          classGroup: cls.group,
+          enumInfo,
+        });
+      }
+    }
+
+    return { methods, properties, enums, parentClassNames };
+  }
+
+  /**
    * Get all classes that inherit from ScriptComponent (directly or indirectly).
    * Useful for finding available components to attach to entities.
    */

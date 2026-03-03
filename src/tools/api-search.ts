@@ -8,7 +8,15 @@ import type {
 } from "../index/search-engine.js";
 import type { ClassInfo } from "../index/types.js";
 
-function formatClassResult(cls: ClassInfo, verbose = true): string {
+interface InheritedContext {
+  methods: MethodSearchResult[];
+  properties: PropertySearchResult[];
+  enums: EnumSearchResult[];
+  parentClassNames: string[];
+  totalAncestorCount: number;
+}
+
+function formatClassResult(cls: ClassInfo, verbose = true, inherited?: InheritedContext): string {
   const lines: string[] = [];
   lines.push(`## ${cls.name}`);
   lines.push(`Source: ${cls.source === "enfusion" ? "Enfusion Engine" : "Arma Reforger"} API`);
@@ -113,6 +121,61 @@ function formatClassResult(cls: ClassInfo, verbose = true): string {
       for (const p of protectedProps) {
         const desc = p.description ? ` -- ${p.description}` : "";
         lines.push(`- ${p.type} **${p.name}**${desc}`);
+      }
+    }
+  }
+
+  // Inherited members from parent classes
+  if (verbose && inherited && inherited.methods.length + inherited.properties.length + inherited.enums.length > 0) {
+    const shownCount = inherited.parentClassNames.length;
+    const moreNote =
+      inherited.totalAncestorCount > shownCount
+        ? ` (showing ${shownCount} of ${inherited.totalAncestorCount} ancestor classes)`
+        : "";
+    lines.push("");
+    lines.push(`### Inherited Members${moreNote}`);
+    lines.push(`From: ${inherited.parentClassNames.join(", ")}`);
+
+    // Group methods by parent class
+    const methodsByClass = new Map<string, MethodSearchResult[]>();
+    for (const m of inherited.methods) {
+      let arr = methodsByClass.get(m.className);
+      if (!arr) {
+        arr = [];
+        methodsByClass.set(m.className, arr);
+      }
+      arr.push(m);
+    }
+
+    for (const parentName of inherited.parentClassNames) {
+      const parentMethods = methodsByClass.get(parentName) || [];
+      if (parentMethods.length === 0) continue;
+      lines.push("");
+      lines.push(`#### ${parentName}`);
+      for (const m of parentMethods) {
+        lines.push(`- ${m.method.signature}`);
+      }
+    }
+
+    // Inherited properties (compact)
+    if (inherited.properties.length > 0) {
+      lines.push("");
+      lines.push(`#### Inherited Properties`);
+      const shown = inherited.properties.slice(0, 20);
+      for (const p of shown) {
+        lines.push(`- ${p.property.type} **${p.property.name}** *(from ${p.className})*`);
+      }
+      if (inherited.properties.length > 20) {
+        lines.push(`  ... and ${inherited.properties.length - 20} more`);
+      }
+    }
+
+    // Inherited enums (compact)
+    if (inherited.enums.length > 0) {
+      lines.push("");
+      lines.push(`#### Inherited Enums`);
+      for (const e of inherited.enums) {
+        lines.push(`- **${e.enumInfo.name}** *(from ${e.className})*`);
       }
     }
   }
@@ -228,7 +291,14 @@ export function registerApiSearch(server: McpServer, searchEngine: SearchEngine)
         if (results.length === 0) {
           text = `No classes found matching "${query}".`;
         } else if (results.length === 1) {
-          text = formatClassResult(results[0], true);
+          const cls = results[0];
+          let inheritedCtx: InheritedContext | undefined;
+          if (cls.parents.length > 0) {
+            const chain = searchEngine.getInheritanceChain(cls.name);
+            const inherited = searchEngine.getInheritedMembersLimited(cls.name, 3);
+            inheritedCtx = { ...inherited, totalAncestorCount: chain.length - 1 };
+          }
+          text = formatClassResult(cls, true, inheritedCtx);
         } else {
           text = results.map((cls) => formatClassResult(cls, false)).join("\n\n---\n\n");
         }
@@ -261,7 +331,14 @@ export function registerApiSearch(server: McpServer, searchEngine: SearchEngine)
           const parts: string[] = [];
           for (const r of results) {
             if (r.type === "class" && r.classInfo) {
-              parts.push(formatClassResult(r.classInfo, results.length === 1));
+              const verbose = results.length === 1;
+              let inheritedCtx: InheritedContext | undefined;
+              if (verbose && r.classInfo.parents.length > 0) {
+                const chain = searchEngine.getInheritanceChain(r.classInfo.name);
+                const inherited = searchEngine.getInheritedMembersLimited(r.classInfo.name, 3);
+                inheritedCtx = { ...inherited, totalAncestorCount: chain.length - 1 };
+              }
+              parts.push(formatClassResult(r.classInfo, verbose, inheritedCtx));
             } else if (r.type === "method" && r.methodResult) {
               const mr = r.methodResult;
               const sourceLabel = mr.classSource === "enfusion" ? "Enfusion" : "Arma Reforger";
