@@ -128,31 +128,23 @@ export function registerScenarioTools(server: McpServer, client: WorkbenchClient
         await client.call("EMCP_WB_CreateEntity", { prefab: AREA_PREFAB, name: names.area, position: resolvedPosition });
         placed.push(names.area);
 
-        // 2. Place LayerTask, reparent, then move to local 0 0 0
-        // Note: CreateEntity ignores position for some prefabs; move after reparent sets local coords.
-        // ParentEntity(transformChildToParentSpace=true) preserves world pos, so we move after.
+        // 2-5. Place children at world origin, reparent with transformChildToParentSpace=false
+        // so their local coords stay 0 0 0 (at parent's origin).
         await client.call("EMCP_WB_CreateEntity", { prefab: p.layerTask, name: names.layerTask });
         placed.push(names.layerTask);
         await client.call("EMCP_WB_ModifyEntity", { action: "reparent", name: names.layerTask, value: names.area });
-        await client.call("EMCP_WB_ModifyEntity", { action: "move", name: names.layerTask, value: "0 0 0" });
 
-        // 3. Place Layer_AI, reparent, move to local 0 0 0
         await client.call("EMCP_WB_CreateEntity", { prefab: LAYER_PREFAB, name: names.layerAI });
         placed.push(names.layerAI);
         await client.call("EMCP_WB_ModifyEntity", { action: "reparent", name: names.layerAI, value: names.layerTask });
-        await client.call("EMCP_WB_ModifyEntity", { action: "move", name: names.layerAI, value: "0 0 0" });
 
-        // 4. Place Slot, reparent, move to local 0 0 0
         await client.call("EMCP_WB_CreateEntity", { prefab: p.slot, name: names.slot });
         placed.push(names.slot);
         await client.call("EMCP_WB_ModifyEntity", { action: "reparent", name: names.slot, value: names.layerAI });
-        await client.call("EMCP_WB_ModifyEntity", { action: "move", name: names.slot, value: "0 0 0" });
 
-        // 5. Place SlotAI, reparent, move to local 0 0 0
         await client.call("EMCP_WB_CreateEntity", { prefab: SLOT_AI_PREFAB, name: names.slotAI });
         placed.push(names.slotAI);
         await client.call("EMCP_WB_ModifyEntity", { action: "reparent", name: names.slotAI, value: names.layerAI });
-        await client.call("EMCP_WB_ModifyEntity", { action: "move", name: names.slotAI, value: "0 0 0" });
 
         // 6. Wire properties — Area trigger (m_fAreaRadius confirmed from game sample layers)
         await setProp(names.area, "SCR_ScenarioFrameworkArea.m_fAreaRadius", String(triggerRadius));

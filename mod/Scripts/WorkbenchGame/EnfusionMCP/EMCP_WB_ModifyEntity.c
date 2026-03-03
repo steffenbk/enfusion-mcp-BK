@@ -230,7 +230,7 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 			}
 
 			api.BeginEntityAction("Reparent entity via NetAPI");
-			api.ParentEntity(parentSrc, entSrc, true);
+			api.ParentEntity(parentSrc, entSrc, false); // false = keep local coords (0 0 0), true would convert world pos causing offset
 			api.EndEntityAction();
 
 			resp.status = "ok";
