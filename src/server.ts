@@ -44,6 +44,7 @@ import { registerGameDuplicate } from "./tools/game-duplicate.js";
 import { registerWbEntityDuplicate } from "./tools/wb-entity-duplicate.js";
 import { registerWorkshopInfo } from "./tools/workshop-info.js";
 import { registerScenarioTools } from "./tools/wb-scenario.js";
+import { registerAnimationGraphInspect } from "./tools/animation-graph-inspect.js";
 import type { Config } from "./config.js";
 
 export function registerTools(server: McpServer, config: Config): void {
@@ -103,6 +104,7 @@ export function registerTools(server: McpServer, config: Config): void {
   registerGameDuplicate(server, config, wbClient);
   registerWbEntityDuplicate(server, config, wbClient);
   registerWorkshopInfo(server, config);
+  registerAnimationGraphInspect(server, config);
 
   // MCP Prompts
   registerCreateModPrompt(server, patterns);
