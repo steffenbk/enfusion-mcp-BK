@@ -1,0 +1,206 @@
+[
+  {
+    "path": "Scripting_And_Core/enforceScript-language.md",
+    "title": "EnforceScript Language",
+    "description": "Language quirks, types, OOP, casting, collections, preprocessor, naming conventions, pitfalls",
+    "keywords": ["script", "enforce", "language", "types", "oop", "cast", "collection", "enum", "preprocessor", "naming", "pitfall", "string", "array", "map", "class", "interface", "variable", "function", "operator", "autoptr", "ref", "typename"]
+  },
+  {
+    "path": "Scripting_And_Core/entity-lifecycle.md",
+    "title": "Entity Lifecycle",
+    "description": "Entity/component creation patterns, full lifecycle table, activeness post-0.9.8, user actions, LOD, collision layers, environment metrics",
+    "keywords": ["entity", "lifecycle", "component", "create", "spawn", "delete", "init", "postinit", "active", "inactive", "lod", "collision", "layer", "user", "action", "environment", "metric", "event"]
+  },
+  {
+    "path": "Scripting_And_Core/multiplayer-replication.md",
+    "title": "Multiplayer Replication",
+    "description": "Architecture, entity roles, RPC, RplProp, RplSave/Load, server guard, angular velocity, CRC mismatch, DS-excluded components",
+    "keywords": ["multiplayer", "replication", "rpc", "rplprop", "rplsave", "rplload", "server", "client", "authority", "proxy", "network", "sync", "broadcast", "crc", "ds", "dedicated", "role"]
+  },
+  {
+    "path": "Scripting_And_Core/config-system.md",
+    "title": "Config System",
+    "description": "BaseContainerProps/Attribute decorators, .conf usage patterns, BaseContainer API, WorldEditorAPI SetVariableValue, prefab data, file types",
+    "keywords": ["config", "conf", "basecontainer", "attribute", "decorator", "property", "prefab", "data", "container", "variable", "value", "set", "get", "register", "class", "inherit"]
+  },
+  {
+    "path": "Scripting_And_Core/serialization.md",
+    "title": "Serialization",
+    "description": "JSON/Binary serialization contexts, object serialization, JsonApiStruct, file operations",
+    "keywords": ["serialization", "serialize", "json", "binary", "file", "save", "load", "read", "write", "jsonapistruct", "context", "object", "persist"]
+  },
+  {
+    "path": "Scripting_And_Core/resource-usage.md",
+    "title": "Resource Usage",
+    "description": "Resource lifetime rules, correct/wrong patterns, CreateInstanceFromContainer exception",
+    "keywords": ["resource", "lifetime", "resourcename", "load", "unload", "instance", "container", "memory", "leak", "reference"]
+  },
+  {
+    "path": "Scripting_And_Core/script-invoker.md",
+    "title": "Script Invoker",
+    "description": "Typed ScriptInvoker pattern, lazy creation, common game events via EventHandlerManagerComponent",
+    "keywords": ["scriptinvoker", "invoker", "event", "handler", "callback", "subscribe", "insert", "remove", "signal", "delegate", "eventhandler"]
+  },
+  {
+    "path": "Scripting_And_Core/input-manager.md",
+    "title": "Input Manager",
+    "description": "Action types, input sources, filters, contexts, reading input in script",
+    "keywords": ["input", "action", "key", "button", "mouse", "gamepad", "context", "filter", "bind", "press", "hold", "release", "axis", "inputmanager"]
+  },
+  {
+    "path": "Scripting_And_Core/scripting-best-practices.md",
+    "title": "Scripting Best Practices",
+    "description": "Early return, caching, performance principles, spread pattern, profiling, modding hooks, REST API, RichText, game mode setup",
+    "keywords": ["best", "practice", "performance", "cache", "profile", "modding", "hook", "modded", "override", "rest", "api", "richtext", "game", "mode", "setup", "pattern", "convention"]
+  },
+  {
+    "path": "Tools_And_Workbench/workbench-plugins.md",
+    "title": "Workbench Plugins",
+    "description": "WorldEditorPlugin/ScriptEditorPlugin structure, ScriptDialog, FileIO, CreateEntityTemplate, Code Formatter, Fill From Template, Object Brush, String Editor",
+    "keywords": ["workbench", "plugin", "worldeditor", "scripteditor", "dialog", "fileio", "template", "brush", "editor", "tool", "attribute", "menu", "shortcut"]
+  },
+  {
+    "path": "Tools_And_Workbench/world-editor.md",
+    "title": "World Editor",
+    "description": "WE shortcuts, all tools, generators, WorldEditorAPI, Plugin vs Tool, WorkbenchPluginAttribute, metadata, links",
+    "keywords": ["world", "editor", "we", "terrain", "navmesh", "prefab", "generator", "road", "powerline", "worldeditorapi", "entity", "place", "meta", "link", "shortcut", "tool"]
+  },
+  {
+    "path": "Tools_And_Workbench/particle-editor.md",
+    "title": "Particle Editor",
+    "description": "LOD system, emitter properties, material editor, animation panel, pitfalls",
+    "keywords": ["particle", "emitter", "lod", "material", "animation", "effect", "vfx", "texture", "sheet", "lifetime", "emission", "physics", "graph"]
+  },
+  {
+    "path": "Tools_And_Workbench/resource-manager-blender.md",
+    "title": "Resource Manager & Blender",
+    "description": "Resource Manager UI, FBX import rules, collider naming, texture import, batch plugins, Enfusion Blender Tools features, probes/portals/BSP",
+    "keywords": ["resource", "manager", "blender", "fbx", "import", "lod", "collider", "texture", "material", "mesh", "model", "asset", "ebt", "probe", "portal", "bsp", "building"]
+  },
+  {
+    "path": "Tools_And_Workbench/mcp-net-api.md",
+    "title": "MCP Net API",
+    "description": "EnfusionMCP NetApiHandler skeleton, SetVariableValue, reading properties, array operations, GUID fix",
+    "keywords": ["mcp", "net", "api", "netapi", "handler", "variable", "guid", "workbench", "connect", "request", "response", "enfusionmcp"]
+  },
+  {
+    "path": "Weapons_And_Attachments/weapon-components.md",
+    "title": "Weapon Components",
+    "description": "Required component stack, MuzzleComponent, SightsComponent, obstruction system, stat-modifying attachments, collimator creation, slot/bone naming, animation system, suppressor workflow, PIP optic workflow",
+    "keywords": ["weapon", "gun", "muzzle", "sight", "optic", "suppressor", "attachment", "slot", "bone", "animation", "pip", "scope", "collimator", "reticle", "component", "magazine", "ammo", "fire", "reload"]
+  },
+  {
+    "path": "UI_And_Interface/ui-dialogs-tooltips.md",
+    "title": "UI Dialogs & Tooltips",
+    "description": "SCR_ConfigurableDialogUi (3 usage patterns), widget tooltips, DiagMenu scripting API",
+    "keywords": ["ui", "dialog", "tooltip", "widget", "menu", "button", "layout", "configurable", "diag", "debug", "menu", "hud", "screen", "interface", "popup"]
+  },
+  {
+    "path": "Modding_And_Extensions/modding-basics.md",
+    "title": "Modding Basics",
+    "description": "Mod project setup, data modding (Override/Duplicate/Inherit/Replace), LOD system, game mode setup, 2D map creation, collision layers, prefab system, Entity Catalog",
+    "keywords": ["mod", "modding", "project", "setup", "override", "duplicate", "inherit", "replace", "lod", "catalog", "prefab", "layer", "collision", "map", "gproj"]
+  },
+  {
+    "path": "Modding_And_Extensions/prop-creation.md",
+    "title": "Prop Creation",
+    "description": "FBX prep, collider naming, Layer Preset assignment, Workbench import settings, prefab setup, pitfalls",
+    "keywords": ["prop", "static", "object", "fbx", "collider", "import", "prefab", "layer", "preset", "mesh", "model", "create"]
+  },
+  {
+    "path": "Modding_And_Extensions/game-master.md",
+    "title": "Game Master",
+    "description": "Budget system, waypoint types, composition naming, editable entity generation, context/toolbar actions, entity attributes/properties/tooltips, preview image",
+    "keywords": ["game", "master", "gm", "budget", "waypoint", "composition", "editable", "entity", "context", "toolbar", "action", "attribute", "preview", "tooltip"]
+  },
+  {
+    "path": "Modding_And_Extensions/ui-notifications-hints.md",
+    "title": "UI Notifications & Hints",
+    "description": "UI types, ChimeraMenuPreset enum pattern, MenuManager API, Modular Button, Notification system, Hint system, End Screen, Field Manual, localisation",
+    "keywords": ["notification", "hint", "ui", "menu", "manager", "button", "localization", "localisation", "string", "chimera", "field", "manual", "end", "screen", "hud"]
+  },
+  {
+    "path": "Modding_And_Extensions/scripting-misc.md",
+    "title": "Scripting Miscellaneous",
+    "description": "Generic/template classes, SQF vs EnforceScript differences, Game Identity API, Animation Editor custom properties, Asset Browser, Doxygen, Action Context Setup",
+    "keywords": ["generic", "template", "sqf", "identity", "doxygen", "action", "context", "actionsmanager", "browser", "asset", "migration", "diag", "build"]
+  },
+  {
+    "path": "Modding_And_Extensions/faction-creation.md",
+    "title": "Faction Creation",
+    "description": "Character components, faction config fields, groups, custom EEditableEntityLabel enum pattern, editor registration workflow",
+    "keywords": ["faction", "create", "character", "group", "label", "config", "register", "editor", "team", "side", "us", "ussr", "fdf", "custom"]
+  },
+  {
+    "path": "Vehicles_And_Physics/physics-transforms.md",
+    "title": "Physics & Transforms",
+    "description": "Physics API, transform helpers, parenting, debug shapes",
+    "keywords": ["physics", "transform", "position", "rotation", "vector", "matrix", "parent", "attach", "debug", "shape", "rigidbody", "force", "velocity"]
+  },
+  {
+    "path": "Vehicles_And_Physics/damage-vehicles.md",
+    "title": "Vehicle Damage",
+    "description": "Vehicle damage patterns",
+    "keywords": ["vehicle", "damage", "health", "destroy", "hit", "armor", "component", "repair"]
+  },
+  {
+    "path": "Vehicles_And_Physics/vehicle-modding.md",
+    "title": "Vehicle Modding",
+    "description": "Key vehicle components (damage, fuel, simulation, slots), faction affiliation, component icon types, collision pitfalls",
+    "keywords": ["vehicle", "car", "truck", "tank", "fuel", "simulation", "wheeled", "slot", "component", "damage", "faction", "mod", "create", "setup"]
+  },
+  {
+    "path": "AI_And_Behavior/behavior-tree.md",
+    "title": "Behavior Tree",
+    "description": "BT Editor UI/shortcuts, all node types (Flow/Decorator/Task), debug colors, AI Debug Panel, BaseContainer API",
+    "keywords": ["ai", "behavior", "tree", "bt", "node", "flow", "decorator", "task", "selector", "sequence", "condition", "action", "debug", "agent"]
+  },
+  {
+    "path": "AI_And_Behavior/navmesh-terrain.md",
+    "title": "Navmesh & Terrain",
+    "description": "Navmesh types, world setup, generation workflow, partial regen, override pattern, Terrain entity concepts, new terrain setup workflow, environment prefabs",
+    "keywords": ["navmesh", "navigation", "terrain", "world", "generate", "bake", "tile", "area", "environment", "prefab", "setup", "snap", "orient"]
+  },
+  {
+    "path": "Audio_And_Sound/audio-system.md",
+    "title": "Audio System",
+    "description": "ACP pipeline, all node types, SoundComponent hierarchy, signals, Audio Variables, Directivity, Occlusion, SCR_SoundManagerEntity, Music/Radio/VoN/Door/MPD audio",
+    "keywords": ["audio", "sound", "acp", "bank", "signal", "bus", "shader", "amplitude", "frequency", "selector", "component", "music", "radio", "von", "voice", "door", "occlusion", "reverb", "loop", "event"]
+  },
+  {
+    "path": "Terrain_And_Environment/world-environment.md",
+    "title": "World Environment",
+    "description": "Particle effects, wind API, surface material detection, spatial query, vegetation destruction",
+    "keywords": ["world", "environment", "wind", "surface", "material", "particle", "vegetation", "destruction", "spatial", "query", "terrain", "weather"]
+  },
+  {
+    "path": "GameModes_And_Scenarios/scenario-framework.md",
+    "title": "Scenario Framework",
+    "description": "SF prefab hierarchy (Area/Layer/Slot), activation types, task types, trigger types, logic entities, QRF, game mode setup",
+    "keywords": ["scenario", "framework", "sf", "area", "layer", "slot", "task", "trigger", "activation", "qrf", "respawn", "objective", "logic", "mission", "game", "mode"]
+  },
+  {
+    "path": "GameModes_And_Scenarios/capture-and-hold.md",
+    "title": "Capture & Hold",
+    "description": "C&H setup workflow, required prefabs, mission header creation, score/time settings, Conflict mode overview",
+    "keywords": ["capture", "hold", "cah", "conflict", "gamemode", "score", "time", "area", "zone", "spawn", "faction", "mission", "header", "supply", "rank"]
+  },
+  {
+    "path": "Inventory_And_Damage/damage-system.md",
+    "title": "Damage System",
+    "description": "DamageManager class hierarchy, damage flow, scripting callbacks, SetHealth() pitfall, mod-compatible damage patterns",
+    "keywords": ["damage", "health", "hitzone", "damagemanager", "kill", "death", "hit", "resistance", "armor", "callback", "script", "sethealth", "heal"]
+  },
+  {
+    "path": "Character_And_Animation/gadgets-actions.md",
+    "title": "Gadgets & Actions",
+    "description": "SCR_FlashlightComponent pitfalls, SetEmissiveMultiplier, ScriptedUserAction pattern",
+    "keywords": ["gadget", "flashlight", "action", "user", "scripted", "emissive", "item", "use", "interact", "equip"]
+  },
+  {
+    "path": "Character_And_Animation/character-gear-and-anim-data.md",
+    "title": "Character Gear & Animation Data",
+    "description": "Animation workspace structure, all graph node types, State Machine, Pose 2D, export profiles, human variables, CMD_Weapon_Reload commands, animation instances, SoundInfo signals, gear creation",
+    "keywords": ["animation", "character", "gear", "state", "machine", "pose", "blend", "ik", "workspace", "template", "instance", "animset", "export", "profile", "variable", "reload", "weapon", "sound", "signal", "pap", "siga"]
+  }
+]
