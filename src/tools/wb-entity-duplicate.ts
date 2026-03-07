@@ -1,15 +1,15 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import {
-  readdirSync,
   readFileSync,
   writeFileSync,
   mkdirSync,
   existsSync,
 } from "node:fs";
-import { resolve, join, dirname } from "node:path";
+import { join, dirname } from "node:path";
 import type { Config } from "../config.js";
 import type { WorkbenchClient } from "../workbench/client.js";
+import { resolveGameDataPath, findLooseFile, resolveAddonDir } from "../utils/game-paths.js";
 
 /**
  * wb_entity_duplicate — duplicate a scene entity into the mod folder.
@@ -263,35 +263,6 @@ export function registerWbEntityDuplicate(
   );
 }
 
-/** Find the game data directory (loose files location). */
-function resolveGameDataPath(gamePath: string): string | null {
-  const dataPath = join(gamePath, "addons", "data");
-  if (existsSync(dataPath)) return dataPath;
-  const addonsPath = join(gamePath, "addons");
-  if (existsSync(addonsPath)) return addonsPath;
-  return null;
-}
-
-/** Find a loose file in the game data directory. Handles DataXXX prefix and bare paths. */
-function findLooseFile(gameDataPath: string, relativePath: string): string | null {
-  const direct = join(gameDataPath, relativePath);
-  if (existsSync(direct)) return direct;
-
-  if (!relativePath.startsWith("Data")) {
-    try {
-      const entries = readdirSync(gameDataPath, { withFileTypes: true });
-      for (const entry of entries) {
-        if (!entry.isDirectory() || !entry.name.startsWith("Data")) continue;
-        const candidate = join(gameDataPath, entry.name, relativePath);
-        if (existsSync(candidate)) return candidate;
-      }
-    } catch {
-      // ignore
-    }
-  }
-  return null;
-}
-
 /** Read the GUID from a Workbench .meta file. Returns null if not found. */
 function readMetaGuid(metaPath: string): string | null {
   try {
@@ -301,35 +272,4 @@ function readMetaGuid(metaPath: string): string | null {
   } catch {
     return null;
   }
-}
-
-/** Find the addon directory: by modName (folder name) or first addon with a .gproj. */
-function resolveAddonDir(projectPath: string, modName?: string): string | null {
-  if (modName) {
-    const dir = resolve(projectPath, modName);
-    return existsSync(dir) ? dir : null;
-  }
-  try {
-    const entries = readdirSync(projectPath, { withFileTypes: true });
-    for (const entry of entries) {
-      if (!entry.isDirectory()) continue;
-      const dir = join(projectPath, entry.name);
-      if (findGproj(dir)) return dir;
-    }
-  } catch {
-    // ignore
-  }
-  return null;
-}
-
-function findGproj(dir: string): string | null {
-  try {
-    const entries = readdirSync(dir, { withFileTypes: true });
-    for (const e of entries) {
-      if (!e.isDirectory() && e.name.endsWith(".gproj")) return join(dir, e.name);
-    }
-  } catch {
-    // ignore
-  }
-  return null;
 }

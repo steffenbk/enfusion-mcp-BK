@@ -1,10 +1,11 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { readdirSync, readFileSync, existsSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join, extname, relative } from "node:path";
 import type { Config } from "../config.js";
 import { logger } from "../utils/logger.js";
 import { PakVirtualFS } from "../pak/vfs.js";
+import { resolveGameDataPath } from "../utils/game-paths.js";
 
 interface AssetEntry {
   /** Relative path from game data root (e.g., "Prefabs/Weapons/Rifles/AK47/AK47.et") */
@@ -184,14 +185,6 @@ function getIndex(basePath: string, gamePath: string): AssetEntry[] {
   return cachedIndex;
 }
 
-function resolveGameDataPath(config: Config): string | null {
-  const dataPath = join(config.gamePath, "addons", "data");
-  if (existsSync(dataPath)) return dataPath;
-  const addonsPath = join(config.gamePath, "addons");
-  if (existsSync(addonsPath)) return addonsPath;
-  return null;
-}
-
 export function registerAssetSearch(server: McpServer, config: Config): void {
   server.registerTool(
     "asset_search",
@@ -225,7 +218,7 @@ export function registerAssetSearch(server: McpServer, config: Config): void {
       if (refresh) {
         invalidateAssetCache();
       }
-      const basePath = resolveGameDataPath(config);
+      const basePath = resolveGameDataPath(config.gamePath);
       if (!basePath) {
         return {
           content: [

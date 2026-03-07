@@ -1,24 +1,17 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { readFileSync, existsSync, statSync } from "node:fs";
-import { join, extname } from "node:path";
+import { extname } from "node:path";
 import type { Config } from "../config.js";
 import { validateProjectPath } from "../utils/safe-path.js";
 import { PakVirtualFS } from "../pak/vfs.js";
+import { resolveGameDataPath } from "../utils/game-paths.js";
 
 /** Extensions that are safe to read as text */
 const TEXT_EXTENSIONS = new Set([
   ".c", ".et", ".conf", ".gproj", ".ent", ".layer", ".st",
   ".layout", ".txt", ".json", ".xml", ".csv",
 ]);
-
-function resolveGameDataPath(config: Config): string | null {
-  const dataPath = join(config.gamePath, "addons", "data");
-  if (existsSync(dataPath)) return dataPath;
-  const addonsPath = join(config.gamePath, "addons");
-  if (existsSync(addonsPath)) return addonsPath;
-  return null;
-}
 
 export function registerGameRead(server: McpServer, config: Config): void {
   server.registerTool(
@@ -38,7 +31,7 @@ export function registerGameRead(server: McpServer, config: Config): void {
       },
     },
     async ({ path: subPath }) => {
-      const basePath = resolveGameDataPath(config);
+      const basePath = resolveGameDataPath(config.gamePath);
       if (!basePath) {
         return {
           content: [

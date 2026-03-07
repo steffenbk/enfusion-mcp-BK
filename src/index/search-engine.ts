@@ -281,48 +281,59 @@ export class SearchEngine {
     source: "enfusion" | "arma" | "all" = "all",
     limit = 10
   ): SearchResult[] {
-    const classResults = this.searchClasses(query, source, limit).map(
-      (cls) =>
-        ({
-          type: "class" as const,
-          score: cls.name.toLowerCase() === query.toLowerCase() ? 100 : 50,
-          classInfo: cls,
-        }) satisfies SearchResult
-    );
+    const q = query.toLowerCase();
+    const combined: SearchResult[] = [];
 
-    const methodResults = this.searchMethods(query, source, limit).map(
-      (mr) =>
-        ({
-          type: "method" as const,
-          score:
-            mr.method.name.toLowerCase() === query.toLowerCase() ? 90 : 40,
-          methodResult: mr,
-        }) satisfies SearchResult
-    );
+    // Classes — score directly to preserve granularity
+    for (const cls of this.classByName.values()) {
+      if (source !== "all" && cls.source !== source) continue;
+      const score = this.nameScore(cls.name.toLowerCase(), q);
+      if (score > 0) combined.push({ type: "class", score, classInfo: cls });
+    }
 
-    const enumResults = this.searchEnums(query, source, limit).map(
-      (er) =>
-        ({
-          type: "enum" as const,
-          score:
-            er.enumInfo.name.toLowerCase() === query.toLowerCase() ? 95 : 45,
-          enumResult: er,
-        }) satisfies SearchResult
-    );
+    // Methods
+    for (const [methodName, entries] of this.methodIndex) {
+      const score = this.nameScore(methodName, q);
+      if (score <= 0) continue;
+      for (const entry of entries) {
+        if (source !== "all" && entry.classSource !== source) continue;
+        combined.push({ type: "method", score, methodResult: entry });
+      }
+    }
 
-    const propertyResults = this.searchProperties(query, source, limit).map(
-      (pr) =>
-        ({
-          type: "property" as const,
-          score:
-            pr.property.name.toLowerCase() === query.toLowerCase() ? 85 : 35,
-          propertyResult: pr,
-        }) satisfies SearchResult
-    );
+    // Enums
+    const seenEnums = new Set<string>();
+    for (const [enumKey, entries] of this.enumIndex) {
+      const score = this.nameScore(enumKey, q);
+      if (score <= 0) continue;
+      for (const entry of entries) {
+        if (source !== "all" && entry.classSource !== source) continue;
+        const dedup = `${entry.className}::${entry.enumInfo.name}`;
+        if (seenEnums.has(dedup)) continue;
+        seenEnums.add(dedup);
+        combined.push({ type: "enum", score, enumResult: entry });
+      }
+    }
 
-    const combined = [...classResults, ...methodResults, ...enumResults, ...propertyResults];
+    // Properties
+    for (const [propName, entries] of this.propertyIndex) {
+      const score = this.nameScore(propName, q);
+      if (score <= 0) continue;
+      for (const entry of entries) {
+        if (source !== "all" && entry.classSource !== source) continue;
+        combined.push({ type: "property", score, propertyResult: entry });
+      }
+    }
+
     combined.sort((a, b) => b.score - a.score);
     return combined.slice(0, limit);
+  }
+
+  private nameScore(nameLower: string, queryLower: string): number {
+    if (nameLower === queryLower) return 100;
+    if (nameLower.startsWith(queryLower)) return 80;
+    if (nameLower.includes(queryLower)) return 60;
+    return 0;
   }
 
   searchWiki(query: string, limit = 5): WikiPage[] {

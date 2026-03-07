@@ -9,7 +9,12 @@ export interface KbEntry {
   keywords: string[];
 }
 
+let cachedKbIndex: KbEntry[] | null = null;
+let cachedKbDir: string | null = null;
+
 function loadIndex(kbDir: string): KbEntry[] {
+  if (cachedKbIndex && cachedKbDir === kbDir) return cachedKbIndex;
+
   const indexPath = resolve(kbDir, "index.json");
   if (!existsSync(indexPath)) {
     logger.warn(`KB index not found: ${indexPath}`);
@@ -17,7 +22,9 @@ function loadIndex(kbDir: string): KbEntry[] {
   }
   try {
     const raw = readFileSync(indexPath, "utf-8");
-    return JSON.parse(raw) as KbEntry[];
+    cachedKbIndex = JSON.parse(raw) as KbEntry[];
+    cachedKbDir = kbDir;
+    return cachedKbIndex;
   } catch (e) {
     logger.error(`Failed to load KB index: ${e}`);
     return [];

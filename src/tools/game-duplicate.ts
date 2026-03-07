@@ -1,16 +1,17 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import {
-  readdirSync,
   readFileSync,
   writeFileSync,
   mkdirSync,
   existsSync,
 } from "node:fs";
-import { resolve, join, dirname } from "node:path";
+import { dirname } from "node:path";
 import type { Config } from "../config.js";
 import type { WorkbenchClient } from "../workbench/client.js";
 import { validateProjectPath } from "../utils/safe-path.js";
+import { resolveGameDataPath, findLooseFile, resolveAddonDir } from "../utils/game-paths.js";
+import { generateGuid } from "../formats/guid.js";
 
 export function registerGameDuplicate(
   server: McpServer,
@@ -130,7 +131,7 @@ export function registerGameDuplicate(
       try {
         let content = readFileSync(sourceFile, "utf-8");
         // Replace the ID field (entity GUID) with a fresh one so the duplicate is independent
-        const newEntityId = randomHex16();
+        const newEntityId = generateGuid();
         content = content.replace(/^(\s*ID\s+")[0-9A-Fa-f]{16}(")/m, `$1${newEntityId}$2`);
         mkdirSync(dirname(absDestPath), { recursive: true });
         writeFileSync(absDestPath, content, "utf-8");
@@ -210,78 +211,3 @@ export function registerGameDuplicate(
   );
 }
 
-/** Find the game data directory (loose files location). */
-function resolveGameDataPath(gamePath: string): string | null {
-  const dataPath = join(gamePath, "addons", "data");
-  if (existsSync(dataPath)) return dataPath;
-  const addonsPath = join(gamePath, "addons");
-  if (existsSync(addonsPath)) return addonsPath;
-  return null;
-}
-
-/**
- * Find a loose file in the game data directory.
- * Handles paths with DataXXX prefix ("Data006/Prefabs/...") and bare paths ("Prefabs/...").
- */
-function findLooseFile(gameDataPath: string, relativePath: string): string | null {
-  // Direct match (handles "Data006/Prefabs/..." paths)
-  const direct = join(gameDataPath, relativePath);
-  if (existsSync(direct)) return direct;
-
-  // Bare path (no DataXXX prefix) — scan DataXXX subdirectories
-  if (!relativePath.startsWith("Data")) {
-    try {
-      const entries = readdirSync(gameDataPath, { withFileTypes: true });
-      for (const entry of entries) {
-        if (!entry.isDirectory() || !entry.name.startsWith("Data")) continue;
-        const candidate = join(gameDataPath, entry.name, relativePath);
-        if (existsSync(candidate)) return candidate;
-      }
-    } catch {
-      // ignore
-    }
-  }
-
-  return null;
-}
-
-/** Find the addon directory: by modName (folder name) or first addon with a .gproj. */
-function resolveAddonDir(projectPath: string, modName?: string): string | null {
-  if (modName) {
-    const dir = resolve(projectPath, modName);
-    return existsSync(dir) ? dir : null;
-  }
-  try {
-    const entries = readdirSync(projectPath, { withFileTypes: true });
-    for (const entry of entries) {
-      if (!entry.isDirectory()) continue;
-      const dir = join(projectPath, entry.name);
-      if (findGproj(dir)) return dir;
-    }
-  } catch {
-    // ignore
-  }
-  return null;
-}
-
-/** Find the first .gproj file in a directory. */
-function findGproj(dir: string): string | null {
-  try {
-    const entries = readdirSync(dir, { withFileTypes: true });
-    for (const e of entries) {
-      if (!e.isDirectory() && e.name.endsWith(".gproj")) {
-        return join(dir, e.name);
-      }
-    }
-  } catch {
-    // ignore
-  }
-  return null;
-}
-
-/** Generate a random 16-character uppercase hex string (64-bit entity GUID). */
-function randomHex16(): string {
-  const bytes = new Uint8Array(8);
-  crypto.getRandomValues(bytes);
-  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("").toUpperCase();
-}
