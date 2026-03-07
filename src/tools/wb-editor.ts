@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { WorkbenchClient } from "../workbench/client.js";
+import { formatConnectionStatus, requireEditMode, requirePlayMode } from "../workbench/status.js";
 
 export function registerWbEditorTools(server: McpServer, client: WorkbenchClient): void {
   // wb_play — Switch to game mode (Play in Editor)
@@ -8,7 +9,7 @@ export function registerWbEditorTools(server: McpServer, client: WorkbenchClient
     "wb_play",
     {
       description:
-        "Switch Workbench to game (play) mode. Compiles scripts and launches the world for testing. Equivalent to pressing Play in the World Editor.",
+        "Switch Workbench to game (play) mode. Compiles scripts and launches the world for testing. Equivalent to pressing Play in the World Editor. Requires edit mode.",
       inputSchema: {
         debugMode: z
           .boolean()
@@ -21,6 +22,10 @@ export function registerWbEditorTools(server: McpServer, client: WorkbenchClient
       },
     },
     async ({ debugMode, fullScreen }) => {
+      const modeErr = requireEditMode(client, "start play mode");
+      if (modeErr) {
+        return { content: [{ type: "text" as const, text: modeErr + formatConnectionStatus(client) }] };
+      }
       try {
         const params: Record<string, unknown> = { action: "play" };
         if (debugMode !== undefined) params.debugMode = debugMode;
@@ -32,14 +37,14 @@ export function registerWbEditorTools(server: McpServer, client: WorkbenchClient
           content: [
             {
               type: "text" as const,
-              text: `**Play Mode Started**\n\nWorkbench is now compiling and entering game mode.${result.message ? `\n${result.message}` : ""}`,
+              text: `**Play Mode Started**\n\nWorkbench is now compiling and entering game mode.${result.message ? `\n${result.message}` : ""}${formatConnectionStatus(client)}`,
             },
           ],
         };
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         return {
-          content: [{ type: "text" as const, text: `Error starting play mode: ${msg}` }],
+          content: [{ type: "text" as const, text: `Error starting play mode: ${msg}${formatConnectionStatus(client)}` }],
         };
       }
     }
@@ -50,10 +55,14 @@ export function registerWbEditorTools(server: McpServer, client: WorkbenchClient
     "wb_stop",
     {
       description:
-        "Stop game mode and return to the World Editor. Equivalent to pressing Stop in the World Editor.",
+        "Stop game mode and return to the World Editor. Equivalent to pressing Stop in the World Editor. Requires play mode.",
       inputSchema: {},
     },
     async () => {
+      const modeErr = requirePlayMode(client, "stop play mode");
+      if (modeErr) {
+        return { content: [{ type: "text" as const, text: modeErr + formatConnectionStatus(client) }] };
+      }
       try {
         const result = await client.call<Record<string, unknown>>("EMCP_WB_EditorControl", {
           action: "stop",
@@ -63,14 +72,14 @@ export function registerWbEditorTools(server: McpServer, client: WorkbenchClient
           content: [
             {
               type: "text" as const,
-              text: `**Edit Mode Restored**\n\nWorkbench has returned to edit mode.${result.message ? `\n${result.message}` : ""}`,
+              text: `**Edit Mode Restored**\n\nWorkbench has returned to edit mode.${result.message ? `\n${result.message}` : ""}${formatConnectionStatus(client)}`,
             },
           ],
         };
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         return {
-          content: [{ type: "text" as const, text: `Error stopping play mode: ${msg}` }],
+          content: [{ type: "text" as const, text: `Error stopping play mode: ${msg}${formatConnectionStatus(client)}` }],
         };
       }
     }
@@ -81,7 +90,7 @@ export function registerWbEditorTools(server: McpServer, client: WorkbenchClient
     "wb_save",
     {
       description:
-        "Save the current world in the World Editor. Optionally save to a new path (Save As).",
+        "Save the current world in the World Editor. Optionally save to a new path (Save As). Only works in edit mode.",
       inputSchema: {
         path: z
           .string()
@@ -90,6 +99,10 @@ export function registerWbEditorTools(server: McpServer, client: WorkbenchClient
       },
     },
     async ({ path }) => {
+      const modeErr = requireEditMode(client, "save");
+      if (modeErr) {
+        return { content: [{ type: "text" as const, text: modeErr + formatConnectionStatus(client) }] };
+      }
       try {
         const params: Record<string, unknown> = {
           action: path ? "saveAs" : "save",
@@ -108,7 +121,7 @@ export function registerWbEditorTools(server: McpServer, client: WorkbenchClient
           content: [
             {
               type: "text" as const,
-              text: `**Save Complete**\n\n${label}${result.message ? `\n${result.message}` : ""}`,
+              text: `**Save Complete**\n\n${label}${result.message ? `\n${result.message}` : ""}${formatConnectionStatus(client)}`,
             },
           ],
         };
@@ -119,13 +132,13 @@ export function registerWbEditorTools(server: McpServer, client: WorkbenchClient
             content: [
               {
                 type: "text" as const,
-                text: `**Save Pending** — Workbench opened a save dialog that requires user confirmation. The world will be saved once the user clicks OK in Workbench. This is normal for worlds that haven't been saved before.`,
+                text: `**Save Pending** — Workbench opened a save dialog that requires user confirmation. The world will be saved once the user clicks OK in Workbench. This is normal for worlds that haven't been saved before.${formatConnectionStatus(client)}`,
               },
             ],
           };
         }
         return {
-          content: [{ type: "text" as const, text: `Error saving: ${msg}` }],
+          content: [{ type: "text" as const, text: `Error saving: ${msg}${formatConnectionStatus(client)}` }],
         };
       }
     }
@@ -153,14 +166,14 @@ export function registerWbEditorTools(server: McpServer, client: WorkbenchClient
           content: [
             {
               type: "text" as const,
-              text: `**${label} Complete**${result.message ? `\n\n${result.message}` : ""}`,
+              text: `**${label} Complete**${result.message ? `\n\n${result.message}` : ""}${formatConnectionStatus(client)}`,
             },
           ],
         };
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         return {
-          content: [{ type: "text" as const, text: `Error performing ${action}: ${msg}` }],
+          content: [{ type: "text" as const, text: `Error performing ${action}: ${msg}${formatConnectionStatus(client)}` }],
         };
       }
     }
@@ -189,14 +202,14 @@ export function registerWbEditorTools(server: McpServer, client: WorkbenchClient
           content: [
             {
               type: "text" as const,
-              text: `**Resource Opened**\n\nOpened: ${path}${result.message ? `\n${result.message}` : ""}`,
+              text: `**Resource Opened**\n\nOpened: ${path}${result.message ? `\n${result.message}` : ""}${formatConnectionStatus(client)}`,
             },
           ],
         };
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         return {
-          content: [{ type: "text" as const, text: `Error opening resource: ${msg}` }],
+          content: [{ type: "text" as const, text: `Error opening resource: ${msg}${formatConnectionStatus(client)}` }],
         };
       }
     }

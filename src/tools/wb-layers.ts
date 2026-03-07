@@ -1,13 +1,16 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { WorkbenchClient } from "../workbench/client.js";
+import { formatConnectionStatus, requireEditMode } from "../workbench/status.js";
+
+const MUTATING_LAYER_ACTIONS = new Set(["create", "delete", "rename"]);
 
 export function registerWbLayers(server: McpServer, client: WorkbenchClient): void {
   server.registerTool(
     "wb_layers",
     {
       description:
-        "Manage layers in the World Editor. List layers, create/delete layers, rename, set active layer, toggle visibility, or lock/unlock layers.",
+        "Manage layers in the World Editor. List layers, create/delete layers, rename, set active layer, toggle visibility, or lock/unlock layers. Create/delete/rename only work in edit mode.",
       inputSchema: {
         action: z
           .enum([
@@ -44,6 +47,12 @@ export function registerWbLayers(server: McpServer, client: WorkbenchClient): vo
       },
     },
     async ({ action, subScene, layerPath, name, parentPath, visible }) => {
+      if (MUTATING_LAYER_ACTIONS.has(action)) {
+        const modeErr = requireEditMode(client, `${action} layer`);
+        if (modeErr) {
+          return { content: [{ type: "text" as const, text: modeErr + formatConnectionStatus(client) }] };
+        }
+      }
       try {
         const params: Record<string, unknown> = { action, subScene };
         if (layerPath) params.layerPath = layerPath;
@@ -57,7 +66,7 @@ export function registerWbLayers(server: McpServer, client: WorkbenchClient): vo
           const layers = Array.isArray(result.layers) ? result.layers : [];
           if (layers.length === 0) {
             return {
-              content: [{ type: "text" as const, text: "**No layers found.**" }],
+              content: [{ type: "text" as const, text: `**No layers found.**${formatConnectionStatus(client)}` }],
             };
           }
 
@@ -78,7 +87,7 @@ export function registerWbLayers(server: McpServer, client: WorkbenchClient): vo
             lines.push(`\nActive layer: **${result.activeLayer}**`);
           }
 
-          return { content: [{ type: "text" as const, text: lines.join("\n") }] };
+          return { content: [{ type: "text" as const, text: lines.join("\n") + formatConnectionStatus(client) }] };
         }
 
         const actionLabels: Record<string, string> = {
@@ -95,7 +104,7 @@ export function registerWbLayers(server: McpServer, client: WorkbenchClient): vo
           content: [
             {
               type: "text" as const,
-              text: `**Layer Updated**\n\n${actionLabels[action] || action}${result.message ? `\n${result.message}` : ""}`,
+              text: `**Layer Updated**\n\n${actionLabels[action] || action}${result.message ? `\n${result.message}` : ""}${formatConnectionStatus(client)}`,
             },
           ],
         };
@@ -103,7 +112,7 @@ export function registerWbLayers(server: McpServer, client: WorkbenchClient): vo
         const msg = e instanceof Error ? e.message : String(e);
         return {
           content: [
-            { type: "text" as const, text: `Error managing layers (${action}): ${msg}` },
+            { type: "text" as const, text: `Error managing layers (${action}): ${msg}${formatConnectionStatus(client)}` },
           ],
         };
       }

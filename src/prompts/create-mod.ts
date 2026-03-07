@@ -83,20 +83,22 @@ This file is the handoff document. A future Claude instance with zero context wi
   - Use **game_browse** to list game directories (merges loose files and .pak contents)
   - Use **game_read** to read any game file — scripts, prefabs, configs — directly from .pak archives
   - Use **api_search** to look up class definitions, methods, and properties
+  - Use **component_search** to find components to attach to entities — filter by category (character, vehicle, weapon, damage, inventory, ai, ui) or by event handlers they implement
 
-- **Wiki content is pre-downloaded** and available via the **wiki_search** tool. Do NOT try to fetch wiki pages from the web or reference URLs on the Bohemia Interactive Wiki. Use **wiki_search** for all tutorial and guide content about Enfusion engine concepts, scripting patterns, and Arma Reforger modding topics.
+- **Wiki content is pre-downloaded** and available via the **wiki_search** tool. Do NOT try to fetch wiki pages from the web or reference URLs on the Bohemia Interactive Wiki. Use **wiki_search** for all tutorial and guide content about Enfusion engine concepts, scripting patterns, and Arma Reforger modding topics. When you need the full page content (especially code examples), use **wiki_read** with the page title from the search results.
 
 ## CRITICAL: API VERIFICATION RULE
 
 **NEVER guess, assume, or invent Enfusion API method names.** The Enfusion scripting API is non-standard and poorly documented. Methods that seem obvious often do not exist (e.g., \`HitZone.SetHealth()\`, \`IEntity.GetVelocity()\`, \`AIWorld.GetAIGroups()\`).
 
 Before writing ANY script that calls an Enfusion API method, you MUST:
-1. Use **api_search** to find the class
-2. Read the method list in the results
+1. Use **api_search** to find the class — inherited methods from parent classes are included automatically, so one lookup is usually enough
+2. Read the method list in the results (includes both own and inherited methods)
 3. Only use methods that appear in the search results
-4. If the method you need doesn't exist, search for alternative classes or approaches
-5. For damage/health: use \`SCR_CharacterDamageManagerComponent.FullHeal()\`, NOT per-hitzone SetHealth
-6. For any class interaction: search the class first, read its methods, then write code
+4. If the method you need doesn't exist, search for alternative classes or approaches — check the **Related Classes** section for sibling classes in the same API group
+5. For enums/constants: use \`api_search(type: "enum")\` — this detects enum-like constant classes even when formal enum data is missing
+6. For damage/health: use \`SCR_CharacterDamageManagerComponent.FullHeal()\`, NOT per-hitzone SetHealth
+7. For any class interaction: search the class first, read its methods, then write code
 
 If you cannot find a method via api_search, it probably does not exist. Do NOT write code that calls unverified methods — it will fail to compile silently in Workbench.
 

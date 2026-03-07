@@ -79,15 +79,17 @@ export function parseClassPage(
 
   try {
   // Doxygen inheritance diagrams use (x, y) coords in the image map.
-  // The subject class is NOT in the map. Items above it (lower y) with
-  // the same x-position are ancestors. Items below with the same or
-  // adjacent x-position are direct children. Items at higher x are
-  // grandchildren.
+  // The subject class is NOT in the map.  Items above it (lower y) are
+  // ancestors; items below are descendants.
   //
-  // Strategy: collect all areas with their coords, find the y-gap
-  // where the subject class sits, then classify above=parents, below=children.
-  // Only include items at x=0 column as direct relationships; deeper-x items
-  // are indirect descendants we skip.
+  // The gap-based heuristic for finding the subject's y-position is fragile:
+  // when a class has no ancestors, all entries are descendants and the
+  // "largest gap" falls between direct children and grandchildren, causing
+  // direct children to be misclassified as parents.
+  //
+  // These map-derived relationships are best-effort and will be overridden
+  // by hierarchy.html data in the cross-reference step.  So we prioritize
+  // correctness of children (easy) over parents (hard).
   const mapAreas = $("map area");
   if (mapAreas.length > 0) {
     const entries: Array<{ alt: string; x1: number; y1: number }> = [];
@@ -102,51 +104,62 @@ export function parseClassPage(
     });
 
     if (entries.length > 0) {
-      // Sort by y position
       entries.sort((a, b) => a.y1 - b.y1);
 
-      // Find the y-gap: the subject class is NOT in the map. All areas
-      // are either ancestors (above) or descendants (below). We find
-      // the largest y-gap between consecutive entries to locate the split.
-      let gapY = -1;
+      // Find the minimum x-position (the "main column" — ancestors and direct children)
+      const minX = Math.min(...entries.map((e) => e.x1));
 
       if (entries.length === 1) {
-        // Single entry: if y is 0, it's a parent. Otherwise child.
-        if (entries[0].y1 === 0) {
+        // Single entry: if it's at y=0 and same x-column, likely a parent.
+        if (entries[0].y1 === 0 && entries[0].x1 <= minX + 10) {
           parents.push(entries[0].alt);
         } else {
           children.push(entries[0].alt);
         }
       } else {
-        // Find the largest gap between consecutive entries
-        let maxGap = 0;
-        let splitIdx = 0;
-        for (let i = 1; i < entries.length; i++) {
-          const gap = entries[i].y1 - entries[i - 1].y1;
-          if (gap > maxGap) {
-            maxGap = gap;
-            splitIdx = i;
+        // Find the largest y-gap between consecutive main-column entries.
+        // This gap is where the subject class sits in the diagram.
+        const mainCol = entries.filter((e) => e.x1 <= minX + 10);
+
+        let gapY = -1;
+        if (mainCol.length >= 2) {
+          let maxGap = 0;
+          let splitIdx = 0;
+          for (let i = 1; i < mainCol.length; i++) {
+            const gap = mainCol[i].y1 - mainCol[i - 1].y1;
+            if (gap > maxGap) {
+              maxGap = gap;
+              splitIdx = i;
+            }
+          }
+
+          // Sanity check: the gap should be noticeably larger than normal
+          // row spacing. If all entries are evenly spaced, there's no real
+          // gap — likely all entries are on one side (all descendants).
+          if (mainCol.length === 2) {
+            // With exactly 2 main-column entries, one is above the subject
+            // and one is below. The gap between them IS the subject position.
+            gapY = (mainCol[0].y1 + mainCol[1].y1) / 2;
+          } else {
+            const avgSpacing = (mainCol[mainCol.length - 1].y1 - mainCol[0].y1)
+              / (mainCol.length - 1);
+
+            if (maxGap > avgSpacing * 1.5 && splitIdx > 0) {
+              // Genuine gap found — entries before it are ancestors
+              gapY = (mainCol[splitIdx - 1].y1 + mainCol[splitIdx].y1) / 2;
+            }
+            // Otherwise: no clear gap — all entries are likely descendants.
+            // Leave parents empty; hierarchy.html will fill them in.
           }
         }
 
-        // The gap is between entries[splitIdx-1] and entries[splitIdx]
-        gapY = (entries[splitIdx - 1].y1 + entries[splitIdx].y1) / 2;
-
-        // Find the minimum x-position among entries below the gap
-        const belowEntries = entries.filter((e) => e.y1 > gapY);
-        const minChildX = belowEntries.length > 0
-          ? Math.min(...belowEntries.map((e) => e.x1))
-          : 0;
-
         for (const entry of entries) {
-          if (entry.y1 < gapY) {
+          if (gapY >= 0 && entry.y1 < gapY) {
             parents.push(entry.alt);
-          } else {
-            // Only include direct children (same x-column)
-            if (entry.x1 <= minChildX + 10) {
-              children.push(entry.alt);
-            }
+          } else if (entry.x1 <= minX + 10) {
+            children.push(entry.alt);
           }
+          // Skip indented entries (grandchildren): x1 > minX + 10
         }
       }
     }
@@ -600,29 +613,71 @@ function extractSourceFile($: cheerio.CheerioAPI): string {
 
 /**
  * Parse hierarchy.html to extract the class inheritance tree.
+ *
+ * Doxygen 1.13+ uses a `<table class="directory">` with row IDs encoding
+ * tree depth (e.g., `row_0_` = root, `row_0_1_` = child of root 0).
+ * Older Doxygen uses nested `<ul><li>` lists.  We support both.
  */
 export function parseHierarchyPage(html: string): HierarchyNode[] {
   const $ = cheerio.load(html);
   const nodes: Map<string, HierarchyNode> = new Map();
 
-  function processListItems(
-    items: cheerio.Cheerio<AnyNode>,
-    parentName: string | null
-  ) {
-    items.each((_i, li) => {
-      const $li = $(li);
-      // Get the direct text/link of this item (not nested children)
-      const link = $li.children("a.el, span > a.el").first();
-      const name = link.text().trim() || $li.children("span").first().text().trim();
+  // --- Strategy 1: Doxygen 1.13+ table-based hierarchy ---
+  const dirTable = $("table.directory");
+  if (dirTable.length) {
+    // Each row has id="row_X_Y_Z_" where the path encodes the tree position.
+    // The parent of row_X_Y_Z_ is row_X_Y_.
+    const idToName: Map<string, string> = new Map();
 
-      if (!name) return;
+    dirTable.find("tr[id^='row_']").each((_i, row) => {
+      const rowId = $(row).attr("id") || "";
+      const link = $(row).find("a.el").first();
+      const name = link.text().trim();
+      if (!name || !rowId) return;
+
+      idToName.set(rowId, name);
 
       // Ensure node exists
       if (!nodes.has(name)) {
         nodes.set(name, { name, children: [] });
       }
 
-      // Add as child of parent
+      // Derive parent row ID by stripping the last segment.
+      // "row_1_2_3_" → segments ["1","2","3"] → parent "row_1_2_"
+      const segments = rowId.replace(/^row_/, "").replace(/_$/, "").split("_");
+      if (segments.length > 1) {
+        const parentId = "row_" + segments.slice(0, -1).join("_") + "_";
+        const parentName = idToName.get(parentId);
+        if (parentName && nodes.has(parentName)) {
+          const parent = nodes.get(parentName)!;
+          if (!parent.children.includes(name)) {
+            parent.children.push(name);
+          }
+        }
+      }
+    });
+
+    if (nodes.size > 0) {
+      return Array.from(nodes.values());
+    }
+  }
+
+  // --- Strategy 2: Older Doxygen nested <ul><li> hierarchy ---
+  function processListItems(
+    items: cheerio.Cheerio<AnyNode>,
+    parentName: string | null
+  ) {
+    items.each((_i, li) => {
+      const $li = $(li);
+      const link = $li.children("a.el, span > a.el").first();
+      const name = link.text().trim() || $li.children("span").first().text().trim();
+
+      if (!name) return;
+
+      if (!nodes.has(name)) {
+        nodes.set(name, { name, children: [] });
+      }
+
       if (parentName && nodes.has(parentName)) {
         const parent = nodes.get(parentName)!;
         if (!parent.children.includes(name)) {
@@ -630,7 +685,6 @@ export function parseHierarchyPage(html: string): HierarchyNode[] {
         }
       }
 
-      // Process nested <ul> children
       const childList = $li.children("ul").children("li");
       if (childList.length > 0) {
         processListItems(childList, name);
@@ -638,12 +692,10 @@ export function parseHierarchyPage(html: string): HierarchyNode[] {
     });
   }
 
-  // The hierarchy is a nested list structure
   const topList = $("div.contents > div.directory ul").first();
   if (topList.length) {
     processListItems(topList.children("li"), null);
   } else {
-    // Fallback: try plain nested lists
     const altList = $("div.contents ul").first();
     if (altList.length) {
       processListItems(altList.children("li"), null);

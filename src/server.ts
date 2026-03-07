@@ -1,6 +1,8 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { registerApiSearch } from "./tools/api-search.js";
+import { registerComponentSearch } from "./tools/component-search.js";
 import { registerWikiSearch } from "./tools/wiki-search.js";
+import { registerWikiRead } from "./tools/wiki-read.js";
 import { registerProjectBrowse } from "./tools/project-browse.js";
 import { registerProjectRead } from "./tools/project-read.js";
 import { registerProjectWrite } from "./tools/project-write.js";
@@ -56,7 +58,9 @@ export function registerTools(server: McpServer, config: Config): void {
 
   // Phase 0 tools
   registerApiSearch(server, searchEngine);
+  registerComponentSearch(server, searchEngine);
   registerWikiSearch(server, searchEngine);
+  registerWikiRead(server, searchEngine);
   registerProjectBrowse(server, config);
 
   // Phase 1 tools

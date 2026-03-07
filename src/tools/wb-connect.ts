@@ -1,5 +1,6 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { WorkbenchClient } from "../workbench/client.js";
+import { formatConnectionStatus } from "../workbench/status.js";
 
 export function registerWbConnect(server: McpServer, client: WorkbenchClient): void {
   server.registerTool(
@@ -32,14 +33,14 @@ export function registerWbConnect(server: McpServer, client: WorkbenchClient): v
         if (details.mode) lines.push(`- **Mode:** ${details.mode}`);
         if (details.message) lines.push(`- **Info:** ${details.message}`);
 
-        return { content: [{ type: "text" as const, text: lines.join("\n") }] };
+        return { content: [{ type: "text" as const, text: lines.join("\n") + formatConnectionStatus(client) }] };
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         return {
           content: [
             {
               type: "text" as const,
-              text: `**Connection Failed**\n\n${msg}\n\nEnsure Workbench is running with NET API enabled (File > Options > General > Net API).`,
+              text: `**Connection Failed**\n\n${msg}\n\nEnsure Workbench is running with NET API enabled (File > Options > General > Net API).${formatConnectionStatus(client)}`,
             },
           ],
         };

@@ -8,7 +8,8 @@ export function registerWikiSearch(server: McpServer, searchEngine: SearchEngine
     {
       description:
         "Search pre-downloaded Bohemia Interactive Wiki (BIKI) content, tutorials, and guides about Enfusion engine concepts, scripting patterns, and Arma Reforger modding topics. " +
-        "Always use this tool instead of trying to access the wiki via the web — all wiki content is already available here.",
+        "Always use this tool instead of trying to access the wiki via the web — all wiki content is already available here. " +
+        "Results are previews — use wiki_read with the page title to get the full content including code examples.",
       inputSchema: {
         query: z
           .string()
@@ -49,13 +50,15 @@ export function registerWikiSearch(server: McpServer, searchEngine: SearchEngine
         lines.push(`Source: ${sourceLabel}${page.url ? ` — ${page.url}` : ""}`);
         lines.push("");
 
-        // For short pages show everything, for long ones show a truncated excerpt
-        const MAX_LENGTH = 2000;
+        // Show more content when only 1 result matches; otherwise truncate to preview length
+        const MAX_LENGTH = results.length === 1 ? 8000 : 2000;
         if (page.content.length <= MAX_LENGTH) {
           lines.push(page.content);
         } else {
           lines.push(page.content.slice(0, MAX_LENGTH));
-          lines.push(`\n... (truncated, ${page.content.length} chars total)`);
+          lines.push(
+            `\n... (truncated, ${page.content.length} chars total — use wiki_read to get the full page)`
+          );
         }
 
         return lines.join("\n");

@@ -1,13 +1,14 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { WorkbenchClient } from "../workbench/client.js";
+import { formatConnectionStatus, requireEditMode } from "../workbench/status.js";
 
 export function registerWbComponent(server: McpServer, client: WorkbenchClient): void {
   server.registerTool(
     "wb_component",
     {
       description:
-        "Manage components on an entity in the World Editor. Add, remove, or list components attached to an entity.",
+        "Manage components on an entity in the World Editor. Add, remove, or list components attached to an entity. Add/remove only work in edit mode.",
       inputSchema: {
         entityName: z.string().describe("Name of the target entity"),
         action: z
@@ -24,6 +25,12 @@ export function registerWbComponent(server: McpServer, client: WorkbenchClient):
       },
     },
     async ({ entityName, action, componentClass, componentIndex }) => {
+      if (action === "add" || action === "remove") {
+        const modeErr = requireEditMode(client, `${action} component`);
+        if (modeErr) {
+          return { content: [{ type: "text" as const, text: modeErr + formatConnectionStatus(client) }] };
+        }
+      }
       try {
         if ((action === "add" || action === "remove") && !componentClass) {
           return {
@@ -49,7 +56,7 @@ export function registerWbComponent(server: McpServer, client: WorkbenchClient):
               content: [
                 {
                   type: "text" as const,
-                  text: `**${entityName}** has no components.`,
+                  text: `**${entityName}** has no components.${formatConnectionStatus(client)}`,
                 },
               ],
             };
@@ -62,7 +69,7 @@ export function registerWbComponent(server: McpServer, client: WorkbenchClient):
             const props = comp.propertyCount ? ` (${comp.propertyCount} properties)` : "";
             lines.push(`${i}. **${className}**${props}`);
           }
-          return { content: [{ type: "text" as const, text: lines.join("\n") }] };
+          return { content: [{ type: "text" as const, text: lines.join("\n") + formatConnectionStatus(client) }] };
         }
 
         const actionLabel = action === "add" ? "Added" : "Removed";
@@ -70,7 +77,7 @@ export function registerWbComponent(server: McpServer, client: WorkbenchClient):
           content: [
             {
               type: "text" as const,
-              text: `**Component ${actionLabel}**\n\n- **Entity:** ${entityName}\n- **Component:** ${componentClass}${result.message ? `\n- **Note:** ${result.message}` : ""}`,
+              text: `**Component ${actionLabel}**\n\n- **Entity:** ${entityName}\n- **Component:** ${componentClass}${result.message ? `\n- **Note:** ${result.message}` : ""}${formatConnectionStatus(client)}`,
             },
           ],
         };
@@ -80,7 +87,7 @@ export function registerWbComponent(server: McpServer, client: WorkbenchClient):
           content: [
             {
               type: "text" as const,
-              text: `Error managing component on "${entityName}": ${msg}`,
+              text: `Error managing component on "${entityName}": ${msg}${formatConnectionStatus(client)}`,
             },
           ],
         };

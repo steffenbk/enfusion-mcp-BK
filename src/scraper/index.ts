@@ -107,25 +107,66 @@ function scrapeLocalSource(
   }
   logger.info(`Parsed ${wikiPages.length} tutorial pages from ${source}`);
 
-  // 6. Cross-reference hierarchy with classes to populate children arrays
-  // The hierarchy parsed from hierarchy.html gives us parent-child relationships
-  const childMap = new Map<string, string[]>();
+  // 6. Cross-reference hierarchy with class data.
+  //
+  // The hierarchy parsed from hierarchy.html is the authoritative source for
+  // inheritance relationships.  The <map><area> diagram parser in parseClassPage
+  // is a heuristic that frequently reverses parent/child direction (especially
+  // for root classes with no ancestors), so we override its results with
+  // hierarchy data whenever available.
+  const hChildMap = new Map<string, string[]>();  // parent → children
+  const hParentMap = new Map<string, string[]>(); // child → parents
+
   for (const node of hierarchy) {
     for (const child of node.children) {
-      if (!childMap.has(node.name)) {
-        childMap.set(node.name, []);
+      // parent → child
+      if (!hChildMap.has(node.name)) hChildMap.set(node.name, []);
+      hChildMap.get(node.name)!.push(child);
+
+      // child → parent (inverted)
+      if (!hParentMap.has(child)) hParentMap.set(child, []);
+      if (!hParentMap.get(child)!.includes(node.name)) {
+        hParentMap.get(child)!.push(node.name);
       }
-      childMap.get(node.name)!.push(child);
     }
   }
 
-  // Update classes that have no children from the diagram but have them in hierarchy
+  const classesInHierarchy = new Set([...hChildMap.keys(), ...hParentMap.keys()]);
+
   for (const cls of classes) {
-    const hierarchyChildren = childMap.get(cls.name);
-    if (hierarchyChildren && cls.children.length === 0) {
-      cls.children = hierarchyChildren;
+    if (classesInHierarchy.has(cls.name)) {
+      // Hierarchy data is authoritative — override map-derived relationships
+      cls.parents = hParentMap.get(cls.name) ?? [];
+      cls.children = hChildMap.get(cls.name) ?? [];
     }
+    // Classes not in the hierarchy keep their map-derived data (best-effort).
   }
+
+  // 7. Validate: detect and fix circular parent references.
+  //    If A.parents includes B AND B.parents includes A, one direction is wrong.
+  //    Remove the less-likely direction.
+  const classMap = new Map(classes.map((c) => [c.name, c]));
+  for (const cls of classes) {
+    cls.parents = cls.parents.filter((parentName) => {
+      const parentCls = classMap.get(parentName);
+      if (!parentCls) return true; // keep refs to unknown classes
+      if (parentCls.parents.includes(cls.name)) {
+        // Circular reference detected. Use heuristic: SCR_X extends X, not vice versa.
+        // Also: a class with MORE descendants is more likely the parent.
+        const clsIsScr = cls.name.startsWith("SCR_") && !parentName.startsWith("SCR_");
+        if (clsIsScr) return true; // SCR_X extends X — this direction is correct
+        const parentIsScr = parentName.startsWith("SCR_") && !cls.name.startsWith("SCR_");
+        if (parentIsScr) return false; // X says parent is SCR_X — wrong
+        // For non-SCR pairs, keep the one where parent has more children
+        return (parentCls.children.length >= cls.children.length);
+      }
+      return true;
+    });
+  }
+
+  logger.info(
+    `Hierarchy cross-reference: ${classesInHierarchy.size} classes updated from hierarchy data`
+  );
 
   return { classes, groups, hierarchy, wikiPages };
 }

@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { dirname } from "node:path";
 import type { WorkbenchClient } from "../workbench/client.js";
+import { formatConnectionStatus } from "../workbench/status.js";
 
 export function registerWbLaunch(
   server: McpServer,
@@ -44,7 +45,7 @@ export function registerWbLaunch(
             content: [
               {
                 type: "text" as const,
-                text: "**Workbench Already Running** — NET API is responding. All `wb_*` tools are available.",
+                text: `**Workbench Already Running** — NET API is responding. All \`wb_*\` tools are available.${formatConnectionStatus(client)}`,
               },
             ],
           };
@@ -62,7 +63,7 @@ export function registerWbLaunch(
           content: [
             {
               type: "text" as const,
-              text: `**Workbench Ready** — Launched, handler scripts installed, NET API responding. All \`wb_*\` tools are available.${note}`,
+              text: `**Workbench Ready** — Launched, handler scripts installed, NET API responding. All \`wb_*\` tools are available.${note}${formatConnectionStatus(client)}`,
             },
           ],
         };
@@ -72,7 +73,7 @@ export function registerWbLaunch(
           content: [
             {
               type: "text" as const,
-              text: `**Launch Failed**\n\n${msg}`,
+              text: `**Launch Failed**\n\n${msg}${formatConnectionStatus(client)}`,
             },
           ],
         };
@@ -102,7 +103,7 @@ export function registerWbLaunch(
           content: [
             {
               type: "text" as const,
-              text: "**Cleanup Complete** — EnfusionMCP handler scripts removed from the mod. The mod is ready to publish.",
+              text: `**Cleanup Complete** — EnfusionMCP handler scripts removed from the mod. The mod is ready to publish.${formatConnectionStatus(client)}`,
             },
           ],
         };
@@ -111,7 +112,7 @@ export function registerWbLaunch(
         content: [
           {
             type: "text" as const,
-            text: "**No Cleanup Needed** — Handler scripts were not present in the mod directory.",
+            text: `**No Cleanup Needed** — Handler scripts were not present in the mod directory.${formatConnectionStatus(client)}`,
           },
         ],
       };

@@ -1,13 +1,16 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { WorkbenchClient } from "../workbench/client.js";
+import { formatConnectionStatus, requireEditMode } from "../workbench/status.js";
+
+const MUTATING_PREFAB_ACTIONS = new Set(["createTemplate", "save"]);
 
 export function registerWbPrefabs(server: McpServer, client: WorkbenchClient): void {
   server.registerTool(
     "wb_prefabs",
     {
       description:
-        "Prefab operations in the Workbench. Create entity templates, save prefab changes, look up prefab GUIDs, or locate prefabs by path.",
+        "Prefab operations in the Workbench. Create entity templates, save prefab changes, look up prefab GUIDs, or locate prefabs by path. createTemplate/save only work in edit mode.",
       inputSchema: {
         action: z
           .enum(["createTemplate", "save", "getGuid", "locate", "getAncestor"])
@@ -29,6 +32,12 @@ export function registerWbPrefabs(server: McpServer, client: WorkbenchClient): v
       },
     },
     async ({ action, entityName, templatePath, searchPath }) => {
+      if (MUTATING_PREFAB_ACTIONS.has(action)) {
+        const modeErr = requireEditMode(client, `${action === "createTemplate" ? "create template" : "save prefab"}`);
+        if (modeErr) {
+          return { content: [{ type: "text" as const, text: modeErr + formatConnectionStatus(client) }] };
+        }
+      }
       try {
         if (action === "getGuid") {
           if (!templatePath && !searchPath) {
@@ -50,7 +59,7 @@ export function registerWbPrefabs(server: McpServer, client: WorkbenchClient): v
             content: [
               {
                 type: "text" as const,
-                text: `**Prefab GUID**\n\n- **Path:** ${templatePath || searchPath}\n- **GUID:** ${result.guid || result.GUID || "(not found)"}`,
+                text: `**Prefab GUID**\n\n- **Path:** ${templatePath || searchPath}\n- **GUID:** ${result.guid || result.GUID || "(not found)"}${formatConnectionStatus(client)}`,
               },
             ],
           };
@@ -78,7 +87,7 @@ export function registerWbPrefabs(server: McpServer, client: WorkbenchClient): v
               content: [
                 {
                   type: "text" as const,
-                  text: `**No prefabs found** in: ${searchPath}`,
+                  text: `**No prefabs found** in: ${searchPath}${formatConnectionStatus(client)}`,
                 },
               ],
             };
@@ -93,7 +102,7 @@ export function registerWbPrefabs(server: McpServer, client: WorkbenchClient): v
               lines.push(`- ${pObj.path || pObj.name || JSON.stringify(pObj)}`);
             }
           }
-          return { content: [{ type: "text" as const, text: lines.join("\n") }] };
+          return { content: [{ type: "text" as const, text: lines.join("\n") + formatConnectionStatus(client) }] };
         }
 
         if (action === "getAncestor") {
@@ -133,7 +142,7 @@ export function registerWbPrefabs(server: McpServer, client: WorkbenchClient): v
             content: [
               {
                 type: "text" as const,
-                text: `**Template Created**\n\n- **Entity:** ${entityName}\n- **Path:** ${templatePath || result.path || "(auto)"}${result.guid ? `\n- **GUID:** ${result.guid}` : ""}`,
+                text: `**Template Created**\n\n- **Entity:** ${entityName}\n- **Path:** ${templatePath || result.path || "(auto)"}${result.guid ? `\n- **GUID:** ${result.guid}` : ""}${formatConnectionStatus(client)}`,
               },
             ],
           };
@@ -144,7 +153,7 @@ export function registerWbPrefabs(server: McpServer, client: WorkbenchClient): v
           content: [
             {
               type: "text" as const,
-              text: `**Prefab Saved**\n\n- **Entity:** ${entityName}${result.message ? `\n- **Note:** ${result.message}` : ""}`,
+              text: `**Prefab Saved**\n\n- **Entity:** ${entityName}${result.message ? `\n- **Note:** ${result.message}` : ""}${formatConnectionStatus(client)}`,
             },
           ],
         };
@@ -154,7 +163,7 @@ export function registerWbPrefabs(server: McpServer, client: WorkbenchClient): v
           content: [
             {
               type: "text" as const,
-              text: `Error with prefab operation (${action}): ${msg}`,
+              text: `Error with prefab operation (${action}): ${msg}${formatConnectionStatus(client)}`,
             },
           ],
         };

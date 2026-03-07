@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { WorkbenchClient } from "../workbench/client.js";
+import { formatConnectionStatus } from "../workbench/status.js";
 
 export function registerWbScriptEditor(server: McpServer, client: WorkbenchClient): void {
   server.registerTool(
@@ -80,7 +81,7 @@ export function registerWbScriptEditor(server: McpServer, client: WorkbenchClien
             content: [
               {
                 type: "text" as const,
-                text: `**Current Script File:** ${filePath}`,
+                text: `**Current Script File:** ${filePath}${formatConnectionStatus(client)}`,
               },
             ],
           };
@@ -92,7 +93,7 @@ export function registerWbScriptEditor(server: McpServer, client: WorkbenchClien
             content: [
               {
                 type: "text" as const,
-                text: `**Line ${line}:**\n\`\`\`\n${lineText}\n\`\`\``,
+                text: `**Line ${line}:**\n\`\`\`\n${lineText}\n\`\`\`${formatConnectionStatus(client)}`,
               },
             ],
           };
@@ -104,7 +105,7 @@ export function registerWbScriptEditor(server: McpServer, client: WorkbenchClien
             content: [
               {
                 type: "text" as const,
-                text: `**Line Count:** ${count}`,
+                text: `**Line Count:** ${count}${formatConnectionStatus(client)}`,
               },
             ],
           };
@@ -115,7 +116,7 @@ export function registerWbScriptEditor(server: McpServer, client: WorkbenchClien
             content: [
               {
                 type: "text" as const,
-                text: `**Line ${line} Updated**\n\nNew content:\n\`\`\`\n${text}\n\`\`\``,
+                text: `**Line ${line} Updated**\n\nNew content:\n\`\`\`\n${text}\n\`\`\`${formatConnectionStatus(client)}`,
               },
             ],
           };
@@ -126,7 +127,7 @@ export function registerWbScriptEditor(server: McpServer, client: WorkbenchClien
             content: [
               {
                 type: "text" as const,
-                text: `**Line Inserted** at position ${line}\n\nContent:\n\`\`\`\n${text}\n\`\`\``,
+                text: `**Line Inserted** at position ${line}\n\nContent:\n\`\`\`\n${text}\n\`\`\`${formatConnectionStatus(client)}`,
               },
             ],
           };
@@ -137,7 +138,7 @@ export function registerWbScriptEditor(server: McpServer, client: WorkbenchClien
             content: [
               {
                 type: "text" as const,
-                text: `**Line ${line} Removed**${result.text ? `\n\nRemoved content:\n\`\`\`\n${result.text}\n\`\`\`` : ""}`,
+                text: `**Line ${line} Removed**${result.text ? `\n\nRemoved content:\n\`\`\`\n${result.text}\n\`\`\`` : ""}${formatConnectionStatus(client)}`,
               },
             ],
           };
@@ -148,7 +149,7 @@ export function registerWbScriptEditor(server: McpServer, client: WorkbenchClien
             content: [
               {
                 type: "text" as const,
-                text: `**Opened:** ${path}`,
+                text: `**Opened:** ${path}${formatConnectionStatus(client)}`,
               },
             ],
           };
@@ -158,7 +159,7 @@ export function registerWbScriptEditor(server: McpServer, client: WorkbenchClien
           content: [
             {
               type: "text" as const,
-              text: JSON.stringify(result, null, 2),
+              text: JSON.stringify(result, null, 2) + formatConnectionStatus(client),
             },
           ],
         };
@@ -168,7 +169,7 @@ export function registerWbScriptEditor(server: McpServer, client: WorkbenchClien
           content: [
             {
               type: "text" as const,
-              text: `Error in script editor (${action}): ${msg}`,
+              text: `Error in script editor (${action}): ${msg}${formatConnectionStatus(client)}`,
             },
           ],
         };

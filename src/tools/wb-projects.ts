@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { WorkbenchClient } from "../workbench/client.js";
+import { formatConnectionStatus } from "../workbench/status.js";
 
 export function registerWbProjects(server: McpServer, client: WorkbenchClient): void {
   server.registerTool(
@@ -41,7 +42,7 @@ export function registerWbProjects(server: McpServer, client: WorkbenchClient): 
             content: [
               {
                 type: "text" as const,
-                text: `**Project Opened**\n\nLoaded: ${name}${result.message ? `\n${result.message}` : ""}`,
+                text: `**Project Opened**\n\nLoaded: ${name}${result.message ? `\n${result.message}` : ""}${formatConnectionStatus(client)}`,
               },
             ],
           };
@@ -68,7 +69,7 @@ export function registerWbProjects(server: McpServer, client: WorkbenchClient): 
             content: [
               {
                 type: "text" as const,
-                text: `**Project Located**\n\n- **Name:** ${name}\n- **Path:** ${path}${result.guid ? `\n- **GUID:** ${result.guid}` : ""}`,
+                text: `**Project Located**\n\n- **Name:** ${name}\n- **Path:** ${path}${result.guid ? `\n- **GUID:** ${result.guid}` : ""}${formatConnectionStatus(client)}`,
               },
             ],
           };
@@ -86,7 +87,7 @@ export function registerWbProjects(server: McpServer, client: WorkbenchClient): 
         if (projects.length === 0) {
           return {
             content: [
-              { type: "text" as const, text: "**No projects loaded** in Workbench." },
+              { type: "text" as const, text: `**No projects loaded** in Workbench.${formatConnectionStatus(client)}` },
             ],
           };
         }
@@ -104,14 +105,14 @@ export function registerWbProjects(server: McpServer, client: WorkbenchClient): 
           }
         }
 
-        return { content: [{ type: "text" as const, text: lines.join("\n") }] };
+        return { content: [{ type: "text" as const, text: lines.join("\n") + formatConnectionStatus(client) }] };
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         return {
           content: [
             {
               type: "text" as const,
-              text: `Error querying projects (${action}): ${msg}`,
+              text: `Error querying projects (${action}): ${msg}${formatConnectionStatus(client)}`,
             },
           ],
         };

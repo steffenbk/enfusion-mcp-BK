@@ -8,7 +8,15 @@ import type {
 } from "../index/search-engine.js";
 import type { ClassInfo } from "../index/types.js";
 
-function formatClassResult(cls: ClassInfo, verbose = true): string {
+interface InheritedContext {
+  methods: MethodSearchResult[];
+  properties: PropertySearchResult[];
+  enums: EnumSearchResult[];
+  parentClassNames: string[];
+  totalAncestorCount: number;
+}
+
+function formatClassResult(cls: ClassInfo, verbose = true, inherited?: InheritedContext, siblingClassNames?: string[]): string {
   const lines: string[] = [];
   lines.push(`## ${cls.name}`);
   lines.push(`Source: ${cls.source === "enfusion" ? "Enfusion Engine" : "Arma Reforger"} API`);
@@ -117,6 +125,74 @@ function formatClassResult(cls: ClassInfo, verbose = true): string {
     }
   }
 
+  // Inherited members from parent classes
+  if (verbose && inherited && inherited.methods.length + inherited.properties.length + inherited.enums.length > 0) {
+    const shownCount = inherited.parentClassNames.length;
+    const moreNote =
+      inherited.totalAncestorCount > shownCount
+        ? ` (showing ${shownCount} of ${inherited.totalAncestorCount} ancestor classes)`
+        : "";
+    lines.push("");
+    lines.push(`### Inherited Members${moreNote}`);
+    lines.push(`From: ${inherited.parentClassNames.join(", ")}`);
+
+    // Group methods by parent class
+    const methodsByClass = new Map<string, MethodSearchResult[]>();
+    for (const m of inherited.methods) {
+      let arr = methodsByClass.get(m.className);
+      if (!arr) {
+        arr = [];
+        methodsByClass.set(m.className, arr);
+      }
+      arr.push(m);
+    }
+
+    for (const parentName of inherited.parentClassNames) {
+      const parentMethods = methodsByClass.get(parentName) || [];
+      if (parentMethods.length === 0) continue;
+      lines.push("");
+      lines.push(`#### ${parentName}`);
+      for (const m of parentMethods) {
+        lines.push(`- ${m.method.signature}`);
+      }
+    }
+
+    // Inherited properties (compact)
+    if (inherited.properties.length > 0) {
+      lines.push("");
+      lines.push(`#### Inherited Properties`);
+      const shown = inherited.properties.slice(0, 20);
+      for (const p of shown) {
+        lines.push(`- ${p.property.type} **${p.property.name}** *(from ${p.className})*`);
+      }
+      if (inherited.properties.length > 20) {
+        lines.push(`  ... and ${inherited.properties.length - 20} more`);
+      }
+    }
+
+    // Inherited enums (compact)
+    if (inherited.enums.length > 0) {
+      lines.push("");
+      lines.push(`#### Inherited Enums`);
+      for (const e of inherited.enums) {
+        lines.push(`- **${e.enumInfo.name}** *(from ${e.className})*`);
+      }
+    }
+  }
+
+  // Related classes in the same API group
+  if (verbose && siblingClassNames && siblingClassNames.length > 0) {
+    lines.push("");
+    lines.push(`### Related Classes in Group`);
+    const shown = siblingClassNames.slice(0, 15);
+    for (const name of shown) {
+      lines.push(`- ${name}`);
+    }
+    if (siblingClassNames.length > 15) {
+      lines.push(`  ... and ${siblingClassNames.length - 15} more`);
+    }
+  }
+
   if (cls.sourceFile) {
     lines.push("");
     lines.push(`Source file: ${cls.sourceFile}`);
@@ -153,7 +229,9 @@ function formatEnumResult(results: EnumSearchResult[]): string {
   for (let i = 0; i < results.length; i++) {
     const r = results[i];
     const sourceLabel = r.classSource === "enfusion" ? "Enfusion Engine" : "Arma Reforger";
-    lines.push(`${i + 1}. **${r.enumInfo.name}** (in ${r.className})`);
+    const isEnumLike = r.enumInfo.description.startsWith("[Enum-like class]");
+    const label = isEnumLike ? "enum-like class" : `in ${r.className}`;
+    lines.push(`${i + 1}. **${r.enumInfo.name}** (${label})`);
     if (r.enumInfo.description) {
       lines.push(`   ${r.enumInfo.description}`);
     }
@@ -171,6 +249,85 @@ function formatEnumResult(results: EnumSearchResult[]): string {
       }
     }
     lines.push("");
+  }
+
+  return lines.join("\n");
+}
+
+export const MAX_TREE_CHILDREN = 20;
+
+export function formatTreeNode(cls: ClassInfo | undefined, name: string, isTarget: boolean): string {
+  if (!cls) return `${name} (?)${isTarget ? "  ◀ TARGET" : ""}`;
+
+  const methodCount =
+    (cls.methods?.length || 0) +
+    (cls.protectedMethods?.length || 0) +
+    (cls.staticMethods?.length || 0);
+  const propCount =
+    (cls.properties?.length || 0) +
+    (cls.protectedProperties?.length || 0);
+  const counts = `${methodCount}m, ${propCount}p`;
+  let brief = "";
+  if (cls.brief) {
+    brief = cls.brief.length > 60 ? ` — ${cls.brief.slice(0, 57)}...` : ` — ${cls.brief}`;
+  }
+  const marker = isTarget ? "  ◀ TARGET" : "";
+  return `${cls.name} (${counts})${brief}${marker}`;
+}
+
+export function formatClassTree(targetClass: ClassInfo, searchEngine: SearchEngine): string {
+  const lines: string[] = [];
+  lines.push(`Class Hierarchy: ${targetClass.name}`);
+  lines.push("");
+
+  // Get the primary inheritance chain (root → ... → target)
+  const chain = searchEngine.getInheritanceChain(targetClass.name);
+
+  // Render ancestors as a linear chain
+  for (let i = 0; i < chain.length; i++) {
+    const name = chain[i];
+    const cls = searchEngine.getClass(name);
+    const isTarget = name === targetClass.name;
+    const nodeText = formatTreeNode(cls, name, isTarget);
+    if (i === 0) {
+      lines.push(nodeText);
+    } else {
+      const indent = "    ".repeat(i - 1);
+      lines.push(`${indent}└── ${nodeText}`);
+    }
+  }
+
+  // Render immediate children below the target
+  const children = targetClass.children || [];
+  if (children.length > 0) {
+    const depth = chain.length - 1; // indent level for children
+    const indent = "    ".repeat(depth);
+    const shown = children.slice(0, MAX_TREE_CHILDREN);
+    for (let i = 0; i < shown.length; i++) {
+      const childName = shown[i];
+      const childCls = searchEngine.getClass(childName);
+      const isLast = i === shown.length - 1 && children.length <= MAX_TREE_CHILDREN;
+      const connector = isLast ? "└── " : "├── ";
+      lines.push(`${indent}${connector}${formatTreeNode(childCls, childName, false)}`);
+    }
+    if (children.length > MAX_TREE_CHILDREN) {
+      lines.push(`${indent}└── ... and ${children.length - MAX_TREE_CHILDREN} more`);
+    }
+  }
+
+  // Note secondary parents (multi-inheritance)
+  if (targetClass.parents.length > 1) {
+    const secondary = targetClass.parents.slice(1);
+    lines.push("");
+    lines.push(`Also inherits from: ${secondary.join(", ")}`);
+  }
+
+  // Footer
+  lines.push("");
+  const sourceLabel = targetClass.source === "enfusion" ? "Enfusion Engine" : "Arma Reforger";
+  lines.push(`Source: ${sourceLabel} API`);
+  if (targetClass.docsUrl) {
+    lines.push(`Docs: ${targetClass.docsUrl}`);
   }
 
   return lines.join("\n");
@@ -199,7 +356,7 @@ export function registerApiSearch(server: McpServer, searchEngine: SearchEngine)
     "api_search",
     {
       description:
-        "Search the Enfusion / Arma Reforger script API by class name, method name, or keyword. Use this to look up classes, methods, inheritance, and component types.",
+        "Search the Enfusion / Arma Reforger script API by class name, method name, or keyword. Results automatically include inherited methods from parent classes, detect enum-like constant classes (use type: 'enum'), and show related sibling classes from the same API group. Use format: 'tree' with class searches to visualize the full inheritance hierarchy as an ASCII tree. For component-specific searches (finding what to attach to entities), use the component_search tool for more targeted filtering by category and event handlers.",
       inputSchema: {
         query: z
           .string()
@@ -218,17 +375,44 @@ export function registerApiSearch(server: McpServer, searchEngine: SearchEngine)
           .max(50)
           .default(10)
           .describe("Maximum results to return"),
+        format: z
+          .enum(["detailed", "tree"])
+          .default("detailed")
+          .describe("Output format: 'detailed' (default markdown) or 'tree' (ASCII inheritance tree, class searches only)"),
       },
     },
-    async ({ query, type, source, limit }) => {
+    async ({ query, type, source, limit, format }) => {
       let text: string;
 
       if (type === "class") {
         const results = searchEngine.searchClasses(query, source, limit);
         if (results.length === 0) {
           text = `No classes found matching "${query}".`;
+        } else if (format === "tree") {
+          text = formatClassTree(results[0], searchEngine);
+          if (results.length > 1) {
+            const others = results.slice(1, 5).map((c) => `- ${c.name}`).join("\n");
+            text += `\n\n---\nOther matches:\n${others}`;
+            if (results.length > 5) {
+              text += `\n... and ${results.length - 5} more`;
+            }
+          }
         } else if (results.length === 1) {
-          text = formatClassResult(results[0], true);
+          const cls = results[0];
+          let inheritedCtx: InheritedContext | undefined;
+          if (cls.parents.length > 0) {
+            const chain = searchEngine.getInheritanceChain(cls.name);
+            const inherited = searchEngine.getInheritedMembersLimited(cls.name, 3);
+            inheritedCtx = { ...inherited, totalAncestorCount: chain.length - 1 };
+          }
+          let siblings: string[] | undefined;
+          if (cls.group) {
+            const group = searchEngine.getGroup(cls.group);
+            if (group) {
+              siblings = group.classes.filter((name) => name !== cls.name);
+            }
+          }
+          text = formatClassResult(cls, true, inheritedCtx, siblings);
         } else {
           text = results.map((cls) => formatClassResult(cls, false)).join("\n\n---\n\n");
         }
@@ -257,11 +441,42 @@ export function registerApiSearch(server: McpServer, searchEngine: SearchEngine)
         const results = searchEngine.searchAny(query, source, limit);
         if (results.length === 0) {
           text = `No results found for "${query}".`;
+        } else if (format === "tree" && results[0].type === "class" && results[0].classInfo) {
+          text = formatClassTree(results[0].classInfo, searchEngine);
+          if (results.length > 1) {
+            const others = results.slice(1, 5).map((r) => {
+              if (r.type === "class" && r.classInfo) return `- ${r.classInfo.name} (class)`;
+              if (r.type === "method" && r.methodResult) return `- ${r.methodResult.className}.${r.methodResult.method.name} (method)`;
+              if (r.type === "enum" && r.enumResult) return `- ${r.enumResult.enumInfo.name} (enum)`;
+              if (r.type === "property" && r.propertyResult) return `- ${r.propertyResult.className}.${r.propertyResult.property.name} (property)`;
+              return "";
+            }).filter(Boolean).join("\n");
+            if (others) {
+              text += `\n\n---\nOther matches:\n${others}`;
+              if (results.length > 5) {
+                text += `\n... and ${results.length - 5} more`;
+              }
+            }
+          }
         } else {
           const parts: string[] = [];
           for (const r of results) {
             if (r.type === "class" && r.classInfo) {
-              parts.push(formatClassResult(r.classInfo, results.length === 1));
+              const verbose = results.length === 1;
+              let inheritedCtx: InheritedContext | undefined;
+              if (verbose && r.classInfo.parents.length > 0) {
+                const chain = searchEngine.getInheritanceChain(r.classInfo.name);
+                const inherited = searchEngine.getInheritedMembersLimited(r.classInfo.name, 3);
+                inheritedCtx = { ...inherited, totalAncestorCount: chain.length - 1 };
+              }
+              let siblings: string[] | undefined;
+              if (verbose && r.classInfo.group) {
+                const group = searchEngine.getGroup(r.classInfo.group);
+                if (group) {
+                  siblings = group.classes.filter((name) => name !== r.classInfo!.name);
+                }
+              }
+              parts.push(formatClassResult(r.classInfo, verbose, inheritedCtx, siblings));
             } else if (r.type === "method" && r.methodResult) {
               const mr = r.methodResult;
               const sourceLabel = mr.classSource === "enfusion" ? "Enfusion" : "Arma Reforger";

@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { WorkbenchClient } from "../workbench/client.js";
+import { formatConnectionStatus } from "../workbench/status.js";
 
 export function registerWbResources(server: McpServer, client: WorkbenchClient): void {
   server.registerTool(
@@ -52,7 +53,7 @@ export function registerWbResources(server: McpServer, client: WorkbenchClient):
             }
           }
 
-          return { content: [{ type: "text" as const, text: lines.join("\n") }] };
+          return { content: [{ type: "text" as const, text: lines.join("\n") + formatConnectionStatus(client) }] };
         }
 
         // register, rebuild, open all use EMCP_WB_Resources
@@ -71,7 +72,7 @@ export function registerWbResources(server: McpServer, client: WorkbenchClient):
           content: [
             {
               type: "text" as const,
-              text: `**${actionLabels[action]}**${result.message ? `\n\n${result.message}` : ""}`,
+              text: `**${actionLabels[action]}**${result.message ? `\n\n${result.message}` : ""}${formatConnectionStatus(client)}`,
             },
           ],
         };
@@ -81,7 +82,7 @@ export function registerWbResources(server: McpServer, client: WorkbenchClient):
           content: [
             {
               type: "text" as const,
-              text: `Error managing resource "${path}" (${action}): ${msg}`,
+              text: `Error managing resource "${path}" (${action}): ${msg}${formatConnectionStatus(client)}`,
             },
           ],
         };
