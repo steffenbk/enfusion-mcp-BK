@@ -41,6 +41,7 @@ import { registerWbValidate } from "./tools/wb-validate.js";
 import { registerWbState } from "./tools/wb-state.js";
 import { registerGameBrowse } from "./tools/game-browse.js";
 import { registerGameRead } from "./tools/game-read.js";
+import { registerPrefabInspect } from "./tools/prefab-inspect.js";
 import { registerAssetSearch } from "./tools/asset-search.js";
 import { registerGameDuplicate } from "./tools/game-duplicate.js";
 import { registerWbEntityDuplicate } from "./tools/wb-entity-duplicate.js";
@@ -107,6 +108,7 @@ export function registerTools(server: McpServer, config: Config): void {
   // Base game access tools
   registerGameBrowse(server, config);
   registerGameRead(server, config);
+  registerPrefabInspect(server, config);
   registerAssetSearch(server, config);
   registerGameDuplicate(server, config, wbClient);
   registerWbEntityDuplicate(server, config, wbClient);
