@@ -133,7 +133,7 @@ After implementing any upgrade, complete **all** of the following before marking
 
 ---
 
-### 9. Config Validation (Beyond Parse Check)
+### ~~9. Config Validation (Beyond Parse Check)~~ ✅ Done in v0.6.5
 
 **What**: Extend config validation in `mod_validate` to check that class names referenced in `.conf` files actually exist in the API index, and that required fields for known config types (faction configs, entity catalogs, etc.) are present.
 
@@ -177,7 +177,7 @@ After implementing any upgrade, complete **all** of the following before marking
 
 ## Tier 2: Medium Effort, High Impact
 
-### 12. Fuzzy Search with Typo Tolerance + Trigram Matching
+### ~~12. Fuzzy Search with Typo Tolerance + Trigram Matching~~ ✅ Done in v0.6.5
 
 > *Merged from: "Semantic Search via Trigram Index" (List 1) + "Fuzzy Search with Typo Tolerance" (List 2)*
 
@@ -209,7 +209,7 @@ After implementing any upgrade, complete **all** of the following before marking
 
 ---
 
-### 14. `script_create` Should Auto-Fetch Parent Methods
+### ~~14. `script_create` Should Auto-Fetch Parent Methods~~ ✅ Done in v0.6.5
 
 **What**: When `script_create` is called with a `parentClass`, automatically look up the parent class in the search engine and populate the method stubs with the actual overridable methods (virtual/protected) from the parent, instead of relying on hardcoded lists like `GAMEMODE_METHODS` and `COMPONENT_METHODS`.
 

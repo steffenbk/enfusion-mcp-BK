@@ -104,7 +104,7 @@ Work without Workbench running — API search, mod scaffolding, code generation,
 | `project_read` | Read any project file |
 | `project_write` | Write or update project files |
 | `mod_create` | Scaffold a complete addon with directory structure and `.gproj` |
-| `script_create` | Generate Enforce Script (`.c`) files — 7 types: component, gamemode, action, entity, manager, modded, basic |
+| `script_create` | Generate Enforce Script (`.c`) files — 7 types: component, gamemode, action, entity, manager, modded, basic. Auto-fetches overridable parent methods from API index when `parentClass` is specified |
 | `prefab_create` | Generate Entity Template (`.et`) prefabs — 7 types: character, vehicle, weapon, spawnpoint, gamemode, interactive, generic |
 | `layout_create` | Generate UI layout (`.layout`) files — 5 types: hud, menu, dialog, list, custom |
 | `config_create` | Generate config files — factions, missions, entity catalogs, editor placeables |
