@@ -97,6 +97,19 @@ export function registerScenarioTools(server: McpServer, client: WorkbenchClient
       const placed: string[] = [];
       const propWarnings: string[] = [];
 
+      async function cleanupPlaced(): Promise<string[]> {
+        const cleaned: string[] = [];
+        for (const entityName of placed) {
+          try {
+            await client.call("EMCP_WB_DeleteEntity", { name: entityName });
+            cleaned.push(entityName);
+          } catch {
+            // Entity might not exist if creation itself failed
+          }
+        }
+        return cleaned;
+      }
+
       // setProperty: propertyPath = component class, propertyKey = property name.
       // Returns false (not an error) when the component class is unresolvable in the current
       // Workbench project context (e.g. base-game-only compiled classes). Collect as warnings.
@@ -210,6 +223,7 @@ export function registerScenarioTools(server: McpServer, client: WorkbenchClient
 
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
+        const cleaned = await cleanupPlaced();
         return {
           content: [{
             type: "text" as const,
@@ -217,9 +231,9 @@ export function registerScenarioTools(server: McpServer, client: WorkbenchClient
               `**scenario_create_objective failed**`,
               `Error: ${msg}`,
               ``,
-              placed.length > 0
-                ? `Entities already placed (clean up manually or delete them):\n${placed.map(n => `  - ${n}`).join("\n")}`
-                : "No entities were placed.",
+              cleaned.length > 0
+                ? `Cleaned up ${cleaned.length} entities: ${cleaned.join(", ")}`
+                : "No entities needed cleanup.",
             ].join("\n"),
           }],
         };
