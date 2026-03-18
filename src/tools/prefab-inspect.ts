@@ -5,6 +5,7 @@ import { join } from "node:path";
 import type { Config } from "../config.js";
 import { PakVirtualFS } from "../pak/vfs.js";
 import { resolveGameDataPath, findLooseFile } from "../utils/game-paths.js";
+import { logger } from "../utils/logger.js";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -91,7 +92,7 @@ function readEtFile(path: string, config: Config, projectPath?: string): string 
   if (base) {
     const direct = join(base, bare);
     if (existsSync(direct)) {
-      try { return readFileSync(direct, "utf-8"); } catch { /* fall through */ }
+      try { return readFileSync(direct, "utf-8"); } catch (e) { logger.debug(`Failed to read ${direct}: ${e}`); }
     }
     // Check one level of addon subdirectories
     try {
@@ -99,17 +100,17 @@ function readEtFile(path: string, config: Config, projectPath?: string): string 
         if (!entry.isDirectory()) continue;
         const candidate = join(base, entry.name, bare);
         if (existsSync(candidate)) {
-          try { return readFileSync(candidate, "utf-8"); } catch { /* continue */ }
+          try { return readFileSync(candidate, "utf-8"); } catch (e) { logger.debug(`Failed to read ${candidate}: ${e}`); }
         }
       }
-    } catch { /* ignore if base not readable */ }
+    } catch (e) { logger.debug(`Cannot read addon dir ${base}: ${e}`); }
   }
 
   // 2. Extracted files
   if (config.extractedPath) {
     const found = findLooseFile(config.extractedPath, bare);
     if (found) {
-      try { return readFileSync(found, "utf-8"); } catch { /* fall through */ }
+      try { return readFileSync(found, "utf-8"); } catch (e) { logger.debug(`Failed to read extracted ${found}: ${e}`); }
     }
   }
 
@@ -118,14 +119,14 @@ function readEtFile(path: string, config: Config, projectPath?: string): string 
   if (gameDataPath) {
     const found = findLooseFile(gameDataPath, bare);
     if (found) {
-      try { return readFileSync(found, "utf-8"); } catch { /* fall through */ }
+      try { return readFileSync(found, "utf-8"); } catch (e) { logger.debug(`Failed to read loose ${found}: ${e}`); }
     }
   }
 
   // 4. Pak VFS
   const pakVfs = PakVirtualFS.get(config.gamePath);
   if (pakVfs && pakVfs.exists(bare)) {
-    try { return pakVfs.readTextFile(bare); } catch { /* fall through */ }
+    try { return pakVfs.readTextFile(bare); } catch (e) { logger.debug(`Failed to read pak ${bare}: ${e}`); }
   }
 
   return null;

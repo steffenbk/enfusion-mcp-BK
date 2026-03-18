@@ -120,13 +120,21 @@ function scrapeLocalSource(
   for (const node of hierarchy) {
     for (const child of node.children) {
       // parent → child
-      if (!hChildMap.has(node.name)) hChildMap.set(node.name, []);
-      hChildMap.get(node.name)!.push(child);
+      let children = hChildMap.get(node.name);
+      if (!children) {
+        children = [];
+        hChildMap.set(node.name, children);
+      }
+      children.push(child);
 
       // child → parent (inverted)
-      if (!hParentMap.has(child)) hParentMap.set(child, []);
-      if (!hParentMap.get(child)!.includes(node.name)) {
-        hParentMap.get(child)!.push(node.name);
+      let parents = hParentMap.get(child);
+      if (!parents) {
+        parents = [];
+        hParentMap.set(child, parents);
+      }
+      if (!parents.includes(node.name)) {
+        parents.push(node.name);
       }
     }
   }

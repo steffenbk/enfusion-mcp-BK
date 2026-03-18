@@ -244,7 +244,8 @@ export function registerAssetSearch(server: McpServer, config: Config): void {
 
           // Score by filename match (not full path — filename is most relevant)
           const pathLower = entry.path.toLowerCase();
-          const filename = entry.path.split("/").pop()!.toLowerCase();
+          const segments = entry.path.split("/");
+          const filename = (segments[segments.length - 1] ?? "").toLowerCase();
 
           let score = 0;
           if (filename === q || filename === `${q}.${entry.ext}`) {

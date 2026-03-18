@@ -27,6 +27,8 @@ const WORKBENCH_SUBDIR = "Workbench";
 const HANDLER_FOLDER = "EnfusionMCP";
 const LAUNCH_POLL_INTERVAL_MS = 3_000;
 const LAUNCH_TIMEOUT_MS = 90_000;
+/** Delay after killing Workbench before relaunching, to let the port release. */
+const KILL_SETTLE_MS = 3_000;
 
 export type WorkbenchMode = "edit" | "play" | "unknown";
 
@@ -146,17 +148,20 @@ export class WorkbenchClient {
       throw new WorkbenchError("No config provided — cannot auto-launch Workbench.", "LAUNCH_FAILED");
     }
 
+    // Deduplicate concurrent calls — all callers await the same promise
     if (this.launchPromise) {
       return this.launchPromise;
     }
 
-    this.launchPromise = this.launchWorkbench(gprojPath);
+    const promise = this.launchWorkbench(gprojPath).finally(() => {
+      // Only clear if this is still the active promise (guards against re-entrant calls)
+      if (this.launchPromise === promise) {
+        this.launchPromise = null;
+      }
+    });
 
-    try {
-      await this.launchPromise;
-    } finally {
-      this.launchPromise = null;
-    }
+    this.launchPromise = promise;
+    return promise;
   }
 
   /**
@@ -247,7 +252,7 @@ export class WorkbenchClient {
     this.killWorkbench();
 
     // Brief delay to ensure the process fully exits and releases the port
-    await new Promise((r) => setTimeout(r, 2_000));
+    await new Promise((r) => setTimeout(r, KILL_SETTLE_MS));
 
     // Relaunch and wait for NET API + handler scripts to compile
     await this.launchWorkbench(gprojPath || undefined);
@@ -288,11 +293,12 @@ export class WorkbenchClient {
     // 3. Find executable
     const exePath = this.findWorkbenchExe();
     if (!exePath) {
+      const wbPath = this.config?.workbenchPath ?? "(not configured)";
       throw new WorkbenchError(
         `Cannot find ${WORKBENCH_EXE}. Install Arma Reforger Tools from Steam, ` +
           `or set ENFUSION_WORKBENCH_PATH. Searched:\n` +
-          `  - ${join(this.config!.workbenchPath, WORKBENCH_SUBDIR, WORKBENCH_EXE)}\n` +
-          `  - ${join(this.config!.workbenchPath, WORKBENCH_EXE)}`,
+          `  - ${join(wbPath, WORKBENCH_SUBDIR, WORKBENCH_EXE)}\n` +
+          `  - ${join(wbPath, WORKBENCH_EXE)}`,
         "LAUNCH_FAILED"
       );
     }
@@ -333,10 +339,11 @@ export class WorkbenchClient {
   }
 
   private findWorkbenchExe(): string | null {
-    const subPath = join(this.config!.workbenchPath, WORKBENCH_SUBDIR, WORKBENCH_EXE);
+    if (!this.config) return null;
+    const subPath = join(this.config.workbenchPath, WORKBENCH_SUBDIR, WORKBENCH_EXE);
     if (existsSync(subPath)) return subPath;
 
-    const rootPath = join(this.config!.workbenchPath, WORKBENCH_EXE);
+    const rootPath = join(this.config.workbenchPath, WORKBENCH_EXE);
     if (existsSync(rootPath)) return rootPath;
 
     return null;
@@ -348,7 +355,8 @@ export class WorkbenchClient {
    */
   private findFallbackGproj(): string | null {
     try {
-      const addonsDir = this.config!.projectPath;
+      const addonsDir = this.config?.projectPath;
+      if (!addonsDir) return null;
       if (!existsSync(addonsDir)) return null;
       for (const entry of readdirSync(addonsDir, { withFileTypes: true })) {
         if (!entry.isDirectory()) continue;
@@ -376,7 +384,8 @@ export class WorkbenchClient {
       return envGamePath;
     }
 
-    const toolsDir = this.config!.workbenchPath;
+    if (!this.config) return null;
+    const toolsDir = this.config.workbenchPath;
     // workbenchPath may be "Arma Reforger Tools" or "Arma Reforger Tools\Workbench"
     const candidates = [
       resolve(toolsDir, "..", "Arma Reforger"),
@@ -406,7 +415,12 @@ export class WorkbenchClient {
       return;
     }
 
-    const targetBase = modDir || join(this.config!.projectPath, HANDLER_FOLDER);
+    const fallbackBase = this.config?.projectPath;
+    if (!modDir && !fallbackBase) {
+      logger.warn("No modDir or projectPath configured — cannot install handler scripts.");
+      return;
+    }
+    const targetBase = modDir || join(fallbackBase!, HANDLER_FOLDER);
     const targetScriptsDir = join(targetBase, "Scripts", "WorkbenchGame", HANDLER_FOLDER);
 
     // Already installed? Skip unless force-reinstalling (e.g. recovery after missing handlers)

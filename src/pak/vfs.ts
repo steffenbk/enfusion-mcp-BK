@@ -37,6 +37,12 @@ export class PakVirtualFS {
   /** Merged directory tree for browsing */
   private root: PakDirEntry = { kind: "dir", name: "", children: new Map() };
 
+  /** Clear the cached VFS instance, forcing a fresh rebuild on next get(). */
+  static invalidate(): void {
+    PakVirtualFS.instance = null;
+    PakVirtualFS.instanceGamePath = null;
+  }
+
   /**
    * Get or create the singleton VFS for the given game path.
    * Returns null if no .pak files are found.

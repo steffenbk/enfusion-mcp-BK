@@ -63,7 +63,6 @@ export function registerWbPrefabs(server: McpServer, client: WorkbenchClient): v
                 text: `**Prefab GUID**\n\n- **Path:** ${templatePath || searchPath}\n- **GUID:** ${result.guid || result.GUID || "(not found)"}${formatConnectionStatus(client)}`,
               },
             ],
-            isError: true,
           };
         }
 
@@ -120,7 +119,6 @@ export function registerWbPrefabs(server: McpServer, client: WorkbenchClient): v
               type: "text" as const,
               text: `**Ancestor Prefab**\n\n- **Entity:** ${entityName}\n- **Ancestor:** ${result.ancestorPath || "(none)"}`,
             }],
-          isError: true,
           };
         }
 

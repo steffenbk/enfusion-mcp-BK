@@ -49,12 +49,15 @@ const DEFAULTS: Config = {
 
 function loadJsonFile(path: string): Partial<Config> {
   try {
-    if (existsSync(path)) {
-      const raw = readFileSync(path, "utf-8");
-      return JSON.parse(raw) as Partial<Config>;
-    }
+    if (!existsSync(path)) return {};
+    const raw = readFileSync(path, "utf-8");
+    return JSON.parse(raw) as Partial<Config>;
   } catch (e) {
-    logger.warn(`Failed to load config from ${path}: ${e}`);
+    // Distinguish read errors from parse errors so users can fix malformed JSON
+    const detail = e instanceof SyntaxError
+      ? `invalid JSON: ${e.message}`
+      : String(e);
+    logger.warn(`Failed to load config from ${path}: ${detail}`);
   }
   return {};
 }

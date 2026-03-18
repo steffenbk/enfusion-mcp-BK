@@ -339,7 +339,7 @@ class Parser {
         const after = this.peek();
         if (after && after.type === TokenType.OpenBrace) {
           // Quoted type name node (rare but possible)
-          this.pos--;
+          if (this.pos > 0) this.pos--;
           const child = this.parseNode();
           node.children.push(child);
         } else {

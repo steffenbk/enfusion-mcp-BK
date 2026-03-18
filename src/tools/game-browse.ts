@@ -7,6 +7,7 @@ import { validateProjectPath } from "../utils/safe-path.js";
 import { PakVirtualFS } from "../pak/vfs.js";
 import { resolveGameDataPath } from "../utils/game-paths.js";
 import { listDirectory, getFileType, formatSize } from "../utils/dir-listing.js";
+import { logger } from "../utils/logger.js";
 
 export function registerGameBrowse(server: McpServer, config: Config): void {
   server.registerTool(
@@ -75,7 +76,9 @@ export function registerGameBrowse(server: McpServer, config: Config): void {
               });
             }
           }
-        } catch { /* pak VFS unavailable — continue with loose files only */ }
+        } catch (e) {
+          logger.debug(`PAK VFS unavailable for game_browse: ${e}`);
+        }
 
         // Re-sort after merging
         entries.sort((a, b) => {

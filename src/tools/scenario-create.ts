@@ -1,6 +1,6 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { mkdirSync, writeFileSync, existsSync } from "node:fs";
+import { mkdirSync, writeFileSync, existsSync, unlinkSync } from "node:fs";
 import { resolve, join } from "node:path";
 import type { Config } from "../config.js";
 import {
@@ -196,13 +196,23 @@ export function registerScenarioCreate(server: McpServer, config: Config): void 
             };
           }
 
-          writeFileSync(confPath,        output.missionConf,  "utf-8");
-          writeFileSync(entPath,         output.worldEnt,     "utf-8");
-          writeFileSync(defaultLayPath,  output.defaultLayer, "utf-8");
-          writeFileSync(basesLayPath,    output.basesLayer,   "utf-8");
-          writeFileSync(defendersLayPath, output.defendersLayer, "utf-8");
-          if (output.cahLayer)             writeFileSync(cahLayPath,      output.cahLayer,      "utf-8");
-          if (output.ambientVehiclesLayer) writeFileSync(vehiclesLayPath, output.ambientVehiclesLayer, "utf-8");
+          // Write all files with rollback on partial failure
+          const writtenPaths: string[] = [];
+          try {
+            writeFileSync(confPath,        output.missionConf,  "utf-8"); writtenPaths.push(confPath);
+            writeFileSync(entPath,         output.worldEnt,     "utf-8"); writtenPaths.push(entPath);
+            writeFileSync(defaultLayPath,  output.defaultLayer, "utf-8"); writtenPaths.push(defaultLayPath);
+            writeFileSync(basesLayPath,    output.basesLayer,   "utf-8"); writtenPaths.push(basesLayPath);
+            writeFileSync(defendersLayPath, output.defendersLayer, "utf-8"); writtenPaths.push(defendersLayPath);
+            if (output.cahLayer)             { writeFileSync(cahLayPath,      output.cahLayer,      "utf-8"); writtenPaths.push(cahLayPath); }
+            if (output.ambientVehiclesLayer) { writeFileSync(vehiclesLayPath, output.ambientVehiclesLayer, "utf-8"); writtenPaths.push(vehiclesLayPath); }
+          } catch (writeErr) {
+            // Rollback: remove any files we already wrote to avoid partial scenarios
+            for (const p of writtenPaths) {
+              try { unlinkSync(p); } catch { /* best-effort cleanup */ }
+            }
+            throw writeErr;
+          }
 
           const factions = [...new Set(bases.map(b => b.faction))];
           const writtenFiles = [

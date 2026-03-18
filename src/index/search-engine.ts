@@ -195,14 +195,19 @@ export class SearchEngine {
 
     // Build component index: collect all ScriptComponent descendants
     // Use multiple strategies since scraped inheritance chains are often broken
-    const componentNames = new Set<string>();
+    const componentKeys = new Set<string>();
 
     // Strategy 1: Walk descendants from known component base classes
     for (const baseName of ["ScriptComponent", "GenericComponent", "GameComponent", "ScriptGameComponent"]) {
       if (this.classByName.has(baseName.toLowerCase())) {
         const tree = this.getClassTree(baseName);
         for (const name of tree.descendants) {
-          componentNames.add(name.toLowerCase());
+          const key = name.toLowerCase();
+          if (!componentKeys.has(key)) {
+            componentKeys.add(key);
+            const cls = this.classByName.get(key);
+            if (cls) this.componentIndex.push(cls);
+          }
         }
       }
     }
@@ -210,13 +215,12 @@ export class SearchEngine {
     // Strategy 2: Name-based heuristic — classes ending in "Component" but not "ComponentClass"
     for (const cls of allClasses) {
       if (cls.name.endsWith("Component") && !cls.name.endsWith("ComponentClass")) {
-        componentNames.add(cls.name.toLowerCase());
+        const key = cls.name.toLowerCase();
+        if (!componentKeys.has(key)) {
+          componentKeys.add(key);
+          this.componentIndex.push(cls);
+        }
       }
-    }
-
-    for (const key of componentNames) {
-      const cls = this.classByName.get(key);
-      if (cls) this.componentIndex.push(cls);
     }
 
     this.loaded = true;
