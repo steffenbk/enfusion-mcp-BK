@@ -56,8 +56,12 @@ async function setEntityProp(
   value: string,
 ): Promise<void> {
   const dot = componentDotProp.lastIndexOf(".");
-  const propertyPath = componentDotProp.slice(0, dot);
-  const propertyKey  = componentDotProp.slice(dot + 1);
+  const propertyPath = dot === -1 ? "" : componentDotProp.slice(0, dot);
+  let propertyKey    = dot === -1 ? componentDotProp : componentDotProp.slice(dot + 1);
+  // Strip surrounding quotes from property key (Enfusion file format uses "faction affiliation" style keys)
+  if (propertyKey.startsWith('"') && propertyKey.endsWith('"')) {
+    propertyKey = propertyKey.slice(1, -1);
+  }
   const res = await client.call<Record<string, unknown>>("EMCP_WB_ModifyEntity", {
     action: "setProperty", name: entityName, propertyPath, propertyKey, value,
   });
@@ -271,8 +275,14 @@ export function registerScenarioTools(server: McpServer, client: WorkbenchClient
   // ---------------------------------------------------------------------------
 
   const CONFLICT_BASE_PREFAB   = "{2BCE96CD93121D01}Prefabs/Systems/MilitaryBase/ConflictBase_Base.et";
-  const CONFLICT_PATROL_PREFAB = "{1E4C8AD00BBB16AA}Prefabs/Systems/AmbientPatrol/AmbientPatrolSpawnpoint_Base.et";
   const CONFLICT_SPAWN_PREFAB  = "{E7F4D5562F48DDE4}Prefabs/MP/Spawning/SpawnPoint_Base.et";
+
+  // Faction-specific patrol prefabs (faction affiliation pre-baked — no property setting needed)
+  // FIA has a known faction-specific GUID; US/USSR use base + property set via fixed setEntityProp
+  const PATROL_PREFAB_BY_FACTION: Record<string, string> = {
+    FIA: "{9273AB931008C271}Prefabs/Systems/AmbientPatrol/AmbientPatrolSpawnpoint_FIA.et",
+  };
+  const CONFLICT_PATROL_PREFAB_DEFAULT = "{1E4C8AD00BBB16AA}Prefabs/Systems/AmbientPatrol/AmbientPatrolSpawnpoint_Base.et";
 
   // Patrol offsets relative to base position (x, z)
   const PATROL_OFFSETS = [[30,0],[-30,0],[0,30],[0,-30],[25,25],[-25,-25]] as [number,number][];
@@ -354,22 +364,28 @@ export function registerScenarioTools(server: McpServer, client: WorkbenchClient
         }
 
         // 3. Place patrol spawnpoints around base
+        // Use faction-specific prefab where available (faction pre-baked), otherwise base + property set
+        const patrolPrefab = PATROL_PREFAB_BY_FACTION[faction] ?? CONFLICT_PATROL_PREFAB_DEFAULT;
+        const needsFactionProp = !(faction in PATROL_PREFAB_BY_FACTION);
         const count = Math.min(Math.max(patrolCount, 0), 6);
         const patrolNames: string[] = [];
         for (let i = 0; i < count; i++) {
           const [ox, oz] = PATROL_OFFSETS[i]!;
           const patrolPos = `${px + ox} ${py} ${pz + oz}`;
           const patrolName = `${baseName}_Patrol_${i + 1}`;
-          await client.call("EMCP_WB_CreateEntity", { prefab: CONFLICT_PATROL_PREFAB, name: patrolName, position: patrolPos });
+          await client.call("EMCP_WB_CreateEntity", { prefab: patrolPrefab, name: patrolName, position: patrolPos });
           placed.push(patrolName);
           patrolNames.push(patrolName);
-          await setEntityProp(client, propWarnings,patrolName, 'SCR_FactionAffiliationComponent."faction affiliation"', faction);
+          if (needsFactionProp) {
+            await setEntityProp(client, propWarnings, patrolName, 'SCR_FactionAffiliationComponent."faction affiliation"', faction);
+          }
         }
 
         // 4. Place spawn point
         await client.call("EMCP_WB_CreateEntity", { prefab: CONFLICT_SPAWN_PREFAB, name: names.spawnPoint, position: resolvedPosition });
         placed.push(names.spawnPoint);
-        await setEntityProp(client, propWarnings,names.spawnPoint, "SCR_SpawnPoint.m_sFaction", faction);
+        // m_sFaction is a root entity property on SCR_SpawnPoint, not inside a component
+        await setEntityProp(client, propWarnings, names.spawnPoint, "m_sFaction", faction);
 
         const lines = [
           `**Conflict base created: ${baseName}**`,
