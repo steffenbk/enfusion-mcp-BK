@@ -1,7 +1,7 @@
 /**
  * EMCP_WB_Resources.c - Resource operations handler
  *
- * Actions: register, rebuild, open
+ * Actions: register, rebuild, open, browse
  * Uses the ResourceManager Workbench module.
  * Called via NET API TCP protocol: APIFunc = "EMCP_WB_Resources"
  */
@@ -20,12 +20,21 @@ class EMCP_WB_ResourcesRequest : JsonApiStruct
 	}
 }
 
+class EMCP_WB_ResourceEntry
+{
+	string m_sName;
+	string m_sPath;
+	string m_sType;
+}
+
 class EMCP_WB_ResourcesResponse : JsonApiStruct
 {
 	string status;
 	string message;
 	string action;
 	string path;
+	int entryCount;
+	ref array<ref EMCP_WB_ResourceEntry> m_aEntries;
 
 	void EMCP_WB_ResourcesResponse()
 	{
@@ -33,6 +42,26 @@ class EMCP_WB_ResourcesResponse : JsonApiStruct
 		RegV("message");
 		RegV("action");
 		RegV("path");
+		RegV("entryCount");
+		m_aEntries = {};
+	}
+
+	override void OnPack()
+	{
+		if (m_aEntries.Count() > 0)
+		{
+			StartArray("entries");
+			for (int i = 0; i < m_aEntries.Count(); i++)
+			{
+				EMCP_WB_ResourceEntry e = m_aEntries[i];
+				StartObject("");
+				StoreString("name", e.m_sName);
+				StoreString("path", e.m_sPath);
+				StoreString("type", e.m_sType);
+				EndObject();
+			}
+			EndArray();
+		}
 	}
 }
 
@@ -89,10 +118,57 @@ class EMCP_WB_Resources : NetApiHandler
 			else
 				resp.message = "SetOpenedResource returned false for: " + req.path;
 		}
+		else if (req.action == "browse")
+		{
+			array<string> foundPaths = {};
+
+			// RUNTIME_VERIFY: Workbench.SearchResources(prefix, outArray) must be confirmed at compile time.
+			// Alternative: resMgr may expose a search method instead.
+			Workbench.SearchResources(req.path, foundPaths);
+
+			int total = foundPaths.Count();
+			resp.entryCount = total;
+
+			if (total == 0)
+			{
+				resp.status = "ok";
+				resp.message = "No resources found matching: " + req.path;
+				return resp;
+			}
+
+			int cap = total;
+			if (cap > 200) cap = 200;
+
+			for (int i = 0; i < cap; i++)
+			{
+				string fullPath = foundPaths[i];
+
+				// Extract filename from path
+				array<string> segments = {};
+				fullPath.Split("/", segments, false);
+				string filename = (segments.Count() == 0) ? fullPath : segments[segments.Count() - 1];
+
+				// Detect extension as type
+				// RUNTIME_VERIFY: string.LastIndexOf may not exist in EnforceScript; using IndexOf as fallback.
+				string ext = "";
+				int dotIdx = filename.IndexOf(".");
+				if (dotIdx >= 0)
+					ext = filename.Substring(dotIdx + 1, filename.Length() - dotIdx - 1);
+
+				EMCP_WB_ResourceEntry entry = new EMCP_WB_ResourceEntry();
+				entry.m_sName = filename;
+				entry.m_sPath = fullPath;
+				entry.m_sType = ext;
+				resp.m_aEntries.Insert(entry);
+			}
+
+			resp.status = "ok";
+			resp.message = "Found " + total.ToString() + " resources" + (total > 200 ? " (capped at 200)" : "");
+		}
 		else
 		{
 			resp.status = "error";
-			resp.message = "Unknown action: " + req.action + ". Valid: register, rebuild, open";
+			resp.message = "Unknown action: " + req.action + ". Valid: register, rebuild, open, browse";
 		}
 
 		return resp;

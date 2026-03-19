@@ -11,13 +11,15 @@ export function registerWbResources(server: McpServer, client: WorkbenchClient):
         "Manage Workbench resources. Register new resources, rebuild resource databases, get resource info, or open a resource in its editor.",
       inputSchema: {
         action: z
-          .enum(["register", "rebuild", "getInfo", "open"])
+          .enum(["register", "rebuild", "getInfo", "open", "browse"])
           .describe(
-            "Action: register (add resource to DB), rebuild (regenerate resource DB), getInfo (resource metadata), open (open in editor)"
+            "Action: register (add resource to DB), rebuild (regenerate resource DB), getInfo (resource metadata), open (open in editor), browse (list resources by path prefix)"
           ),
         path: z
           .string()
-          .describe("Resource path (e.g., 'Prefabs/Weapons/AK47.et', 'Models/Vehicle.xob')"),
+          .describe(
+            "Resource path or path prefix. Required for all actions. For browse: use a prefix like 'Prefabs/Characters/' to find matching resources."
+          ),
         buildRuntime: z
           .boolean()
           .optional()
@@ -32,6 +34,27 @@ export function registerWbResources(server: McpServer, client: WorkbenchClient):
           if (modeErr) {
             return { content: [{ type: "text" as const, text: modeErr + formatConnectionStatus(client) }] };
           }
+        }
+
+        if (action === "browse") {
+          const result = await client.call<Record<string, unknown>>("EMCP_WB_Resources", { action, path });
+          const entries = Array.isArray(result.entries) ? result.entries : [];
+          const total = typeof result.entryCount === "number" ? result.entryCount : entries.length;
+
+          if (entries.length === 0) {
+            return {
+              content: [{ type: "text" as const, text: `**No resources found** matching \`${path}\`\n\n${result.message || ""}${formatConnectionStatus(client)}` }],
+            };
+          }
+          const lines = [`**Resources matching \`${path}\`** (${entries.length} of ${total})\n`];
+          for (const entry of entries) {
+            const e = entry as Record<string, unknown>;
+            lines.push(`- \`${e.path}\` *(${e.type || "?"})*`);
+          }
+          if (total > entries.length) {
+            lines.push(`\n*${total - entries.length} more not shown (cap 200).*`);
+          }
+          return { content: [{ type: "text" as const, text: lines.join("\n") + formatConnectionStatus(client) }] };
         }
 
         if (action === "getInfo") {
