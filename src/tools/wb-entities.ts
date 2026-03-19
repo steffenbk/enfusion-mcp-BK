@@ -335,7 +335,7 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
           return {
             content: [{
               type: "text" as const,
-              text: `**Transform: ${name}**\n\n- **Position:** ${pos?.value || "(unknown)"}\n- **Rotation:** ${rot?.value || "(unknown)"}${formatConnectionStatus(client)}`,
+              text: `**Transform: ${name}**\n\n- **Position:** ${(pos?.value as string | undefined)?.trim() || "(unknown)"}\n- **Rotation:** ${(rot?.value as string | undefined)?.trim() || "(unknown)"}${formatConnectionStatus(client)}`,
             }],
           };
         }
@@ -353,7 +353,7 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
           ];
           for (const p of props) {
             const prop = p as Record<string, unknown>;
-            lines.push(`| ${prop.name} | ${prop.value || ""} |`);
+            lines.push(`| ${prop.name ?? "(unnamed)"} | ${prop.value || ""} |`);
           }
           return { content: [{ type: "text" as const, text: lines.join("\n") + formatConnectionStatus(client) }] };
         }

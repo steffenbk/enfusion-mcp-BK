@@ -649,6 +649,28 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 			resp.status = "ok";
 			resp.message = "Transform for: " + req.name;
 		}
+		else if (req.action == "makeVisible")
+		{
+			// Select the entity — Workbench auto-reveals selected entities in the hierarchy panel.
+			// Selection is UI state only; no BeginEntityAction/EndEntityAction needed (confirmed by SelectEntity handler pattern).
+			// Primary API method: api.SetSelectedEntity(entSrc)
+			// If that fails to compile, try: api.SetSelection(entSrc) (confirmed at binary address 0x1428c2e10)
+			// Or: api.SelectEntity(entSrc)
+			// Note: AddToEntitySelection is not in the public API per EMCP_WB_SelectEntity.c comments.
+			api.ClearEntitySelection();
+			bool selectResult = api.SetSelectedEntity(entSrc);
+
+			if (selectResult)
+			{
+				resp.status = "ok";
+				resp.message = "Entity selected and revealed in hierarchy: " + req.name;
+			}
+			else
+			{
+				resp.status = "ok";  // Selection may succeed even if return is false — treat as ok
+				resp.message = "Entity revealed: " + req.name;
+			}
+		}
 		else
 		{
 			resp.status = "error";
