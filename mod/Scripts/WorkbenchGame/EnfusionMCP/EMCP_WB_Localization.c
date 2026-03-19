@@ -38,6 +38,7 @@ class EMCP_WB_LocalizationResponse : JsonApiStruct
 	string itemId;
 	int tableItemCount;
 	ref array<ref EMCP_WB_LocalizationEntry> m_aEntries;
+	ref array<string> m_aLanguages;
 
 	void EMCP_WB_LocalizationResponse()
 	{
@@ -47,6 +48,7 @@ class EMCP_WB_LocalizationResponse : JsonApiStruct
 		RegV("itemId");
 		RegV("tableItemCount");
 		m_aEntries = {};
+		m_aLanguages = {};
 	}
 
 	override void OnPack()
@@ -63,6 +65,16 @@ class EMCP_WB_LocalizationResponse : JsonApiStruct
 				StoreString("target", e.m_sTarget);
 				StoreString("comment", e.m_sComment);
 				EndObject();
+			}
+			EndArray();
+		}
+
+		if (m_aLanguages.Count() > 0)
+		{
+			StartArray("languages");
+			for (int i = 0; i < m_aLanguages.Count(); i++)
+			{
+				StoreString("", m_aLanguages[i]);
 			}
 			EndArray();
 		}
@@ -221,6 +233,36 @@ class EMCP_WB_Localization : NetApiHandler
 			resp.status = "ok";
 			resp.message = "String table has " + childCount.ToString() + " items" +
 				(childCount > 500 ? " (capped at 500)" : "");
+		}
+		else if (req.action == "listLanguages")
+		{
+			BaseContainer table = locEditor.GetTable();
+			if (!table || table.GetNumChildren() == 0)
+			{
+				resp.status = "ok";
+				resp.message = "No entries in table — cannot detect languages";
+				return resp;
+			}
+
+			BaseContainer firstEntry = table.GetChild(0);
+			if (!firstEntry)
+			{
+				resp.status = "error";
+				resp.message = "Could not read first entry";
+				return resp;
+			}
+
+			// Language columns match pattern: 5 chars, index 2 is underscore (e.g. en_us, fr_fr)
+			int varCount = firstEntry.GetNumVars();
+			for (int v = 0; v < varCount; v++)
+			{
+				string varName = firstEntry.GetVarName(v);
+				if (varName.Length() == 5 && varName.Substring(2, 1) == "_")
+					resp.m_aLanguages.Insert(varName);
+			}
+
+			resp.status = "ok";
+			resp.message = "Found " + resp.m_aLanguages.Count().ToString() + " language columns";
 		}
 		else
 		{

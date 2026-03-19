@@ -11,9 +11,9 @@ export function registerWbLocalization(server: McpServer, client: WorkbenchClien
         "Manage localization entries in the Workbench Localization Editor. Insert, delete, or modify string table entries, or get the full localization table.",
       inputSchema: {
         action: z
-          .enum(["insert", "delete", "modify", "getTable"])
+          .enum(["insert", "delete", "modify", "getTable", "listLanguages"])
           .describe(
-            "Action: insert (add new entry), delete (remove entry), modify (update entry), getTable (list all entries)"
+            "Action: insert (add new entry), delete (remove entry), modify (update entry), getTable (list all entries), listLanguages (list available language columns)"
           ),
         itemId: z
           .string()
@@ -95,10 +95,26 @@ export function registerWbLocalization(server: McpServer, client: WorkbenchClien
           return { content: [{ type: "text" as const, text: lines.join("\n") + formatConnectionStatus(client) }] };
         }
 
+        if (action === "listLanguages") {
+          const langs = Array.isArray(result.languages) ? result.languages : [];
+          if (langs.length === 0) {
+            return {
+              content: [{ type: "text" as const, text: `**No language columns detected.**\n\n${result.message || ""}${formatConnectionStatus(client)}` }],
+            };
+          }
+          return {
+            content: [{
+              type: "text" as const,
+              text: `**Language Columns** (${langs.length})\n\n${(langs as unknown[]).map((l) => `- ${l}`).join("\n")}${formatConnectionStatus(client)}`,
+            }],
+          };
+        }
+
         const actionLabels: Record<string, string> = {
           insert: `Inserted localization entry: **${itemId}**`,
           delete: `Deleted localization entry: **${itemId}**`,
           modify: `Modified **${itemId}**.${property} = "${value || ""}"`,
+          listLanguages: "Listed language columns",
         };
 
         return {
