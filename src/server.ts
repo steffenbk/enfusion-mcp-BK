@@ -52,6 +52,7 @@ import { registerAnimationGraphInspect } from "./tools/animation-graph-inspect.j
 import { registerAnimationGraphAuthor } from "./tools/animation-graph-author.js";
 import { registerAnimationGraphSetup } from "./tools/animation-graph-setup.js";
 import { registerWbKnowledge } from "./tools/wb-knowledge.js";
+import { registerWbCompile } from "./tools/wb-compile.js";
 import type { Config } from "./config.js";
 
 export function registerTools(server: McpServer, config: Config): void {
@@ -119,6 +120,7 @@ export function registerTools(server: McpServer, config: Config): void {
   registerAnimationGraphAuthor(server, config);
   registerAnimationGraphSetup(server, config);
   registerWbKnowledge(server);
+  registerWbCompile(server, wbClient);
 
   // MCP Prompts
   registerCreateModPrompt(server, patterns);
