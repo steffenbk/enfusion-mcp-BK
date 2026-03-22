@@ -188,8 +188,8 @@ function parseTransitions(body: string): ParsedTransition[] {
     }
     const tBody = body.slice(openBrace + 1, i - 1);
     results.push({
-      from: extractProp(tBody, "From"),
-      to: extractProp(tBody, "To"),
+      from: extractProp(tBody, "From") ?? "",
+      to: extractProp(tBody, "To") ?? "",
       condition: extractProp(tBody, "Condition"),
       duration: extractProp(tBody, "Duration"),
       postEval: extractProp(tBody, "PostEval") === "1",
