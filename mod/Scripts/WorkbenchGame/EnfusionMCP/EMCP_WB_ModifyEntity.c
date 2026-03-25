@@ -104,6 +104,8 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 
 	//------------------------------------------------------------------------------------------------
 	// Build a ContainerIdPathEntry array from a dot-separated path string.
+	// Supports array indices: "m_aTriggerActions[0].m_aNames" produces
+	//   ContainerIdPathEntry("m_aTriggerActions", 0) then ContainerIdPathEntry("m_aNames").
 	// Returns null if the path is empty (meaning target the entity root).
 	static array<ref ContainerIdPathEntry> BuildPathEntries(string propertyPath)
 	{
@@ -115,7 +117,26 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 		propertyPath.Split(".", pathParts, true);
 		for (int p = 0; p < pathParts.Count(); p++)
 		{
-			pathEntries.Insert(new ContainerIdPathEntry(pathParts[p]));
+			string part = pathParts[p];
+			int bracketPos = part.IndexOf("[");
+			if (bracketPos > -1)
+			{
+				int closeBracket = part.IndexOf("]");
+				if (closeBracket <= bracketPos)
+				{
+					// Malformed bracket syntax — treat the whole part as a plain name
+					pathEntries.Insert(new ContainerIdPathEntry(part));
+					continue;
+				}
+				string name = part.Substring(0, bracketPos);
+				string idxStr = part.Substring(bracketPos + 1, closeBracket - bracketPos - 1);
+				int idx = idxStr.ToInt();
+				pathEntries.Insert(new ContainerIdPathEntry(name, idx));
+			}
+			else
+			{
+				pathEntries.Insert(new ContainerIdPathEntry(part));
+			}
 		}
 		return pathEntries;
 	}
@@ -274,7 +295,9 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 
 			array<ref ContainerIdPathEntry> pathEntries = BuildPathEntries(req.propertyPath);
 
+			api.BeginEntityAction("Set property via NetAPI");
 			bool result = api.SetVariableValue(entSrc, pathEntries, req.propertyKey, req.value);
+			api.EndEntityAction();
 
 			if (result)
 			{
@@ -298,7 +321,9 @@ class EMCP_WB_ModifyEntity : NetApiHandler
 
 			array<ref ContainerIdPathEntry> pathEntries = BuildPathEntries(req.propertyPath);
 
+			api.BeginEntityAction("Clear property via NetAPI");
 			bool result = api.ClearVariableValue(entSrc, pathEntries, req.propertyKey);
+			api.EndEntityAction();
 
 			if (result)
 			{

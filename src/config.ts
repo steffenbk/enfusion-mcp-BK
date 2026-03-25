@@ -93,6 +93,8 @@ export function loadConfig(): Config {
   }
   if (process.env.ENFUSION_MCP_DATA_DIR) {
     config.dataDir = process.env.ENFUSION_MCP_DATA_DIR;
+    // patternsDir is always <dataDir>/patterns unless explicitly set in a config file
+    config.patternsDir = join(process.env.ENFUSION_MCP_DATA_DIR, "patterns");
   }
   if (process.env.ENFUSION_WORKBENCH_HOST) {
     config.workbenchHost = process.env.ENFUSION_WORKBENCH_HOST;

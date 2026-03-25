@@ -133,8 +133,16 @@ function findGprojFiles(dirPath: string): string[] {
     const entries = readdirSync(dirPath, { withFileTypes: true });
     const results: string[] = [];
     for (const entry of entries) {
-      if (!entry.isDirectory() && entry.name.endsWith(".gproj")) {
-        results.push(join(dirPath, entry.name));
+      if (!entry.isDirectory()) {
+        if (entry.name.endsWith(".gproj")) {
+          results.push(join(dirPath, entry.name));
+        }
+      } else {
+        // Check for the conventional <addonName>/<addonName>.gproj layout one level deep.
+        const nested = join(dirPath, entry.name, `${entry.name}.gproj`);
+        if (existsSync(nested)) {
+          results.push(nested);
+        }
       }
     }
     return results;
