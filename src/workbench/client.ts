@@ -10,13 +10,14 @@
  */
 
 import { Socket } from "node:net";
-import { existsSync, mkdirSync, copyFileSync, readdirSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, copyFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawn, execSync } from "node:child_process";
 import { encodeRequest, decodeResponse } from "./protocol.js";
 import { logger } from "../utils/logger.js";
 import type { Config } from "../config.js";
+import { generateGproj } from "../templates/gproj.js";
 
 const DEFAULT_CLIENT_ID = "EnfusionMCP";
 const DEFAULT_TIMEOUT_MS = 10_000;
@@ -29,6 +30,10 @@ const LAUNCH_POLL_INTERVAL_MS = 3_000;
 const LAUNCH_TIMEOUT_MS = 90_000;
 /** Delay after killing Workbench before relaunching, to let the port release. */
 const KILL_SETTLE_MS = 3_000;
+/** How long to wait for Workbench to recompile handler scripts after installation. */
+const HANDLER_RECOMPILE_TIMEOUT_MS = 30_000;
+/** Interval between polls while waiting for handler script recompilation. */
+const HANDLER_RECOMPILE_POLL_MS = 2_000;
 
 export type WorkbenchMode = "edit" | "play" | "unknown";
 
@@ -230,8 +235,12 @@ export class WorkbenchClient {
 
   /**
    * Recover from "not existing Net API function" errors.
-   * Workbench is running but our handler scripts aren't compiled.
-   * Installs handlers, kills Workbench, relaunches so scripts compile on startup.
+   * Workbench is running but our custom handler scripts aren't compiled.
+   * Installs handlers into the mod directory and waits for Workbench to
+   * auto-recompile them — without killing the running Workbench process.
+   *
+   * Previous behaviour killed Workbench with taskkill, which broke other
+   * tools (e.g. the Enfusion Blender plugin) that share the same NET API.
    */
   private async recoverMissingHandlers(): Promise<void> {
     if (!this.config) {
@@ -248,14 +257,26 @@ export class WorkbenchClient {
       this.installHandlerScripts(undefined, true);
     }
 
-    // Kill Workbench so it restarts with newly installed handlers
-    this.killWorkbench();
+    // Wait for Workbench to detect the new files and recompile scripts.
+    // Workbench watches its script directories and recompiles automatically.
+    // Poll with our custom EMCP_WB_Ping handler — it only succeeds once
+    // the handler scripts are compiled and registered.
+    logger.info("Handler scripts installed. Waiting for Workbench to recompile...");
+    const deadline = Date.now() + HANDLER_RECOMPILE_TIMEOUT_MS;
+    while (Date.now() < deadline) {
+      await new Promise((r) => setTimeout(r, HANDLER_RECOMPILE_POLL_MS));
+      if (await this.ping()) {
+        logger.info("Handler scripts compiled and loaded.");
+        return;
+      }
+    }
 
-    // Brief delay to ensure the process fully exits and releases the port
-    await new Promise((r) => setTimeout(r, KILL_SETTLE_MS));
-
-    // Relaunch and wait for NET API + handler scripts to compile
-    await this.launchWorkbench(gprojPath || undefined);
+    throw new WorkbenchError(
+      `Handler scripts were installed but Workbench did not recompile them within ` +
+        `${HANDLER_RECOMPILE_TIMEOUT_MS / 1000}s. Try recompiling scripts manually in ` +
+        `Workbench (Plugins > Reload Scripts) or restart Workbench.`,
+      "LAUNCH_FAILED"
+    );
   }
 
   /**
@@ -279,7 +300,7 @@ export class WorkbenchClient {
     }
 
     // 2. Resolve the target .gproj and inject handler scripts into that mod
-    const resolvedGproj = gprojPath || this.findFallbackGproj();
+    let resolvedGproj = gprojPath || this.findFallbackGproj();
     if (resolvedGproj) {
       // Copy handler scripts directly into the target mod so they compile
       // as part of the mod — no separate addon or dependency needed.
@@ -288,6 +309,15 @@ export class WorkbenchClient {
     } else {
       // Fallback: install to default project path as a standalone addon
       this.installHandlerScripts();
+      // Point resolvedGproj at the standalone addon's .gproj so Workbench
+      // opens it directly (skipping the launcher) and compiles the handlers.
+      const fallbackBase = this.config?.projectPath;
+      if (fallbackBase) {
+        const standaloneGproj = join(fallbackBase, HANDLER_FOLDER, `${HANDLER_FOLDER}.gproj`);
+        if (existsSync(standaloneGproj)) {
+          resolvedGproj = standaloneGproj;
+        }
+      }
     }
 
     // 3. Find executable
@@ -420,6 +450,7 @@ export class WorkbenchClient {
       logger.warn("No modDir or projectPath configured — cannot install handler scripts.");
       return;
     }
+    const isFallback = !modDir;
     const targetBase = modDir || join(fallbackBase!, HANDLER_FOLDER);
     const targetScriptsDir = join(targetBase, "Scripts", "WorkbenchGame", HANDLER_FOLDER);
 
@@ -447,6 +478,17 @@ export class WorkbenchClient {
     }
 
     logger.info(`Installed ${files.length} handler scripts.`);
+
+    // When using the standalone fallback path, also write a .gproj so Workbench
+    // treats the directory as a loadable addon and compiles the handler scripts.
+    if (isFallback) {
+      const gprojPath = join(targetBase, `${HANDLER_FOLDER}.gproj`);
+      if (!existsSync(gprojPath)) {
+        const gprojContent = generateGproj({ name: HANDLER_FOLDER, title: "EnfusionMCP Handlers" });
+        writeFileSync(gprojPath, gprojContent, "utf-8");
+        logger.info(`Created standalone addon .gproj at ${gprojPath}`);
+      }
+    }
   }
 
   /**
