@@ -181,8 +181,8 @@ Config can also be loaded from `~/.enfusion-mcp/config.json`. Environment variab
 ## Development
 
 ```bash
-git clone https://github.com/Articulated7/enfusion-mcp.git
-cd enfusion-mcp
+git clone https://github.com/steffenbk/enfusion-mcp-BK.git
+cd enfusion-mcp-BK
 npm install
 npm run scrape   # Build API index from Workbench docs
 npm run build
@@ -191,7 +191,7 @@ npm test         # 187 tests
 
 ## Documentation
 
-Full documentation is on the [GitHub Wiki](https://github.com/Articulated7/enfusion-mcp/wiki).
+Full documentation is on the [GitHub Wiki](https://github.com/steffenbk/enfusion-mcp-BK/wiki).
 
 ## License
 

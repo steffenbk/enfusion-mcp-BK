@@ -43,9 +43,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Articulated7/enfusion-mcp.git"
+    "url": "https://github.com/steffenbk/enfusion-mcp-BK.git"
   },
-  "homepage": "https://github.com/Articulated7/enfusion-mcp",
+  "homepage": "https://github.com/steffenbk/enfusion-mcp-BK",
   "license": "MIT",
   "keywords": [
     "mcp",

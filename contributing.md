@@ -9,8 +9,8 @@ Please **open an issue before submitting a PR** for anything beyond small bug fi
 ## Getting Started
 
 ```bash
-git clone https://github.com/Articulated7/enfusion-mcp.git
-cd enfusion-mcp
+git clone https://github.com/steffenbk/enfusion-mcp-BK.git
+cd enfusion-mcp-BK
 npm install
 npm run build
 npm test
