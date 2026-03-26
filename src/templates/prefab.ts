@@ -12,6 +12,7 @@ export type PrefabType =
 
 export interface ComponentDef {
   type: string;
+  guid?: string;
   properties?: Record<string, string>;
 }
 
@@ -26,6 +27,12 @@ export interface PrefabOptions {
   components?: ComponentDef[];
   /** Description (used for m_sDisplayName if applicable) */
   description?: string;
+  /**
+   * Pre-resolved ancestor components (from prefab-ancestry walkChain).
+   * When provided, replaces the hardcoded defaultComponents for this prefab type.
+   * GUIDs are preserved so they act as override slots in the Enfusion delta model.
+   */
+  ancestorComponents?: ComponentDef[];
 }
 
 interface PrefabTypeConfig {
@@ -116,8 +123,10 @@ export function generatePrefab(opts: PrefabOptions): string {
   });
 
   // Build components block
+  // Use resolved ancestor components if provided, otherwise fall back to type defaults
+  const baseComponents: ComponentDef[] = opts.ancestorComponents ?? config.defaultComponents;
   const allComponents: ComponentDef[] = [
-    ...config.defaultComponents,
+    ...baseComponents,
     ...(opts.components ?? []),
   ];
 
@@ -125,7 +134,8 @@ export function generatePrefab(opts: PrefabOptions): string {
     const componentNodes: EnfusionNode[] = [];
 
     for (const comp of allComponents) {
-      const compGuid = generateGuid();
+      // Preserve GUID if provided (ancestor components carry their original GUID)
+      const compGuid = comp.guid ?? generateGuid();
       const compNode = createNode(comp.type, {
         id: `{${compGuid}}`,
       });

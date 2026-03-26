@@ -100,6 +100,44 @@ describe("generatePrefab", () => {
       expect(child.id).toMatch(/^\{[0-9A-F]{16}\}$/);
     }
   });
+
+  it("uses ancestorComponents instead of type defaults when provided", () => {
+    const text = generatePrefab({
+      name: "Test",
+      prefabType: "character",
+      ancestorComponents: [
+        { type: "CustomComponent", guid: "AAAAAAAAAAAAAAAA", properties: {} },
+      ],
+    });
+    const node = parse(text);
+    const comps = node.children.find((c) => c.type === "components");
+    expect(comps).toBeDefined();
+    // ancestorComponents replaces defaults — InventoryStorageManagerComponent should NOT be present
+    expect(comps!.children.find((c) => c.type === "InventoryStorageManagerComponent")).toBeUndefined();
+    // Custom component should be present
+    const custom = comps!.children.find((c) => c.type === "CustomComponent");
+    expect(custom).toBeDefined();
+    // GUID should be preserved from ancestorComponents
+    expect(custom!.id).toBe("{AAAAAAAAAAAAAAAA}");
+  });
+
+  it("appends user components after ancestorComponents", () => {
+    const text = generatePrefab({
+      name: "Test",
+      prefabType: "generic",
+      ancestorComponents: [
+        { type: "MeshObject", guid: "AAAAAAAAAAAAAAAA" },
+      ],
+      components: [
+        { type: "RigidBody" },
+      ],
+    });
+    const node = parse(text);
+    const comps = node.children.find((c) => c.type === "components");
+    expect(comps).toBeDefined();
+    expect(comps!.children.find((c) => c.type === "MeshObject")).toBeDefined();
+    expect(comps!.children.find((c) => c.type === "RigidBody")).toBeDefined();
+  });
 });
 
 describe("getPrefabSubdirectory", () => {
