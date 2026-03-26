@@ -381,17 +381,39 @@ export class WorkbenchClient {
 
   /**
    * Find a .gproj to pass via -gproj so Workbench skips the launcher.
-   * Looks for any .gproj in the default project path.
+   * Prefers config.defaultMod if set; otherwise picks first addon found.
+   * Scans for any .gproj in each addon folder (name need not match folder).
    */
   private findFallbackGproj(): string | null {
+    const findGprojInDir = (dir: string): string | null => {
+      try {
+        for (const f of readdirSync(dir, { withFileTypes: true })) {
+          if (!f.isDirectory() && f.name.endsWith(".gproj")) {
+            return join(dir, f.name);
+          }
+        }
+      } catch { /* ignore */ }
+      return null;
+    };
+
     try {
       const addonsDir = this.config?.projectPath;
-      if (!addonsDir) return null;
-      if (!existsSync(addonsDir)) return null;
+      if (!addonsDir || !existsSync(addonsDir)) return null;
+
+      // Prefer the configured default mod over alphabetical first-pick
+      const preferred = this.config?.defaultMod;
+      if (preferred) {
+        const gprojPath = findGprojInDir(join(addonsDir, preferred));
+        if (gprojPath) {
+          logger.info(`Using defaultMod gproj to skip launcher: ${gprojPath}`);
+          return gprojPath;
+        }
+      }
+
       for (const entry of readdirSync(addonsDir, { withFileTypes: true })) {
         if (!entry.isDirectory()) continue;
-        const gprojPath = join(addonsDir, entry.name, `${entry.name}.gproj`);
-        if (existsSync(gprojPath)) {
+        const gprojPath = findGprojInDir(join(addonsDir, entry.name));
+        if (gprojPath) {
           logger.info(`Using fallback gproj to skip launcher: ${gprojPath}`);
           return gprojPath;
         }
