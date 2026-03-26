@@ -53,11 +53,7 @@ export function registerWbLaunch(
 
         await client.ensureRunning(gprojPath);
 
-        const modDir = gprojPath ? dirname(gprojPath) : null;
-        const note = modDir
-          ? `\n\nNote: Handler scripts were copied to ${modDir}/Scripts/WorkbenchGame/EnfusionMCP/. ` +
-            `Call **wb_cleanup** with the mod directory path when done to remove them before publishing.`
-          : "";
+        const note = "";
 
         return {
           content: [

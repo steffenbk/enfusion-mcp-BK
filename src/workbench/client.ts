@@ -251,15 +251,8 @@ export class WorkbenchClient {
       throw new WorkbenchError("No config provided — cannot recover handlers.", "LAUNCH_FAILED");
     }
 
-    // Find a .gproj to determine which mod to inject handlers into
-    const gprojPath = this.findFallbackGproj();
-
-    // Install handler scripts (force overwrite in case they're outdated)
-    if (gprojPath) {
-      this.installHandlerScripts(dirname(gprojPath), true);
-    } else {
-      this.installHandlerScripts(undefined, true);
-    }
+    // Always reinstall to the standalone addon (force overwrite in case outdated)
+    this.installHandlerScripts(undefined, true);
 
     // Wait for Workbench to detect the new files and recompile scripts.
     // Workbench watches its script directories and recompiles automatically.
@@ -303,26 +296,15 @@ export class WorkbenchClient {
       return;
     }
 
-    // 2. Resolve the target .gproj and inject handler scripts into that mod
+    // 2. Install handler scripts into the standalone EnfusionMCP addon only.
+    //    Workbench loads ALL addons in the project directory simultaneously, so
+    //    injecting handlers into a user's mod causes duplicate class name errors.
+    //    The standalone addon compiles alongside any project the user opens.
+    this.installHandlerScripts();
+
+    // Resolve which .gproj to pass via -gproj (skips the launcher).
+    // Prefer the caller's explicit path; fall back to finding one from the addons dir.
     let resolvedGproj = gprojPath || this.findFallbackGproj();
-    if (resolvedGproj) {
-      // Copy handler scripts directly into the target mod so they compile
-      // as part of the mod — no separate addon or dependency needed.
-      const modDir = dirname(resolvedGproj);
-      this.installHandlerScripts(modDir);
-    } else {
-      // Fallback: install to default project path as a standalone addon
-      this.installHandlerScripts();
-      // Point resolvedGproj at the standalone addon's .gproj so Workbench
-      // opens it directly (skipping the launcher) and compiles the handlers.
-      const fallbackBase = this.config?.projectPath;
-      if (fallbackBase) {
-        const standaloneGproj = join(fallbackBase, HANDLER_FOLDER, `${HANDLER_FOLDER}.gproj`);
-        if (existsSync(standaloneGproj)) {
-          resolvedGproj = standaloneGproj;
-        }
-      }
-    }
 
     // 3. Find executable
     const exePath = this.findWorkbenchExe();
