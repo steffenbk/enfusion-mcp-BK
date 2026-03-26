@@ -5,7 +5,6 @@ import {
   walkChain,
   mergeAncestryComponents,
   type AncestorLevel,
-  type ParsedComponent,
 } from "../utils/prefab-ancestry.js";
 
 // ── Output ────────────────────────────────────────────────────────────────────
