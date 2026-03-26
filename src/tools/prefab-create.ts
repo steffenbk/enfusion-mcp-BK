@@ -10,6 +10,7 @@ import {
   type PrefabType,
   type ComponentDef,
 } from "../templates/prefab.js";
+import { walkChain, mergeAncestryComponents } from "../utils/prefab-ancestry.js";
 import { validateFilename } from "../utils/safe-path.js";
 
 export function registerPrefabCreate(server: McpServer, config: Config): void {
@@ -17,7 +18,9 @@ export function registerPrefabCreate(server: McpServer, config: Config): void {
     "prefab_create",
     {
       description:
-        "Create a new Entity Template (.et) prefab file for an Arma Reforger mod. Generates a properly structured prefab with components in valid Enfusion text serialization format. IMPORTANT: For 'interactive' and other visible prefabs, the MeshObject component MUST have its 'Object' property set to a base game .xob model path (e.g., '{5F4C4181F065B447}Assets/Props/Military/Barrels/BarrelGreen_01.xob') or the entity will be invisible in-game. Use api_search to find model paths.",
+        "Create a new Entity Template (.et) prefab file for an Arma Reforger mod. Generates a properly structured prefab with components in valid Enfusion text serialization format. " +
+        "When parentPrefab is provided, automatically resolves the full ancestor chain and pre-populates inherited components (set includeAncestry=false to skip). " +
+        "IMPORTANT: For 'interactive' and other visible prefabs, the MeshObject component MUST have its 'Object' property set to a base game .xob model path (e.g., '{5F4C4181F065B447}Assets/Props/Military/Barrels/BarrelGreen_01.xob') or the entity will be invisible in-game. Use api_search to find model paths.",
       inputSchema: {
         name: z
           .string()
@@ -60,17 +63,49 @@ export function registerPrefabCreate(server: McpServer, config: Config): void {
           .describe(
             "Description for the prefab. Used as the display name in Game Master."
           ),
+        includeAncestry: z
+          .boolean()
+          .default(true)
+          .describe(
+            "When parentPrefab is provided, resolve the full ancestor chain and pre-populate inherited components. " +
+            "Defaults to true. Set false to skip ancestry resolution (uses hardcoded template defaults instead)."
+          ),
         projectPath: z
           .string()
           .optional()
           .describe("Addon root path. Uses configured default if omitted."),
       },
     },
-    async ({ name, prefabType, parentPrefab, components, description, projectPath }) => {
+    async ({ name, prefabType, parentPrefab, components, description, includeAncestry, projectPath }) => {
       const basePath = projectPath || config.projectPath;
 
       try {
         validateFilename(name);
+
+        // Resolve ancestry if parentPrefab is given and includeAncestry is not disabled
+        let ancestorComponents: ComponentDef[] | undefined;
+        let ancestryNote = "";
+
+        if (parentPrefab && includeAncestry !== false) {
+          const { levels, warnings } = walkChain(parentPrefab, config, projectPath);
+          if (levels.length > 0) {
+            const merged = mergeAncestryComponents(levels);
+            ancestorComponents = Array.from(merged.values()).map(({ comp }) => ({
+              type: comp.typeName,
+              guid: comp.guid,
+              properties: {},
+            }));
+            ancestryNote = `\n\nAncestry resolved: ${levels.length} ancestor level(s), ${ancestorComponents.length} inherited component(s) pre-populated.`;
+            if (warnings.length > 0) {
+              ancestryNote += `\nWarnings: ${warnings.join("; ")}`;
+            }
+          } else {
+            ancestryNote = `\n\nAncestry resolution unavailable (game files not found). Using template defaults.`;
+            if (warnings.length > 0) {
+              ancestryNote += ` Warnings: ${warnings.join("; ")}`;
+            }
+          }
+        }
 
         const content = generatePrefab({
           name,
@@ -78,6 +113,7 @@ export function registerPrefabCreate(server: McpServer, config: Config): void {
           parentPrefab,
           components: components as ComponentDef[] | undefined,
           description,
+          ancestorComponents,
         });
 
         if (basePath) {
@@ -102,14 +138,14 @@ export function registerPrefabCreate(server: McpServer, config: Config): void {
           writeFileSync(targetPath, content, "utf-8");
 
           const meshWarning = (prefabType === "interactive" || prefabType === "generic")
-            ? "\n\n⚠️ IMPORTANT: The MeshObject 'Object' property is empty. You MUST set it to a base game .xob model path (e.g., '{5F4C4181F065B447}Assets/Props/Military/Barrels/BarrelGreen_01.xob') or the entity will be INVISIBLE in-game. Use project_write to update the prefab."
+            ? "\n\nIMPORTANT: The MeshObject 'Object' property is empty. You MUST set it to a base game .xob model path (e.g., '{5F4C4181F065B447}Assets/Props/Military/Barrels/BarrelGreen_01.xob') or the entity will be INVISIBLE in-game. Use project_write to update the prefab."
             : "";
 
           return {
             content: [
               {
                 type: "text",
-                text: `Prefab created: ${subdir}/${filename}\n\n\`\`\`\n${content}\n\`\`\`${meshWarning}`,
+                text: `Prefab created: ${subdir}/${filename}\n\n\`\`\`\n${content}\n\`\`\`${meshWarning}${ancestryNote}`,
               },
             ],
           };
@@ -119,7 +155,7 @@ export function registerPrefabCreate(server: McpServer, config: Config): void {
           content: [
             {
               type: "text",
-              text: `Generated prefab (no project path configured — not written to disk):\n\n\`\`\`\n${content}\n\`\`\`\n\nSet ENFUSION_PROJECT_PATH to write files automatically.`,
+              text: `Generated prefab (no project path configured — not written to disk):\n\n\`\`\`\n${content}\n\`\`\`\n\nSet ENFUSION_PROJECT_PATH to write files automatically.${ancestryNote}`,
             },
           ],
         };
@@ -127,7 +163,7 @@ export function registerPrefabCreate(server: McpServer, config: Config): void {
         const msg = e instanceof Error ? e.message : String(e);
         return {
           content: [{ type: "text", text: `Error creating prefab: ${msg}` }],
-        isError: true,
+          isError: true,
         };
       }
     }
