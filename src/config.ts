@@ -24,8 +24,8 @@ export interface Config {
   /** Workbench NET API port (default 5775) */
   workbenchPort: number;
   /** Default addon folder name used when modName is not specified in tool calls.
-   *  Prevents resolveAddonDir from picking the first addon alphabetically.
-   *  Set via ENFUSION_DEFAULT_MOD env var (e.g., "Crossbow"). */
+   *  Automatically set at runtime when wb_launch opens a .gproj file.
+   *  Can also be set via ENFUSION_DEFAULT_MOD env var as a static fallback. */
   defaultMod?: string;
 }
 

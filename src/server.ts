@@ -87,7 +87,7 @@ export function registerTools(server: McpServer, config: Config): void {
     config.workbenchPort,
     config
   );
-  registerWbLaunch(server, wbClient);
+  registerWbLaunch(server, config, wbClient);
   registerWbConnect(server, wbClient);
   registerWbReload(server, wbClient);
   registerWbEditorTools(server, wbClient);

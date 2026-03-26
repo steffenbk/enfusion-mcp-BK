@@ -1,12 +1,14 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { dirname, join, resolve } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import { existsSync, readdirSync } from "node:fs";
+import type { Config } from "../config.js";
 import type { WorkbenchClient } from "../workbench/client.js";
 import { formatConnectionStatus } from "../workbench/status.js";
 
 export function registerWbLaunch(
   server: McpServer,
+  config: Config,
   client: WorkbenchClient
 ): void {
   server.registerTool(
@@ -45,6 +47,12 @@ export function registerWbLaunch(
         }
 
         await client.ensureRunning(gprojPath);
+
+        // Remember which addon was launched so other tools default to it
+        if (gprojPath) {
+          const modDir = dirname(resolve(gprojPath));
+          config.defaultMod = basename(modDir);
+        }
 
         const modDir = gprojPath ? dirname(gprojPath) : null;
         const note = modDir
