@@ -17,7 +17,6 @@ import {
   walkChain,
   mergeAncestryComponents,
   parseComponents,
-  stripGuid,
 } from "../utils/prefab-ancestry.js";
 
 export function registerGameDuplicate(
@@ -171,50 +170,58 @@ export function registerGameDuplicate(
         const { levels, warnings } = walkChain(bareSourcePath, config);
 
         if (levels.length > 1) {
-          // Parse source into node tree
-          let rootNode = parse(rawContent);
+          try {
+            // Parse source into node tree
+            let rootNode = parse(rawContent);
 
-          // Get merged components from full ancestry
-          const merged = mergeAncestryComponents(levels);
+            // Get merged components from full ancestry
+            const merged = mergeAncestryComponents(levels);
 
-          // Get GUIDs already present in the source file
-          const existingGuids = new Set(parseComponents(rawContent).keys());
+            // Get GUIDs already present in the source file
+            const existingGuids = new Set(parseComponents(rawContent).keys());
 
-          // Find or create the components child node
-          let componentsNode = rootNode.children.find((c) => c.type === "components");
-          const injected: string[] = [];
+            // Find or create the components child node
+            let componentsNode = rootNode.children.find((c) => c.type === "components");
+            const injected: string[] = [];
 
-          for (const [guid, { comp, source }] of merged) {
-            if (existingGuids.has(guid)) continue; // already declared in leaf
-            if (source.depth === levels.length - 1) continue; // it's in the leaf itself
+            for (const [guid, { comp, source }] of merged) {
+              if (existingGuids.has(guid)) continue; // already declared in leaf
+              if (source.depth === levels.length - 1) continue; // it's in the leaf itself
 
-            // Build a minimal component node with the original GUID preserved
-            const compNode = createNode(comp.typeName, { id: `{${comp.guid}}` });
-            if (!componentsNode) {
-              componentsNode = createNode("components");
-              rootNode.children.push(componentsNode);
+              // Build a minimal component node with the original GUID preserved
+              const compNode = createNode(comp.typeName, { id: `{${comp.guid}}` });
+              if (!componentsNode) {
+                componentsNode = createNode("components");
+                rootNode.children.push(componentsNode);
+              }
+              componentsNode.children.push(compNode);
+              injected.push(`${comp.typeName} (from [${source.depth}] ${source.path})`);
             }
-            componentsNode.children.push(compNode);
-            injected.push(`${comp.typeName} (from [${source.depth}] ${source.path})`);
-          }
 
-          // If flatten, strip parent reference
-          if (flatten) {
-            rootNode = { ...rootNode, inheritance: undefined };
-          }
+            // If flatten, strip parent reference
+            if (flatten) {
+              rootNode = { ...rootNode, inheritance: undefined };
+            }
 
-          finalContent = serialize(rootNode);
+            finalContent = serialize(rootNode);
 
-          const levelCount = levels.length;
-          ancestryNote = `\n\nAncestry: resolved ${levelCount} level(s), injected ${injected.length} inherited component(s).`;
-          if (injected.length > 0) {
-            ancestryNote += `\nInjected: ${injected.join(", ")}`;
-          }
-          if (flatten) {
-            ancestryNote += `\nParent reference stripped (flatten=true).`;
-          }
-          if (warnings.length > 0) {
-            ancestryNote += `\nWarnings: ${warnings.join("; ")}`;
+            const levelCount = levels.length;
+            ancestryNote = `\n\nAncestry: resolved ${levelCount} level(s), injected ${injected.length} inherited component(s).`;
+            if (injected.length > 0) {
+              ancestryNote += `\nInjected: ${injected.join(", ")}`;
+            }
+            if (flatten) {
+              ancestryNote += `\nParent reference stripped (flatten=true).`;
+            }
+            if (warnings.length > 0) {
+              ancestryNote += `\nWarnings: ${warnings.join("; ")}`;
+            }
+          } catch (e) {
+            const msg = e instanceof Error ? e.message : String(e);
+            return {
+              content: [{ type: "text", text: `Failed to process ancestry: ${msg}` }],
+              isError: true,
+            };
           }
         }
       }
