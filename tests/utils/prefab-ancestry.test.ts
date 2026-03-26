@@ -15,6 +15,10 @@ describe("stripGuid", () => {
   it("returns path unchanged when no GUID prefix", () => {
     expect(stripGuid("Prefabs/Foo.et")).toBe("Prefabs/Foo.et");
   });
+
+  it("does not strip malformed short GUID prefix", () => {
+    expect(stripGuid("{AABB}Prefabs/Foo.et")).toBe("{AABB}Prefabs/Foo.et");
+  });
 });
 
 describe("parseParentPath", () => {
@@ -54,6 +58,7 @@ describe("parseComponents", () => {
     expect(comp).toBeDefined();
     expect(comp!.typeName).toBe("MeshObject");
     expect(comp!.guid).toBe("AABBCCDD11223344");
+    expect(comp!.rawBody).toContain('Object "foo.xob"');
   });
 
   it("parses multiple components with distinct GUIDs", () => {
