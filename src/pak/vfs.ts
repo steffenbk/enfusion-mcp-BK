@@ -1,6 +1,6 @@
 import { openSync, readSync, closeSync, readdirSync, existsSync } from "node:fs";
 import { join, extname } from "node:path";
-import { inflateRawSync } from "node:zlib";
+import { inflateSync } from "node:zlib";
 import { parsePakIndex, type PakIndex, type PakDirEntry, type PakFileEntry } from "./reader.js";
 import { logger } from "../utils/logger.js";
 
@@ -124,11 +124,11 @@ export class PakVirtualFS {
     if (!dir) return [];
 
     const entries: VfsEntry[] = [];
-    for (const [name, child] of dir.children) {
+    for (const child of dir.children.values()) {
       if (child.kind === "dir") {
-        entries.push({ name, isDirectory: true, size: 0 });
+        entries.push({ name: child.name, isDirectory: true, size: 0 });
       } else {
-        entries.push({ name, isDirectory: false, size: child.decompressedLen });
+        entries.push({ name: child.name, isDirectory: false, size: child.decompressedLen });
       }
     }
     return entries;
@@ -152,13 +152,13 @@ export class PakVirtualFS {
       throw new Error(`File not found in pak: ${virtualPath}`);
     }
 
-    const { pakPath, dataStart, entry } = ref;
+    const { pakPath, entry } = ref;
     const readLen = entry.compressed ? entry.compressedLen : entry.decompressedLen;
 
     const fd = openSync(pakPath, "r");
     try {
       const buf = Buffer.alloc(readLen);
-      const position = dataStart + entry.offset;
+      const position = entry.offset;
       const bytesRead = readSync(fd, buf, 0, readLen, position);
       if (bytesRead < readLen) {
         throw new Error(
@@ -167,7 +167,7 @@ export class PakVirtualFS {
       }
 
       if (entry.compressed) {
-        return inflateRawSync(buf);
+        return inflateSync(buf);
       }
       return buf;
     } finally {
@@ -216,17 +216,20 @@ export class PakVirtualFS {
 
       if (child.kind === "dir") {
         // Merge directories: create in target if missing, then recurse
-        let targetChild = target.children.get(name);
+        // Use lowercase key so directory lookups are case-insensitive
+        const lowerName = name.toLowerCase();
+        let targetChild = target.children.get(lowerName);
         if (!targetChild || targetChild.kind !== "dir") {
           targetChild = { kind: "dir", name, children: new Map() };
-          target.children.set(name, targetChild);
+          target.children.set(lowerName, targetChild);
         }
         count += this.mergeTree(targetChild, child, index, childPath);
       } else {
         // File: add to target and flat index (first pak wins)
         const norm = normalizePath(childPath);
+        const lowerName = name.toLowerCase();
         if (!this.fileIndex.has(norm)) {
-          target.children.set(name, child);
+          target.children.set(lowerName, child);
           this.fileIndex.set(norm, {
             pakPath: index.pakPath,
             dataStart: index.dataStart,
@@ -265,5 +268,6 @@ function normalizePath(p: string): string {
   return p
     .replace(/\\/g, "/")
     .replace(/^\/+|\/+$/g, "")
-    .replace(/\/+/g, "/");
+    .replace(/\/+/g, "/")
+    .toLowerCase();
 }

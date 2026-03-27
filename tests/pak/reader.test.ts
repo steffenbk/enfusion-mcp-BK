@@ -16,6 +16,8 @@ import { parsePakIndex } from "../../src/pak/reader.js";
  */
 function buildTestPak(files: Array<{ path: string; content: string; compress: boolean }>): Buffer {
   // ── Build DATA payload and FILE tree simultaneously ────────────────────
+  const headLen = 0x1c;
+  const dataStart = 12 + 8 + headLen + 8;
   const dataChunks: Buffer[] = [];
   let dataOffset = 0;
 
@@ -57,7 +59,7 @@ function buildTestPak(files: Array<{ path: string; content: string; compress: bo
 
     dir.children.set(fileName, {
       name: fileName,
-      offset: dataOffset,
+      offset: dataStart + dataOffset,
       compressedLen: stored.length,
       decompressedLen: raw.length,
       compressed: file.compress,
@@ -114,7 +116,6 @@ function buildTestPak(files: Array<{ path: string; content: string; compress: bo
   const dataPayload = Buffer.concat(dataChunks);
 
   // ── HEAD chunk (minimal: 0x1c bytes of zeros) ──────────────────────────
-  const headLen = 0x1c;
   const headPayload = Buffer.alloc(headLen);
 
   // ── Assemble chunks ────────────────────────────────────────────────────

@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { writeFileSync, mkdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { deflateRawSync } from "node:zlib";
+import { deflateSync } from "node:zlib";
 import { PakVirtualFS } from "../../src/pak/vfs.js";
 
 /**
@@ -12,13 +12,15 @@ function buildTestPak(files: Array<{ path: string; content: string; compress: bo
   interface TreeFile { name: string; offset: number; compressedLen: number; decompressedLen: number; compressed: boolean }
   interface TreeDir { name: string; children: Map<string, TreeDir | TreeFile> }
 
+  const headLen = 0x1c;
+  const dataStart = 12 + 8 + headLen + 8;
   const dataChunks: Buffer[] = [];
   let dataOffset = 0;
   const root: TreeDir = { name: "", children: new Map() };
 
   for (const file of files) {
     const raw = Buffer.from(file.content, "utf-8");
-    const stored = file.compress ? deflateRawSync(raw) : raw;
+    const stored = file.compress ? deflateSync(raw) : raw;
 
     const parts = file.path.split("/");
     const fileName = parts.pop()!;
@@ -33,7 +35,7 @@ function buildTestPak(files: Array<{ path: string; content: string; compress: bo
     }
 
     dir.children.set(fileName, {
-      name: fileName, offset: dataOffset,
+      name: fileName, offset: dataStart + dataOffset,
       compressedLen: stored.length, decompressedLen: raw.length,
       compressed: file.compress,
     });
@@ -76,7 +78,6 @@ function buildTestPak(files: Array<{ path: string; content: string; compress: bo
 
   const fileTreeBuf = serializeEntry(root);
   const dataPayload = Buffer.concat(dataChunks);
-  const headLen = 0x1c;
   const headPayload = Buffer.alloc(headLen);
 
   const totalPayload = 4 + 8 + headLen + 8 + dataPayload.length + 8 + fileTreeBuf.length;
@@ -209,10 +210,10 @@ describe("PakVirtualFS", () => {
     const vfs = PakVirtualFS.get(GAME_DIR)!;
     const paths = vfs.allFilePaths().sort();
     expect(paths).toEqual([
-      "Configs/game.conf",
-      "Prefabs/box.et",
-      "Scripts/Game/player.c",
-      "Scripts/Game/vehicle.c",
+      "configs/game.conf",
+      "prefabs/box.et",
+      "scripts/game/player.c",
+      "scripts/game/vehicle.c",
     ]);
   });
 
