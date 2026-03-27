@@ -23,6 +23,12 @@ export interface EnfusionNode {
   type: string;
   /** Quoted GUID that follows the type name (e.g., component instance ID) */
   id?: string;
+  /**
+   * Class qualifier between type/key and the GUID.
+   * E.g., in `Attributes SCR_ItemAttributeCollection "{GUID}" { ... }`,
+   * type="Attributes", className="SCR_ItemAttributeCollection", id="{GUID}".
+   */
+  className?: string;
   /** Parent reference after ":" (e.g., "{GUID}path/to/parent.et") */
   inheritance?: string;
   /** Key-value properties */
@@ -194,30 +200,43 @@ class Parser {
       children: [],
     };
 
-    // Optional bare-word ID after type name (e.g., "GameProjectConfig PC")
+    // Optional bare-word after type name (e.g., "GameProjectConfig PC" or class qualifier)
     let next = this.peek();
     if (next && next.type === TokenType.Identifier) {
       const saved = this.pos;
       const bareId = this.advance();
       const afterBare = this.peek();
-      if (afterBare && (afterBare.type === TokenType.OpenBrace || afterBare.type === TokenType.Colon || afterBare.type === TokenType.String)) {
+      if (afterBare && (afterBare.type === TokenType.OpenBrace || afterBare.type === TokenType.Colon)) {
+        // BareWord followed by { or : — it's a simple bare-word ID (e.g., "PC")
         node.id = bareId.value;
+      } else if (afterBare && afterBare.type === TokenType.String) {
+        // BareWord followed by "String" — could be className + GUID or just bare ID before colon
+        const saved2 = this.pos;
+        const strTok = this.advance();
+        const afterStr = this.peek();
+        if (afterStr && (afterStr.type === TokenType.OpenBrace || afterStr.type === TokenType.Colon)) {
+          // Type BareWord "GUID" { — bare word is class qualifier, string is ID
+          node.className = bareId.value;
+          node.id = strTok.value;
+        } else {
+          // BareWord "String" not followed by { or : — bare word is just an ID
+          this.pos = saved2;
+          node.id = bareId.value;
+        }
       } else {
         this.pos = saved;
       }
     }
 
-    // Optional quoted GUID string after type name (before ":" or "{")
+    // Optional quoted GUID string after type name (when no bare-word was consumed)
     next = this.peek();
-    if (next && next.type === TokenType.String) {
+    if (next && next.type === TokenType.String && node.id === undefined) {
       const saved = this.pos;
       const strTok = this.advance();
       const afterStr = this.peek();
       if (afterStr && (afterStr.type === TokenType.OpenBrace || afterStr.type === TokenType.Colon)) {
-        // This quoted string is the node ID (e.g., component GUID)
         node.id = strTok.value;
       } else {
-        // Not followed by { or :, restore position
         this.pos = saved;
       }
     }
@@ -384,11 +403,13 @@ function serializeNode(node: EnfusionNode, indent: number): string {
   // Type name
   let header = node.type;
 
-  // Secondary identifier (bare word after type — e.g., "PC" in "GameProjectConfig PC")
-  // We store this in node.id only when it's a bare word, not a GUID string
-  // For component GUIDs, we quote them
+  // Class qualifier (e.g., "SCR_ItemAttributeCollection" in "Attributes SCR_ItemAttributeCollection "{GUID}" {")
+  if (node.className !== undefined) {
+    header += ` ${node.className}`;
+  }
+
+  // Node ID — bare word (e.g., "PC") or quoted GUID
   if (node.id !== undefined) {
-    // If the id looks like a GUID or contains special chars, quote it
     if (/^[A-Za-z0-9_]+$/.test(node.id) && !/^[0-9A-Fa-f]{16}$/.test(node.id)) {
       header += ` ${node.id}`;
     } else {
@@ -401,9 +422,33 @@ function serializeNode(node: EnfusionNode, indent: number): string {
     header += ` : "${escapeString(node.inheritance)}"`;
   }
 
-  // If raw content is provided, emit it verbatim inside the braces and return early
+  // If raw content is provided, re-indent it to match the target depth and emit
   if (node.rawContent !== undefined) {
-    return `${pad}${header} {${node.rawContent}${pad}}`;
+    const lines = node.rawContent.split("\n");
+    // Find minimum indentation of non-empty lines
+    let minIndent = Infinity;
+    for (const line of lines) {
+      if (line.trim().length === 0) continue;
+      const leading = line.match(/^[ \t]*/)?.[0].length ?? 0;
+      if (leading < minIndent) minIndent = leading;
+    }
+    if (minIndent === Infinity) minIndent = 0;
+
+    // Re-indent each line to innerPad level
+    const reindented = lines
+      .map((line) => {
+        if (line.trim().length === 0) return "";
+        return innerPad + line.slice(minIndent);
+      })
+      .filter((line, idx, arr) => {
+        // Remove leading/trailing blank lines
+        if (idx === 0 && line === "") return false;
+        if (idx === arr.length - 1 && line === "") return false;
+        return true;
+      })
+      .join("\n");
+
+    return `${pad}${header} {\n${reindented}\n${pad}}`;
   }
 
   parts.push(`${pad}${header} {`);
@@ -411,8 +456,12 @@ function serializeNode(node: EnfusionNode, indent: number): string {
   // Properties
   for (const prop of node.properties) {
     if (typeof prop.value === "string") {
-      // If value looks like a bare number or boolean, don't quote it
-      if (/^-?\d+(\.\d+)?$/.test(prop.value) || prop.value === "true" || prop.value === "false") {
+      // Emit bare (unquoted) values for numbers, booleans, and bare identifiers (enums like Manual, Runtime, None)
+      if (
+        /^-?\d+(\.\d+)?$/.test(prop.value) ||
+        prop.value === "true" || prop.value === "false" ||
+        /^[A-Za-z_][A-Za-z0-9_]*$/.test(prop.value)
+      ) {
         parts.push(`${innerPad}${prop.key} ${prop.value}`);
       } else {
         parts.push(`${innerPad}${prop.key} "${escapeString(prop.value)}"`);
