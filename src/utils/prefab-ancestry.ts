@@ -64,7 +64,7 @@ export function parseComponents(content: string): Map<string, ParsedComponent> {
   const block = extractComponentsBlock(content);
   if (!block) return result;
 
-  const re = /^[ \t]*(\w+)\s+"\{([0-9A-Fa-f]{16})\}"[^{]*\{/gm;
+  const re = /^[ \t]*(\w+)\s+"\{([0-9A-Fa-f]{16})\}"(?:[^{"\\]|"[^"]*")*\{/gm;
   let match: RegExpExecArray | null;
 
   while ((match = re.exec(block)) !== null) {
