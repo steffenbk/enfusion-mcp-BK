@@ -65,12 +65,11 @@ export function resolveEngineFields(args: {
       const vLoc = findEngineBlock(vanillaText);
       if (vLoc) {
         const vInline = readEngineFieldsFromBlock(vanillaText, vLoc);
-        if (Object.keys(vInline).length > 0) {
-          Object.assign(inherited, vInline);
-        } else {
-          // a vanilla block may itself only reference a conf
-          confFromRef(vLoc.inheritance);
-        }
+        // Read the referenced conf first as the baseline (if any), then let
+        // the vanilla block's own inline fields override it — the vanilla
+        // block can both reference a conf AND override a field inline.
+        confFromRef(vLoc.inheritance);
+        Object.assign(inherited, vInline);
       }
     }
   }

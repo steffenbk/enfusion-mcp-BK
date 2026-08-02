@@ -100,6 +100,45 @@ const ENGINE_M998_CONF = `Engine {
 }
 `;
 
+const MOD_ET_M35_NO_REF = `Vehicle : "{1111}Base.et" {
+ components {
+  VehicleWheeledSimulation "{731B26FCA2F19855}" {
+   Simulation Wheeled "{4D8B26DEA5F25978}" {
+    Engine Engine Engine {
+     MaxPower 200
+    }
+   }
+  }
+ }
+}
+`;
+
+const VANILLA_ET_M35_WITH_REF_AND_INLINE = `Vehicle : "{2222}Base.et" {
+ components {
+  VehicleWheeledSimulation "{731B26FCA2F19855}" {
+   Simulation Wheeled "{4D8B26DEA5F25978}" {
+    Engine Engine Engine : "{3333333333333333}Prefabs/Vehicles/Core/Configs/Engines/Engine_M35.conf" {
+     Steepness 25
+    }
+   }
+  }
+ }
+}
+`;
+
+const ENGINE_M35_CONF = `Engine {
+ Inertia 0.7
+ MaxPower 130
+ MaxTorque 420
+ RpmMaxPower 2800
+ RpmMaxTorque 1400
+ Steepness 18
+ Friction 110
+ RpmIdle 650
+ RpmMax 3200
+}
+`;
+
 describe("resolveEngineFields", () => {
   it("marks a field written in the mod .et as overridden and the rest as inherited", () => {
     const r = resolveEngineFields({
@@ -151,6 +190,29 @@ describe("resolveEngineFields", () => {
     expect(r.MaxPower).toEqual({ value: 150, source: "overridden" });
     expect(r.MaxTorque).toEqual({ value: 305, source: "inherited" });
     expect(r.RpmIdle).toEqual({ value: 700, source: "inherited" });
+  });
+
+  it("reads the vanilla conf baseline even when the vanilla block also has an inline override", () => {
+    const r = resolveEngineFields({
+      modText: MOD_ET_M35_NO_REF,
+      relPath: "Prefabs/Vehicles/Wheeled/M35/M35_base.et",
+      extractedPath: "E:/mirror",
+      readFile: (p) =>
+        p.includes("M35_base.et")
+          ? VANILLA_ET_M35_WITH_REF_AND_INLINE
+          : p.includes("Engine_M35.conf")
+            ? ENGINE_M35_CONF
+            : null,
+    });
+    expect(r.MaxPower).toEqual({ value: 200, source: "overridden" });
+    // Steepness is overridden inline in the vanilla block (25), which must win
+    // over the conf's own Steepness (18).
+    expect(r.Steepness).toEqual({ value: 25, source: "inherited" });
+    // MaxTorque is only in the referenced conf, not inline in the vanilla block,
+    // so it must still resolve via confFromRef even though the vanilla block
+    // also has an inline field on another key.
+    expect(r.MaxTorque).toEqual({ value: 420, source: "inherited" });
+    expect(r.RpmIdle).toEqual({ value: 650, source: "inherited" });
   });
 
   it("returns all nine keys regardless of what resolved", () => {
