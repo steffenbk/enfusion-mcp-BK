@@ -62,6 +62,44 @@ const VANILLA_ET_INLINE = `Vehicle : "{DDDD}Base.et" {
 }
 `;
 
+const MOD_ET_M998_NO_REF = `Vehicle : "{EEEE}Base.et" {
+ components {
+  VehicleWheeledSimulation "{731B26FCA2F19855}" {
+   Simulation Wheeled "{4D8B26DEA5F25978}" {
+    Engine Engine Engine {
+     MaxPower 150
+    }
+   }
+  }
+ }
+}
+`;
+
+const VANILLA_ET_M998_WITH_REF = `Vehicle : "{FFFF}Base.et" {
+ components {
+  VehicleWheeledSimulation "{731B26FCA2F19855}" {
+   Simulation Wheeled "{4D8B26DEA5F25978}" {
+    Engine Engine Engine : "{9A9A9A9A9A9A9A9A}Prefabs/Vehicles/Core/Configs/Engines/Engine_M998.conf" {
+    }
+   }
+  }
+ }
+}
+`;
+
+const ENGINE_M998_CONF = `Engine {
+ Inertia 0.5
+ MaxPower 135
+ MaxTorque 305
+ RpmMaxPower 3400
+ RpmMaxTorque 2000
+ Steepness 14
+ Friction 90
+ RpmIdle 700
+ RpmMax 4200
+}
+`;
+
 describe("resolveEngineFields", () => {
   it("marks a field written in the mod .et as overridden and the rest as inherited", () => {
     const r = resolveEngineFields({
@@ -96,6 +134,23 @@ describe("resolveEngineFields", () => {
     });
     expect(r.MaxPower).toEqual({ value: 120, source: "overridden" });
     expect(r.Steepness).toEqual({ value: null, source: "unresolved" });
+  });
+
+  it("falls back through a vanilla .et that itself only references a conf", () => {
+    const r = resolveEngineFields({
+      modText: MOD_ET_M998_NO_REF,
+      relPath: "Prefabs/Vehicles/Wheeled/M998/M998_base.et",
+      extractedPath: "E:/mirror",
+      readFile: (p) =>
+        p.includes("M998_base.et")
+          ? VANILLA_ET_M998_WITH_REF
+          : p.includes("Engine_M998.conf")
+            ? ENGINE_M998_CONF
+            : null,
+    });
+    expect(r.MaxPower).toEqual({ value: 150, source: "overridden" });
+    expect(r.MaxTorque).toEqual({ value: 305, source: "inherited" });
+    expect(r.RpmIdle).toEqual({ value: 700, source: "inherited" });
   });
 
   it("returns all nine keys regardless of what resolved", () => {
