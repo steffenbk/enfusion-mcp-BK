@@ -47,20 +47,20 @@ select,.applybtn{font-size:13px;padding:6px 14px;border:.5px solid rgba(255,255,
   <div class="lay">
     <div>
       <div class="sec">Power &amp; torque</div>
-      <div class="sr"><span class="lbl">Max Power (kW)</span><input type="range" id="ePw" min="30" max="600" step="1" value="246" oninput="sE();dE()"><span class="vl" id="ePwV">246</span></div>
-      <div class="sr"><span class="lbl">Max Torque (Nm)</span><input type="range" id="eTq" min="50" max="1500" step="5" value="583" oninput="sE();dE()"><span class="vl" id="eTqV">583</span></div>
-      <div class="sr"><span class="lbl">Rpm Max Power</span><input type="range" id="eRpp" min="1500" max="8500" step="50" value="4100" oninput="sE();dE()"><span class="vl" id="eRppV">4100</span></div>
-      <div class="sr"><span class="lbl">Rpm Max Torque</span><input type="range" id="eRpt" min="500" max="6000" step="50" value="3000" oninput="sE();dE()"><span class="vl" id="eRptV">3000</span></div>
+      <div class="sr"><span class="lbl">Max Power (kW)</span><input type="range" id="ePw" min="30" max="600" step="1" value="246" oninput="sE();dE();markTouched('ePw')"><span class="vl" id="ePwV">246</span></div>
+      <div class="sr"><span class="lbl">Max Torque (Nm)</span><input type="range" id="eTq" min="50" max="1500" step="5" value="583" oninput="sE();dE();markTouched('eTq')"><span class="vl" id="eTqV">583</span></div>
+      <div class="sr"><span class="lbl">Rpm Max Power</span><input type="range" id="eRpp" min="1500" max="8500" step="50" value="4100" oninput="sE();dE();markTouched('eRpp')"><span class="vl" id="eRppV">4100</span></div>
+      <div class="sr"><span class="lbl">Rpm Max Torque</span><input type="range" id="eRpt" min="500" max="6000" step="50" value="3000" oninput="sE();dE();markTouched('eRpt')"><span class="vl" id="eRptV">3000</span></div>
       <div class="tip2">Must be &le; Rpm Max Power</div>
       <div class="sec">RPM range</div>
-      <div class="sr"><span class="lbl">Rpm Idle</span><input type="range" id="eIdle" min="400" max="1500" step="25" value="850" oninput="sE();dE()"><span class="vl" id="eIdleV">850</span></div>
-      <div class="sr"><span class="lbl">Rpm Max</span><input type="range" id="eRmax" min="2500" max="10000" step="100" value="7500" oninput="sE();dE()"><span class="vl" id="eRmaxV">7500</span></div>
+      <div class="sr"><span class="lbl">Rpm Idle</span><input type="range" id="eIdle" min="400" max="1500" step="25" value="850" oninput="sE();dE();markTouched('eIdle')"><span class="vl" id="eIdleV">850</span></div>
+      <div class="sr"><span class="lbl">Rpm Max</span><input type="range" id="eRmax" min="2500" max="10000" step="100" value="7500" oninput="sE();dE();markTouched('eRmax')"><span class="vl" id="eRmaxV">7500</span></div>
       <div class="sec">Character</div>
-      <div class="sr"><span class="lbl">Steepness</span><input type="range" id="eSteep" min="1" max="40" step="0.5" value="15" oninput="sE();dE()"><span class="vl" id="eSteepV">15.0</span></div>
+      <div class="sr"><span class="lbl">Steepness</span><input type="range" id="eSteep" min="1" max="40" step="0.5" value="15" oninput="sE();dE();markTouched('eSteep')"><span class="vl" id="eSteepV">15.0</span></div>
       <div class="tip2">Low = gradual diesel swell · High = peaky, hits hard at once</div>
-      <div class="sr"><span class="lbl">Friction (Nm)</span><input type="range" id="eFric" min="1" max="120" step="1" value="35" oninput="sE();dE()"><span class="vl" id="eFricV">35</span></div>
+      <div class="sr"><span class="lbl">Friction (Nm)</span><input type="range" id="eFric" min="1" max="120" step="1" value="35" oninput="sE();dE();markTouched('eFric')"><span class="vl" id="eFricV">35</span></div>
       <div class="tip2">Engine braking — drag when you lift off</div>
-      <div class="sr"><span class="lbl">Inertia (kg·m²)</span><input type="range" id="eIner" min="0.02" max="0.8" step="0.01" value="0.16" oninput="sE()"><span class="vl" id="eInerV">0.160</span></div>
+      <div class="sr"><span class="lbl">Inertia (kg·m²)</span><input type="range" id="eIner" min="0.02" max="0.8" step="0.01" value="0.16" oninput="sE();markTouched('eIner')"><span class="vl" id="eInerV">0.160</span></div>
       <div class="tip2">Heavy flywheel — high = slow to rev, less RPM drop on shifts</div>
       <div class="stats">
         <div class="stat"><div class="sl">Horsepower</div><div class="sv" id="eHp">330 hp</div></div>
@@ -94,6 +94,9 @@ var AC='rgba(255,255,255,0.2)';
 var TC2='rgba(255,255,255,0.32)';
 
 var currentFile = null;
+var loadedFields = null;
+var touchedFields = {};
+function markTouched(sliderId){ touchedFields[FIELD_MAP[sliderId]] = true; }
 
 // -- slider readouts --
 function sE(){
@@ -184,7 +187,8 @@ function setSlidersFromFields(fields){
 function currentFieldsFromSliders(){
   var fields = {};
   Object.keys(FIELD_MAP).forEach(function(sliderId){
-    fields[FIELD_MAP[sliderId]] = g(sliderId);
+    var field = FIELD_MAP[sliderId];
+    fields[field] = touchedFields[field] ? g(sliderId) : loadedFields[field];
   });
   return fields;
 }
@@ -218,6 +222,8 @@ async function loadEngine(file){
     showBanner('err', body.message || 'Failed to load ' + file);
     return;
   }
+  loadedFields = body.fields;
+  touchedFields = {};
   setSlidersFromFields(body.fields);
   el('applyBtn').disabled = false;
   showBanner('ok', 'Loaded live values from ' + file + '.');

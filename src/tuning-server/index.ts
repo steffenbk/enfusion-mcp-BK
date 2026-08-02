@@ -8,7 +8,7 @@ const addonPath = join(config.projectPath, addonName);
 const port = process.env.ENFUSION_TUNING_PORT ? parseInt(process.env.ENFUSION_TUNING_PORT, 10) : 5790;
 
 const server = createTuningServer(addonPath);
-server.listen(port, () => {
+server.listen(port, "127.0.0.1", () => {
   console.log(`Vehicle tuning server: http://127.0.0.1:${port}`);
   console.log(`  addon:  ${addonName}`);
   console.log(`  path:   ${addonPath}`);

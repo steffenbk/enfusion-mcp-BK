@@ -117,6 +117,22 @@ describe("tuning server", () => {
     expect(body).toEqual({ status: "error", message: "Invalid filename" });
   });
 
+  it("POST /api/engines/:file rejects a non-JSON Content-Type with 400", async () => {
+    const res = await fetch(`${baseUrl}/api/engines/Engine_M151.conf`, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({
+        fields: {
+          Inertia: 0.3, MaxPower: 99, MaxTorque: 176, RpmMaxPower: 4000,
+          RpmMaxTorque: 1800, Steepness: 20, Friction: 53, RpmIdle: 840, RpmMax: 6000,
+        },
+      }),
+    });
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body).toEqual({ status: "error", message: "Content-Type must be application/json" });
+  });
+
   it("GET / serves the tuner HTML page", async () => {
     const res = await fetch(`${baseUrl}/`);
     expect(res.status).toBe(200);

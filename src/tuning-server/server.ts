@@ -93,6 +93,12 @@ export function createTuningServer(addonPath: string): Server {
           return;
         }
 
+        const contentType = req.headers["content-type"];
+        if (typeof contentType !== "string" || !contentType.toLowerCase().includes("application/json")) {
+          sendJson(res, 400, { status: "error", message: "Content-Type must be application/json" });
+          return;
+        }
+
         const rawBody = await readBody(req);
         let parsedBody: unknown;
         try {
