@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RoadForger — Engine Tuner</title>
+</head>
+<body>
+<style>
+body{background:#1a1918;margin:0;padding:16px 20px}
+*{box-sizing:border-box;margin:0;padding:0}
+.root{padding:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#e8e6e3;font-size:13px}
+.lay{display:grid;grid-template-columns:minmax(0,256px) minmax(0,1fr);gap:1.5rem;align-items:start}
+.sec{font-size:10px;font-weight:500;color:#6b6762;letter-spacing:.09em;text-transform:uppercase;margin:12px 0 5px;padding-bottom:4px;border-bottom:.5px solid rgba(255,255,255,0.08)}
+.sec:first-child{margin-top:0}
+.sr{display:flex;align-items:center;gap:7px;margin-bottom:1px}
+.lbl{font-size:12px;color:#a8a49e;width:152px;flex-shrink:0}
+.sr input[type=range]{flex:1;min-width:0}
+.vl{font-size:12px;font-weight:500;min-width:44px;text-align:right;flex-shrink:0;color:#e8e6e3}
+.tip2{font-size:11px;color:#6b6762;margin:2px 0 7px 159px;line-height:1.5}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:10px}
+.stat{background:#2a2927;border-radius:8px;padding:7px 9px}
+.sl{font-size:10px;color:#6b6762;margin-bottom:2px}
+.sv{font-size:15px;font-weight:500}
+.rc{display:flex;flex-direction:column;gap:10px}
+.cc{background:#2a2927;border-radius:12px;padding:.85rem 1rem;overflow:hidden}
+.leg{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:#a8a49e;margin-bottom:8px}
+.leg span{display:inline-flex;align-items:center;gap:5px}
+.sw{width:20px;height:2px;border-radius:1px;display:inline-block;flex-shrink:0}
+.ax{font-size:11px;color:#6b6762;text-align:center;margin-top:6px}
+select,.applybtn{font-size:13px;padding:6px 14px;border:.5px solid rgba(255,255,255,0.14);border-radius:8px;background:#2a2927;color:#e8e6e3;font-family:inherit;cursor:pointer}
+.applybtn{background:#378ADD;border-color:#378ADD;font-weight:500}
+.applybtn:disabled{opacity:.5;cursor:default}
+.toprow{display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.banner{font-size:12px;padding:9px 12px;border-radius:8px;margin-bottom:12px;line-height:1.5;display:none}
+.banner.ok{display:block;background:rgba(59,109,17,0.18);color:#9fd97a;border:.5px solid rgba(59,109,17,0.4)}
+.banner.err{display:block;background:rgba(226,75,74,0.15);color:#f0a3a2;border:.5px solid rgba(226,75,74,0.4)}
+</style>
+
+<div class="root">
+  <div class="toprow">
+    <select id="engineSelect"><option value="">Loading engines...</option></select>
+    <button class="applybtn" id="applyBtn" disabled onclick="applyValues()">Apply to disk</button>
+  </div>
+  <div id="banner" class="banner"></div>
+
+  <div class="lay">
+    <div>
+      <div class="sec">Power &amp; torque</div>
+      <div class="sr"><span class="lbl">Max Power (kW)</span><input type="range" id="ePw" min="30" max="600" step="1" value="246" oninput="sE();dE()"><span class="vl" id="ePwV">246</span></div>
+      <div class="sr"><span class="lbl">Max Torque (Nm)</span><input type="range" id="eTq" min="50" max="1500" step="5" value="583" oninput="sE();dE()"><span class="vl" id="eTqV">583</span></div>
+      <div class="sr"><span class="lbl">Rpm Max Power</span><input type="range" id="eRpp" min="1500" max="8500" step="50" value="4100" oninput="sE();dE()"><span class="vl" id="eRppV">4100</span></div>
+      <div class="sr"><span class="lbl">Rpm Max Torque</span><input type="range" id="eRpt" min="500" max="6000" step="50" value="3000" oninput="sE();dE()"><span class="vl" id="eRptV">3000</span></div>
+      <div class="tip2">Must be &le; Rpm Max Power</div>
+      <div class="sec">RPM range</div>
+      <div class="sr"><span class="lbl">Rpm Idle</span><input type="range" id="eIdle" min="400" max="1500" step="25" value="850" oninput="sE();dE()"><span class="vl" id="eIdleV">850</span></div>
+      <div class="sr"><span class="lbl">Rpm Max</span><input type="range" id="eRmax" min="2500" max="10000" step="100" value="7500" oninput="sE();dE()"><span class="vl" id="eRmaxV">7500</span></div>
+      <div class="sec">Character</div>
+      <div class="sr"><span class="lbl">Steepness</span><input type="range" id="eSteep" min="1" max="40" step="0.5" value="15" oninput="sE();dE()"><span class="vl" id="eSteepV">15.0</span></div>
+      <div class="tip2">Low = gradual diesel swell · High = peaky, hits hard at once</div>
+      <div class="sr"><span class="lbl">Friction (Nm)</span><input type="range" id="eFric" min="1" max="120" step="1" value="35" oninput="sE();dE()"><span class="vl" id="eFricV">35</span></div>
+      <div class="tip2">Engine braking — drag when you lift off</div>
+      <div class="sr"><span class="lbl">Inertia (kg·m²)</span><input type="range" id="eIner" min="0.02" max="0.8" step="0.01" value="0.16" oninput="sE()"><span class="vl" id="eInerV">0.160</span></div>
+      <div class="tip2">Heavy flywheel — high = slow to rev, less RPM drop on shifts</div>
+      <div class="stats">
+        <div class="stat"><div class="sl">Horsepower</div><div class="sv" id="eHp">330 hp</div></div>
+        <div class="stat"><div class="sl">Max clutch Nm</div><div class="sv" id="eCl">933</div></div>
+        <div class="stat"><div class="sl">lb-ft torque</div><div class="sv" id="eLb">430</div></div>
+      </div>
+    </div>
+    <div class="rc">
+      <div class="cc">
+        <div class="leg"><span><span class="sw" style="background:#378ADD"></span>Power (kW)</span><span><span class="sw" style="background:#E24B4A"></span>Torque (Nm)</span></div>
+        <div style="position:relative;width:100%;height:220px"><canvas id="cE" style="position:absolute;inset:0;width:100%;height:100%"></canvas></div>
+        <div class="ax">RPM — Power &amp; Torque</div>
+      </div>
+      <div class="cc">
+        <div class="leg"><span><span class="sw" style="background:#E24B4A"></span>Steep 5 (diesel)</span><span><span class="sw" style="background:#378ADD"></span>Current</span><span><span class="sw" style="background:#3B6D11"></span>Steep 30 (sport)</span></div>
+        <div style="position:relative;width:100%;height:140px"><canvas id="cSt" style="position:absolute;inset:0;width:100%;height:100%"></canvas></div>
+        <div class="ax">Steepness — how quickly torque builds to its peak</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var EL=document;
+function g(id){return parseFloat(EL.getElementById(id).value);}
+function sv(id,t){EL.getElementById(id).textContent=t;}
+function el(id){return EL.getElementById(id);}
+
+var GC='rgba(255,255,255,0.07)';
+var AC='rgba(255,255,255,0.2)';
+var TC2='rgba(255,255,255,0.32)';
+
+var currentFile = null;
+
+// -- slider readouts --
+function sE(){
+  sv('ePwV',g('ePw').toFixed(0));sv('eTqV',g('eTq').toFixed(0));
+  sv('eRppV',g('eRpp').toFixed(0));sv('eRptV',g('eRpt').toFixed(0));
+  sv('eIdleV',g('eIdle').toFixed(0));sv('eRmaxV',g('eRmax').toFixed(0));
+  sv('eSteepV',g('eSteep').toFixed(1));sv('eFricV',g('eFric').toFixed(0));sv('eInerV',g('eIner').toFixed(3));
+  sv('eHp',Math.round(g('ePw')*1.341)+' hp');sv('eCl',Math.round(g('eTq')*1.6));sv('eLb',Math.round(g('eTq')*0.7376));
+}
+
+function setup(id){
+  var cv=el(id),par=cv.parentElement,dpr=window.devicePixelRatio||1;
+  var W=par.offsetWidth||500,H=par.offsetHeight||260;
+  cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
+  var ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
+  return{ctx:ctx,W:W,H:H};
+}
+
+function engT(rpm,pw,tq,rpp,rpt,idle,rmax,steep,fric){
+  if(rpm<=idle)return 0;
+  var t,tA=pw*9549/rpp;
+  if(rpm<=rpt){var r=1/(1+Math.exp(-steep*(rpm-rpt)/rmax)),r0=1/(1+Math.exp(-steep*(idle-rpt)/rmax));t=tq*(r-r0)/(1-r0+1e-9);}
+  else if(rpm<=rpp){t=tq+(tA-tq)*(rpm-rpt)/(rpp-rpt+1);}
+  else{t=pw*9549/rpm;}
+  return rpm>=rmax?0:Math.max(0,t-fric);
+}
+
+function dE(){
+  var pw=g('ePw'),tq=g('eTq'),rpp=g('eRpp'),rpt=g('eRpt'),idle=g('eIdle'),rmax=g('eRmax'),steep=g('eSteep'),fric=g('eFric');
+  var s=setup('cE'),ctx=s.ctx,W=s.W,H=s.H;
+  var L=46,R=46,T=12,Bo=22,pw2=W-L-R,ph=H-T-Bo;
+  ctx.clearRect(0,0,W,H);
+  var Ts=[],Ps=[],Rs=[];
+  for(var i=0;i<=150;i++){var rpm=idle+(rmax-idle)*(i/150),t=engT(rpm,pw,tq,rpp,rpt,idle,rmax,steep,fric);Rs.push(rpm);Ts.push(t);Ps.push(Math.min(t*rpm/9549,pw));}
+  var maxT=Math.max.apply(null,Ts)||1,maxP=Math.max.apply(null,Ps)||1;
+  function tx(r){return L+(r-idle)/(rmax-idle)*pw2;}
+  function tyT(t){return T+ph*(1-t/maxT);}
+  function tyP(p){return T+ph*(1-p/maxP);}
+  for(var i=0;i<=5;i++){ctx.strokeStyle=GC;ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(L,T+ph*i/5);ctx.lineTo(L+pw2,T+ph*i/5);ctx.stroke();ctx.fillStyle=TC2;ctx.font='11px system-ui,-apple-system,"Segoe UI",sans-serif';ctx.textAlign='right';ctx.fillText(Math.round(maxT*(1-i/5)),L-3,T+ph*i/5+4);}
+  for(var i=0;i<=6;i++){ctx.strokeStyle=GC;ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(L+pw2*i/6,T);ctx.lineTo(L+pw2*i/6,T+ph);ctx.stroke();ctx.fillStyle=TC2;ctx.font='11px system-ui,-apple-system,"Segoe UI",sans-serif';ctx.textAlign='center';ctx.fillText(Math.round(idle+(rmax-idle)*(i/6)),L+pw2*i/6,T+ph+14);}
+  ctx.fillStyle='#378ADD';ctx.font='11px system-ui,-apple-system,"Segoe UI",sans-serif';ctx.textAlign='left';
+  for(var i=0;i<=5;i++)ctx.fillText(Math.round(maxP*(1-i/5)),L+pw2+4,T+ph*i/5+4);
+  ctx.strokeStyle='#E24B4A';ctx.lineWidth=1.5;ctx.globalAlpha=.1;
+  ctx.beginPath();Rs.forEach(function(r,i){i===0?ctx.moveTo(tx(r),tyT(Ts[i])):ctx.lineTo(tx(r),tyT(Ts[i]));});
+  ctx.lineTo(tx(Rs[Rs.length-1]),T+ph);ctx.lineTo(tx(idle),T+ph);ctx.fill();
+  ctx.globalAlpha=1;ctx.strokeStyle='#E24B4A';ctx.lineWidth=2;ctx.beginPath();
+  Rs.forEach(function(r,i){i===0?ctx.moveTo(tx(r),tyT(Ts[i])):ctx.lineTo(tx(r),tyT(Ts[i]));});ctx.stroke();
+  ctx.strokeStyle='#378ADD';ctx.lineWidth=1.5;ctx.globalAlpha=.09;
+  ctx.beginPath();Rs.forEach(function(r,i){i===0?ctx.moveTo(tx(r),tyP(Ps[i])):ctx.lineTo(tx(r),tyP(Ps[i]));});
+  ctx.lineTo(tx(Rs[Rs.length-1]),T+ph);ctx.lineTo(tx(idle),T+ph);ctx.fill();
+  ctx.globalAlpha=1;ctx.strokeStyle='#378ADD';ctx.lineWidth=2;ctx.beginPath();
+  Rs.forEach(function(r,i){i===0?ctx.moveTo(tx(r),tyP(Ps[i])):ctx.lineTo(tx(r),tyP(Ps[i]));});ctx.stroke();
+  ctx.fillStyle='#E24B4A';ctx.font='500 11px system-ui,-apple-system,"Segoe UI",sans-serif';ctx.textAlign='left';ctx.fillText('Nm',L+5,T+14);
+  ctx.fillStyle='#378ADD';ctx.fillText('kW',L+5,T+26);
+  var rx=tx(rmax*.87);
+  ctx.strokeStyle='rgba(220,60,60,0.22)';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);
+  ctx.beginPath();ctx.moveTo(rx,T);ctx.lineTo(rx,T+ph);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='rgba(210,60,60,0.5)';ctx.font='11px system-ui,-apple-system,"Segoe UI",sans-serif';ctx.textAlign='right';ctx.fillText('redline',rx-3,T+11);
+
+  var s2=setup('cSt'),c2=s2.ctx,W2=s2.W,H2=s2.H,L2=28,T2=8,Bo2=16,pw3=W2-L2-10,ph2=H2-T2-Bo2;
+  c2.clearRect(0,0,W2,H2);
+  for(var i=0;i<=4;i++){c2.strokeStyle=GC;c2.lineWidth=.5;c2.beginPath();c2.moveTo(L2,T2+ph2*i/4);c2.lineTo(L2+pw3,T2+ph2*i/4);c2.stroke();c2.fillStyle=TC2;c2.font='11px system-ui,-apple-system,"Segoe UI",sans-serif';c2.textAlign='right';c2.fillText((1-i/4).toFixed(1),L2-3,T2+ph2*i/4+4);}
+  [[5,'#E24B4A',[4,3]],[steep,'#378ADD',[]],[30,'#3B6D11',[4,3]]].forEach(function(cfg){
+    c2.strokeStyle=cfg[1];c2.lineWidth=cfg[2].length?1.5:2.5;
+    if(cfg[2].length)c2.setLineDash(cfg[2]);else c2.setLineDash([]);
+    c2.beginPath();
+    for(var i=0;i<=100;i++){var rpm=(i/100)*rmax,r=1/(1+Math.exp(-cfg[0]*(rpm-rpt)/rmax)),r0=1/(1+Math.exp(-cfg[0]*(0-rpt)/rmax));var v=Math.max(0,Math.min(1,(r-r0)/(1-r0+1e-9)));i===0?c2.moveTo(L2+pw3*(i/100),T2+ph2*(1-v)):c2.lineTo(L2+pw3*(i/100),T2+ph2*(1-v));}
+    c2.stroke();c2.setLineDash([]);
+  });
+}
+
+// -- API wiring --
+var FIELD_MAP = { ePw:'MaxPower', eTq:'MaxTorque', eRpp:'RpmMaxPower', eRpt:'RpmMaxTorque', eIdle:'RpmIdle', eRmax:'RpmMax', eSteep:'Steepness', eFric:'Friction', eIner:'Inertia' };
+
+function showBanner(kind, text){
+  var b = el('banner');
+  b.className = 'banner ' + kind;
+  b.textContent = text;
+}
+
+function setSlidersFromFields(fields){
+  Object.keys(FIELD_MAP).forEach(function(sliderId){
+    el(sliderId).value = fields[FIELD_MAP[sliderId]];
+  });
+  sE(); dE();
+}
+
+function currentFieldsFromSliders(){
+  var fields = {};
+  Object.keys(FIELD_MAP).forEach(function(sliderId){
+    fields[FIELD_MAP[sliderId]] = g(sliderId);
+  });
+  return fields;
+}
+
+async function loadEngineList(){
+  var res = await fetch('/api/engines');
+  var body = await res.json();
+  var select = el('engineSelect');
+  select.innerHTML = '';
+  if (!body.files || body.files.length === 0) {
+    select.innerHTML = '<option value="">No engine .conf overrides found</option>';
+    showBanner('err', 'No engine .conf files found under this addon. In Workbench, right-click the vehicle\'s Engine_*.conf resource and choose Override/Duplicate into this addon before tuning it here.');
+    return;
+  }
+  body.files.forEach(function(f){
+    var opt = document.createElement('option');
+    opt.value = f; opt.textContent = f;
+    select.appendChild(opt);
+  });
+  select.onchange = function(){ loadEngine(select.value); };
+  loadEngine(select.value);
+}
+
+async function loadEngine(file){
+  if (!file) return;
+  currentFile = file;
+  el('applyBtn').disabled = true;
+  var res = await fetch('/api/engines/' + encodeURIComponent(file));
+  var body = await res.json();
+  if (body.status !== 'ok') {
+    showBanner('err', body.message || 'Failed to load ' + file);
+    return;
+  }
+  setSlidersFromFields(body.fields);
+  el('applyBtn').disabled = false;
+  showBanner('ok', 'Loaded live values from ' + file + '.');
+}
+
+async function applyValues(){
+  if (!currentFile) return;
+  el('applyBtn').disabled = true;
+  var res = await fetch('/api/engines/' + encodeURIComponent(currentFile), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fields: currentFieldsFromSliders() }),
+  });
+  var body = await res.json();
+  el('applyBtn').disabled = false;
+  if (body.status !== 'ok') {
+    showBanner('err', body.message || 'Failed to apply changes');
+    return;
+  }
+  showBanner('ok', body.message);
+}
+
+sE(); dE();
+loadEngineList();
+</script>
+</body>
+</html>

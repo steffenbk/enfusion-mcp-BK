@@ -1,5 +1,7 @@
 import { createServer, type IncomingMessage, type ServerResponse, type Server } from "node:http";
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
 import {
   parseEngineConf,
   serializeEngineConf,
@@ -7,6 +9,8 @@ import {
   type EngineFields,
 } from "./engine-conf.js";
 import { listEngineConfFiles, engineConfPath } from "./discover.js";
+
+const TUNER_HTML_PATH = join(dirname(fileURLToPath(import.meta.url)), "public", "tuner.html");
 
 function sendJson(res: ServerResponse, status: number, body: unknown): void {
   const data = JSON.stringify(body);
@@ -45,6 +49,13 @@ export function createTuningServer(addonPath: string): Server {
   return createServer(async (req: IncomingMessage, res: ServerResponse) => {
     try {
       const url = new URL(req.url ?? "/", "http://localhost");
+
+      if (req.method === "GET" && url.pathname === "/") {
+        const html = readFileSync(TUNER_HTML_PATH, "utf-8");
+        res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+        res.end(html);
+        return;
+      }
 
       if (req.method === "GET" && url.pathname === "/api/engines") {
         sendJson(res, 200, { status: "ok", files: listEngineConfFiles(addonPath) });

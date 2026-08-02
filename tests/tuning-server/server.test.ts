@@ -116,4 +116,12 @@ describe("tuning server", () => {
     const body = await res.json();
     expect(body).toEqual({ status: "error", message: "Invalid filename" });
   });
+
+  it("GET / serves the tuner HTML page", async () => {
+    const res = await fetch(`${baseUrl}/`);
+    expect(res.status).toBe(200);
+    expect(res.headers.get("content-type")).toContain("text/html");
+    const body = await res.text();
+    expect(body).toContain("<title>");
+  });
 });
