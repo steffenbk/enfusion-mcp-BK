@@ -3,6 +3,7 @@ import {
   findEngineBlock,
   readEngineFieldsFromBlock,
   countUnquotedBraces,
+  writeEngineFields,
 } from "../../src/tuning-server/et-engine-block.js";
 
 // Shape of RoadForger/Prefabs/Vehicles/Wheeled/Ural4320/Ural4320.et:
@@ -151,5 +152,65 @@ describe("readEngineFieldsFromBlock", () => {
   it("returns an empty object for a block that only overrides Output", () => {
     const loc = findEngineBlock(REF_ENGINE)!;
     expect(readEngineFieldsFromBlock(REF_ENGINE, loc)).toEqual({});
+  });
+});
+
+describe("writeEngineFields", () => {
+  it("replaces an existing field in place and changes nothing else", () => {
+    const loc = findEngineBlock(INLINE_ENGINE)!;
+    const out = writeEngineFields(INLINE_ENGINE, loc, { MaxPower: 175 });
+
+    const before = INLINE_ENGINE.split("\n");
+    const after = out.split("\n");
+    expect(after.length).toBe(before.length);
+
+    const differing = after.filter((l, i) => l !== before[i]);
+    expect(differing).toEqual(["     MaxPower 175"]);
+  });
+
+  it("preserves the RpmRedline line it does not manage", () => {
+    const loc = findEngineBlock(INLINE_ENGINE)!;
+    const out = writeEngineFields(INLINE_ENGINE, loc, { MaxPower: 175 });
+    expect(out).toContain("RpmRedline 8500");
+  });
+
+  it("does not touch the Clutch block's MaxTorque when writing the Engine's", () => {
+    const loc = findEngineBlock(INLINE_ENGINE)!;
+    const out = writeEngineFields(INLINE_ENGINE, loc, { MaxTorque: 999 });
+    expect(out).toContain("MaxTorque 999");
+    expect(out).toContain("MaxTorque 250"); // Clutch's, untouched
+  });
+
+  it("inserts a missing field inside the block using the block's indentation", () => {
+    const loc = findEngineBlock(REF_ENGINE)!;
+    const out = writeEngineFields(REF_ENGINE, loc, { MaxPower: 75 });
+
+    const before = REF_ENGINE.split("\n");
+    const after = out.split("\n");
+    expect(after.length).toBe(before.length + 1);
+    expect(out).toContain("     MaxPower 75");
+    // inserted inside the block, before its closing brace
+    const idx = after.findIndex((l) => l.trim() === "MaxPower 75");
+    expect(after[idx - 1].trim()).toBe('Output "Clutch"');
+  });
+
+  it("preserves the + array-append operator elsewhere in the file", () => {
+    const loc = findEngineBlock(REF_ENGINE)!;
+    const out = writeEngineFields(REF_ENGINE, loc, { MaxPower: 75 });
+    expect(out).toContain("Filenames + {");
+  });
+
+  it("writes nothing when there are no changes", () => {
+    const loc = findEngineBlock(INLINE_ENGINE)!;
+    expect(writeEngineFields(INLINE_ENGINE, loc, {})).toBe(INLINE_ENGINE);
+  });
+
+  it("preserves CRLF line endings", () => {
+    const crlf = INLINE_ENGINE.replace(/\n/g, "\r\n");
+    const loc = findEngineBlock(crlf)!;
+    const out = writeEngineFields(crlf, loc, { MaxPower: 175 });
+    expect(out).toContain("\r\n");
+    expect(out).toContain("MaxPower 175");
+    expect(out.includes("\n\n")).toBe(false);
   });
 });
