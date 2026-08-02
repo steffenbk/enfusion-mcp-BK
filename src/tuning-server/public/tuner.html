@@ -17,6 +17,10 @@ body{background:#1a1918;margin:0;padding:16px 20px}
 .lbl{font-size:12px;color:#a8a49e;width:152px;flex-shrink:0}
 .sr input[type=range]{flex:1;min-width:0}
 .vl{font-size:12px;font-weight:500;min-width:44px;text-align:right;flex-shrink:0;color:#e8e6e3}
+.src{font-size:9px;letter-spacing:.04em;text-transform:uppercase;min-width:30px;text-align:right;flex-shrink:0}
+.src.ovr{color:#378ADD}
+.src.inh{color:#6b6762}
+.src.unr{color:#BA7517}
 .tip2{font-size:11px;color:#6b6762;margin:2px 0 7px 159px;line-height:1.5}
 .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:10px}
 .stat{background:#2a2927;border-radius:8px;padding:7px 9px}
@@ -47,20 +51,20 @@ select,.applybtn{font-size:13px;padding:6px 14px;border:.5px solid rgba(255,255,
   <div class="lay">
     <div>
       <div class="sec">Power &amp; torque</div>
-      <div class="sr"><span class="lbl">Max Power (kW)</span><input type="range" id="ePw" min="30" max="600" step="1" value="246" oninput="sE();dE();markTouched('ePw')"><span class="vl" id="ePwV">246</span></div>
-      <div class="sr"><span class="lbl">Max Torque (Nm)</span><input type="range" id="eTq" min="50" max="1500" step="5" value="583" oninput="sE();dE();markTouched('eTq')"><span class="vl" id="eTqV">583</span></div>
-      <div class="sr"><span class="lbl">Rpm Max Power</span><input type="range" id="eRpp" min="1500" max="8500" step="50" value="4100" oninput="sE();dE();markTouched('eRpp')"><span class="vl" id="eRppV">4100</span></div>
-      <div class="sr"><span class="lbl">Rpm Max Torque</span><input type="range" id="eRpt" min="500" max="6000" step="50" value="3000" oninput="sE();dE();markTouched('eRpt')"><span class="vl" id="eRptV">3000</span></div>
+      <div class="sr"><span class="lbl">Max Power (kW)</span><input type="range" id="ePw" min="30" max="600" step="1" value="246" oninput="sE();dE();markTouched('ePw')"><span class="vl" id="ePwV">246</span><span class="src" id="ePwS"></span></div>
+      <div class="sr"><span class="lbl">Max Torque (Nm)</span><input type="range" id="eTq" min="50" max="1500" step="5" value="583" oninput="sE();dE();markTouched('eTq')"><span class="vl" id="eTqV">583</span><span class="src" id="eTqS"></span></div>
+      <div class="sr"><span class="lbl">Rpm Max Power</span><input type="range" id="eRpp" min="1500" max="8500" step="50" value="4100" oninput="sE();dE();markTouched('eRpp')"><span class="vl" id="eRppV">4100</span><span class="src" id="eRppS"></span></div>
+      <div class="sr"><span class="lbl">Rpm Max Torque</span><input type="range" id="eRpt" min="500" max="6000" step="50" value="3000" oninput="sE();dE();markTouched('eRpt')"><span class="vl" id="eRptV">3000</span><span class="src" id="eRptS"></span></div>
       <div class="tip2">Must be &le; Rpm Max Power</div>
       <div class="sec">RPM range</div>
-      <div class="sr"><span class="lbl">Rpm Idle</span><input type="range" id="eIdle" min="400" max="1500" step="25" value="850" oninput="sE();dE();markTouched('eIdle')"><span class="vl" id="eIdleV">850</span></div>
-      <div class="sr"><span class="lbl">Rpm Max</span><input type="range" id="eRmax" min="2500" max="10000" step="100" value="7500" oninput="sE();dE();markTouched('eRmax')"><span class="vl" id="eRmaxV">7500</span></div>
+      <div class="sr"><span class="lbl">Rpm Idle</span><input type="range" id="eIdle" min="400" max="1500" step="25" value="850" oninput="sE();dE();markTouched('eIdle')"><span class="vl" id="eIdleV">850</span><span class="src" id="eIdleS"></span></div>
+      <div class="sr"><span class="lbl">Rpm Max</span><input type="range" id="eRmax" min="2500" max="10000" step="100" value="7500" oninput="sE();dE();markTouched('eRmax')"><span class="vl" id="eRmaxV">7500</span><span class="src" id="eRmaxS"></span></div>
       <div class="sec">Character</div>
-      <div class="sr"><span class="lbl">Steepness</span><input type="range" id="eSteep" min="1" max="40" step="0.5" value="15" oninput="sE();dE();markTouched('eSteep')"><span class="vl" id="eSteepV">15.0</span></div>
+      <div class="sr"><span class="lbl">Steepness</span><input type="range" id="eSteep" min="1" max="40" step="0.5" value="15" oninput="sE();dE();markTouched('eSteep')"><span class="vl" id="eSteepV">15.0</span><span class="src" id="eSteepS"></span></div>
       <div class="tip2">Low = gradual diesel swell · High = peaky, hits hard at once</div>
-      <div class="sr"><span class="lbl">Friction (Nm)</span><input type="range" id="eFric" min="1" max="120" step="1" value="35" oninput="sE();dE();markTouched('eFric')"><span class="vl" id="eFricV">35</span></div>
+      <div class="sr"><span class="lbl">Friction (Nm)</span><input type="range" id="eFric" min="1" max="120" step="1" value="35" oninput="sE();dE();markTouched('eFric')"><span class="vl" id="eFricV">35</span><span class="src" id="eFricS"></span></div>
       <div class="tip2">Engine braking — drag when you lift off</div>
-      <div class="sr"><span class="lbl">Inertia (kg·m²)</span><input type="range" id="eIner" min="0.02" max="0.8" step="0.01" value="0.16" oninput="sE();markTouched('eIner')"><span class="vl" id="eInerV">0.160</span></div>
+      <div class="sr"><span class="lbl">Inertia (kg·m²)</span><input type="range" id="eIner" min="0.02" max="0.8" step="0.01" value="0.16" oninput="sE();markTouched('eIner')"><span class="vl" id="eInerV">0.160</span><span class="src" id="eInerS"></span></div>
       <div class="tip2">Heavy flywheel — high = slow to rev, less RPM drop on shifts</div>
       <div class="stats">
         <div class="stat"><div class="sl">Horsepower</div><div class="sv" id="eHp">330 hp</div></div>
@@ -177,65 +181,82 @@ function showBanner(kind, text){
   b.textContent = text;
 }
 
-function setSlidersFromFields(fields){
+function setSlidersFromResolved(resolved){
   Object.keys(FIELD_MAP).forEach(function(sliderId){
-    el(sliderId).value = fields[FIELD_MAP[sliderId]];
+    var field = FIELD_MAP[sliderId];
+    var entry = resolved[field] || { value: null, source: 'unresolved' };
+    var badge = el(sliderId + 'S');
+    if (entry.value !== null && entry.value !== undefined) {
+      el(sliderId).value = entry.value;
+    }
+    if (entry.source === 'overridden') { badge.className = 'src ovr'; badge.textContent = 'ovr'; }
+    else if (entry.source === 'inherited') { badge.className = 'src inh'; badge.textContent = 'inh'; }
+    else { badge.className = 'src unr'; badge.textContent = '?'; }
   });
   sE(); dE();
 }
 
-function currentFieldsFromSliders(){
-  var fields = {};
+// Only fields the user actually dragged are sent, so slider min/max/step
+// snapping can never rewrite a value the user did not touch.
+function currentChanges(){
+  var changes = {};
   Object.keys(FIELD_MAP).forEach(function(sliderId){
     var field = FIELD_MAP[sliderId];
-    fields[field] = touchedFields[field] ? g(sliderId) : loadedFields[field];
+    if (touchedFields[field]) changes[field] = g(sliderId);
   });
-  return fields;
+  return changes;
 }
 
-async function loadEngineList(){
-  var res = await fetch('/api/engines');
+async function loadVehicleList(){
+  var res = await fetch('/api/vehicles');
   var body = await res.json();
   var select = el('engineSelect');
   select.innerHTML = '';
-  if (!body.files || body.files.length === 0) {
-    select.innerHTML = '<option value="">No engine .conf overrides found</option>';
-    showBanner('err', 'No engine .conf files found under this addon. In Workbench, right-click the vehicle\'s Engine_*.conf resource and choose Override/Duplicate into this addon before tuning it here.');
+  if (!body.vehicles || body.vehicles.length === 0) {
+    select.innerHTML = '<option value="">No tunable vehicles found</option>';
+    showBanner('err', 'No vehicle prefab in this addon has an Engine block yet. In Workbench, open the vehicle prefab, expand VehicleWheeledSimulation > Simulation Wheeled, add an Engine override, and save. This tool never creates that structure itself.');
     return;
   }
-  body.files.forEach(function(f){
+  body.vehicles.forEach(function(v){
     var opt = document.createElement('option');
-    opt.value = f; opt.textContent = f;
+    opt.value = v;
+    opt.textContent = v.replace('Prefabs/Vehicles/', '');
     select.appendChild(opt);
   });
-  select.onchange = function(){ loadEngine(select.value); };
-  loadEngine(select.value);
+  select.onchange = function(){ loadVehicle(select.value); };
+  loadVehicle(select.value);
 }
 
-async function loadEngine(file){
-  if (!file) return;
-  currentFile = file;
+async function loadVehicle(rel){
+  if (!rel) return;
+  currentFile = rel;
   el('applyBtn').disabled = true;
-  var res = await fetch('/api/engines/' + encodeURIComponent(file));
+  var res = await fetch('/api/vehicles/' + rel.split('/').map(encodeURIComponent).join('/'));
   var body = await res.json();
   if (body.status !== 'ok') {
-    showBanner('err', body.message || 'Failed to load ' + file);
+    showBanner('err', body.message || 'Failed to load ' + rel);
     return;
   }
   loadedFields = body.fields;
   touchedFields = {};
-  setSlidersFromFields(body.fields);
+  setSlidersFromResolved(body.fields);
   el('applyBtn').disabled = false;
-  showBanner('ok', 'Loaded live values from ' + file + '.');
+  var unresolved = Object.keys(body.fields).filter(function(k){ return body.fields[k].source === 'unresolved'; });
+  showBanner('ok', 'Loaded ' + rel + '.' + (unresolved.length ? ' Unresolved (shown as ?): ' + unresolved.join(', ') + '. Base game data not found — drag a slider to set one explicitly.' : ''));
 }
 
 async function applyValues(){
   if (!currentFile) return;
+  var changes = currentChanges();
+  if (Object.keys(changes).length === 0) {
+    showBanner('err', 'Nothing changed. Drag a slider first — untouched fields are never written.');
+    return;
+  }
   el('applyBtn').disabled = true;
-  var res = await fetch('/api/engines/' + encodeURIComponent(currentFile), {
+  var res = await fetch('/api/vehicles/' + currentFile.split('/').map(encodeURIComponent).join('/'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ fields: currentFieldsFromSliders() }),
+    body: JSON.stringify({ changes: changes }),
   });
   var body = await res.json();
   el('applyBtn').disabled = false;
@@ -243,11 +264,12 @@ async function applyValues(){
     showBanner('err', body.message || 'Failed to apply changes');
     return;
   }
-  showBanner('ok', body.message);
+  showBanner('ok', 'Wrote ' + (body.written || []).join(', ') + '. ' + body.message);
+  loadVehicle(currentFile);
 }
 
 sE(); dE();
-loadEngineList();
+loadVehicleList();
 </script>
 </body>
 </html>
