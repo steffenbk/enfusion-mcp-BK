@@ -25,9 +25,9 @@ export const ENGINE_FIELD_KEYS: (keyof EngineFields)[] = [
 // Matches a single "Key Value" line inside an Engine { ... } block, e.g. " MaxPower 53".
 const ENGINE_LINE_RE = /^(\s*)([A-Za-z][A-Za-z0-9_]*)\s+(-?\d+(?:\.\d+)?)\s*$/;
 
-export function parseEngineConf(text: string): EngineFields {
-  const found: Partial<Record<keyof EngineFields, number>> = {};
-
+/** Read whichever of the 9 known fields are present. Never throws. */
+export function parseEngineConfPartial(text: string): Partial<EngineFields> {
+  const found: Partial<EngineFields> = {};
   for (const line of text.split(/\r?\n/)) {
     const m = ENGINE_LINE_RE.exec(line);
     if (!m) continue;
@@ -36,12 +36,15 @@ export function parseEngineConf(text: string): EngineFields {
       found[key as keyof EngineFields] = parseFloat(m[3]);
     }
   }
+  return found;
+}
 
+export function parseEngineConf(text: string): EngineFields {
+  const found = parseEngineConfPartial(text);
   const missing = ENGINE_FIELD_KEYS.filter((k) => found[k] === undefined);
   if (missing.length > 0) {
     throw new Error(`Engine .conf missing required field(s): ${missing.join(", ")}`);
   }
-
   return found as EngineFields;
 }
 

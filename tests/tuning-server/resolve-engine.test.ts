@@ -1,0 +1,111 @@
+// tests/tuning-server/resolve-engine.test.ts
+import { describe, it, expect } from "vitest";
+import { resolveEngineFields } from "../../src/tuning-server/resolve-engine.js";
+
+const MOD_ET_WITH_REF = `Vehicle : "{BBBB}Base.et" {
+ components {
+  VehicleWheeledSimulation "{731B26FCA2F19855}" {
+   Simulation Wheeled "{4D8B26DEA5F25978}" {
+    Engine Engine Engine : "{CEA5458AC6B97274}Prefabs/Vehicles/Core/Configs/Engines/Engine_M151.conf" {
+     MaxPower 75
+    }
+   }
+  }
+ }
+}
+`;
+
+const ENGINE_M151_CONF = `Engine {
+ Inertia 0.3
+ MaxPower 53
+ MaxTorque 176
+ RpmMaxPower 4000
+ RpmMaxTorque 1800
+ Steepness 15
+ Friction 53
+ RpmIdle 840
+ RpmMax 6000
+}
+`;
+
+const MOD_ET_NO_REF = `Vehicle : "{CCCC}Base.et" {
+ components {
+  VehicleWheeledSimulation "{731B26FCA2F19855}" {
+   Simulation Wheeled "{4D8B26DEA5F25978}" {
+    Engine Engine Engine {
+     MaxPower 120
+    }
+   }
+  }
+ }
+}
+`;
+
+const VANILLA_ET_INLINE = `Vehicle : "{DDDD}Base.et" {
+ components {
+  VehicleWheeledSimulation "{731B26FCA2F19855}" {
+   Simulation Wheeled "{4D8B26DEA5F25978}" {
+    Engine Engine Engine {
+     Inertia 1.3
+     MaxPower 103
+     MaxTorque 383
+     RpmMaxPower 3300
+     RpmMaxTorque 2500
+     Steepness 12
+     Friction 140
+     RpmIdle 600
+     RpmMax 4000
+    }
+   }
+  }
+ }
+}
+`;
+
+describe("resolveEngineFields", () => {
+  it("marks a field written in the mod .et as overridden and the rest as inherited", () => {
+    const r = resolveEngineFields({
+      modText: MOD_ET_WITH_REF,
+      relPath: "Prefabs/Vehicles/Wheeled/M151A2/M151A2.et",
+      extractedPath: "E:/mirror",
+      readFile: (p) => (p.includes("Engine_M151.conf") ? ENGINE_M151_CONF : null),
+    });
+    expect(r.MaxPower).toEqual({ value: 75, source: "overridden" });
+    expect(r.MaxTorque).toEqual({ value: 176, source: "inherited" });
+    expect(r.RpmIdle).toEqual({ value: 840, source: "inherited" });
+  });
+
+  it("falls back to the same-path vanilla .et when the block has no conf reference", () => {
+    const r = resolveEngineFields({
+      modText: MOD_ET_NO_REF,
+      relPath: "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
+      extractedPath: "E:/mirror",
+      readFile: (p) => (p.includes("BRDM2_base.et") ? VANILLA_ET_INLINE : null),
+    });
+    expect(r.MaxPower).toEqual({ value: 120, source: "overridden" });
+    expect(r.Steepness).toEqual({ value: 12, source: "inherited" });
+    expect(r.Friction).toEqual({ value: 140, source: "inherited" });
+  });
+
+  it("marks fields unresolved when no baseline can be read", () => {
+    const r = resolveEngineFields({
+      modText: MOD_ET_NO_REF,
+      relPath: "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
+      extractedPath: undefined,
+      readFile: () => null,
+    });
+    expect(r.MaxPower).toEqual({ value: 120, source: "overridden" });
+    expect(r.Steepness).toEqual({ value: null, source: "unresolved" });
+  });
+
+  it("returns all nine keys regardless of what resolved", () => {
+    const r = resolveEngineFields({
+      modText: MOD_ET_NO_REF,
+      relPath: "Prefabs/Vehicles/Wheeled/X/X.et",
+      readFile: () => null,
+    });
+    expect(Object.keys(r).sort()).toEqual(
+      ["Friction", "Inertia", "MaxPower", "MaxTorque", "RpmIdle", "RpmMax", "RpmMaxPower", "RpmMaxTorque", "Steepness"].sort()
+    );
+  });
+});
