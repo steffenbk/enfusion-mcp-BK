@@ -8,3 +8,4 @@ enfusion-mcp.config.json
 *.pdf
 .claude/
 nul
+.worktrees/
