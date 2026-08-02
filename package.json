@@ -10,6 +10,7 @@
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
     "build": "npm run clean && tsc -p tsconfig.build.json",
     "dev": "tsx src/index.ts",
+    "tuning-server": "tsx src/tuning-server/index.ts",
     "scrape": "tsx scripts/scrape.ts",
     "scrape:remote": "tsx scripts/scrape.ts --source remote",
     "scrape:local": "tsx scripts/scrape.ts --source local",
