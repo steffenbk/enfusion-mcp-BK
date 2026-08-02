@@ -2,13 +2,10 @@ import { createServer, type IncomingMessage, type ServerResponse, type Server } 
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import {
-  parseEngineConf,
-  serializeEngineConf,
-  ENGINE_FIELD_KEYS,
-  type EngineFields,
-} from "./engine-conf.js";
-import { listEngineConfFiles, engineConfPath } from "./discover.js";
+import { ENGINE_FIELD_KEYS, type EngineFields } from "./engine-conf.js";
+import { listTunableVehicles, vehicleEtPath, isSafeVehicleRelPath } from "./discover.js";
+import { resolveEngineFields } from "./resolve-engine.js";
+import { findEngineBlock, writeEngineFields } from "./et-engine-block.js";
 
 const TUNER_HTML_PATH = join(dirname(fileURLToPath(import.meta.url)), "public", "tuner.html");
 
@@ -30,22 +27,21 @@ function readBody(req: IncomingMessage): Promise<string> {
   });
 }
 
-function isValidEngineFields(value: unknown): value is EngineFields {
+/** A partial set of engine changes: at least one known key, all finite numbers. */
+function isValidEngineChanges(value: unknown): value is Partial<EngineFields> {
   if (typeof value !== "object" || value === null) return false;
   const v = value as Record<string, unknown>;
-  return ENGINE_FIELD_KEYS.every((key) => typeof v[key] === "number" && Number.isFinite(v[key]));
-}
-
-// Rejects filenames that could escape the Engines directory (path separators or ".." segments).
-function isSafeFilename(file: string): boolean {
-  return !file.includes("/") && !file.includes("\\") && !file.includes("..");
+  const keys = Object.keys(v);
+  if (keys.length === 0) return false;
+  if (!keys.every((k) => (ENGINE_FIELD_KEYS as string[]).includes(k))) return false;
+  return keys.every((k) => typeof v[k] === "number" && Number.isFinite(v[k]));
 }
 
 const RELOAD_REMINDER =
-  "Written to disk. If this engine's vehicle prefab is open in Workbench, reload it — " +
+  "Written to disk. If this vehicle prefab is open in Workbench, reload it — " +
   "Workbench silently reverts external file edits to a prefab it has open.";
 
-export function createTuningServer(addonPath: string): Server {
+export function createTuningServer(addonPath: string, extractedPath?: string): Server {
   return createServer(async (req: IncomingMessage, res: ServerResponse) => {
     try {
       const url = new URL(req.url ?? "/", "http://localhost");
@@ -57,39 +53,28 @@ export function createTuningServer(addonPath: string): Server {
         return;
       }
 
-      if (req.method === "GET" && url.pathname === "/api/engines") {
-        sendJson(res, 200, { status: "ok", files: listEngineConfFiles(addonPath) });
+      if (req.method === "GET" && url.pathname === "/api/vehicles") {
+        sendJson(res, 200, { status: "ok", vehicles: listTunableVehicles(addonPath) });
         return;
       }
 
-      const fileMatch = /^\/api\/engines\/([^/]+)$/.exec(url.pathname);
-
-      if (fileMatch && req.method === "GET") {
-        const file = decodeURIComponent(fileMatch[1]);
-        if (!isSafeFilename(file)) {
-          sendJson(res, 400, { status: "error", message: "Invalid filename" });
+      const match = /^\/api\/vehicles\/(.+)$/.exec(url.pathname);
+      if (match && (req.method === "GET" || req.method === "POST")) {
+        const rel = decodeURIComponent(match[1]);
+        if (!isSafeVehicleRelPath(rel)) {
+          sendJson(res, 400, { status: "error", message: "Invalid vehicle path" });
           return;
         }
-        const filePath = engineConfPath(addonPath, file);
+        const filePath = vehicleEtPath(addonPath, rel);
         if (!existsSync(filePath)) {
-          sendJson(res, 404, { status: "error", message: `Not found: ${file}` });
+          sendJson(res, 404, { status: "error", message: `Not found: ${rel}` });
           return;
         }
-        const text = readFileSync(filePath, "utf-8");
-        const fields = parseEngineConf(text);
-        sendJson(res, 200, { status: "ok", file, fields });
-        return;
-      }
 
-      if (fileMatch && req.method === "POST") {
-        const file = decodeURIComponent(fileMatch[1]);
-        if (!isSafeFilename(file)) {
-          sendJson(res, 400, { status: "error", message: "Invalid filename" });
-          return;
-        }
-        const filePath = engineConfPath(addonPath, file);
-        if (!existsSync(filePath)) {
-          sendJson(res, 404, { status: "error", message: `Not found: ${file}` });
+        if (req.method === "GET") {
+          const modText = readFileSync(filePath, "utf-8");
+          const fields = resolveEngineFields({ modText, relPath: rel, extractedPath });
+          sendJson(res, 200, { status: "ok", vehicle: rel, fields });
           return;
         }
 
@@ -108,19 +93,34 @@ export function createTuningServer(addonPath: string): Server {
           return;
         }
 
-        const fields = (parsedBody as { fields?: unknown }).fields;
-        if (!isValidEngineFields(fields)) {
+        const changes = (parsedBody as { changes?: unknown }).changes;
+        if (!isValidEngineChanges(changes)) {
           sendJson(res, 400, {
             status: "error",
-            message: `Body must include a "fields" object with all of: ${ENGINE_FIELD_KEYS.join(", ")}`,
+            message: `Body must include a "changes" object with at least one numeric field from: ${ENGINE_FIELD_KEYS.join(", ")}`,
           });
           return;
         }
 
         const original = readFileSync(filePath, "utf-8");
-        const updated = serializeEngineConf(original, fields);
-        writeFileSync(filePath, updated, "utf-8");
-        sendJson(res, 200, { status: "ok", file, message: RELOAD_REMINDER });
+        const loc = findEngineBlock(original);
+        if (!loc) {
+          sendJson(res, 409, {
+            status: "error",
+            message:
+              `${rel} has no Engine block. Add the engine override in Workbench first — ` +
+              `this tool never creates the block structure.`,
+          });
+          return;
+        }
+
+        writeFileSync(filePath, writeEngineFields(original, loc, changes), "utf-8");
+        sendJson(res, 200, {
+          status: "ok",
+          vehicle: rel,
+          written: Object.keys(changes),
+          message: RELOAD_REMINDER,
+        });
         return;
       }
 

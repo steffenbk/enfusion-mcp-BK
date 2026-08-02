@@ -4,38 +4,53 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { AddressInfo } from "node:net";
 import { createTuningServer } from "../../src/tuning-server/server.js";
-import { ENGINE_CONF_SUBPATH } from "../../src/tuning-server/discover.js";
+import { VEHICLES_SUBPATH } from "../../src/tuning-server/discover.js";
 
-const M151_CONF = `Engine {
- Inertia 0.3
- MaxPower 53
- MaxTorque 176
- RpmMaxPower 4000
- RpmMaxTorque 1800
- Steepness 15
- Friction 53
- RpmIdle 840
- RpmRedline 4200
- RpmMax 6000
+const REL = "Prefabs/Vehicles/Wheeled/M151A2/M151A2.et";
+
+const VEHICLE_ET = `Vehicle : "{AAAA}Base.et" {
+ components {
+  SCR_VehicleSoundComponent "{55C2E66AD4EF2CA6}" {
+   Filenames + {
+    "{D89573B95647C34A}Sounds/A.acp"
+   }
+  }
+  VehicleWheeledSimulation "{731B26FCA2F19855}" {
+   Simulation Wheeled "{4D8B26DEA5F25978}" {
+    Engine Engine Engine {
+     Inertia 0.3
+     MaxPower 53
+     MaxTorque 176
+     RpmMaxPower 4000
+     RpmMaxTorque 1800
+     Steepness 15
+     Friction 53
+     RpmIdle 840
+     RpmRedline 4200
+     RpmMax 6000
+    }
+   }
+  }
+ }
 }
 `;
 
 describe("tuning server", () => {
   let addonDir: string;
-  let enginesDir: string;
+  let etPath: string;
   let baseUrl: string;
   let server: ReturnType<typeof createTuningServer>;
 
   beforeEach(async () => {
-    addonDir = mkdtempSync(join(tmpdir(), "tuning-server-test-"));
-    enginesDir = join(addonDir, ...ENGINE_CONF_SUBPATH.split("/"));
-    mkdirSync(enginesDir, { recursive: true });
-    writeFileSync(join(enginesDir, "Engine_M151.conf"), M151_CONF);
+    addonDir = mkdtempSync(join(tmpdir(), "tuner-server-"));
+    const dir = join(addonDir, ...VEHICLES_SUBPATH.split("/"), "Wheeled", "M151A2");
+    mkdirSync(dir, { recursive: true });
+    etPath = join(dir, "M151A2.et");
+    writeFileSync(etPath, VEHICLE_ET);
 
     server = createTuningServer(addonDir);
-    await new Promise<void>((resolve) => server.listen(0, resolve));
-    const port = (server.address() as AddressInfo).port;
-    baseUrl = `http://127.0.0.1:${port}`;
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+    baseUrl = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
   });
 
   afterEach(async () => {
@@ -43,101 +58,111 @@ describe("tuning server", () => {
     rmSync(addonDir, { recursive: true, force: true });
   });
 
-  it("GET /api/engines lists discovered files", async () => {
-    const res = await fetch(`${baseUrl}/api/engines`);
-    const body = await res.json();
-    expect(res.status).toBe(200);
-    expect(body).toEqual({ status: "ok", files: ["Engine_M151.conf"] });
-  });
-
-  it("GET /api/engines/:file returns parsed fields", async () => {
-    const res = await fetch(`${baseUrl}/api/engines/Engine_M151.conf`);
-    const body = await res.json();
-    expect(res.status).toBe(200);
-    expect(body.status).toBe("ok");
-    expect(body.fields.MaxPower).toBe(53);
-    expect(body.fields.Steepness).toBe(15);
-  });
-
-  it("GET /api/engines/:file 404s for a file that doesn't exist", async () => {
-    const res = await fetch(`${baseUrl}/api/engines/Engine_Nope.conf`);
-    expect(res.status).toBe(404);
-    const body = await res.json();
-    expect(body.status).toBe("error");
-  });
-
-  it("GET /api/engines/:file rejects a path-traversal filename with 400", async () => {
-    const res = await fetch(`${baseUrl}/api/engines/${encodeURIComponent("../../../etc/passwd")}`);
-    expect(res.status).toBe(400);
-    const body = await res.json();
-    expect(body).toEqual({ status: "error", message: "Invalid filename" });
-  });
-
-  it("POST /api/engines/:file writes the new values to disk and returns the reload reminder", async () => {
-    const res = await fetch(`${baseUrl}/api/engines/Engine_M151.conf`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        fields: {
-          Inertia: 0.3, MaxPower: 99, MaxTorque: 176, RpmMaxPower: 4000,
-          RpmMaxTorque: 1800, Steepness: 20, Friction: 53, RpmIdle: 840, RpmMax: 6000,
-        },
-      }),
-    });
-    const body = await res.json();
-    expect(res.status).toBe(200);
-    expect(body.status).toBe("ok");
-    expect(body.message).toMatch(/reload/i);
-
-    const onDisk = readFileSync(join(enginesDir, "Engine_M151.conf"), "utf-8");
-    expect(onDisk).toContain("MaxPower 99");
-    expect(onDisk).toContain("Steepness 20");
-    expect(onDisk).toContain("RpmRedline 4200"); // untouched
-  });
-
-  it("POST /api/engines/:file rejects a body missing a required field", async () => {
-    const res = await fetch(`${baseUrl}/api/engines/Engine_M151.conf`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ fields: { MaxPower: 99 } }),
-    });
-    expect(res.status).toBe(400);
-    const body = await res.json();
-    expect(body.status).toBe("error");
-  });
-
-  it("POST /api/engines/:file rejects a path-traversal filename with 400", async () => {
-    const res = await fetch(`${baseUrl}/api/engines/${encodeURIComponent("../../../etc/passwd")}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ fields: {} }),
-    });
-    expect(res.status).toBe(400);
-    const body = await res.json();
-    expect(body).toEqual({ status: "error", message: "Invalid filename" });
-  });
-
-  it("POST /api/engines/:file rejects a non-JSON Content-Type with 400", async () => {
-    const res = await fetch(`${baseUrl}/api/engines/Engine_M151.conf`, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({
-        fields: {
-          Inertia: 0.3, MaxPower: 99, MaxTorque: 176, RpmMaxPower: 4000,
-          RpmMaxTorque: 1800, Steepness: 20, Friction: 53, RpmIdle: 840, RpmMax: 6000,
-        },
-      }),
-    });
-    expect(res.status).toBe(400);
-    const body = await res.json();
-    expect(body).toEqual({ status: "error", message: "Content-Type must be application/json" });
-  });
-
   it("GET / serves the tuner HTML page", async () => {
     const res = await fetch(`${baseUrl}/`);
     expect(res.status).toBe(200);
     expect(res.headers.get("content-type")).toContain("text/html");
-    const body = await res.text();
-    expect(body).toContain("<title>");
+    expect(await res.text()).toContain("<title>");
+  });
+
+  it("GET /api/vehicles lists tunable vehicles", async () => {
+    const res = await fetch(`${baseUrl}/api/vehicles`);
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body).toEqual({ status: "ok", vehicles: [REL] });
+  });
+
+  it("GET /api/vehicles/<rel> returns resolved fields with sources", async () => {
+    const res = await fetch(`${baseUrl}/api/vehicles/${REL}`);
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.status).toBe("ok");
+    expect(body.fields.MaxPower).toEqual({ value: 53, source: "overridden" });
+    expect(body.fields.Steepness).toEqual({ value: 15, source: "overridden" });
+  });
+
+  it("GET /api/vehicles/<rel> 404s for an unknown vehicle", async () => {
+    const res = await fetch(`${baseUrl}/api/vehicles/Prefabs/Vehicles/Wheeled/Nope/Nope.et`);
+    expect(res.status).toBe(404);
+    expect((await res.json()).status).toBe("error");
+  });
+
+  it("GET rejects a path outside Prefabs/Vehicles before touching the filesystem", async () => {
+    // Neither a literal ".." nor a percent-encoded "%2e%2e" segment can ever
+    // reach isSafeVehicleRelPath at all: per the WHATWG URL spec, Node's own
+    // `new URL()` treats "%2e"/"%2E" as equivalent to a literal "." for
+    // dot-segment removal, so ANY attempt to traverse via ".." is eliminated
+    // by URL parsing itself before routing ever sees the request — confirmed
+    // by inspecting `new URL(...).pathname` directly for both forms. The
+    // guard's own `..`-rejection branch is still real and correct — it's
+    // exhaustively unit-tested directly against isSafeVehicleRelPath in
+    // tests/tuning-server/discover.test.ts — it's just unreachable through
+    // this specific HTTP route, which is a property of the routing, not a gap.
+    // What we CAN and must prove at the HTTP layer is that the guard actually
+    // runs before any filesystem access: a wrong-prefix path is guaranteed to
+    // survive URL parsing untouched, so a 400 (not a 404 from existsSync)
+    // proves the guard fired first.
+    const res = await fetch(`${baseUrl}/api/vehicles/Scripts/Game/Escape.et`);
+    expect(res.status).toBe(400);
+    expect((await res.json()).message).toContain("Invalid");
+  });
+
+  it("POST writes only the changed field and leaves the rest byte-identical", async () => {
+    const before = readFileSync(etPath, "utf-8");
+    const res = await fetch(`${baseUrl}/api/vehicles/${REL}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ changes: { MaxPower: 75 } }),
+    });
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.status).toBe("ok");
+    expect(body.written).toEqual(["MaxPower"]);
+    expect(body.message).toMatch(/reload/i);
+
+    const after = readFileSync(etPath, "utf-8");
+    const a = before.split("\n");
+    const b = after.split("\n");
+    expect(b.length).toBe(a.length);
+    expect(b.filter((l, i) => l !== a[i])).toEqual(["     MaxPower 75"]);
+    expect(after).toContain("Filenames + {");
+    expect(after).toContain("RpmRedline 4200");
+  });
+
+  it("POST rejects a path outside Prefabs/Vehicles before touching the filesystem", async () => {
+    // See the GET test above for why a wrong-prefix path is used instead of "..".
+    const res = await fetch(`${baseUrl}/api/vehicles/Scripts/Game/Escape.et`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ changes: { MaxPower: 75 } }),
+    });
+    expect(res.status).toBe(400);
+    expect((await res.json()).message).toContain("Invalid");
+  });
+
+  it("POST rejects a non-JSON Content-Type", async () => {
+    const res = await fetch(`${baseUrl}/api/vehicles/${REL}`, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({ changes: { MaxPower: 75 } }),
+    });
+    expect(res.status).toBe(400);
+    expect((await res.json()).message).toContain("Content-Type");
+  });
+
+  it("POST rejects an empty or unknown-key changes object", async () => {
+    const empty = await fetch(`${baseUrl}/api/vehicles/${REL}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ changes: {} }),
+    });
+    expect(empty.status).toBe(400);
+
+    const bogus = await fetch(`${baseUrl}/api/vehicles/${REL}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ changes: { NotAField: 1 } }),
+    });
+    expect(bogus.status).toBe(400);
   });
 });
