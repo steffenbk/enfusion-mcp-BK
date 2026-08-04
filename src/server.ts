@@ -29,6 +29,7 @@ import { registerWbEditorTools } from "./tools/wb-editor.js";
 import { registerWbExecuteAction } from "./tools/wb-execute-action.js";
 import { registerWbEntityTools } from "./tools/wb-entities.js";
 import { registerWbComponent } from "./tools/wb-components.js";
+import { registerWbReadProps } from "./tools/wb-read-props.js";
 import { registerWbTerrain } from "./tools/wb-terrain.js";
 import { registerWbLayers } from "./tools/wb-layers.js";
 import { registerWbResources } from "./tools/wb-resources.js";
@@ -90,6 +91,7 @@ export function registerTools(server: McpServer, config: Config): void {
   registerWbExecuteAction(server, wbClient);
   registerWbEntityTools(server, wbClient);
   registerWbComponent(server, wbClient);
+  registerWbReadProps(server, wbClient);
   registerWbTerrain(server, wbClient);
   registerWbLayers(server, wbClient);
   registerWbResources(server, wbClient);
