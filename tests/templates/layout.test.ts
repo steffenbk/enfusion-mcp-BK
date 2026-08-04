@@ -152,6 +152,79 @@ describe("generateLayout (flat back-compat API)", () => {
       ],
     });
     expect(out).toContain('Name "Score"');
-    expect(out).toContain("Text 0");
+    // Text is a string field, so it is quoted even for a bare-looking value.
+    expect(out).toContain('Text "0"');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// String vs enum property quoting.
+//
+// The rule is derived from the 1177 base-game .layout files: string fields are
+// quoted 100% of the time (Text 1317/1317, Texture 1220/1220, Image 1130/1130),
+// and the enum-valued props form a completely disjoint, always-bare set
+// (SizeMode 1152, Clipping 786, "Horizontal Alignment" 334, "Blend Mode" 59).
+// ---------------------------------------------------------------------------
+describe("property quoting", () => {
+  function emit(props: Record<string, string>, components?: WidgetNode["components"]): string {
+    return generateLayoutTree({
+      type: "Frame",
+      name: "Root",
+      children: [{ type: "Image", name: "W", slot: {}, props, components }],
+    });
+  }
+
+  it("quotes string fields whose values look like bare identifiers", () => {
+    const out = emit({ Text: "SHOP", Texture: "Focus", Image: "favourite" });
+    expect(out).toContain('Text "SHOP"');
+    expect(out).toContain('Texture "Focus"');
+    expect(out).toContain('Image "favourite"');
+  });
+
+  it("leaves enum-valued properties bare", () => {
+    const out = emit({
+      "Blend Mode": "Additive",
+      SizeMode: "Fill",
+      Clipping: "Inherit",
+      "Horizontal Alignment": "Center",
+    });
+    expect(out).toContain('"Blend Mode" Additive');
+    expect(out).toContain("SizeMode Fill");
+    expect(out).toContain("Clipping Inherit");
+    expect(out).toContain('"Horizontal Alignment" Center');
+  });
+
+  it("leaves numeric scalars and tuples bare", () => {
+    const out = emit({ Color: "1 0.72 0.24 1", Opacity: "0.5", "Exact Font Size": "34" });
+    expect(out).toContain("Color 1 0.72 0.24 1");
+    expect(out).toContain("Opacity 0.5");
+    expect(out).toContain('"Exact Font Size" 34');
+  });
+
+  it("applies the same rule to component props: m_s* quoted, enums bare", () => {
+    const out = emit({}, [
+      { type: "SCR_InputButtonComponent", props: { m_sLabel: "Back", m_sActionName: "MenuBack" } },
+      { type: "SCR_TooltipComponent", props: { m_Type: "FOCUS", m_eEvents: "EVENT_CLICKED" } },
+    ]);
+    expect(out).toContain('m_sLabel "Back"');
+    expect(out).toContain('m_sActionName "MenuBack"');
+    expect(out).toContain("m_Type FOCUS");
+    expect(out).toContain("m_eEvents EVENT_CLICKED");
+  });
+
+  it("quotedProps still forces quoting for a field outside the allowlist", () => {
+    const out = generateLayoutTree({
+      type: "Frame",
+      name: "Root",
+      children: [
+        { type: "Image", name: "W", slot: {}, props: { TAG_Custom: "Value" }, quotedProps: ["TAG_Custom"] },
+      ],
+    });
+    expect(out).toContain('TAG_Custom "Value"');
+  });
+
+  it("keeps the output parseable", () => {
+    const out = emit({ Text: "SHOP", SizeMode: "Fill", Color: "1 1 1 1" });
+    expect(() => parse(out)).not.toThrow();
   });
 });

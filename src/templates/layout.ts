@@ -42,18 +42,48 @@ export interface FontDef {
   shadowColor?: string;
 }
 
+/**
+ * A script component attached to a widget, emitted as a `components { }` block.
+ *
+ * This is how a widget gets behaviour that script looks up by name — e.g. a footer
+ * hint button only answers `SCR_InputButtonComponent.GetInputButtonComponent(name, root)`
+ * if it actually carries the component here.
+ */
+export interface WidgetComponentDef {
+  /** Component class, e.g. "SCR_InputButtonComponent". */
+  type: string;
+  /** Component properties, e.g. { m_sLabel: "Back", m_sActionName: "MenuBack" }. */
+  props?: Record<string, string>;
+}
+
 /** A widget in the layout tree. */
 export interface WidgetNode {
   /** Friendly alias (Frame, VerticalLayout, RichText, Image, ...) or raw *WidgetClass. */
   type: string;
   /** Widget Name — used for FindAnyWidget() lookups in scripts. */
   name: string;
+  /**
+   * Base layout this widget inherits from, e.g.
+   * "{08CF3B69CB1ACBC4}UI/layouts/WidgetLibrary/Buttons/WLib_NavigationButton.layout".
+   * Emitted as `ButtonWidgetClass "{guid}" : "{ref}" { ... }` — the pattern every
+   * WidgetLibrary-derived button (nav buttons, hint buttons) uses.
+   */
+  inherits?: string;
   /** Slot properties. Ignored for the root widget (root carries no slot). */
   slot?: LayoutSlotDef;
   /** Raw widget properties (Text, Opacity, Color, Texture, "Blend Mode", Current, Maximum, ...). */
   props?: Record<string, string>;
+  /**
+   * Escape hatch: extra property keys to emit QUOTED, for string fields the
+   * `isStringValuedProp` allowlist doesn't cover. Known string fields (Text, Texture,
+   * Image, m_s*, ...) are already quoted automatically, so this is only needed for a
+   * rarely-used or mod-defined string property.
+   */
+  quotedProps?: string[];
   /** Optional font — expands to a FontProperties sub-node. */
   font?: FontDef;
+  /** Script components attached to this widget (emitted in a `components { }` block). */
+  components?: WidgetComponentDef[];
   /** Nested child widgets (emitted inside an anonymous { } block). */
   children?: WidgetNode[];
 }
@@ -162,21 +192,83 @@ function buildFontNode(font: FontDef): EnfusionNode {
  * Build an EnfusionNode for a widget. `parentClass` is the resolved widget class
  * of the parent, or null for the root (root gets no id and no slot).
  */
+/**
+ * Properties whose values are STRING fields and must always be emitted quoted, even
+ * when the value happens to look like a bare identifier.
+ *
+ * Derived empirically, not guessed: across the 1177 base-game `.layout` files these keys
+ * are quoted 100% of the time with zero bare occurrences —
+ *   Name 10434, Prefab 4039, Text 1317, Texture 1220, Image 1130, Font 577,
+ *   Mask 169, DestinationPath 49, MaskImage 29.
+ *
+ * The complementary set (enum-valued props such as SizeMode, Clipping, "Blend Mode",
+ * "Horizontal Alignment", m_Type, m_eEvents) is entirely disjoint from this one and is
+ * always bare, which is what makes an allowlist safe here rather than a heuristic.
+ *
+ * The one genuinely ambiguous key in the whole corpus is `Format` (6 quoted / 5 bare),
+ * so it is deliberately left out and defaults to bare.
+ */
+const ALWAYS_QUOTED_PROPS = new Set([
+  "Name",
+  "Text",
+  "Texture",
+  "Image",
+  "Font",
+  "Mask",
+  "MaskImage",
+  "Prefab",
+  "DestinationPath",
+]);
+
+/**
+ * True when a property key names a string field, so its value must be quoted.
+ *
+ * The `m_s` prefix is the engine's own naming convention for string members. Verified
+ * against the same corpus: every `m_s*` property is quoted, and no enum-valued property
+ * (`m_e*`, `m_i*`, `m_Type`, `m_Icons`, ...) uses that prefix — so the rule cannot
+ * accidentally quote an enum.
+ */
+export function isStringValuedProp(key: string): boolean {
+  return ALWAYS_QUOTED_PROPS.has(key) || /^m_s[A-Z]/.test(key);
+}
+
+function buildComponentsNode(components: WidgetComponentDef[]): EnfusionNode {
+  const block = createNode("components");
+  for (const comp of components) {
+    const node = createNode(comp.type, { id: `{${generateGuid()}}` });
+    for (const [key, value] of Object.entries(comp.props ?? {})) {
+      // Same rule as widget props: quote string fields (m_sLabel, m_sActionName), leave
+      // enum members (m_Type FOCUS, m_eEvents EVENT_CLICKED) bare.
+      node.properties.push(
+        isStringValuedProp(key) ? { key, value, quoted: true } : { key, value }
+      );
+    }
+    block.children.push(node);
+  }
+  return block;
+}
+
 function buildWidgetNode(widget: WidgetNode, parentClass: string | null): EnfusionNode {
   const cls = resolveWidgetClass(widget.type);
   const isRoot = parentClass === null;
 
+  // A widget that inherits from a base layout still carries a GUID at the root of
+  // THIS file when it is a child; the root widget itself never does.
   const node = createNode(cls, {
     id: isRoot ? undefined : `{${generateGuid()}}`,
+    inheritance: widget.inherits,
   });
 
   // Name is always the first property (always quoted — it's a string field).
   node.properties.push({ key: "Name", value: widget.name, quoted: true });
 
-  // Additional widget properties.
+  // Additional widget properties. String fields are quoted automatically; `quotedProps`
+  // is the escape hatch for a string field the allowlist doesn't know about.
   if (widget.props) {
+    const forceQuoted = new Set(widget.quotedProps ?? []);
     for (const [key, value] of Object.entries(widget.props)) {
-      node.properties.push({ key, value });
+      const quote = forceQuoted.has(key) || isStringValuedProp(key);
+      node.properties.push(quote ? { key, value, quoted: true } : { key, value });
     }
   }
 
@@ -188,6 +280,11 @@ function buildWidgetNode(widget: WidgetNode, parentClass: string | null): Enfusi
   // Font -> FontProperties sub-node.
   if (widget.font) {
     node.children.push(buildFontNode(widget.font));
+  }
+
+  // Script components -> `components { }` block, before the children block.
+  if (widget.components && widget.components.length > 0) {
+    node.children.push(buildComponentsNode(widget.components));
   }
 
   // Child widgets go inside an anonymous { } block (empty-type node).

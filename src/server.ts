@@ -11,6 +11,7 @@ import { registerConfigCreate } from "./tools/config-create.js";
 import { registerServerConfig } from "./tools/server-config.js";
 import { registerLayoutCreate } from "./tools/layout-create.js";
 import { registerLayoutRecipe } from "./tools/layout-recipe.js";
+import { registerMenuCreate } from "./tools/menu-create.js";
 import { registerGamemodeScaffold } from "./tools/gamemode-scaffold.js";
 import { registerCreateModPrompt } from "./prompts/create-mod.js";
 import { registerModifyModPrompt } from "./prompts/modify-mod.js";
@@ -72,6 +73,7 @@ export function registerTools(server: McpServer, config: Config): void {
   registerServerConfig(server, config);
   registerLayoutCreate(server, config);
   registerLayoutRecipe(server, config);
+  registerMenuCreate(server, config);
   registerGamemodeScaffold(server, config);
 
   // Workbench Live Control tools (Phase 4)
