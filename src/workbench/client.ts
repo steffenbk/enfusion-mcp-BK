@@ -13,9 +13,10 @@ import { Socket } from "node:net";
 import { existsSync, mkdirSync, copyFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { spawn, execSync } from "node:child_process";
+import { spawn } from "node:child_process";
 import { encodeRequest, decodeResponse } from "./protocol.js";
 import { logger } from "../utils/logger.js";
+import { findWorkbenchExe } from "../utils/game-paths.js";
 import type { Config } from "../config.js";
 import { generateGproj } from "../templates/gproj.js";
 
@@ -28,8 +29,6 @@ const WORKBENCH_SUBDIR = "Workbench";
 const HANDLER_FOLDER = "EnfusionMCP";
 const LAUNCH_POLL_INTERVAL_MS = 3_000;
 const LAUNCH_TIMEOUT_MS = 90_000;
-/** Delay after killing Workbench before relaunching, to let the port release. */
-const KILL_SETTLE_MS = 3_000;
 /** How long to wait for Workbench to recompile handler scripts after installation. */
 const HANDLER_RECOMPILE_TIMEOUT_MS = 30_000;
 /** Interval between polls while waiting for handler script recompilation. */
@@ -126,7 +125,11 @@ export class WorkbenchClient {
             this.extractMode(result);
             return result;
           }
-          if (err.code === "API_ERROR" && err.message.includes("Undefined API func")) {
+          if (
+            err.code === "API_ERROR" &&
+            (err.message.includes("Undefined API func") ||
+              err.message.includes("not existing Net API function"))
+          ) {
             // Workbench is running but our custom handler scripts aren't compiled.
             // This happens when the user opened Workbench manually, or when handlers
             // were cleaned up but Workbench kept running.
@@ -242,7 +245,7 @@ export class WorkbenchClient {
     // Workbench exe
     let workbenchExe: DiagnosticReport["workbenchExe"] = null;
     if (this.config) {
-      const exePath = this.findWorkbenchExe();
+      const exePath = findWorkbenchExe(this.config!.workbenchPath);
       const candidate =
         exePath ??
         join(this.config.workbenchPath, WORKBENCH_SUBDIR, WORKBENCH_EXE);
@@ -416,19 +419,6 @@ export class WorkbenchClient {
     );
   }
 
-  /**
-   * Kill any running Workbench process. Windows-only (taskkill).
-   * Safe to call even if Workbench isn't running.
-   */
-  private killWorkbench(): void {
-    try {
-      execSync(`taskkill /IM ${WORKBENCH_EXE} /F`, { stdio: "ignore" });
-      logger.info("Killed running Workbench process.");
-    } catch {
-      // Process might not be running — ignore
-    }
-  }
-
   private async launchWorkbench(gprojPath?: string): Promise<void> {
     // 1. Check if already running (maybe it came up between the failed call and now)
     if (await this.ping()) {
@@ -462,7 +452,7 @@ export class WorkbenchClient {
     }
 
     // 3. Find executable
-    const exePath = this.findWorkbenchExe();
+    const exePath = findWorkbenchExe(this.config!.workbenchPath);
     if (!exePath) {
       const wbPath = this.config?.workbenchPath ?? "(not configured)";
       throw new WorkbenchError(
@@ -532,17 +522,6 @@ export class WorkbenchClient {
       `Workbench launched but did not connect within ${LAUNCH_TIMEOUT_MS / 1000}s.\n\n${hint}`,
       "LAUNCH_FAILED"
     );
-  }
-
-  private findWorkbenchExe(): string | null {
-    if (!this.config) return null;
-    const subPath = join(this.config.workbenchPath, WORKBENCH_SUBDIR, WORKBENCH_EXE);
-    if (existsSync(subPath)) return subPath;
-
-    const rootPath = join(this.config.workbenchPath, WORKBENCH_EXE);
-    if (existsSync(rootPath)) return rootPath;
-
-    return null;
   }
 
   /**

@@ -226,3 +226,59 @@ describe("resolveEngineFields", () => {
     );
   });
 });
+
+describe("resolveEngineFields, parent chain", () => {
+  // join() gives OS-native separators; normalise back to the map's posix keys.
+  const norm = (p: string) => p.split("\\").join("/").replace("/addon/", "");
+
+  const et = (parent: string | null, fields: string) =>
+    `Vehicle${parent ? ` : "${parent}"` : ""} {\n components {\n  VehicleWheeledSimulation "{7}" {\n   Simulation Wheeled "{4}" {\n    Engine Engine Engine {\n${fields}\n    }\n   }\n  }\n }\n}\n`;
+
+  it("takes a field deleted from the child from its nearest ancestor", () => {
+    // The child overrides only MaxPower; RpmMax was set back to default and so is
+    // absent from the file entirely — exactly what Workbench writes.
+    const files: Record<string, string> = {
+      "A/Base.et": et(null, "     RpmMax 6000\n     MaxPower 50"),
+      "A/Mid.et": et("{BBBB2222}A/Base.et", "     MaxPower 60"),
+    };
+    const child = et("{AAAA1111}A/Mid.et", "     MaxPower 75");
+
+    const r = resolveEngineFields({
+      modText: child,
+      relPath: "A/Child.et",
+      addonPath: "/addon",
+      readFile: (p) => files[norm(p)] ?? null,
+    });
+
+    expect(r.MaxPower).toEqual({ value: 75, source: "overridden" });
+    expect(r.RpmMax).toEqual({ value: 6000, source: "inherited" });
+  });
+
+  it("prefers the nearest ancestor when several define the same field", () => {
+    const files: Record<string, string> = {
+      "A/Base.et": et(null, "     RpmMax 6000"),
+      "A/Mid.et": et("{BBBB2222}A/Base.et", "     RpmMax 7000"),
+    };
+    const r = resolveEngineFields({
+      modText: et("{AAAA1111}A/Mid.et", "     MaxPower 75"),
+      relPath: "A/Child.et",
+      addonPath: "/addon",
+      readFile: (p) => files[norm(p)] ?? null,
+    });
+    expect(r.RpmMax).toEqual({ value: 7000, source: "inherited" });
+  });
+
+  it("survives a cyclic parent reference instead of hanging", () => {
+    const files: Record<string, string> = {
+      "A/X.et": et("{CCCC3333}A/Y.et", "     RpmMax 6000"),
+      "A/Y.et": et("{CCCC3333}A/X.et", "     MaxPower 10"),
+    };
+    const r = resolveEngineFields({
+      modText: et("{CCCC3333}A/X.et", ""),
+      relPath: "A/Child.et",
+      addonPath: "/addon",
+      readFile: (p) => files[norm(p)] ?? null,
+    });
+    expect(r.RpmMax.value).toBe(6000);
+  });
+});

@@ -118,6 +118,17 @@ export function loadConfig(): Config {
     config.gamePath = resolve(config.workbenchPath, "..", "Arma Reforger");
   }
 
+  // Auto-derive extractedPath from the conventional location beside the addons
+  // folder. Without it every inherited value resolves to "unresolved", and
+  // relying on the caller to export ENFUSION_EXTRACTED_PATH means one plain
+  // `npm run tuning-server` silently degrades the whole tool.
+  if (!config.extractedPath) {
+    const conventional = resolve(config.projectPath, "..", "extracted");
+    if (existsSync(conventional)) {
+      config.extractedPath = conventional;
+    }
+  }
+
   logger.debug("Config loaded", config);
   return config;
 }

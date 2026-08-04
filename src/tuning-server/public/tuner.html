@@ -3,106 +3,330 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RoadForger — Engine Tuner</title>
+<title>Arma Reforger — Vehicle Tuner</title>
 </head>
 <body>
 <style>
 body{background:#1a1918;margin:0;padding:16px 20px}
 *{box-sizing:border-box;margin:0;padding:0}
 .root{padding:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#e8e6e3;font-size:13px}
-.lay{display:grid;grid-template-columns:minmax(0,256px) minmax(0,1fr);gap:1.5rem;align-items:start}
+.tabs{display:flex;gap:6px;margin-bottom:1.25rem;flex-wrap:wrap}
+.tab{font-size:13px;padding:6px 18px;border:.5px solid rgba(255,255,255,0.14);border-radius:8px;background:transparent;color:#a8a49e;cursor:pointer;font-family:inherit}
+.tab.on{background:#2a2927;color:#e8e6e3;font-weight:500}
+.pane{display:none}.pane.on{display:block}
+.lay{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:1.5rem;align-items:start}
 .sec{font-size:10px;font-weight:500;color:#6b6762;letter-spacing:.09em;text-transform:uppercase;margin:12px 0 5px;padding-bottom:4px;border-bottom:.5px solid rgba(255,255,255,0.08)}
 .sec:first-child{margin-top:0}
-.sr{display:flex;align-items:center;gap:7px;margin-bottom:1px}
+.sr{display:flex;align-items:center;gap:7px;margin-bottom:3px}
+.lbs{font-size:12px;color:#a8a49e;width:32px;flex-shrink:0;text-align:right;font-weight:500}
 .lbl{font-size:12px;color:#a8a49e;width:152px;flex-shrink:0}
-.sr input[type=range]{flex:1;min-width:0}
+.sr input[type=range]{flex:1;min-width:0;height:20px;accent-color:#378ADD;cursor:pointer}
 .vl{font-size:12px;font-weight:500;min-width:44px;text-align:right;flex-shrink:0;color:#e8e6e3}
-.src{font-size:9px;letter-spacing:.04em;text-transform:uppercase;min-width:30px;text-align:right;flex-shrink:0}
+/* Typed entry beats hunting for a pixel on the bar, and accepts values the
+   slider's guessed range would otherwise refuse. */
+input.vl{background:#201f1e;border:.5px solid rgba(255,255,255,0.14);border-radius:6px;color:#e8e6e3;
+  font-family:inherit;font-size:12px;padding:3px 5px;width:78px;min-width:78px;text-align:right}
+input.vl:focus{outline:none;border-color:#378ADD}
+input.vl.unset{color:#6b6762;border-style:dashed}
+input.vl.unset::placeholder{color:#6b6762;font-size:10px}
+.rst{flex-shrink:0;width:22px;height:22px;line-height:1;padding:0;border:.5px solid rgba(255,255,255,0.14);
+  border-radius:6px;background:transparent;color:#6b6762;cursor:pointer;font-family:inherit;font-size:13px}
+.rst:hover{background:#2a2927;color:#e8e6e3;border-color:rgba(255,255,255,0.3)}
+.src{font-size:9px;letter-spacing:.04em;text-transform:uppercase;min-width:26px;text-align:right;flex-shrink:0}
 .src.ovr{color:#378ADD}
 .src.inh{color:#6b6762}
 .src.unr{color:#BA7517}
+.tip{font-size:11px;color:#6b6762;margin:2px 0 7px 39px;line-height:1.5}
 .tip2{font-size:11px;color:#6b6762;margin:2px 0 7px 159px;line-height:1.5}
 .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:10px}
 .stat{background:#2a2927;border-radius:8px;padding:7px 9px}
 .sl{font-size:10px;color:#6b6762;margin-bottom:2px}
 .sv{font-size:15px;font-weight:500}
+.live{border:.5px solid rgba(255,255,255,0.08);border-radius:8px;padding:9px 11px;margin-top:8px;font-size:11px;line-height:1.7;color:#a8a49e}
+.live b{color:#e8e6e3;font-weight:500}
+.pbs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.pb{font-size:13px;padding:5px 15px;border:.5px solid rgba(255,255,255,0.14);border-radius:8px;background:transparent;color:#a8a49e;cursor:pointer;font-family:inherit}
+.pb:hover{background:#2a2927;color:#e8e6e3}
 .rc{display:flex;flex-direction:column;gap:10px}
 .cc{background:#2a2927;border-radius:12px;padding:.85rem 1rem;overflow:hidden}
 .leg{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:#a8a49e;margin-bottom:8px}
 .leg span{display:inline-flex;align-items:center;gap:5px}
 .sw{width:20px;height:2px;border-radius:1px;display:inline-block;flex-shrink:0}
 .ax{font-size:11px;color:#6b6762;text-align:center;margin-top:6px}
+.cr{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start}
+.tc{background:#2a2927;border-radius:12px;padding:.7rem;display:flex;flex-direction:column;align-items:center;gap:5px}
+.tlbl{font-size:10px;font-weight:500;color:#6b6762;letter-spacing:.08em;text-transform:uppercase}
+.rp{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
 select,.applybtn{font-size:13px;padding:6px 14px;border:.5px solid rgba(255,255,255,0.14);border-radius:8px;background:#2a2927;color:#e8e6e3;font-family:inherit;cursor:pointer}
 .applybtn{background:#378ADD;border-color:#378ADD;font-weight:500}
-.applybtn:disabled{opacity:.5;cursor:default}
+.watch{font-size:11px;color:#a8a49e;display:inline-flex;align-items:center;gap:5px;cursor:pointer}
 .toprow{display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
-.banner{font-size:12px;padding:9px 12px;border-radius:8px;margin-bottom:12px;line-height:1.5;display:none}
+.banner{white-space:pre-line;font-size:12px;padding:9px 12px;border-radius:8px;margin-bottom:12px;line-height:1.5;display:none}
 .banner.ok{display:block;background:rgba(59,109,17,0.18);color:#9fd97a;border:.5px solid rgba(59,109,17,0.4)}
 .banner.err{display:block;background:rgba(226,75,74,0.15);color:#f0a3a2;border:.5px solid rgba(226,75,74,0.4)}
+.banner.warn{display:block;background:rgba(214,150,44,0.15);color:#e5bd7a;border:.5px solid rgba(214,150,44,0.4)}
+.note{font-size:11px;color:#6b6762;margin-bottom:10px;line-height:1.6}
 </style>
 
 <div class="root">
-  <div class="toprow">
-    <select id="engineSelect"><option value="">Loading engines...</option></select>
-    <button class="applybtn" id="applyBtn" disabled onclick="applyValues()">Apply to disk</button>
-  </div>
-  <div id="banner" class="banner"></div>
+<div class="toprow">
+  <select id="engineSelect"><option value="">Loading vehicles...</option></select>
+  <button class="applybtn" id="reloadBtn" onclick="loadVehicle(currentFile, true)">Reload</button>
+  <label class="watch"><input type="checkbox" id="autoWatch" checked> follow Workbench saves</label>
+  <label class="watch"><input type="checkbox" id="allowWrite" onchange="refreshWriteState()"> allow writing</label>
+  <button class="applybtn" id="writeBtn" disabled onclick="writeChanges()">Apply to prefab</button>
+  <button class="applybtn" style="background:transparent;border-color:rgba(255,255,255,0.14);color:#a8a49e;font-weight:400" onclick="resetVisible()">Default all (this tab)</button>
+</div>
+<div id="banner" class="banner"></div>
 
-  <div class="lay">
-    <div>
-      <div class="sec">Power &amp; torque</div>
-      <div class="sr"><span class="lbl">Max Power (kW)</span><input type="range" id="ePw" min="30" max="600" step="1" value="246" oninput="sE();dE();markTouched('ePw')"><span class="vl" id="ePwV">246</span><span class="src" id="ePwS"></span></div>
-      <div class="sr"><span class="lbl">Max Torque (Nm)</span><input type="range" id="eTq" min="50" max="1500" step="5" value="583" oninput="sE();dE();markTouched('eTq')"><span class="vl" id="eTqV">583</span><span class="src" id="eTqS"></span></div>
-      <div class="sr"><span class="lbl">Rpm Max Power</span><input type="range" id="eRpp" min="1500" max="8500" step="50" value="4100" oninput="sE();dE();markTouched('eRpp')"><span class="vl" id="eRppV">4100</span><span class="src" id="eRppS"></span></div>
-      <div class="sr"><span class="lbl">Rpm Max Torque</span><input type="range" id="eRpt" min="500" max="6000" step="50" value="3000" oninput="sE();dE();markTouched('eRpt')"><span class="vl" id="eRptV">3000</span><span class="src" id="eRptS"></span></div>
-      <div class="tip2">Must be &le; Rpm Max Power</div>
-      <div class="sec">RPM range</div>
-      <div class="sr"><span class="lbl">Rpm Idle</span><input type="range" id="eIdle" min="400" max="1500" step="25" value="850" oninput="sE();dE();markTouched('eIdle')"><span class="vl" id="eIdleV">850</span><span class="src" id="eIdleS"></span></div>
-      <div class="sr"><span class="lbl">Rpm Max</span><input type="range" id="eRmax" min="2500" max="10000" step="100" value="7500" oninput="sE();dE();markTouched('eRmax')"><span class="vl" id="eRmaxV">7500</span><span class="src" id="eRmaxS"></span></div>
-      <div class="sec">Character</div>
-      <div class="sr"><span class="lbl">Steepness</span><input type="range" id="eSteep" min="1" max="40" step="0.5" value="15" oninput="sE();dE();markTouched('eSteep')"><span class="vl" id="eSteepV">15.0</span><span class="src" id="eSteepS"></span></div>
-      <div class="tip2">Low = gradual diesel swell · High = peaky, hits hard at once</div>
-      <div class="sr"><span class="lbl">Friction (Nm)</span><input type="range" id="eFric" min="1" max="120" step="1" value="35" oninput="sE();dE();markTouched('eFric')"><span class="vl" id="eFricV">35</span><span class="src" id="eFricS"></span></div>
-      <div class="tip2">Engine braking — drag when you lift off</div>
-      <div class="sr"><span class="lbl">Inertia (kg·m²)</span><input type="range" id="eIner" min="0.02" max="0.8" step="0.01" value="0.16" oninput="sE();markTouched('eIner')"><span class="vl" id="eInerV">0.160</span><span class="src" id="eInerS"></span></div>
-      <div class="tip2">Heavy flywheel — high = slow to rev, less RPM drop on shifts</div>
-      <div class="stats">
-        <div class="stat"><div class="sl">Horsepower</div><div class="sv" id="eHp">330 hp</div></div>
-        <div class="stat"><div class="sl">Max clutch Nm</div><div class="sv" id="eCl">933</div></div>
-        <div class="stat"><div class="sl">lb-ft torque</div><div class="sv" id="eLb">430</div></div>
-      </div>
+<div class="tabs">
+  <button class="tab on" id="tb-e" onclick="sw('e')">Engine</button>
+  <button class="tab" id="tb-l" onclick="sw('l')">Longitudinal</button>
+  <button class="tab" id="tb-a" onclick="sw('a')">Lateral</button>
+  <button class="tab" id="tb-s" onclick="sw('s')">Suspension</button>
+</div>
+
+<div id="pn-e" class="pane on"><div class="lay">
+<div>
+  <div class="pbs">
+    <button class="pb" onclick="pE({pw:86,tq:155,rpp:5800,rpt:4400,idle:850,rmax:7000,steep:15,fric:20,iner:.08})">Small I4</button>
+    <button class="pb" onclick="pE({pw:246,tq:583,rpp:4100,rpt:3000,idle:850,rmax:7500,steep:15,fric:35,iner:.16})">Diesel truck</button>
+    <button class="pb" onclick="pE({pw:180,tq:320,rpp:6200,rpt:4500,idle:900,rmax:7500,steep:20,fric:25,iner:.10})">Sport petrol</button>
+    <button class="pb" onclick="pE({pw:120,tq:380,rpp:3200,rpt:1800,idle:700,rmax:4000,steep:8,fric:40,iner:.25})">Mil. diesel</button>
+  </div>
+  <div class="sec">Power &amp; torque</div>
+  <div class="sr"><span class="lbl">Max Power (kW)</span><input type="range" id="ePw" min="0" max="10000" step="1" value="246" oninput="sE();dE();markPreview()"><span class="vl" id="ePwV">246</span><span class="src" id="ePwS"></span></div>
+  <div class="tip2">How hard it pushes — like horsepower</div>
+  <div class="sr"><span class="lbl">Max Torque (Nm)</span><input type="range" id="eTq" min="0" max="10000" step="1" value="583" oninput="sE();dE();markPreview()"><span class="vl" id="eTqV">583</span><span class="src" id="eTqS"></span></div>
+  <div class="tip2">Pulling grunt — acceleration off the line</div>
+  <div class="sr"><span class="lbl">Rpm Max Power</span><input type="range" id="eRpp" min="0" max="10000" step="10" value="4100" oninput="sE();dE();markPreview()"><span class="vl" id="eRppV">4100</span><span class="src" id="eRppS"></span></div>
+  <div class="sr"><span class="lbl">Rpm Max Torque</span><input type="range" id="eRpt" min="0" max="10000" step="10" value="3000" oninput="sE();dE();markPreview()"><span class="vl" id="eRptV">3000</span><span class="src" id="eRptS"></span></div>
+  <div class="tip2">Must be &le; Rpm Max Power</div>
+  <div class="sec">RPM range</div>
+  <div class="sr"><span class="lbl">Rpm Idle</span><input type="range" id="eIdle" min="0" max="10000" step="10" value="850" oninput="sE();dE();markPreview()"><span class="vl" id="eIdleV">850</span><span class="src" id="eIdleS"></span></div>
+  <div class="sr"><span class="lbl">Rpm Max</span><input type="range" id="eRmax" min="0" max="10000" step="10" value="7500" oninput="sE();dE();markPreview()"><span class="vl" id="eRmaxV">7500</span><span class="src" id="eRmaxS"></span></div>
+  <div class="sec">Character</div>
+  <div class="sr"><span class="lbl">Steepness</span><input type="range" id="eSteep" min="0" max="100" step="0.5" value="15" oninput="sE();dE();markPreview()"><span class="vl" id="eSteepV">15.0</span><span class="src" id="eSteepS"></span></div>
+  <div class="tip2">Low = gradual diesel swell · High = peaky, hits hard at once</div>
+  <div class="sr"><span class="lbl">Friction (Nm)</span><input type="range" id="eFric" min="0" max="1000" step="1" value="35" oninput="sE();dE();markPreview()"><span class="vl" id="eFricV">35</span><span class="src" id="eFricS"></span></div>
+  <div class="tip2">Engine braking — drag when you lift off</div>
+  <div class="sr"><span class="lbl">Inertia (kg·m²)</span><input type="range" id="eIner" min="0" max="50" step="0.005" value="0.16" oninput="sE();markPreview()"><span class="vl" id="eInerV">0.160</span><span class="src" id="eInerS"></span></div>
+  <div class="tip2">Heavy flywheel — high = slow to rev, less RPM drop on shifts</div>
+  <div class="stats">
+    <div class="stat"><div class="sl">Horsepower</div><div class="sv" id="eHp">330 hp</div></div>
+    <div class="stat"><div class="sl">Max clutch Nm</div><div class="sv" id="eCl">933</div></div>
+    <div class="stat"><div class="sl">lb-ft torque</div><div class="sv" id="eLb">430</div></div>
+  </div>
+</div>
+<div class="rc">
+  <div class="cc">
+    <div class="leg"><span><span class="sw" style="background:#378ADD"></span>Power (kW)</span><span><span class="sw" style="background:#E24B4A"></span>Torque (Nm)</span></div>
+    <div style="position:relative;width:100%;height:220px"><canvas id="cE" style="position:absolute;inset:0;width:100%;height:100%"></canvas></div>
+    <div class="ax">RPM — Power &amp; Torque</div>
+  </div>
+  <div class="cc">
+    <div class="leg"><span><span class="sw" style="background:#E24B4A"></span>Steep 5 (diesel)</span><span><span class="sw" style="background:#378ADD"></span>Current</span><span><span class="sw" style="background:#3B6D11"></span>Steep 30 (sport)</span></div>
+    <div style="position:relative;width:100%;height:140px"><canvas id="cSt" style="position:absolute;inset:0;width:100%;height:100%"></canvas></div>
+    <div class="ax">Steepness — how quickly torque builds to its peak</div>
+  </div>
+</div>
+</div></div>
+
+<div id="pn-l" class="pane"><div class="lay">
+<div>
+  <div class="note">Pacejka coefficients live in tyre configs, not the vehicle prefab — this tab is a maths sandbox, not a view of the selected vehicle.</div>
+  <div class="pbs">
+    <button class="pb" onclick="pL({b0:1.65,b1:0,b2:1100,b3:0,b4:300,b5:0,b6:0,b7:0,b8:-2,b9:0,b10:0})">Default</button>
+    <button class="pb" onclick="pL({b0:1.65,b1:-10,b2:1350,b3:0,b4:380,b5:0,b6:0,b7:0,b8:-3,b9:0,b10:0})">Sport</button>
+    <button class="pb" onclick="pL({b0:1.65,b1:0,b2:850,b3:0,b4:180,b5:0,b6:0,b7:0,b8:-1,b9:0,b10:0})">Off-road</button>
+    <button class="pb" onclick="pL({b0:1.65,b1:0,b2:350,b3:0,b4:80,b5:0,b6:0,b7:0,b8:-.5,b9:0,b10:0})">Ice/mud</button>
+  </div>
+  <div class="sec">Key parameters</div>
+  <div class="sr"><span class="lbs">b0</span><input type="range" id="b0" min="1.4" max="1.8" step="0.01" value="1.65" oninput="sL();dL()"><span class="vl" id="b0V">1.65</span><span class="src" id="b0S"></span></div>
+  <div class="tip">Shape — how wide the curve is. Wiki default 1.65. Leave it.</div>
+  <div class="sr"><span class="lbs">b2</span><input type="range" id="b2" min="300" max="1800" step="10" value="1100" oninput="sL();dL()"><span class="vl" id="b2V">1100</span><span class="src" id="b2S"></span></div>
+  <div class="tip">Peak grip × 1000. Road tyre ≈ 900–1200. Higher = more braking grip.</div>
+  <div class="sr"><span class="lbs">b4</span><input type="range" id="b4" min="50" max="600" step="5" value="300" oninput="sL();dL()"><span class="vl" id="b4V">300</span><span class="src" id="b4S"></span></div>
+  <div class="tip">Grip buildup speed. High = grip arrives fast at low slip (sport). Low = gradual.</div>
+  <div class="sr"><span class="lbs">b8</span><input type="range" id="b8" min="-20" max="1" step="0.1" value="-2" oninput="sL();dL()"><span class="vl" id="b8V">-2.0</span><span class="src" id="b8S"></span></div>
+  <div class="tip">Dropoff after peak. More negative = grip falls fast (snap). Less = forgiving.</div>
+  <div class="sec">Load sensitivity</div>
+  <div class="sr"><span class="lbs">b1</span><input type="range" id="b1" min="-80" max="80" step="1" value="0" oninput="sL();dL()"><span class="vl" id="b1V">0</span><span class="src" id="b1S"></span></div>
+  <div class="tip">Negative = less grip under heavy load (realistic). 0 = no change.</div>
+  <div class="sr"><span class="lbs">b3</span><input type="range" id="b3" min="-20" max="20" step="0.5" value="0" oninput="sL();dL()"><span class="vl" id="b3V">0.0</span><span class="src" id="b3S"></span></div>
+  <div class="sr"><span class="lbs">b5</span><input type="range" id="b5" min="-1" max="1" step="0.01" value="0" oninput="sL();dL()"><span class="vl" id="b5V">0.00</span><span class="src" id="b5S"></span></div>
+  <div class="sec">Fine tuning</div>
+  <div class="sr"><span class="lbs">b6</span><input type="range" id="b6" min="-0.1" max="0.1" step="0.002" value="0" oninput="sL();dL()"><span class="vl" id="b6V">0.000</span><span class="src" id="b6S"></span></div>
+  <div class="sr"><span class="lbs">b7</span><input type="range" id="b7" min="-1" max="1" step="0.02" value="0" oninput="sL();dL()"><span class="vl" id="b7V">0.00</span><span class="src" id="b7S"></span></div>
+  <div class="sr"><span class="lbs">b9</span><input type="range" id="b9" min="-1" max="1" step="0.01" value="0" oninput="sL();dL()"><span class="vl" id="b9V">0.00</span><span class="src" id="b9S"></span></div>
+  <div class="sr"><span class="lbs">b10</span><input type="range" id="b10" min="-5" max="5" step="0.1" value="0" oninput="sL();dL()"><span class="vl" id="b10V">0.0</span><span class="src" id="b10S"></span></div>
+  <div class="sec">Wheel load</div>
+  <div class="sr"><span class="lbl">Fz (kN)</span><input type="range" id="bFz" min="0.5" max="15" step="0.5" value="4" oninput="sL();dL()"><span class="vl" id="bFzV">4.0</span></div>
+  <div class="tip2">Car corner ≈ 3–5 kN · Heavy truck ≈ 8–15 kN</div>
+  <div class="stats">
+    <div class="stat"><div class="sl">Peak grip μ</div><div class="sv" id="bPk">—</div></div>
+    <div class="stat"><div class="sl">Peak slip</div><div class="sv" id="bPs">—</div></div>
+    <div class="stat"><div class="sl">90% grip slip</div><div class="sv" id="bS9">—</div></div>
+  </div>
+  <div class="live" id="llive">—</div>
+</div>
+<div class="rc">
+  <div class="cr">
+    <div class="cc" style="min-width:0">
+      <div class="leg"><span><span class="sw" style="background:#E24B4A"></span>½ load</span><span><span class="sw" style="background:#378ADD"></span>current</span><span><span class="sw" style="background:#3B6D11"></span>1.5× load</span></div>
+      <div style="position:relative;width:100%;height:260px"><canvas id="cL" style="position:absolute;inset:0;width:100%;height:100%"></canvas></div>
+      <div class="ax">← braking &nbsp; slip % &nbsp; acceleration →</div>
     </div>
-    <div class="rc">
-      <div class="cc">
-        <div class="leg"><span><span class="sw" style="background:#378ADD"></span>Power (kW)</span><span><span class="sw" style="background:#E24B4A"></span>Torque (Nm)</span></div>
-        <div style="position:relative;width:100%;height:220px"><canvas id="cE" style="position:absolute;inset:0;width:100%;height:100%"></canvas></div>
-        <div class="ax">RPM — Power &amp; Torque</div>
-      </div>
-      <div class="cc">
-        <div class="leg"><span><span class="sw" style="background:#E24B4A"></span>Steep 5 (diesel)</span><span><span class="sw" style="background:#378ADD"></span>Current</span><span><span class="sw" style="background:#3B6D11"></span>Steep 30 (sport)</span></div>
-        <div style="position:relative;width:100%;height:140px"><canvas id="cSt" style="position:absolute;inset:0;width:100%;height:100%"></canvas></div>
-        <div class="ax">Steepness — how quickly torque builds to its peak</div>
-      </div>
+    <div class="tc">
+      <div class="tlbl">Contact patch</div>
+      <canvas id="cTL" width="130" height="190"></canvas>
     </div>
   </div>
+</div>
+</div></div>
+
+<div id="pn-a" class="pane"><div class="lay">
+<div>
+  <div class="note">Pacejka coefficients live in tyre configs, not the vehicle prefab — this tab is a maths sandbox, not a view of the selected vehicle.</div>
+  <div class="pbs">
+    <button class="pb" onclick="pA({a0:1.3,a1:0,a2:1100,a3:1100,a4:10,a5:0,a6:0,a7:-2,a8:0,a9:0,a10:0,a11:0,a12:0,a13:0,a14:0})">Default</button>
+    <button class="pb" onclick="pA({a0:1.3,a1:-10,a2:1350,a3:1500,a4:7,a5:0,a6:0,a7:-3,a8:0,a9:0,a10:0,a11:0,a12:0,a13:0,a14:0})">Sport</button>
+    <button class="pb" onclick="pA({a0:1.3,a1:0,a2:800,a3:700,a4:16,a5:0,a6:0,a7:-1,a8:0,a9:0,a10:0,a11:0,a12:0,a13:0,a14:0})">Off-road</button>
+    <button class="pb" onclick="pA({a0:1.3,a1:0,a2:330,a3:300,a4:22,a5:0,a6:0,a7:-.5,a8:0,a9:0,a10:0,a11:0,a12:0,a13:0,a14:0})">Ice/mud</button>
+  </div>
+  <div class="sec">Key parameters</div>
+  <div class="sr"><span class="lbs">a0</span><input type="range" id="a0" min="1.2" max="1.8" step="0.01" value="1.3" oninput="sA();dA()"><span class="vl" id="a0V">1.30</span><span class="src" id="a0S"></span></div>
+  <div class="tip">Shape — wiki default 1.3 for lateral. Wider = more forgiving peak.</div>
+  <div class="sr"><span class="lbs">a2</span><input type="range" id="a2" min="300" max="1800" step="10" value="1100" oninput="sA();dA()"><span class="vl" id="a2V">1100</span><span class="src" id="a2S"></span></div>
+  <div class="tip">Peak cornering grip × 1000. Higher = more sideways force before sliding.</div>
+  <div class="sr"><span class="lbs">a3</span><input type="range" id="a3" min="100" max="2500" step="25" value="1100" oninput="sA();dA()"><span class="vl" id="a3V">1100</span><span class="src" id="a3S"></span></div>
+  <div class="tip">Steering response. High = sharp, immediate turn-in. Low = vague, delayed.</div>
+  <div class="sr"><span class="lbs">a4</span><input type="range" id="a4" min="1" max="80" step="1" value="10" oninput="sA();dA()"><span class="vl" id="a4V">10</span><span class="src" id="a4S"></span></div>
+  <div class="tip">Load sensitivity of peak angle. Lower = peak shifts more as load changes.</div>
+  <div class="sr"><span class="lbs">a7</span><input type="range" id="a7" min="-20" max="1" step="0.1" value="-2" oninput="sA();dA()"><span class="vl" id="a7V">-2.0</span><span class="src" id="a7S"></span></div>
+  <div class="tip">Dropoff after peak. More negative = snap oversteer. Less = forgiving.</div>
+  <div class="sec">Load &amp; camber</div>
+  <div class="sr"><span class="lbs">a1</span><input type="range" id="a1" min="-80" max="80" step="1" value="0" oninput="sA();dA()"><span class="vl" id="a1V">0</span><span class="src" id="a1S"></span></div>
+  <div class="tip">Negative = grip reduces under heavy load (realistic).</div>
+  <div class="sr"><span class="lbs">a5</span><input type="range" id="a5" min="-0.1" max="0.1" step="0.005" value="0" oninput="sA();dA()"><span class="vl" id="a5V">0.000</span><span class="src" id="a5S"></span></div>
+  <div class="sr"><span class="lbs">a6</span><input type="range" id="a6" min="-2" max="2" step="0.05" value="0" oninput="sA();dA()"><span class="vl" id="a6V">0.00</span><span class="src" id="a6S"></span></div>
+  <div class="sec">Offsets &amp; camber</div>
+  <div class="rp">
+    <div>
+      <div class="sr"><span class="lbs">a8</span><input type="range" id="a8" min="-1" max="1" step="0.01" value="0" oninput="sA();dA()"><span class="vl" id="a8V">0.00</span><span class="src" id="a8S"></span></div>
+      <div class="sr"><span class="lbs">a9</span><input type="range" id="a9" min="-1" max="1" step="0.01" value="0" oninput="sA();dA()"><span class="vl" id="a9V">0.00</span><span class="src" id="a9S"></span></div>
+      <div class="sr"><span class="lbs">a10</span><input type="range" id="a10" min="-0.1" max="0.1" step="0.005" value="0" oninput="sA();dA()"><span class="vl" id="a10V">0.000</span><span class="src" id="a10S"></span></div>
+    </div>
+    <div>
+      <div class="sr"><span class="lbs">a11</span><input type="range" id="a11" min="-200" max="200" step="5" value="0" oninput="sA();dA()"><span class="vl" id="a11V">0</span><span class="src" id="a11S"></span></div>
+      <div class="sr"><span class="lbs">a12</span><input type="range" id="a12" min="-10" max="10" step="0.5" value="0" oninput="sA();dA()"><span class="vl" id="a12V">0.0</span><span class="src" id="a12S"></span></div>
+      <div class="sr"><span class="lbs">a13</span><input type="range" id="a13" min="-10" max="10" step="0.5" value="0" oninput="sA();dA()"><span class="vl" id="a13V">0.0</span><span class="src" id="a13S"></span></div>
+      <div class="sr"><span class="lbs">a14</span><input type="range" id="a14" min="-15" max="15" step="0.5" value="0" oninput="sA();dA()"><span class="vl" id="a14V">0.0</span><span class="src" id="a14S"></span></div>
+    </div>
+  </div>
+  <div class="sec">Inputs</div>
+  <div class="sr"><span class="lbl">Fz wheel load (kN)</span><input type="range" id="aFz" min="0.5" max="15" step="0.5" value="4" oninput="sA();dA()"><span class="vl" id="aFzV">4.0</span></div>
+  <div class="sr"><span class="lbl">Camber angle (°)</span><input type="range" id="aCam" min="-5" max="5" step="0.5" value="0" oninput="sA();dA()"><span class="vl" id="aCamV">0.0</span></div>
+  <div class="tip2">Negative = top leans in (race setup). Shifts the grip peak.</div>
+  <div class="stats">
+    <div class="stat"><div class="sl">Peak grip μ</div><div class="sv" id="aPk">—</div></div>
+    <div class="stat"><div class="sl">Peak angle</div><div class="sv" id="aPs">—</div></div>
+    <div class="stat"><div class="sl">Cornering stiffness</div><div class="sv" id="aCs">—</div></div>
+  </div>
+  <div class="live" id="alive">—</div>
+</div>
+<div class="rc">
+  <div class="cr">
+    <div class="cc" style="min-width:0">
+      <div class="leg"><span><span class="sw" style="background:#E24B4A"></span>½ load</span><span><span class="sw" style="background:#378ADD"></span>current</span><span><span class="sw" style="background:#3B6D11"></span>1.5× load</span></div>
+      <div style="position:relative;width:100%;height:260px"><canvas id="cA" style="position:absolute;inset:0;width:100%;height:100%"></canvas></div>
+      <div class="ax">← left &nbsp; steer angle (°) &nbsp; right →</div>
+    </div>
+    <div class="tc">
+      <div class="tlbl">Tyre view</div>
+      <canvas id="cTA" width="130" height="190"></canvas>
+    </div>
+  </div>
+</div>
+</div></div>
+
+<div id="pn-s" class="pane"><div class="lay">
+<div>
+  <div class="note">Spring rate, dampers and travel are read from this vehicle, per axle. Swaybar and mass have no prefab equivalent and stay sandbox-only.</div>
+  <div class="sr" style="margin-bottom:10px"><span class="lbl">Axle</span><select id="axleSelect" style="flex:1"></select></div>
+  <div class="pbs">
+    <button class="pb" onclick="pS({sp:25,co:2000,re:1500,tu:.08,td:.10,sw:5000,ms:2000})">Sedan</button>
+    <button class="pb" onclick="pS({sp:40,co:3000,re:2000,tu:.06,td:.07,sw:12000,ms:1400})">Sport</button>
+    <button class="pb" onclick="pS({sp:15,co:1200,re:900,tu:.14,td:.16,sw:2000,ms:2500})">Off-road</button>
+    <button class="pb" onclick="pS({sp:60,co:4000,re:3000,tu:.07,td:.09,sw:20000,ms:6000})">Truck</button>
+  </div>
+  <div class="sec">Spring</div>
+  <div class="sr"><span class="lbl">Spring Rate (N/mm)</span><input type="range" id="sS" min="5" max="200" step="1" value="25" oninput="sSu();dS()"><span class="vl" id="sSV">25</span><span class="src" id="sSS"></span></div>
+  <div class="tip2">Stiffness. 15–30 = comfort · 35–60 = sport · 80+ = race</div>
+  <div class="sr"><span class="lbl">Travel Up (m)</span><input type="range" id="sTu" min="0.02" max="0.35" step="0.005" value="0.08" oninput="sSu();dS()"><span class="vl" id="sTuV">0.080</span><span class="src" id="sTuS"></span></div>
+  <div class="tip2">Bump — how far suspension compresses over obstacles</div>
+  <div class="sr"><span class="lbl">Travel Down (m)</span><input type="range" id="sTd" min="0.02" max="0.35" step="0.005" value="0.10" oninput="sSu();dS()"><span class="vl" id="sTdV">0.100</span><span class="src" id="sTdS"></span></div>
+  <div class="tip2">Droop — keeps wheel in contact over dips</div>
+  <div class="sec">Dampers</div>
+  <div class="sr"><span class="lbl">Compression (Ns/m)</span><input type="range" id="sCo" min="200" max="10000" step="100" value="2000" oninput="sSu();dS()"><span class="vl" id="sCoV">2000</span><span class="src" id="sCoS"></span></div>
+  <div class="tip2">Resistance hitting a bump. Higher = firmer, less nose dive.</div>
+  <div class="sr"><span class="lbl">Relaxation (Ns/m)</span><input type="range" id="sRe" min="200" max="10000" step="100" value="1500" oninput="sSu();dS()"><span class="vl" id="sReV">1500</span><span class="src" id="sReS"></span></div>
+  <div class="tip2">Rebound resistance. Higher = slower return, prevents bouncing.</div>
+  <div class="sec">Anti-roll &amp; mass</div>
+  <div class="sr"><span class="lbl">Swaybar (N)</span><input type="range" id="sSw" min="0" max="60000" step="500" value="5000" oninput="sSu()"><span class="vl" id="sSwV">5000</span></div>
+  <div class="tip2">Anti-roll bar. Higher = less body lean, stiffer feel over bumps.</div>
+  <div class="sr"><span class="lbl">Vehicle Mass (kg)</span><input type="range" id="sMs" min="500" max="12000" step="100" value="2000" oninput="sSu();dS()"><span class="vl" id="sMsV">2000</span></div>
+  <div class="stats">
+    <div class="stat"><div class="sl">Load per wheel</div><div class="sv" id="sFz">—</div></div>
+    <div class="stat"><div class="sl">Natural freq</div><div class="sv" id="sFreq">—</div></div>
+    <div class="stat"><div class="sl">Damping ratio</div><div class="sv" id="sDamp">—</div></div>
+  </div>
+  <div class="live" id="slive">—</div>
+</div>
+<div class="rc">
+  <div class="cc">
+    <div class="leg"><span><span class="sw" style="background:#378ADD"></span>Spring force (kN)</span></div>
+    <div style="position:relative;width:100%;height:200px"><canvas id="cSu" style="position:absolute;inset:0;width:100%;height:100%"></canvas></div>
+    <div class="ax">Displacement (mm) — spring force (kN)</div>
+  </div>
+  <div class="cc">
+    <div class="leg"><span><span class="sw" style="background:#BA7517"></span>Compression</span><span><span class="sw" style="background:#3B6D11"></span>Relaxation</span></div>
+    <div style="position:relative;width:100%;height:150px"><canvas id="cDa" style="position:absolute;inset:0;width:100%;height:100%"></canvas></div>
+    <div class="ax">Velocity (m/s) — damping force (kN)</div>
+  </div>
+</div>
+</div></div>
 </div>
 
 <script>
 var EL=document;
+var dk=true;
 function g(id){return parseFloat(EL.getElementById(id).value);}
-function sv(id,t){EL.getElementById(id).textContent=t;}
 function el(id){return EL.getElementById(id);}
+// Readouts became editable number boxes, so a display update writes .value on an
+// input but .textContent on the plain stat spans. Never stomp the box the user
+// is currently typing into.
+function sv(id,t){
+  var e=EL.getElementById(id);if(!e)return;
+  if(e.tagName==='INPUT'){if(EL.activeElement!==e)e.value=String(t).replace(/[^0-9.\-]/g,'');}
+  else e.textContent=t;
+}
 
-var GC='rgba(255,255,255,0.07)';
-var AC='rgba(255,255,255,0.2)';
-var TC2='rgba(255,255,255,0.32)';
+var TC2=dk?'rgba(255,255,255,0.32)':'rgba(0,0,0,0.28)';
+var GC=dk?'rgba(255,255,255,0.07)':'rgba(0,0,0,0.06)';
+var AC=dk?'rgba(255,255,255,0.2)':'rgba(0,0,0,0.18)';
+var TC=dk?'rgba(255,255,255,0.75)':'rgba(0,0,0,0.72)';
 
-var currentFile = null;
-var loadedFields = null;
-var touchedFields = {};
-function markTouched(sliderId){ touchedFields[FIELD_MAP[sliderId]] = true; }
+function sw(n){
+  ['e','l','a','s'].forEach(function(t){
+    el('pn-'+t).classList.toggle('on',t===n);
+    el('tb-'+t).classList.toggle('on',t===n);
+  });
+  if(n==='l')setTimeout(dL,10);
+  if(n==='a')setTimeout(dA,10);
+  if(n==='s')setTimeout(dS,10);
+}
 
-// -- slider readouts --
 function sE(){
   sv('ePwV',g('ePw').toFixed(0));sv('eTqV',g('eTq').toFixed(0));
   sv('eRppV',g('eRpp').toFixed(0));sv('eRptV',g('eRpt').toFixed(0));
@@ -110,6 +334,45 @@ function sE(){
   sv('eSteepV',g('eSteep').toFixed(1));sv('eFricV',g('eFric').toFixed(0));sv('eInerV',g('eIner').toFixed(3));
   sv('eHp',Math.round(g('ePw')*1.341)+' hp');sv('eCl',Math.round(g('eTq')*1.6));sv('eLb',Math.round(g('eTq')*0.7376));
 }
+function sL(){
+  var d={b0:2,b1:0,b2:0,b3:1,b4:0,b5:2,b6:3,b7:2,b8:1,b9:2,b10:1};
+  Object.keys(d).forEach(function(id){sv(id+'V',g(id).toFixed(d[id]));});
+  sv('bFzV',g('bFz').toFixed(1));
+}
+function sA(){
+  var d={a0:2,a1:0,a2:0,a3:0,a4:0,a5:3,a6:2,a7:1,a8:2,a9:2,a10:3,a11:0,a12:1,a13:1,a14:1};
+  Object.keys(d).forEach(function(id){sv(id+'V',g(id).toFixed(d[id]));});
+  sv('aFzV',g('aFz').toFixed(1));sv('aCamV',g('aCam').toFixed(1));
+}
+function sSu(){
+  sv('sSV',g('sS').toFixed(0));sv('sCoV',g('sCo').toFixed(0));sv('sReV',g('sRe').toFixed(0));
+  sv('sTuV',g('sTu').toFixed(3));sv('sTdV',g('sTd').toFixed(3));sv('sSwV',g('sSw').toFixed(0));sv('sMsV',g('sMs').toFixed(0));
+  var ms=g('sMs'),sp=g('sS')*1000,co=g('sCo'),re=g('sRe'),m=ms/4,Fz=(ms*9.81/4)/1000;
+  var wn=Math.sqrt(sp/m),fn=wn/(2*Math.PI),cc=2*Math.sqrt(sp*m),zeta=((co+re)/2)/cc;
+  sv('sFz',Fz.toFixed(2)+' kN');sv('sFreq',fn.toFixed(2)+' Hz');sv('sDamp',zeta.toFixed(2));
+  var feel=fn<1?'Very soft — off-road/truck':fn<1.5?'Comfort ride':fn<2.2?'Balanced sport':'Stiff — race setup';
+  var df=zeta<0.5?'Under-damped — will bounce':zeta<0.8?'Slightly soft — may wallow':zeta<1.2?'Well damped — controlled':'Over-damped — very firm rebound';
+  el('slive').innerHTML='<b>'+feel+'</b><br>'+df+'<br>Comp÷Relax = '+(co/re).toFixed(2)+' (ideal 0.6–0.8)';
+}
+
+function mf(x,B,C,D,E){var Bx=B*x;return D*Math.sin(C*Math.atan(Bx-E*(Bx-Math.atan(Bx))));}
+function lon(k,Fz,b){
+  var C=b[0],mu=(b[1]*Fz+b[2])/1000,D=mu*Fz*1000;
+  var BCD=(b[3]*Fz*Fz+b[4]*Fz)*Math.exp(-b[5]*Fz);
+  var B=D>1?BCD/(C*D):0;
+  var E=b[6]*Fz*Fz+b[7]*Fz+b[8],Sh=b[9]*Fz+b[10];
+  return mf(k+Sh,B,C,D,E)/(Fz*1000);
+}
+function getB(){return['b0','b1','b2','b3','b4','b5','b6','b7','b8','b9','b10'].map(function(id){return g(id);});}
+function lat(alpha,Fz,gamma,a){
+  var C=a[0],mu=(a[1]*Fz+a[2])/1000,D=mu*Fz*1000;
+  var BCD=a[3]*Math.sin(2*Math.atan(Fz/Math.max(a[4],0.5)))*(1-a[5]*Math.abs(gamma));
+  var B=D>1?BCD/(C*D):0;
+  var E=a[6]*Fz+a[7],Sh=a[8]*Fz+a[9]+a[10]*gamma;
+  var Sv=((a[11]*Fz+a[12])*Fz+(a[13]*Fz+a[14])*gamma);
+  return(mf(alpha+Sh,B,C,D,E)+Sv)/(Fz*1000);
+}
+function getA(){return['a0','a1','a2','a3','a4','a5','a6','a7','a8','a9','a10','a11','a12','a13','a14'].map(function(id){return g(id);});}
 
 function setup(id){
   var cv=el(id),par=cv.parentElement,dpr=window.devicePixelRatio||1;
@@ -117,6 +380,163 @@ function setup(id){
   cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
   var ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
   return{ctx:ctx,W:W,H:H};
+}
+
+function drawCurves(id,datasets,xMin,xMax,xSfx,yMin,yMax){
+  var s=setup(id),ctx=s.ctx,W=s.W,H=s.H;
+  var L=40,R=10,T=10,Bo=22,pw=W-L-R,ph=H-T-Bo;
+  ctx.clearRect(0,0,W,H);
+  function tx(x){return L+(x-xMin)/(xMax-xMin)*pw;}
+  function ty(y){return T+ph*(1-(y-yMin)/(yMax-yMin));}
+  for(var i=0;i<=5;i++){
+    var yv=yMin+(yMax-yMin)*i/5;
+    ctx.strokeStyle=GC;ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(L,ty(yv));ctx.lineTo(L+pw,ty(yv));ctx.stroke();
+    ctx.fillStyle=TC2;ctx.font='11px system-ui,-apple-system,"Segoe UI",sans-serif';ctx.textAlign='right';
+    ctx.fillText(yv.toFixed(2),L-4,ty(yv)+4);
+  }
+  for(var i=0;i<=10;i++){
+    var xv=xMin+(xMax-xMin)*i/10;
+    ctx.strokeStyle=GC;ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(tx(xv),T);ctx.lineTo(tx(xv),T+ph);ctx.stroke();
+    ctx.fillStyle=TC2;ctx.font='11px system-ui,-apple-system,"Segoe UI",sans-serif';ctx.textAlign='center';
+    ctx.fillText(xv.toFixed(0)+(xSfx||''),tx(xv),T+ph+14);
+  }
+  ctx.strokeStyle=AC;ctx.lineWidth=.5;
+  ctx.beginPath();ctx.moveTo(tx(0),T);ctx.lineTo(tx(0),T+ph);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(L,ty(0));ctx.lineTo(L+pw,ty(0));ctx.stroke();
+  datasets.forEach(function(ds){
+    if(ds.fill){
+      ctx.save();ctx.beginPath();var fi=true;
+      ds.pts.forEach(function(p){fi?(ctx.moveTo(tx(p.x),ty(p.y)),fi=false):ctx.lineTo(tx(p.x),ty(p.y));});
+      ctx.lineTo(tx(ds.pts[ds.pts.length-1].x),ty(0));ctx.lineTo(tx(ds.pts[0].x),ty(0));
+      ctx.closePath();ctx.fillStyle=ds.fill;ctx.fill();ctx.restore();
+    }
+    ctx.strokeStyle=ds.color;ctx.lineWidth=ds.w||1.5;
+    if(ds.dash)ctx.setLineDash(ds.dash);else ctx.setLineDash([]);
+    ctx.beginPath();var fi=true;
+    ds.pts.forEach(function(p){fi?(ctx.moveTo(tx(p.x),ty(p.y)),fi=false):ctx.lineTo(tx(p.x),ty(p.y));});
+    ctx.stroke();ctx.setLineDash([]);
+    if(ds.peak){
+      ctx.save();ctx.strokeStyle=ds.color;ctx.lineWidth=1;ctx.globalAlpha=.5;ctx.setLineDash([3,3]);
+      ctx.beginPath();ctx.moveTo(tx(ds.peak.x),ty(0));ctx.lineTo(tx(ds.peak.x),ty(ds.peak.y));ctx.stroke();
+      ctx.setLineDash([]);ctx.globalAlpha=1;
+      ctx.beginPath();ctx.arc(tx(ds.peak.x),ty(ds.peak.y),3.5,0,Math.PI*2);ctx.fillStyle=ds.color;ctx.fill();
+      ctx.fillStyle=ds.color;ctx.font='500 11px system-ui,-apple-system,"Segoe UI",sans-serif';ctx.textAlign='left';
+      var lx=tx(ds.peak.x)+5,ly=ty(ds.peak.y)-5;
+      if(lx>L+pw-60)lx=tx(ds.peak.x)-62;
+      ctx.fillText('peak '+ds.peak.x.toFixed(1)+(xSfx||'%'),lx,ly);
+      ctx.restore();
+    }
+  });
+}
+
+function buildLon(Fz){
+  var b=getB(),pts=[],maxV=0,maxX=0;
+  for(var i=-200;i<=200;i++){var k=i*0.5,v=lon(k,Fz,b);pts.push({x:k,y:v});if(k>=0&&v>maxV){maxV=v;maxX=k;}}
+  return{pts:pts,peak:{x:maxX,y:maxV}};
+}
+function buildLat(Fz,cam){
+  var a=getA(),pts=[],maxV=0,maxX=0;
+  for(var i=-200;i<=200;i++){var alpha=i*0.1,v=lat(alpha,Fz,cam,a);pts.push({x:alpha,y:v});if(alpha>=0&&v>maxV){maxV=v;maxX=alpha;}}
+  return{pts:pts,peak:{x:maxX,y:maxV}};
+}
+var FA=dk?'rgba(55,138,221,0.13)':'rgba(55,138,221,0.1)';
+
+function dL(){
+  var Fz=g('bFz'),b=getB();
+  var d0=buildLon(Fz*.5),d1=buildLon(Fz),d2=buildLon(Fz*1.5);
+  drawCurves('cL',[
+    {pts:d0.pts,color:'#E24B4A',w:1.5,dash:[4,3]},
+    {pts:d1.pts,color:'#378ADD',w:2.5,peak:d1.peak,fill:FA},
+    {pts:d2.pts,color:'#3B6D11',w:1.5,dash:[4,3]}
+  ],-100,100,'%',-1.5,1.5);
+  var pk=d1.peak,mu=(b[1]*Fz+b[2])/1000;
+  sv('bPk',pk.y.toFixed(3));sv('bPs',pk.x.toFixed(1)+'%');
+  var s9=d1.pts.filter(function(p){return p.x>0&&p.y>=pk.y*.9;})[0];
+  sv('bS9',s9?s9.x.toFixed(1)+'%':'—');
+  var grip=mu<0.45?'Ice/mud — very low grip':mu<0.8?'Wet road grip':mu<1.1?'Normal dry road':mu<1.35?'Sport tyre — high grip':'Race tyre level';
+  var sf=pk.x<4?'Peaks at low slip — sharp, can snap':pk.x<9?'Peaks at '+pk.x.toFixed(0)+'% — responsive sport feel':pk.x<16?'Peaks at '+pk.x.toFixed(0)+'% — progressive off-road':'Very gradual — mud or snow tyre';
+  var b8v=g('b8'),drop=b8v<-5?'Sharp dropoff — loses grip suddenly':b8v<-1.5?'Moderate — some warning before sliding':b8v<0?'Gentle — forgiving past peak':'Very flat shoulder';
+  el('llive').innerHTML='<b>'+grip+'</b><br>'+sf+'<br>'+drop;
+  drawTireL(mu,g('b4'),b8v);
+}
+function dA(){
+  var Fz=g('aFz'),cam=g('aCam'),a=getA();
+  var d0=buildLat(Fz*.5,cam),d1=buildLat(Fz,cam),d2=buildLat(Fz*1.5,cam);
+  drawCurves('cA',[
+    {pts:d0.pts,color:'#E24B4A',w:1.5,dash:[4,3]},
+    {pts:d1.pts,color:'#378ADD',w:2.5,peak:d1.peak,fill:FA},
+    {pts:d2.pts,color:'#3B6D11',w:1.5,dash:[4,3]}
+  ],-20,20,'°',-1.5,1.5);
+  var pk=d1.peak,mu=(a[1]*Fz+a[2])/1000;
+  sv('aPk',pk.y.toFixed(3));sv('aPs',pk.x.toFixed(1)+'°');
+  var BCD=a[3]*Math.sin(2*Math.atan(Fz/Math.max(a[4],0.5)))*(1-a[5]*Math.abs(cam));
+  sv('aCs',BCD.toFixed(0)+' N/°');
+  var grip=mu<0.45?'Ice/mud — very low grip':mu<0.8?'Wet/loose grip':mu<1.1?'Normal dry road':mu<1.35?'Sport — high lateral grip':'Race level cornering';
+  var st=pk.x<4?'Sharp — reacts fast, less margin':pk.x<8?'Responsive — '+pk.x.toFixed(1)+'° peak, sport feel':pk.x<14?'Progressive — '+pk.x.toFixed(1)+'° peak, good margin':'Slow to peak — '+pk.x.toFixed(1)+'° — off-road feel';
+  var a7v=g('a7'),drop=a7v<-5?'Very snappy — snap oversteer past peak':a7v<-1.5?'Moderate — warns before sliding':a7v<0?'Gentle — good margin past peak':'Very flat — almost no dropoff';
+  el('alive').innerHTML='<b>'+grip+'</b><br>'+st+'<br>'+drop;
+  drawTireA(pk.x,mu,cam);
+}
+
+function drawTireL(mu,b4,b8){
+  var cv=el('cTL'),ctx=cv.getContext('2d'),W=cv.width,H=cv.height,cx=W/2,cy=H/2-8;
+  ctx.clearRect(0,0,W,H);
+  var hue=130-mu*75,gc='hsl('+hue+',55%,'+(dk?'44%':'38%')+')';
+  var pw=Math.max(20,Math.min(48,15+mu*28)),ph=Math.max(30,Math.min(62,22+mu*32));
+  ctx.strokeStyle=AC;ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.ellipse(cx,cy,30,52,0,0,Math.PI*2);ctx.stroke();
+  ctx.fillStyle=gc;ctx.globalAlpha=.14;
+  ctx.beginPath();ctx.ellipse(cx,cy,pw,ph,0,0,Math.PI*2);ctx.fill();
+  ctx.globalAlpha=1;ctx.strokeStyle=gc;ctx.lineWidth=2;
+  ctx.beginPath();ctx.ellipse(cx,cy,pw,ph,0,0,Math.PI*2);ctx.stroke();
+  var al=Math.min(52,Math.max(10,b4*0.13));
+  ctx.strokeStyle='#378ADD';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(cx,cy+6);ctx.lineTo(cx,cy-al);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx-5,cy-al+9);ctx.lineTo(cx,cy-al);ctx.lineTo(cx+5,cy-al+9);ctx.stroke();
+  var slip=Math.max(0,Math.min(1,(-b8)/12)),er=pw+3+slip*15,ef=ph+2+slip*8;
+  ctx.strokeStyle='#E24B4A';ctx.lineWidth=1.5;ctx.globalAlpha=.7;ctx.setLineDash([3,3]);
+  ctx.beginPath();ctx.ellipse(cx,cy,er,ef,0,0,Math.PI*2);ctx.stroke();
+  ctx.globalAlpha=1;ctx.setLineDash([]);
+  ctx.fillStyle='#378ADD';ctx.font='11px system-ui,-apple-system,"Segoe UI",sans-serif';ctx.textAlign='center';
+  ctx.fillText('stiffness',cx,cy-al-5);
+  ctx.fillStyle='#E24B4A';ctx.textAlign='right';
+  ctx.fillText('slip zone',cx+er-2,cy-ef-3);
+  ctx.fillStyle=gc;ctx.textAlign='center';
+  ctx.fillText('μ = '+mu.toFixed(2),cx,H-18);
+  ctx.fillText('contact patch',cx,H-7);
+}
+
+function drawTireA(peakDeg,mu,camber){
+  var cv=el('cTA'),ctx=cv.getContext('2d'),W=cv.width,H=cv.height,cx=W/2,cy=H/2-10;
+  ctx.clearRect(0,0,W,H);
+  var hue=130-mu*75,gc='hsl('+hue+',55%,'+(dk?'44%':'38%')+')';
+  var camR=camber*Math.PI/180;
+  ctx.save();ctx.translate(cx,cy);ctx.rotate(camR);
+  ctx.strokeStyle=AC;ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(0,0,24,48,0,0,Math.PI*2);ctx.stroke();
+  ctx.fillStyle=gc;ctx.globalAlpha=.14;ctx.beginPath();ctx.ellipse(0,0,17,32,0,0,Math.PI*2);ctx.fill();
+  ctx.globalAlpha=1;ctx.strokeStyle=gc;ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(0,0,17,32,0,0,Math.PI*2);ctx.stroke();
+  ctx.restore();
+  var slipR=peakDeg*Math.PI/180,vlen=46;
+  ctx.strokeStyle=AC;ctx.lineWidth=1;ctx.setLineDash([3,3]);
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx,cy-vlen-10);ctx.stroke();ctx.setLineDash([]);
+  ctx.strokeStyle='#378ADD';ctx.lineWidth=2;
+  var vx=cx+Math.sin(slipR)*vlen,vy=cy-Math.cos(slipR)*vlen;
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(vx,vy);ctx.stroke();
+  var ang=Math.atan2(vx-cx,cy-vy);
+  ctx.beginPath();ctx.moveTo(vx-5*Math.sin(ang-.4),vy+5*Math.cos(ang-.4));ctx.lineTo(vx,vy);ctx.lineTo(vx-5*Math.sin(ang+.4),vy+5*Math.cos(ang+.4));ctx.stroke();
+  if(Math.abs(peakDeg)>0.5){
+    ctx.strokeStyle=AC;ctx.lineWidth=1;ctx.beginPath();ctx.arc(cx,cy,18,-Math.PI/2,-Math.PI/2+slipR,slipR<0);ctx.stroke();
+    ctx.fillStyle=TC2;ctx.font='11px system-ui,-apple-system,"Segoe UI",sans-serif';ctx.textAlign='center';
+    ctx.fillText(peakDeg.toFixed(1)+'°',cx+(peakDeg>0?26:-26),cy-14);
+  }
+  if(Math.abs(camber)>0.3){
+    ctx.fillStyle='#BA7517';ctx.font='11px system-ui,-apple-system,"Segoe UI",sans-serif';ctx.textAlign='center';
+    ctx.fillText('camber '+camber.toFixed(1)+'°',cx,cy+62);
+  }
+  ctx.fillStyle=gc;ctx.font='11px system-ui,-apple-system,"Segoe UI",sans-serif';ctx.textAlign='center';
+  ctx.fillText('peak '+peakDeg.toFixed(1)+'°',cx,H-18);ctx.fillText('μ = '+mu.toFixed(2),cx,H-7);
+  ctx.fillStyle='#378ADD';ctx.font='11px system-ui,-apple-system,"Segoe UI",sans-serif';
+  ctx.fillText('slip',vx+(peakDeg>=0?4:-26),vy+(vy<cy-30?10:-4));
 }
 
 function engT(rpm,pw,tq,rpp,rpt,idle,rmax,steep,fric){
@@ -127,7 +547,6 @@ function engT(rpm,pw,tq,rpp,rpt,idle,rmax,steep,fric){
   else{t=pw*9549/rpm;}
   return rpm>=rmax?0:Math.max(0,t-fric);
 }
-
 function dE(){
   var pw=g('ePw'),tq=g('eTq'),rpp=g('eRpp'),rpt=g('eRpt'),idle=g('eIdle'),rmax=g('eRmax'),steep=g('eSteep'),fric=g('eFric');
   var s=setup('cE'),ctx=s.ctx,W=s.W,H=s.H;
@@ -172,8 +591,156 @@ function dE(){
   });
 }
 
-// -- API wiring --
+function dS(){
+  var sp=g('sS'),tu=g('sTu')*1000,td=g('sTd')*1000,co=g('sCo'),re=g('sRe');
+  function drawLinear(id,lines,xMin,xMax,xFn,yMax){
+    var s=setup(id),ctx=s.ctx,W=s.W,H=s.H,L=36,R=8,T=8,Bo=20,pw=W-L-R,ph=H-T-Bo;
+    ctx.clearRect(0,0,W,H);
+    function tx(x){return L+(x-xMin)/(xMax-xMin)*pw;}
+    function ty(y){return T+ph*(1-y/yMax);}
+    for(var i=0;i<=4;i++){ctx.strokeStyle=GC;ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(L,T+ph*i/4);ctx.lineTo(L+pw,T+ph*i/4);ctx.stroke();ctx.fillStyle=TC2;ctx.font='11px system-ui,-apple-system,"Segoe UI",sans-serif';ctx.textAlign='right';ctx.fillText((yMax*(1-i/4)).toFixed(1),L-3,T+ph*i/4+4);}
+    for(var i=0;i<=4;i++){var xv=xMin+(xMax-xMin)*i/4;ctx.fillStyle=TC2;ctx.font='11px system-ui,-apple-system,"Segoe UI",sans-serif';ctx.textAlign='center';ctx.fillText(xFn(xv),tx(xv),T+ph+14);}
+    ctx.strokeStyle=AC;ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(tx(0),T);ctx.lineTo(tx(0),T+ph);ctx.stroke();
+    lines.forEach(function(ln){
+      if(ln.fill){ctx.fillStyle=ln.fill;ctx.globalAlpha=.1;ctx.beginPath();ln.p.forEach(function(pt,i){i===0?ctx.moveTo(tx(pt.x),ty(pt.y)):ctx.lineTo(tx(pt.x),ty(pt.y));});ctx.lineTo(tx(ln.p[ln.p.length-1].x),ty(0));ctx.lineTo(tx(ln.p[0].x),ty(0));ctx.fill();ctx.globalAlpha=1;}
+      ctx.strokeStyle=ln.color;ctx.lineWidth=2;if(ln.dash)ctx.setLineDash(ln.dash);else ctx.setLineDash([]);
+      ctx.beginPath();ln.p.forEach(function(pt,i){i===0?ctx.moveTo(tx(pt.x),ty(pt.y)):ctx.lineTo(tx(pt.x),ty(pt.y));});ctx.stroke();ctx.setLineDash([]);
+    });
+  }
+  var mF=sp*Math.max(tu,td)/1000;
+  var sp2=[];for(var d=-tu;d<=td;d+=2)sp2.push({x:d,y:sp*Math.abs(d)/1000});
+  drawLinear('cSu',[{p:sp2,color:'#378ADD',fill:'#378ADD'}],-tu,td,function(v){return v.toFixed(0)+'mm';},mF*1.1);
+  var mD=Math.max(co,re)*3/1000;
+  drawLinear('cDa',[{p:[{x:0,y:0},{x:3,y:co*3/1000}],color:'#BA7517',fill:'#BA7517'},{p:[{x:0,y:0},{x:3,y:re*3/1000}],color:'#3B6D11',dash:[4,3]}],0,3,function(v){return v+'m/s';},mD*1.1);
+}
+
+function setSlider(id,v){var r=el(id);if(!r)return;fitRangeTo(r,v);setRangeValueExact(r,v);}
+function pE(p){var m={pw:'ePw',tq:'eTq',rpp:'eRpp',rpt:'eRpt',idle:'eIdle',rmax:'eRmax',steep:'eSteep',fric:'eFric',iner:'eIner'};Object.keys(m).forEach(function(k){setSlider(m[k],p[k]);});sE();dE();markPreview();}
+function pL(p){Object.keys(p).forEach(function(k){setSlider(k,p[k]);});sL();dL();}
+function pA(p){Object.keys(p).forEach(function(k){setSlider(k,p[k]);});sA();dA();}
+function pS(p){var m={sp:'sS',co:'sCo',re:'sRe',tu:'sTu',td:'sTd',sw:'sSw',ms:'sMs'};Object.keys(m).forEach(function(k){setSlider(m[k],p[k]);});sSu();dS();}
+
+// ---- typed entry -------------------------------------------------------
+// Every readout becomes a number box driving its slider. Fine steps (Inertia
+// 0.01, b6 0.002) are simply unhittable by dragging a short track.
+function enhanceReadouts(){
+  var rows = EL.querySelectorAll('.sr');
+  Array.prototype.forEach.call(rows, function(row){
+    var range = row.querySelector('input[type=range]');
+    var out = row.querySelector('span.vl');
+    if (!range || !out) return;
+    var box = EL.createElement('input');
+    box.type = 'number'; box.className = 'vl'; box.id = out.id;
+    // step="any" on both: the slider must be able to hold any value the prefab or
+    // the user supplies, and a number box with a numeric step rejects off-grid
+    // entries outright.
+    range.step = 'any';
+    box.min = range.min; box.max = range.max; box.step = 'any';
+    box.value = range.value;
+    // Dragging the slider counts as an edit. A programmatic .value assignment does
+    // not fire 'input', so loading a vehicle cannot mark its fields as edited.
+    range.addEventListener('input', function(){ noteEdited(range.id); });
+
+    var handler = range.getAttribute('oninput') || '';
+    box.addEventListener('input', function(){
+      var v = parseFloat(box.value);
+      if (isNaN(v)) return;
+      // Typing is authoritative: stretch the track rather than clamp the number,
+      // and bypass the range's own step-snapping so it lands exactly on v.
+      fitRangeTo(range, v);
+      setRangeValueExact(range, v);
+      // Once typed, this is the user's own value, not a blank from the file.
+      if (boundMapFor(range.id)) { delete unsetFields[range.id]; box.classList.remove('unset'); }
+      noteEdited(range.id);
+      if (handler) new Function(handler).call(range);
+    });
+    out.parentNode.replaceChild(box, out);
+
+    // Baseline = what this slider read the first time we saw it. For sandbox
+    // tabs that is the page's own starting value; for engine fields loadVehicle
+    // replaces it with the first value read from the prefab.
+    if (sandboxDefaults[range.id] === undefined) sandboxDefaults[range.id] = parseFloat(range.value);
+
+    var rst = EL.createElement('button');
+    rst.type = 'button'; rst.className = 'rst'; rst.title = 'Back to default';
+    rst.textContent = '↺';
+    rst.addEventListener('click', function(){ resetSlider(range.id); });
+    box.parentNode.insertBefore(rst, box.nextSibling);
+  });
+}
+
+// ---- defaults ----------------------------------------------------------
+// Sandbox tabs (tyre/suspension maths) have one fixed default per slider: the
+// page's own starting value.
+var sandboxDefaults = {};
+// Engine defaults are PER VEHICLE — keyed by prefab path. A single shared map
+// would leak the first-loaded vehicle's numbers into every other vehicle, and
+// since the list is sorted alphabetically that first load is Core/Wheeled_Base,
+// which has no Engine block at all.
+var vehicleDefaults = {};
+
+function defaultFor(sliderId){
+  var field = FIELD_MAP[sliderId];
+  if (field && currentFile && vehicleDefaults[currentFile] &&
+      vehicleDefaults[currentFile][sliderId] !== undefined) {
+    return vehicleDefaults[currentFile][sliderId];
+  }
+  // Always yield SOMETHING. A field this prefab does not define must still land
+  // on a deterministic number, or switching prefabs would leave the previous
+  // vehicle's value sitting in the slider and the graph would show two vehicles
+  // mixed together.
+  return sandboxDefaults[sliderId];
+}
+
+// Restore one slider to its baseline and redraw via that slider's own handler,
+// so each tab's graphs update the same way a manual edit would.
+function resetSlider(id){
+  var range = el(id);
+  var def = defaultFor(id);
+  if (!range || def === undefined || def === null) return;
+  fitRangeTo(range, def);
+  setRangeValueExact(range, def);
+  if (boundMapFor(id)) { delete unsetFields[id]; }
+  var handler = range.getAttribute('oninput') || '';
+  if (handler) new Function(handler).call(range);
+  applyUnsetBoxes();
+}
+
+// Reset every slider on the currently visible tab. Scoped to the open pane so
+// resetting the engine cannot silently move tyre or suspension values too.
+function resetVisible(){
+  var pane = EL.querySelector('.pane.on');
+  if (!pane) return;
+  var ranges = pane.querySelectorAll('input[type=range]');
+  Array.prototype.forEach.call(ranges, function(r){ resetSlider(r.id); });
+  showBanner('ok', 'Reset ' + ranges.length + ' value(s) on this tab to their defaults.');
+}
+
+// ---- server wiring -----------------------------------------------------
 var FIELD_MAP = { ePw:'MaxPower', eTq:'MaxTorque', eRpp:'RpmMaxPower', eRpt:'RpmMaxTorque', eIdle:'RpmIdle', eRmax:'RpmMax', eSteep:'Steepness', eFric:'Friction', eIner:'Inertia' };
+// Pacejka slider ids already match their coefficient names.
+var LON_MAP = {}, LAT_MAP = {};
+['b0','b1','b2','b3','b4','b5','b6','b7','b8','b9','b10'].forEach(function(k){ LON_MAP[k] = k; });
+['a0','a1','a2','a3','a4','a5','a6','a7','a8','a9','a10','a11','a12','a13','a14'].forEach(function(k){ LAT_MAP[k] = k; });
+// Swaybar and vehicle mass have no equivalent in the prefab data, so they stay
+// sandbox-only and are deliberately absent here.
+var SUSP_MAP = { sS:'SpringRate', sCo:'CompressionDamper', sRe:'RelaxationDamper', sTu:'MaxTravelUp', sTd:'MaxTravelDown' };
+
+function boundMapFor(sliderId){
+  if (FIELD_MAP[sliderId]) return FIELD_MAP;
+  if (LON_MAP[sliderId]) return LON_MAP;
+  if (LAT_MAP[sliderId]) return LAT_MAP;
+  if (SUSP_MAP[sliderId]) return SUSP_MAP;
+  return null;
+}
+function allBoundIds(){
+  return Object.keys(FIELD_MAP).concat(Object.keys(LON_MAP), Object.keys(LAT_MAP), Object.keys(SUSP_MAP));
+}
+var currentFile = null;
+var loadedFields = null;
+var lastMtime = null;
+var previewDirty = false;
+var deepLinkMiss = null;
 
 function showBanner(kind, text){
   var b = el('banner');
@@ -181,30 +748,130 @@ function showBanner(kind, text){
   b.textContent = text;
 }
 
-function setSlidersFromResolved(resolved){
-  Object.keys(FIELD_MAP).forEach(function(sliderId){
-    var field = FIELD_MAP[sliderId];
-    var entry = resolved[field] || { value: null, source: 'unresolved' };
+// A range input silently clamps an out-of-range assignment, which would make the
+// page display a value the file does not contain. Widen the track to fit instead.
+//
+// The widened min/max MUST stay on the same step grid as the original min — a
+// native <input type=range> snaps any .value assignment to the nearest point on
+// grid-from-min, silently, with no error. Aligning the new bound to zero instead
+// (Math.floor(value/step)*step) can drift that grid out of sync with the
+// original one, so setting the range back to an old boundary value afterward can
+// get silently snapped to a neighboring step — one that renders identically to
+// what was already showing, making the change look like it did nothing.
+function fitRangeTo(input, value){
+  if (!input) return false;
+  var min = parseFloat(input.min), max = parseFloat(input.max);
+  var step = parseFloat(input.step) || 1;
+  var out = false;
+  if (value < min) { input.min = String(min - Math.ceil((min - value) / step) * step); out = true; }
+  if (value > max) { input.max = String(max + Math.ceil((value - max) / step) * step); out = true; }
+  if (out) {
+    var box = el(input.id + 'V');
+    if (box && box.tagName === 'INPUT') { box.min = input.min; box.max = input.max; }
+  }
+  return out;
+}
+
+// Assign a value to a range input without the browser's step-snapping altering it.
+//
+// Sliders are left on step="any" for their whole life (see enhanceReadouts): a
+// range input snaps .value onto a grid measured from min, and RESTORING a numeric
+// step after assigning re-runs that sanitisation, silently pulling an off-grid
+// value back onto the grid. Typing 5999 into a step="10" field became 6000 and
+// looked like the field was ignoring input. Precision now comes from the number
+// box, so nothing needs the grid.
+function setRangeValueExact(range, value){
+  if (range.step !== 'any') range.step = 'any';
+  range.value = value;
+}
+
+// Apply one resolved group (engine, longitudinal, lateral, or one axle's
+// suspension) to its sliders. Shared by all four tabs so badges, range widening
+// and unset marking behave identically everywhere.
+function applyGroup(map, group){
+  var widened = [], unset = [];
+  Object.keys(map).forEach(function(sliderId){
+    var key = map[sliderId];
+    var entry = (group && group[key]) || { value: null, source: 'unresolved' };
     var badge = el(sliderId + 'S');
     if (entry.value !== null && entry.value !== undefined) {
-      el(sliderId).value = entry.value;
+      if (fitRangeTo(el(sliderId), entry.value)) widened.push(key);
+      setRangeValueExact(el(sliderId), entry.value);
+      unsetFields[sliderId] = false;
+    } else {
+      // No value in the file. Setting a field back to its inherited default makes
+      // Workbench DELETE the override line, so fall back to a deterministic value
+      // rather than leaving the previous vehicle's number in the slider.
+      unset.push(key);
+      var def = defaultFor(sliderId);
+      if (def !== undefined && def !== null) {
+        fitRangeTo(el(sliderId), def);
+        setRangeValueExact(el(sliderId), def);
+      }
+      unsetFields[sliderId] = true;
     }
+    if (!badge) return;
     if (entry.source === 'overridden') { badge.className = 'src ovr'; badge.textContent = 'ovr'; }
     else if (entry.source === 'inherited') { badge.className = 'src inh'; badge.textContent = 'inh'; }
     else { badge.className = 'src unr'; badge.textContent = '?'; }
   });
-  sE(); dE();
+  return { widened: widened, unset: unset };
 }
 
-// Only fields the user actually dragged are sent, so slider min/max/step
-// snapping can never rewrite a value the user did not touch.
-function currentChanges(){
-  var changes = {};
-  Object.keys(FIELD_MAP).forEach(function(sliderId){
-    var field = FIELD_MAP[sliderId];
-    if (touchedFields[field]) changes[field] = g(sliderId);
+function setSlidersFromResolved(body){
+  var chassis = body.chassis || {};
+  var axles = chassis.axles || [];
+  if (currentAxle >= axles.length) currentAxle = 0;
+
+  var e = applyGroup(FIELD_MAP, body.fields);
+  var l = applyGroup(LON_MAP, chassis.longitudinal);
+  var a = applyGroup(LAT_MAP, chassis.lateral);
+  var s = applyGroup(SUSP_MAP, axles[currentAxle] && axles[currentAxle].fields);
+
+  populateAxleSelect(axles);
+  sE(); dE(); sL(); dL(); sA(); dA(); sSu(); dS();
+  // The update functions above repopulated every box from its slider; now mark
+  // the ones whose value did not come from the file.
+  applyUnsetBoxes();
+  return {
+    widened: e.widened.concat(l.widened, a.widened, s.widened),
+    unset: e.unset.concat(l.unset, a.unset, s.unset),
+    axleCount: axles.length
+  };
+}
+
+var currentAxle = 0;
+function populateAxleSelect(axles){
+  var sel = el('axleSelect');
+  if (!sel) return;
+  if (sel.options.length !== axles.length) {
+    sel.innerHTML = '';
+    axles.forEach(function(ax, i){
+      var o = EL.createElement('option');
+      o.value = String(i);
+      o.textContent = 'Axle ' + (i + 1) + (i === 0 ? ' (front)' : (i === axles.length - 1 ? ' (rear)' : ''));
+      sel.appendChild(o);
+    });
+  }
+  sel.value = String(currentAxle);
+  sel.onchange = function(){ currentAxle = parseInt(sel.value, 10) || 0; loadVehicle(currentFile); };
+}
+
+// Fields the loaded file carries no value for. Cleared as soon as the user edits
+// one, since from then on the number on screen is their own preview value.
+var unsetFields = {};
+function applyUnsetBoxes(){
+  allBoundIds().forEach(function(sliderId){
+    var box = el(sliderId + 'V');
+    if (!box || box.tagName !== 'INPUT') return;
+    if (!unsetFields[sliderId]) { box.placeholder = ''; box.classList.remove('unset'); return; }
+    // The file has no value here, but the slider was still given a deterministic
+    // one, so show that number and mark it as not-from-file rather than blanking:
+    // a blank box would disagree with the graph, which always draws from a value.
+    box.classList.add('unset');
+    box.placeholder = '';
+    box.title = 'Not set on this prefab — showing the default this page falls back to';
   });
-  return changes;
 }
 
 async function loadVehicleList(){
@@ -213,63 +880,192 @@ async function loadVehicleList(){
   var select = el('engineSelect');
   select.innerHTML = '';
   if (!body.vehicles || body.vehicles.length === 0) {
-    select.innerHTML = '<option value="">No tunable vehicles found</option>';
-    showBanner('err', 'No vehicle prefab in this addon has an Engine block yet. In Workbench, open the vehicle prefab, expand VehicleWheeledSimulation > Simulation Wheeled, add an Engine override, and save. This tool never creates that structure itself.');
+    select.innerHTML = '<option value="">No vehicle prefabs found</option>';
+    showBanner('err', 'No .et files under Prefabs/Vehicles in this addon.');
     return;
   }
+  var missing = 0;
   body.vehicles.forEach(function(v){
-    var opt = document.createElement('option');
-    opt.value = v;
-    opt.textContent = v.replace('Prefabs/Vehicles/', '');
+    var opt = EL.createElement('option');
+    opt.value = v.path;
+    opt.textContent = v.path.replace('Prefabs/Vehicles/', '') + (v.hasEngineBlock ? '' : '  (inherited)');
+    if (!v.hasEngineBlock) missing++;
     select.appendChild(opt);
   });
+  if (missing > 0) {
+    showBanner('warn', missing + ' vehicle(s) marked (inherited) have no Engine override on the prefab yet, so their fields read as ?. Set them in Workbench and they appear here.');
+  }
   select.onchange = function(){ loadVehicle(select.value); };
+
+  // ?vehicle=<addon-relative path> — how the Workbench plugin jumps straight to the
+  // prefab you right-clicked. Falls back to the first entry if it is not in the list.
+  var wanted = new URLSearchParams(window.location.search).get('vehicle');
+  if (wanted) {
+    var match = body.vehicles.filter(function(v){ return v.path === wanted; })[0];
+    if (match) {
+      select.value = match.path;
+    } else {
+      // Say exactly what was asked for and what is being shown instead. Silently
+      // falling back to the first entry looks identical to "opened the wrong prefab".
+      var NL = String.fromCharCode(10);
+      deepLinkMiss = wanted;
+      var leaf = wanted.split('/').pop().toLowerCase();
+      var near = body.vehicles.filter(function(v){
+        return v.path.toLowerCase().indexOf(leaf) !== -1;
+      }).map(function(v){ return v.path; });
+      showBanner('err',
+        'Requested vehicle not found, showing ' + select.value + ' instead.' + NL + NL +
+        'Asked for: ' + wanted + NL +
+        (near.length ? 'Closest matches: ' + near.join(', ') : 'No similarly-named prefab in this addon.'));
+    }
+  }
   loadVehicle(select.value);
 }
 
-async function loadVehicle(rel){
+async function loadVehicle(rel, manual){
   if (!rel) return;
   currentFile = rel;
-  el('applyBtn').disabled = true;
   var res = await fetch('/api/vehicles/' + rel.split('/').map(encodeURIComponent).join('/'));
   var body = await res.json();
   if (body.status !== 'ok') {
     showBanner('err', body.message || 'Failed to load ' + rel);
     return;
   }
+  lastMtime = body.mtimeMs;
   loadedFields = body.fields;
-  touchedFields = {};
-  setSlidersFromResolved(body.fields);
-  el('applyBtn').disabled = false;
-  var unresolved = Object.keys(body.fields).filter(function(k){ return body.fields[k].source === 'unresolved'; });
-  showBanner('ok', 'Loaded ' + rel + '.' + (unresolved.length ? ' Unresolved (shown as ?): ' + unresolved.join(', ') + '. Base game data not found — drag a slider to set one explicitly.' : ''));
+  previewDirty = false;
+  editedFields = {};
+
+  // Capture the prefab's values the FIRST time this vehicle is opened, and keep
+  // them: that snapshot is what the reset buttons restore. Refreshing it on every
+  // poll would make "default" follow each Workbench save and mean nothing.
+  if (!vehicleDefaults[rel]) {
+    var snap = {};
+    var ch = body.chassis || {};
+    var ax = (ch.axles || [])[0];
+    var groups = [
+      [FIELD_MAP, body.fields],
+      [LON_MAP, ch.longitudinal],
+      [LAT_MAP, ch.lateral],
+      [SUSP_MAP, ax && ax.fields]
+    ];
+    groups.forEach(function(g){
+      Object.keys(g[0]).forEach(function(sliderId){
+        var f = g[1] && g[1][g[0][sliderId]];
+        if (f && f.value !== null && f.value !== undefined) snap[sliderId] = f.value;
+      });
+    });
+    vehicleDefaults[rel] = snap;
+  }
+  var r = setSlidersFromResolved(body);
+  var msg = (manual ? 'Reloaded ' : 'Loaded ') + rel + ' at ' + new Date().toLocaleTimeString() + '.';
+  if (r.unset.length) {
+    msg += ' Not set on this prefab (' + r.unset.join(', ') + ') — shown dashed, using a fallback value. ' +
+           'Setting a field back to its inherited default makes Workbench delete the override line, ' +
+           'and the real default lives in vanilla data this tool cannot read yet.';
+  }
+  if (r.widened.length) msg += ' Slider range widened to fit: ' + r.widened.join(', ') + '.';
+  refreshWriteState();
+  if (deepLinkMiss) {
+    msg = 'NOT the requested prefab (' + deepLinkMiss + ' was not found). ' + msg;
+    showBanner('err', msg);
+  } else {
+    showBanner((r.widened.length || r.unset.length) ? 'warn' : 'ok', msg);
+  }
 }
 
-async function applyValues(){
+// Poll mtime rather than contents: a Workbench save bumps it, and re-reading only
+// then keeps this cheap enough to leave running all session.
+async function pollForChanges(){
+  if (!currentFile || !el('autoWatch').checked) return;
+  try {
+    var res = await fetch('/api/vehicles/' + currentFile.split('/').map(encodeURIComponent).join('/'));
+    var body = await res.json();
+    if (body.status !== 'ok' || body.mtimeMs === lastMtime) return;
+    loadVehicle(currentFile);
+  } catch (e) { /* server down or file mid-write; try again next tick */ }
+}
+setInterval(pollForChanges, 1500);
+
+// Only fields the user actually touched are ever written, so a slider that merely
+// displays an inherited value can never author an override for it.
+var editedFields = {};
+function noteEdited(sliderId){
+  if (!boundMapFor(sliderId)) return;
+  editedFields[sliderId] = true;
+  refreshWriteState();
+}
+
+function refreshWriteState(){
+  var btn = el('writeBtn');
+  if (!btn) return;
+  var n = Object.keys(editedFields).length;
+  var enabled = el('allowWrite') && el('allowWrite').checked;
+  btn.disabled = !enabled || n === 0 || !currentFile;
+  btn.textContent = n > 0 ? 'Apply ' + n + ' change(s) to prefab' : 'Apply to prefab';
+}
+
+// Engine is the only group with a writer: the .et carries Engine fields inline,
+// whereas Pacejka and Suspension values live in referenced .conf files that are
+// shared between vehicles — writing those would silently retune every vehicle
+// using the same tyre or suspension config.
+function engineChanges(){
+  var changes = {};
+  Object.keys(editedFields).forEach(function(sliderId){
+    var field = FIELD_MAP[sliderId];
+    if (field) changes[field] = g(sliderId);
+  });
+  return changes;
+}
+
+async function writeChanges(){
   if (!currentFile) return;
-  var changes = currentChanges();
+  var changes = engineChanges();
+  var skipped = Object.keys(editedFields).filter(function(id){ return !FIELD_MAP[id]; });
+
   if (Object.keys(changes).length === 0) {
-    showBanner('err', 'Nothing changed. Drag a slider first — untouched fields are never written.');
+    showBanner('err', 'Nothing writable was changed. Only Engine values can be written back; ' +
+      'Pacejka and suspension live in shared .conf files.' +
+      (skipped.length ? ' Ignored: ' + skipped.join(', ') : ''));
     return;
   }
-  el('applyBtn').disabled = true;
+
+  el('writeBtn').disabled = true;
   var res = await fetch('/api/vehicles/' + currentFile.split('/').map(encodeURIComponent).join('/'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ changes: changes }),
+    body: JSON.stringify({ changes: changes })
   });
   var body = await res.json();
-  el('applyBtn').disabled = false;
   if (body.status !== 'ok') {
-    showBanner('err', body.message || 'Failed to apply changes');
+    showBanner('err', body.message || 'Write failed');
+    refreshWriteState();
     return;
   }
-  showBanner('ok', 'Wrote ' + (body.written || []).join(', ') + '. ' + body.message);
+
+  editedFields = {};
+  var wb = body.workbench || '';
+  // A write that landed but could not be pushed into Workbench is a partial success:
+  // the bytes are on disk, but the open editor still shows the old value.
+  var reachedWorkbench = wb.indexOf('not reachable') === -1 && wb.indexOf('not notified') === -1;
+  showBanner(wb && !reachedWorkbench ? 'warn' : 'ok',
+    'Wrote ' + (body.written || []).join(', ') + ' to ' + currentFile +
+    (skipped.length ? '. Not written (not Engine fields): ' + skipped.join(', ') : '') +
+    (wb ? ' -- ' + wb : '') +
+    (reachedWorkbench ? '' : ' ' + body.message));
   loadVehicle(currentFile);
 }
 
-sE(); dE();
+function markPreview(){
+  if (previewDirty || !currentFile) return;
+  previewDirty = true;
+  showBanner('warn', 'Preview only — engine values here are NOT written to the prefab. Set them in Workbench, or hit Reload to snap back to what is on disk.');
+}
+
+enhanceReadouts();
+sE();sL();sA();sSu();dE();
 loadVehicleList();
 </script>
+
 </body>
 </html>

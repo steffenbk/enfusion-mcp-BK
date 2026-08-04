@@ -35,7 +35,7 @@ export function countUnquotedBraces(line: string): number {
 }
 
 /** Index of the first line that opens the document's root block. */
-function findRootOpenLine(lines: string[]): number {
+export function findRootOpenLine(lines: string[]): number {
   for (let i = 0; i < lines.length; i++) {
     if (countUnquotedBraces(lines[i]) > 0) return i;
   }
@@ -47,7 +47,7 @@ function findRootOpenLine(lines: string[]): number {
  * token equals `firstToken`. Only lines at the parent's immediate nesting level
  * are considered, so a matching name deeper in the tree is ignored.
  */
-function findChildBlock(
+export function findChildBlock(
   lines: string[],
   parent: BlockRange,
   firstToken: string
@@ -188,4 +188,20 @@ export function writeEngineFields(
   }
 
   return lines.join(usesCrlf ? "\r\n" : "\n");
+}
+
+/**
+ * The prefab this .et inherits from, taken from the root header line
+ * `Vehicle : "{GUID}Prefabs/.../Parent.et" {`. Returns the raw reference
+ * including the GUID braces, or null for a root prefab with no parent.
+ *
+ * This is how a vehicle's real defaults are reached: a prefab stores only what
+ * differs from its parent, so any field absent here is defined further up.
+ */
+export function findParentReference(text: string): string | null {
+  const lines = text.split(/\r?\n/);
+  const rootOpen = findRootOpenLine(lines);
+  if (rootOpen === -1) return null;
+  const m = /:\s*"([^"]+)"/.exec(lines[rootOpen]);
+  return m ? m[1] : null;
 }

@@ -48,7 +48,9 @@ describe("tuning server", () => {
     etPath = join(dir, "M151A2.et");
     writeFileSync(etPath, VEHICLE_ET);
 
-    server = createTuningServer(addonDir);
+    // Writing is opt-in now: the server is a read-only view of Workbench by
+    // default, so the POST tests below exercise the explicitly-enabled path.
+    server = createTuningServer(addonDir, undefined, true);
     await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
     baseUrl = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
   });
@@ -65,11 +67,14 @@ describe("tuning server", () => {
     expect(await res.text()).toContain("<title>");
   });
 
-  it("GET /api/vehicles lists tunable vehicles", async () => {
+  it("GET /api/vehicles lists vehicles with their Engine-block flag", async () => {
     const res = await fetch(`${baseUrl}/api/vehicles`);
     const body = await res.json();
     expect(res.status).toBe(200);
-    expect(body).toEqual({ status: "ok", vehicles: [REL] });
+    expect(body).toEqual({
+      status: "ok",
+      vehicles: [{ path: REL, hasEngineBlock: true }],
+    });
   });
 
   it("GET /api/vehicles/<rel> returns resolved fields with sources", async () => {
@@ -150,6 +155,17 @@ describe("tuning server", () => {
     expect((await res.json()).message).toContain("Content-Type");
   });
 
+  it("GET reports the file's mtime so the page can follow Workbench saves", async () => {
+    const res = await fetch(`${baseUrl}/api/vehicles/${REL}`);
+    const body = await res.json();
+    expect(typeof body.mtimeMs).toBe("number");
+
+    writeFileSync(etPath, VEHICLE_ET.replace("MaxPower 53", "MaxPower 99"));
+    const after = await (await fetch(`${baseUrl}/api/vehicles/${REL}`)).json();
+    expect(after.mtimeMs).not.toBe(body.mtimeMs);
+    expect(after.fields.MaxPower.value).toBe(99);
+  });
+
   it("POST rejects an empty or unknown-key changes object", async () => {
     const empty = await fetch(`${baseUrl}/api/vehicles/${REL}`, {
       method: "POST",
@@ -164,5 +180,106 @@ describe("tuning server", () => {
       body: JSON.stringify({ changes: { NotAField: 1 } }),
     });
     expect(bogus.status).toBe(400);
+  });
+});
+
+describe("tuning server, read-only by default", () => {
+  let addonDir: string;
+  let etPath: string;
+  let baseUrl: string;
+  let server: ReturnType<typeof createTuningServer>;
+
+  beforeEach(async () => {
+    addonDir = mkdtempSync(join(tmpdir(), "tuner-ro-"));
+    const dir = join(addonDir, ...VEHICLES_SUBPATH.split("/"), "Wheeled", "M151A2");
+    mkdirSync(dir, { recursive: true });
+    etPath = join(dir, "M151A2.et");
+    writeFileSync(etPath, VEHICLE_ET);
+
+    server = createTuningServer(addonDir);
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+    baseUrl = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+  });
+
+  afterEach(async () => {
+    await new Promise<void>((resolve) => server.close(() => resolve()));
+    rmSync(addonDir, { recursive: true, force: true });
+  });
+
+  it("still serves reads", async () => {
+    const res = await fetch(`${baseUrl}/api/vehicles/${REL}`);
+    expect(res.status).toBe(200);
+    expect((await res.json()).fields.MaxPower.value).toBe(53);
+  });
+
+  it("refuses a write and leaves the file untouched", async () => {
+    const before = readFileSync(etPath, "utf-8");
+    const res = await fetch(`${baseUrl}/api/vehicles/${REL}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ changes: { MaxPower: 75 } }),
+    });
+    expect(res.status).toBe(403);
+    expect((await res.json()).message).toContain("read-only");
+    expect(readFileSync(etPath, "utf-8")).toBe(before);
+  });
+});
+
+describe("tuning server, Workbench notification after write", () => {
+  let addonDir: string;
+  let etPath: string;
+  let baseUrl: string;
+  let server: ReturnType<typeof createTuningServer>;
+  let seen: string[];
+  let notifier: (rel: string) => Promise<string | null>;
+
+  beforeEach(async () => {
+    addonDir = mkdtempSync(join(tmpdir(), "tuner-notify-"));
+    const dir = join(addonDir, ...VEHICLES_SUBPATH.split("/"), "Wheeled", "M151A2");
+    mkdirSync(dir, { recursive: true });
+    etPath = join(dir, "M151A2.et");
+    writeFileSync(etPath, VEHICLE_ET);
+
+    seen = [];
+    server = createTuningServer(addonDir, undefined, true, async (rel) => {
+      seen.push(rel);
+      return notifier(rel);
+    });
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+    baseUrl = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+  });
+
+  afterEach(async () => {
+    await new Promise<void>((resolve) => server.close(() => resolve()));
+    rmSync(addonDir, { recursive: true, force: true });
+  });
+
+  const post = () =>
+    fetch(`${baseUrl}/api/vehicles/${REL}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ changes: { MaxPower: 75 } }),
+    });
+
+  it("passes the written vehicle to the notifier and reports its result", async () => {
+    notifier = async () => "Workbench: rebuild requested";
+    const body = await (await post()).json();
+    expect(seen).toEqual([REL]);
+    expect(body.workbench).toBe("Workbench: rebuild requested");
+  });
+
+  it("still reports the write as successful when Workbench is unreachable", async () => {
+    notifier = async () => {
+      throw new Error("ECONNREFUSED");
+    };
+    const res = await post();
+    const body = await res.json();
+    // The bytes are on disk either way — an unreachable editor must not turn a
+    // completed write into a failed request.
+    expect(res.status).toBe(200);
+    expect(body.status).toBe("ok");
+    expect(body.written).toEqual(["MaxPower"]);
+    expect(body.workbench).toContain("ECONNREFUSED");
+    expect(readFileSync(etPath, "utf-8")).toContain("MaxPower 75");
   });
 });

@@ -17,26 +17,41 @@ function collectEtFiles(absDir: string, relPrefix: string, out: string[]): void 
   }
 }
 
+export interface DiscoveredVehicle {
+  /** Addon-relative posix path, e.g. "Prefabs/Vehicles/Wheeled/M151A2/M151A2.et". */
+  path: string;
+  /**
+   * Whether the prefab already overrides Engine. False is normal — a clean prefab
+   * inherits everything — but Apply cannot write until the block exists.
+   */
+  hasEngineBlock: boolean;
+}
+
 /**
- * Addon-relative paths of vehicle prefabs that already contain an Engine block.
- * Vehicles without one are omitted: this tool never creates the block structure.
+ * Every vehicle prefab under Prefabs/Vehicles, sorted by path.
+ *
+ * All .et files are listed, not just the ones carrying an Engine override: a
+ * prefab that inherits its engine is still worth opening, because the resolver
+ * can show the inherited baseline. `hasEngineBlock` tells the caller which ones
+ * are writable as-is.
  */
-export function listTunableVehicles(addonPath: string): string[] {
+export function listVehicles(addonPath: string): DiscoveredVehicle[] {
   const base = join(addonPath, ...VEHICLES_SUBPATH.split("/"));
   if (!existsSync(base) || !statSync(base).isDirectory()) return [];
 
   const candidates: string[] = [];
   collectEtFiles(base, VEHICLES_SUBPATH, candidates);
 
-  return candidates
-    .filter((rel) => {
-      try {
-        return findEngineBlock(readFileSync(join(addonPath, ...rel.split("/")), "utf-8")) !== null;
-      } catch {
-        return false;
-      }
-    })
-    .sort();
+  return candidates.sort().map((rel) => {
+    let hasEngineBlock = false;
+    try {
+      hasEngineBlock =
+        findEngineBlock(readFileSync(join(addonPath, ...rel.split("/")), "utf-8")) !== null;
+    } catch {
+      hasEngineBlock = false;
+    }
+    return { path: rel, hasEngineBlock };
+  });
 }
 
 export function vehicleEtPath(addonPath: string, relPath: string): string {

@@ -3,7 +3,7 @@ import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
-  listTunableVehicles,
+  listVehicles,
   vehicleEtPath,
   isSafeVehicleRelPath,
   VEHICLES_SUBPATH,
@@ -37,7 +37,7 @@ const WITHOUT_ENGINE = `Vehicle : "{BBBB}Base.et" {
 }
 `;
 
-describe("listTunableVehicles", () => {
+describe("listVehicles", () => {
   let addonDir: string;
 
   beforeEach(() => {
@@ -49,10 +49,10 @@ describe("listTunableVehicles", () => {
   });
 
   it("returns an empty array when Prefabs/Vehicles does not exist", () => {
-    expect(listTunableVehicles(addonDir)).toEqual([]);
+    expect(listVehicles(addonDir)).toEqual([]);
   });
 
-  it("lists only .et files that contain an Engine block, recursively and sorted", () => {
+  it("lists every .et recursively and sorted, flagging which have an Engine block", () => {
     const base = join(addonDir, ...VEHICLES_SUBPATH.split("/"));
     mkdirSync(join(base, "Wheeled", "Ural4320"), { recursive: true });
     mkdirSync(join(base, "Wheeled", "M151A2"), { recursive: true });
@@ -60,8 +60,9 @@ describe("listTunableVehicles", () => {
     writeFileSync(join(base, "Wheeled", "M151A2", "M151A2.et"), WITH_ENGINE);
     writeFileSync(join(base, "Wheeled", "M151A2", "notes.txt"), "ignore me");
 
-    expect(listTunableVehicles(addonDir)).toEqual([
-      "Prefabs/Vehicles/Wheeled/M151A2/M151A2.et",
+    expect(listVehicles(addonDir)).toEqual([
+      { path: "Prefabs/Vehicles/Wheeled/M151A2/M151A2.et", hasEngineBlock: true },
+      { path: "Prefabs/Vehicles/Wheeled/Ural4320/Ural4320.et", hasEngineBlock: false },
     ]);
   });
 

@@ -11,22 +11,11 @@ import { validateFilename, validateProjectPath } from "../utils/safe-path.js";
 import type { SearchEngine } from "../index/search-engine.js";
 import { parse, getProperty } from "../formats/enfusion-text.js";
 
+import { findWorkbenchExe } from "../utils/game-paths.js";
+
 // ─── build helpers ────────────────────────────────────────────────────────────
 
-const WORKBENCH_DIAG_EXE = "ArmaReforgerWorkbenchSteamDiag.exe";
 const BUILD_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
-
-function findWorkbenchExe(workbenchPath: string): string | null {
-  // Check Workbench subdirectory first (standard Steam layout: "Arma Reforger Tools/Workbench/")
-  const subPath = join(workbenchPath, "Workbench", WORKBENCH_DIAG_EXE);
-  if (existsSync(subPath)) return subPath;
-
-  // Check root (in case config points directly to Workbench/)
-  const rootPath = join(workbenchPath, WORKBENCH_DIAG_EXE);
-  if (existsSync(rootPath)) return rootPath;
-
-  return null;
-}
 
 function runBuild(
   exePath: string,
@@ -475,7 +464,7 @@ export function registerMod(
             content: [
               {
                 type: "text",
-                text: `Workbench not found at: ${config.workbenchPath}\n\n${WORKBENCH_DIAG_EXE} is required for building.\n\nInstall Arma Reforger Tools from Steam, or set ENFUSION_WORKBENCH_PATH to the correct path.\n\nNote: You need the Diag version (opt into "Profiling Build" beta in Steam).`,
+                text: `Workbench not found at: ${config.workbenchPath}\n\nArmaReforgerWorkbenchSteamDiag.exe is required for building.\n\nInstall Arma Reforger Tools from Steam, or set ENFUSION_WORKBENCH_PATH to the correct path.\n\nNote: You need the Diag version (opt into "Profiling Build" beta in Steam).`,
               },
             ],
             isError: true,
@@ -524,7 +513,7 @@ export function registerMod(
           }
 
           lines.push("");
-          lines.push(`**Command:** ${WORKBENCH_DIAG_EXE} ${args.join(" ")}`);
+          lines.push(`**Command:** ArmaReforgerWorkbenchSteamDiag.exe ${args.join(" ")}`);
 
           if (result.stdout.trim()) {
             lines.push("");

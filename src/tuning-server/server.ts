@@ -1,10 +1,11 @@
 import { createServer, type IncomingMessage, type ServerResponse, type Server } from "node:http";
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { ENGINE_FIELD_KEYS, type EngineFields } from "./engine-conf.js";
-import { listTunableVehicles, vehicleEtPath, isSafeVehicleRelPath } from "./discover.js";
+import { listVehicles, vehicleEtPath, isSafeVehicleRelPath } from "./discover.js";
 import { resolveEngineFields } from "./resolve-engine.js";
+import { resolveChassis } from "./resolve-chassis.js";
 import { findEngineBlock, writeEngineFields } from "./et-engine-block.js";
 
 const TUNER_HTML_PATH = join(dirname(fileURLToPath(import.meta.url)), "public", "tuner.html");
@@ -41,7 +42,22 @@ const RELOAD_REMINDER =
   "Written to disk. If this vehicle prefab is open in Workbench, reload it — " +
   "Workbench silently reverts external file edits to a prefab it has open.";
 
-export function createTuningServer(addonPath: string, extractedPath?: string): Server {
+/**
+ * Told about a prefab that changed on disk, so Workbench can pick it up.
+ * Returns a short status for the response, or null if nothing was attempted.
+ *
+ * Injected rather than imported so the tests never open a socket, and so a
+ * missing or unreachable Workbench can never turn a successful write into a
+ * failed request.
+ */
+export type WorkbenchNotifier = (relPath: string) => Promise<string | null>;
+
+export function createTuningServer(
+  addonPath: string,
+  extractedPath?: string,
+  allowWrite = false,
+  notifyWorkbench?: WorkbenchNotifier
+): Server {
   return createServer(async (req: IncomingMessage, res: ServerResponse) => {
     try {
       const url = new URL(req.url ?? "/", "http://localhost");
@@ -54,7 +70,7 @@ export function createTuningServer(addonPath: string, extractedPath?: string): S
       }
 
       if (req.method === "GET" && url.pathname === "/api/vehicles") {
-        sendJson(res, 200, { status: "ok", vehicles: listTunableVehicles(addonPath) });
+        sendJson(res, 200, { status: "ok", vehicles: listVehicles(addonPath) });
         return;
       }
 
@@ -73,8 +89,21 @@ export function createTuningServer(addonPath: string, extractedPath?: string): S
 
         if (req.method === "GET") {
           const modText = readFileSync(filePath, "utf-8");
-          const fields = resolveEngineFields({ modText, relPath: rel, extractedPath });
-          sendJson(res, 200, { status: "ok", vehicle: rel, fields });
+          const fields = resolveEngineFields({ modText, relPath: rel, addonPath, extractedPath });
+          const chassis = resolveChassis({ modText, relPath: rel, addonPath, extractedPath });
+          // mtime lets the page poll cheaply and re-read only when Workbench saves.
+          const mtimeMs = statSync(filePath).mtimeMs;
+          sendJson(res, 200, { status: "ok", vehicle: rel, fields, chassis, mtimeMs });
+          return;
+        }
+
+        if (!allowWrite) {
+          sendJson(res, 403, {
+            status: "error",
+            message:
+              "This server is read-only. Edit the prefab in Workbench; the page picks the change up automatically. " +
+              "Set ENFUSION_TUNING_ALLOW_WRITE=1 to re-enable writing.",
+          });
           return;
         }
 
@@ -115,11 +144,25 @@ export function createTuningServer(addonPath: string, extractedPath?: string): S
         }
 
         writeFileSync(filePath, writeEngineFields(original, loc, changes), "utf-8");
+
+        // Best effort: ask Workbench to re-read the file so the change shows up in
+        // the editor. A failure here is not a write failure — the bytes are on disk
+        // either way — so it is reported alongside the success, never instead of it.
+        let workbench: string | null = null;
+        if (notifyWorkbench) {
+          try {
+            workbench = await notifyWorkbench(rel);
+          } catch (e) {
+            workbench = `Workbench not notified: ${e instanceof Error ? e.message : String(e)}`;
+          }
+        }
+
         sendJson(res, 200, {
           status: "ok",
           vehicle: rel,
           written: Object.keys(changes),
           message: RELOAD_REMINDER,
+          workbench,
         });
         return;
       }
