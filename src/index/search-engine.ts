@@ -1,6 +1,6 @@
 import { loadIndex } from "./loader.js";
 import type { ClassInfo, MethodInfo, EnumInfo, PropertyInfo, WikiPage, GroupInfo } from "./types.js";
-import { levenshtein, trigramSimilarity } from "../utils/fuzzy.js";
+import { nameScore, fuzzyNameScore } from "../utils/fuzzy.js";
 
 export interface MethodSearchResult {
   className: string;
@@ -51,7 +51,14 @@ export class SearchEngine {
   private componentIndex: ClassInfo[] = [];
   private loaded = false;
 
-  constructor(private dataDir: string) {
+  constructor(private dataDir: string) {}
+
+  /** Ensure the index is loaded. Called automatically on first use. */
+  private ensureLoaded(): void {
+    if (this.loaded) return;
+    // Mark as loaded up-front so internal calls (e.g. getClassTree) during
+    // load() don't recursively re-enter this method.
+    this.loaded = true;
     this.load();
   }
 
@@ -227,6 +234,7 @@ export class SearchEngine {
   }
 
   getClass(name: string): ClassInfo | undefined {
+    this.ensureLoaded();
     return this.classByName.get(name.toLowerCase());
   }
 
@@ -235,36 +243,14 @@ export class SearchEngine {
     source: "enfusion" | "arma" | "all" = "all",
     limit = 10
   ): ClassInfo[] {
+    this.ensureLoaded();
     const q = query.toLowerCase();
     const results: Array<{ cls: ClassInfo; score: number }> = [];
 
     for (const cls of this.classByName.values()) {
       if (source !== "all" && cls.source !== source) continue;
 
-      const nameLower = cls.name.toLowerCase();
-      let score = 0;
-
-      // Exact match
-      if (nameLower === q) {
-        score = 100;
-      }
-      // Prefix match
-      else if (nameLower.startsWith(q)) {
-        score = 80;
-      }
-      // Substring in name
-      else if (nameLower.includes(q)) {
-        score = 60;
-      }
-      // Match in brief description
-      else if (cls.brief.toLowerCase().includes(q)) {
-        score = 30;
-      }
-      // Match in full description
-      else if (cls.description.toLowerCase().includes(q)) {
-        score = 20;
-      }
-
+      const score = this.scoreClass(cls, q);
       if (score > 0) {
         results.push({ cls, score });
       }
@@ -277,17 +263,9 @@ export class SearchEngine {
         if (source !== "all" && cls.source !== source) continue;
         if (seen.has(cls.name)) continue;
 
-        const nameLower = cls.name.toLowerCase();
-        const dist = levenshtein(q, nameLower);
-        if (dist <= 1) {
-          results.push({ cls, score: 40 });
-        } else if (dist <= 2) {
-          results.push({ cls, score: 20 });
-        } else {
-          const sim = trigramSimilarity(q, nameLower);
-          if (sim > 0.3) {
-            results.push({ cls, score: 15 });
-          }
+        const score = fuzzyNameScore(cls.name.toLowerCase(), q);
+        if (score > 0) {
+          results.push({ cls, score });
         }
       }
     }
@@ -301,19 +279,12 @@ export class SearchEngine {
     source: "enfusion" | "arma" | "all" = "all",
     limit = 10
   ): MethodSearchResult[] {
+    this.ensureLoaded();
     const q = query.toLowerCase();
     const results: Array<{ result: MethodSearchResult; score: number }> = [];
 
     for (const [methodName, entries] of this.methodIndex) {
-      let score = 0;
-      if (methodName === q) {
-        score = 100;
-      } else if (methodName.startsWith(q)) {
-        score = 80;
-      } else if (methodName.includes(q)) {
-        score = 60;
-      }
-
+      const score = nameScore(methodName, q);
       if (score > 0) {
         for (const entry of entries) {
           if (source !== "all" && entry.classSource !== source) continue;
@@ -327,20 +298,11 @@ export class SearchEngine {
       const seen = new Set(results.map((r) => r.result.method.name));
       for (const [methodName, entries] of this.methodIndex) {
         if (seen.has(methodName)) continue;
-        const dist = levenshtein(q, methodName);
-        let fuzzyScore = 0;
-        if (dist <= 1) {
-          fuzzyScore = 40;
-        } else if (dist <= 2) {
-          fuzzyScore = 20;
-        } else {
-          const sim = trigramSimilarity(q, methodName);
-          if (sim > 0.3) fuzzyScore = 15;
-        }
-        if (fuzzyScore > 0) {
+        const score = fuzzyNameScore(methodName, q);
+        if (score > 0) {
           for (const entry of entries) {
             if (source !== "all" && entry.classSource !== source) continue;
-            results.push({ result: entry, score: fuzzyScore });
+            results.push({ result: entry, score });
           }
         }
       }
@@ -355,24 +317,16 @@ export class SearchEngine {
     source: "enfusion" | "arma" | "all" = "all",
     limit = 10
   ): EnumSearchResult[] {
+    this.ensureLoaded();
     const q = query.toLowerCase();
     const results: Array<{ result: EnumSearchResult; score: number }> = [];
     const seen = new Set<string>();
 
     for (const [enumKey, entries] of this.enumIndex) {
-      let score = 0;
-      if (enumKey === q) {
-        score = 100;
-      } else if (enumKey.startsWith(q)) {
-        score = 80;
-      } else if (enumKey.includes(q)) {
-        score = 60;
-      }
-
+      const score = nameScore(enumKey, q);
       if (score > 0) {
         for (const entry of entries) {
           if (source !== "all" && entry.classSource !== source) continue;
-          // Deduplicate by className+enumName
           const dedup = `${entry.className}::${entry.enumInfo.name}`;
           if (seen.has(dedup)) continue;
           seen.add(dedup);
@@ -386,23 +340,14 @@ export class SearchEngine {
       for (const [enumKey, entries] of this.enumIndex) {
         const dedup = entries.map((e) => `${e.className}::${e.enumInfo.name}`);
         if (dedup.every((d) => seen.has(d))) continue;
-        const dist = levenshtein(q, enumKey);
-        let fuzzyScore = 0;
-        if (dist <= 1) {
-          fuzzyScore = 40;
-        } else if (dist <= 2) {
-          fuzzyScore = 20;
-        } else {
-          const sim = trigramSimilarity(q, enumKey);
-          if (sim > 0.3) fuzzyScore = 15;
-        }
-        if (fuzzyScore > 0) {
+        const score = fuzzyNameScore(enumKey, q);
+        if (score > 0) {
           for (const entry of entries) {
             if (source !== "all" && entry.classSource !== source) continue;
             const dedupKey = `${entry.className}::${entry.enumInfo.name}`;
             if (seen.has(dedupKey)) continue;
             seen.add(dedupKey);
-            results.push({ result: entry, score: fuzzyScore });
+            results.push({ result: entry, score });
           }
         }
       }
@@ -417,19 +362,12 @@ export class SearchEngine {
     source: "enfusion" | "arma" | "all" = "all",
     limit = 10
   ): PropertySearchResult[] {
+    this.ensureLoaded();
     const q = query.toLowerCase();
     const results: Array<{ result: PropertySearchResult; score: number }> = [];
 
     for (const [propName, entries] of this.propertyIndex) {
-      let score = 0;
-      if (propName === q) {
-        score = 100;
-      } else if (propName.startsWith(q)) {
-        score = 80;
-      } else if (propName.includes(q)) {
-        score = 60;
-      }
-
+      const score = nameScore(propName, q);
       if (score > 0) {
         for (const entry of entries) {
           if (source !== "all" && entry.classSource !== source) continue;
@@ -442,23 +380,14 @@ export class SearchEngine {
     if (results.length < 3) {
       const seen = new Set(results.map((r) => `${r.result.className}::${r.result.property.name}`));
       for (const [propName, entries] of this.propertyIndex) {
-        const dist = levenshtein(q, propName);
-        let fuzzyScore = 0;
-        if (dist <= 1) {
-          fuzzyScore = 40;
-        } else if (dist <= 2) {
-          fuzzyScore = 20;
-        } else {
-          const sim = trigramSimilarity(q, propName);
-          if (sim > 0.3) fuzzyScore = 15;
-        }
-        if (fuzzyScore > 0) {
+        const score = fuzzyNameScore(propName, q);
+        if (score > 0) {
           for (const entry of entries) {
             if (source !== "all" && entry.classSource !== source) continue;
             const dedupKey = `${entry.className}::${entry.property.name}`;
             if (seen.has(dedupKey)) continue;
             seen.add(dedupKey);
-            results.push({ result: entry, score: fuzzyScore });
+            results.push({ result: entry, score });
           }
         }
       }
@@ -473,19 +402,20 @@ export class SearchEngine {
     source: "enfusion" | "arma" | "all" = "all",
     limit = 10
   ): SearchResult[] {
+    this.ensureLoaded();
     const q = query.toLowerCase();
     const combined: SearchResult[] = [];
 
     // Classes — score directly to preserve granularity
     for (const cls of this.classByName.values()) {
       if (source !== "all" && cls.source !== source) continue;
-      const score = this.nameScore(cls.name.toLowerCase(), q);
+      const score = nameScore(cls.name.toLowerCase(), q);
       if (score > 0) combined.push({ type: "class", score, classInfo: cls });
     }
 
     // Methods
     for (const [methodName, entries] of this.methodIndex) {
-      const score = this.nameScore(methodName, q);
+      const score = nameScore(methodName, q);
       if (score <= 0) continue;
       for (const entry of entries) {
         if (source !== "all" && entry.classSource !== source) continue;
@@ -496,7 +426,7 @@ export class SearchEngine {
     // Enums
     const seenEnums = new Set<string>();
     for (const [enumKey, entries] of this.enumIndex) {
-      const score = this.nameScore(enumKey, q);
+      const score = nameScore(enumKey, q);
       if (score <= 0) continue;
       for (const entry of entries) {
         if (source !== "all" && entry.classSource !== source) continue;
@@ -509,7 +439,7 @@ export class SearchEngine {
 
     // Properties
     for (const [propName, entries] of this.propertyIndex) {
-      const score = this.nameScore(propName, q);
+      const score = nameScore(propName, q);
       if (score <= 0) continue;
       for (const entry of entries) {
         if (source !== "all" && entry.classSource !== source) continue;
@@ -517,18 +447,38 @@ export class SearchEngine {
       }
     }
 
+    // Fuzzy fallback: only activate when strict matching returns < 3 results
+    if (combined.length < 3) {
+      const seenClasses = new Set(
+        combined.filter((r) => r.type === "class" && r.classInfo).map((r) => r.classInfo!.name)
+      );
+      for (const cls of this.classByName.values()) {
+        if (source !== "all" && cls.source !== source) continue;
+        if (seenClasses.has(cls.name)) continue;
+        const score = fuzzyNameScore(cls.name.toLowerCase(), q);
+        if (score > 0) combined.push({ type: "class", score, classInfo: cls });
+      }
+
+      const seenMethods = new Set(
+        combined.filter((r) => r.type === "method" && r.methodResult).map((r) => r.methodResult!.method.name)
+      );
+      for (const [methodName, entries] of this.methodIndex) {
+        if (seenMethods.has(methodName)) continue;
+        const score = fuzzyNameScore(methodName, q);
+        if (score <= 0) continue;
+        for (const entry of entries) {
+          if (source !== "all" && entry.classSource !== source) continue;
+          combined.push({ type: "method", score, methodResult: entry });
+        }
+      }
+    }
+
     combined.sort((a, b) => b.score - a.score);
     return combined.slice(0, limit);
   }
 
-  private nameScore(nameLower: string, queryLower: string): number {
-    if (nameLower === queryLower) return 100;
-    if (nameLower.startsWith(queryLower)) return 80;
-    if (nameLower.includes(queryLower)) return 60;
-    return 0;
-  }
-
   searchWiki(query: string, limit = 5): WikiPage[] {
+    this.ensureLoaded();
     const tokens = query.toLowerCase().split(/\s+/);
     const results: Array<{ page: WikiPage; score: number }> = [];
 
@@ -553,19 +503,23 @@ export class SearchEngine {
 
   /** Look up a wiki page by exact title (case-insensitive). */
   getWikiPage(title: string): WikiPage | undefined {
+    this.ensureLoaded();
     return this.wikiPageByTitle.get(title.toLowerCase());
   }
 
   getGroups(): GroupInfo[] {
+    this.ensureLoaded();
     return this.groups;
   }
 
   getGroup(name: string): GroupInfo | undefined {
+    this.ensureLoaded();
     return this.groups.find((g) => g.name.toLowerCase() === name.toLowerCase());
   }
 
   /** Get all class names (for resource listing) */
   getAllClassNames(): string[] {
+    this.ensureLoaded();
     return this.classNames;
   }
 
@@ -574,6 +528,7 @@ export class SearchEngine {
    * Walks up through parents[] and down through children[].
    */
   getClassTree(name: string): { ancestors: string[]; descendants: string[] } {
+    this.ensureLoaded();
     const ancestors: string[] = [];
     const descendants: string[] = [];
 
@@ -613,6 +568,7 @@ export class SearchEngine {
    * Returns [root, ..., parent, className].
    */
   getInheritanceChain(name: string): string[] {
+    this.ensureLoaded();
     const chain: string[] = [name];
     const visited = new Set<string>([name.toLowerCase()]);
     let current = name;
@@ -639,6 +595,7 @@ export class SearchEngine {
     properties: PropertySearchResult[];
     enums: EnumSearchResult[];
   } {
+    this.ensureLoaded();
     const methods: MethodSearchResult[] = [];
     const properties: PropertySearchResult[] = [];
     const enums: EnumSearchResult[] = [];
@@ -703,6 +660,7 @@ export class SearchEngine {
     enums: EnumSearchResult[];
     parentClassNames: string[];
   } {
+    this.ensureLoaded();
     const methods: MethodSearchResult[] = [];
     const properties: PropertySearchResult[] = [];
     const enums: EnumSearchResult[] = [];
@@ -763,6 +721,7 @@ export class SearchEngine {
    * Useful for finding available components to attach to entities.
    */
   getComponents(): ClassInfo[] {
+    this.ensureLoaded();
     const tree = this.getClassTree("ScriptComponent");
     const results: ClassInfo[] = [];
     for (const name of tree.descendants) {
@@ -770,6 +729,15 @@ export class SearchEngine {
       if (cls) results.push(cls);
     }
     return results;
+  }
+
+  /** Score a class against a lowercased query using name, brief, and description. */
+  private scoreClass(cls: ClassInfo, q: string): number {
+    const score = nameScore(cls.name.toLowerCase(), q);
+    if (score > 0) return score;
+    if (cls.brief.toLowerCase().includes(q)) return 30;
+    if (cls.description.toLowerCase().includes(q)) return 20;
+    return 0;
   }
 
   /**
@@ -827,6 +795,7 @@ export class SearchEngine {
     source?: "enfusion" | "arma" | "all";
     limit?: number;
   } = {}): ComponentSearchResult[] {
+    this.ensureLoaded();
     const { query, category = "any", event, source = "all", limit = 20 } = options;
     const q = query?.toLowerCase();
     const eventLower = event?.toLowerCase();
@@ -850,21 +819,8 @@ export class SearchEngine {
       // Query scoring (same pattern as searchClasses)
       let score = 0;
       if (q) {
-        const nameLower = cls.name.toLowerCase();
-        if (nameLower === q) {
-          score = 100;
-        } else if (nameLower.startsWith(q)) {
-          score = 80;
-        } else if (nameLower.includes(q)) {
-          score = 60;
-        } else if (cls.brief.toLowerCase().includes(q)) {
-          score = 30;
-        } else if (cls.description.toLowerCase().includes(q)) {
-          score = 20;
-        } else {
-          // Query didn't match anything on this component
-          continue;
-        }
+        score = this.scoreClass(cls, q);
+        if (score === 0) continue;
       } else {
         // No query — give a base score so category/event-only filters work
         score = 10;
@@ -881,6 +837,7 @@ export class SearchEngine {
    * Check if a class name exists in the index (case-insensitive).
    */
   hasClass(name: string): boolean {
+    this.ensureLoaded();
     return this.classByName.has(name.toLowerCase());
   }
 
@@ -896,6 +853,7 @@ export class SearchEngine {
     totalWikiPages: number;
     totalComponents: number;
   } {
+    this.ensureLoaded();
     return {
       totalClasses: this.classByName.size,
       totalMethods: this.methodIndex.size,

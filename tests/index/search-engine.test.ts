@@ -9,9 +9,9 @@ describe("SearchEngine", () => {
   const engine = new SearchEngine(dataDir);
 
   it("loads the index", () => {
-    expect(engine.isLoaded()).toBe(true);
     const stats = engine.getStats();
     expect(stats.totalClasses).toBeGreaterThan(8000);
+    expect(engine.isLoaded()).toBe(true);
   });
 
   describe("getClass", () => {

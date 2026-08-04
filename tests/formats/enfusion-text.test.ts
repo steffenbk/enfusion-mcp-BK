@@ -146,8 +146,9 @@ describe("enfusion-text serializer", () => {
     });
     const text = serialize(node);
     expect(text).toContain("GameProject {");
-    expect(text).toContain('ID "TestMod"');
-    expect(text).toContain('GUID "AAAA0000BBBB1111"');
+    // Bare identifiers are emitted unquoted in Enfusion format
+    expect(text).toContain("ID TestMod");
+    expect(text).toContain("GUID AAAA0000BBBB1111");
     expect(text).toContain("}");
   });
 

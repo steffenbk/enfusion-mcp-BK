@@ -30,7 +30,7 @@ export class RecipeLoader {
     }
 
     if (!variant) {
-      return JSON.parse(JSON.stringify(recipe)); // Deep clone
+      return structuredClone(recipe);
     }
 
     // Find the variant and merge its overrides
@@ -80,6 +80,15 @@ export class RecipeLoader {
 
     const config = loadConfig();
     const recipesDir = join(config.dataDir, "recipes");
+
+    if (!existsSync(recipesDir)) {
+      logger.warn(
+        `Recipes directory not found: ${recipesDir}. ` +
+          `Check that dataDir is set correctly (currently "${config.dataDir}").`
+      );
+      this.loaded = true;
+      return;
+    }
 
     for (const id of recipeIds) {
       const path = join(recipesDir, `${id}.json`);
@@ -156,7 +165,7 @@ export class RecipeLoader {
    * Merge a variant's overrides into the base recipe.
    */
   private mergeVariant(base: PrefabRecipe, variant: RecipeVariant): PrefabRecipe {
-    const merged = JSON.parse(JSON.stringify(base)) as PrefabRecipe;
+    const merged = structuredClone(base);
 
     if (variant.defaultParent) {
       merged.defaultParent = variant.defaultParent;

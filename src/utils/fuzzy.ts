@@ -61,6 +61,30 @@ export function trigramSimilarity(a: string, b: string): number {
   return union === 0 ? 0 : intersection / union;
 }
 
+/**
+ * Score a name against a query using exact/prefix/substring matching.
+ * Returns 0 if no match. Both inputs must already be lowercased.
+ */
+export function nameScore(nameLower: string, queryLower: string): number {
+  if (nameLower === queryLower) return 100;
+  if (nameLower.startsWith(queryLower)) return 80;
+  if (nameLower.includes(queryLower)) return 60;
+  return 0;
+}
+
+/**
+ * Score a name against a query using fuzzy matching (Levenshtein + trigrams).
+ * Returns 0 if no fuzzy match. Both inputs must already be lowercased.
+ */
+export function fuzzyNameScore(nameLower: string, queryLower: string): number {
+  const dist = levenshtein(queryLower, nameLower);
+  if (dist <= 1) return 40;
+  if (dist <= 2) return 20;
+  const sim = trigramSimilarity(queryLower, nameLower);
+  if (sim > 0.3) return 15;
+  return 0;
+}
+
 function trigrams(s: string): Set<string> {
   const set = new Set<string>();
   const padded = `  ${s} `; // pad for edge trigrams

@@ -17,6 +17,8 @@ interface FileRef {
   pakPath: string;
   dataStart: number;
   entry: PakFileEntry;
+  /** Original-cased virtual path for display/enumeration. */
+  originalPath: string;
 }
 
 // ── PakVirtualFS ─────────────────────────────────────────────────────────────
@@ -124,11 +126,11 @@ export class PakVirtualFS {
     if (!dir) return [];
 
     const entries: VfsEntry[] = [];
-    for (const [name, child] of dir.children) {
+    for (const [, child] of dir.children) {
       if (child.kind === "dir") {
-        entries.push({ name, isDirectory: true, size: 0 });
+        entries.push({ name: child.name, isDirectory: true, size: 0 });
       } else {
-        entries.push({ name, isDirectory: false, size: child.decompressedLen });
+        entries.push({ name: child.name, isDirectory: false, size: child.decompressedLen });
       }
     }
     return entries;
@@ -187,9 +189,9 @@ export class PakVirtualFS {
     return ref ? ref.entry.decompressedLen : -1;
   }
 
-  /** Get all file paths in the VFS (for building the asset search index). */
+  /** Get all file paths in the VFS (original casing, for building the asset search index). */
   allFilePaths(): string[] {
-    return Array.from(this.fileIndex.keys());
+    return Array.from(this.fileIndex.values()).map((ref) => ref.originalPath);
   }
 
   /** Get the number of indexed files. */
@@ -213,24 +215,26 @@ export class PakVirtualFS {
 
     for (const [name, child] of source.children) {
       const childPath = pathPrefix ? `${pathPrefix}/${name}` : name;
+      const key = name.toLowerCase();
 
       if (child.kind === "dir") {
         // Merge directories: create in target if missing, then recurse
-        let targetChild = target.children.get(name);
+        let targetChild = target.children.get(key);
         if (!targetChild || targetChild.kind !== "dir") {
           targetChild = { kind: "dir", name, children: new Map() };
-          target.children.set(name, targetChild);
+          target.children.set(key, targetChild);
         }
         count += this.mergeTree(targetChild, child, index, childPath);
       } else {
         // File: add to target and flat index (first pak wins)
         const norm = normalizePath(childPath);
         if (!this.fileIndex.has(norm)) {
-          target.children.set(name, child);
+          target.children.set(key, child);
           this.fileIndex.set(norm, {
             pakPath: index.pakPath,
             dataStart: index.dataStart,
             entry: child,
+            originalPath: childPath,
           });
           count++;
         }
@@ -265,5 +269,6 @@ function normalizePath(p: string): string {
   return p
     .replace(/\\/g, "/")
     .replace(/^\/+|\/+$/g, "")
-    .replace(/\/+/g, "/");
+    .replace(/\/+/g, "/")
+    .toLowerCase();
 }
