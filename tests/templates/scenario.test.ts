@@ -404,4 +404,100 @@ describe("generateConflictScenario", () => {
       expect(count).toBe(6);
     });
   });
+
+  describe("relay base type", () => {
+    const opts = {
+      ...MINIMAL_OPTS,
+      bases: [...MINIMAL_OPTS.bases, { name: "RelayTower", position: "1500 0 3000", faction: "US", type: "relay" as const }],
+    };
+
+    it("generates a non-seizable radio-only entity", () => {
+      const { basesLayer } = generateConflictScenario(opts);
+      expect(basesLayer).toContain("RelayTower");
+      expect(basesLayer).toContain("m_eType RELAY");
+      expect(basesLayer).not.toMatch(/RelayTower \{[\s\S]*?SCR_CampaignSeizingComponent/);
+    });
+
+    it("defaults relay radio range to 3000", () => {
+      const { basesLayer } = generateConflictScenario(opts);
+      expect(basesLayer).toContain("m_fTransmittingRange 3000");
+    });
+
+    it("respects an explicit radioRange override", () => {
+      const customOpts = {
+        ...MINIMAL_OPTS,
+        bases: [...MINIMAL_OPTS.bases, { name: "RelayTower", position: "1500 0 3000", faction: "US", type: "relay" as const, radioRange: 4500 }],
+      };
+      const { basesLayer } = generateConflictScenario(customOpts);
+      expect(basesLayer).toContain("m_fTransmittingRange 4500");
+    });
+
+    it("excludes relay bases from the mission base whitelist", () => {
+      const { missionConf } = generateConflictScenario(opts);
+      expect(missionConf).not.toContain(`m_sBaseName "RelayTower"`);
+    });
+
+    it("excludes relay bases from patrol and defender generation", () => {
+      const { basesLayer, defendersLayer } = generateConflictScenario(opts);
+      expect(basesLayer.split("RelayTower")[1]).not.toContain("AmbientPatrolSpawnpoint");
+      expect(defendersLayer).not.toContain("RelayTower");
+    });
+  });
+
+  describe("seedingEnabled", () => {
+    it("is omitted from default.layer and returns a null seedingLayer when not set", () => {
+      const { defaultLayer, seedingLayer } = generateConflictScenario(MINIMAL_OPTS);
+      expect(defaultLayer).not.toContain("m_bServerSeedingEnabled");
+      expect(seedingLayer).toBeNull();
+    });
+
+    it("adds gamemode seeding attributes with default threshold 12", () => {
+      const { defaultLayer } = generateConflictScenario({ ...MINIMAL_OPTS, seedingEnabled: true });
+      expect(defaultLayer).toContain("m_bServerSeedingEnabled 1");
+      expect(defaultLayer).toContain("m_iServerSeedingThreshold 12");
+    });
+
+    it("respects a custom seedingThreshold", () => {
+      const { defaultLayer } = generateConflictScenario({ ...MINIMAL_OPTS, seedingEnabled: true, seedingThreshold: 8 });
+      expect(defaultLayer).toContain("m_iServerSeedingThreshold 8");
+    });
+
+    it("adds a restriction zone to each MOB in Bases.layer", () => {
+      const { basesLayer } = generateConflictScenario({ ...MINIMAL_OPTS, seedingEnabled: true });
+      expect(basesLayer).toContain("IRON_SeedingRestrictionZoneEntity");
+      expect(basesLayer).toContain("m_bAutoSizeToHQ 1");
+      // MINIMAL_OPTS has 2 MOBs — one restriction zone each
+      expect((basesLayer.match(/IRON_SeedingRestrictionZoneEntity/g) || []).length).toBe(2);
+    });
+
+    it("generates a seeding patrol layer with fast respawn at each MOB", () => {
+      const { seedingLayer } = generateConflictScenario({ ...MINIMAL_OPTS, seedingEnabled: true });
+      expect(seedingLayer).not.toBeNull();
+      expect(seedingLayer).toContain("SCR_Iron_AmbientPatrolSpawnPointComponent_Seeding");
+      expect(seedingLayer).toContain("m_bRespawnOnlyDuringSeeding 1");
+      expect(seedingLayer).toContain("m_iRespawnPeriod 90");
+    });
+
+    it("returns null seedingLayer when seedingEnabled but no MOB exists", () => {
+      const { seedingLayer } = generateConflictScenario({
+        scenarioName: "X",
+        worldName: "Everon",
+        bases: [{ name: "BaseOnly", position: "0 0 0", faction: "US" }],
+        seedingEnabled: true,
+      });
+      expect(seedingLayer).toBeNull();
+    });
+  });
+
+  describe("suppliesIncome", () => {
+    it("defaults to 50", () => {
+      const { defaultLayer } = generateConflictScenario(MINIMAL_OPTS);
+      expect(defaultLayer).toContain("m_iRegularSuppliesIncome 50");
+    });
+
+    it("respects a custom value", () => {
+      const { defaultLayer } = generateConflictScenario({ ...MINIMAL_OPTS, suppliesIncome: 75 });
+      expect(defaultLayer).toContain("m_iRegularSuppliesIncome 75");
+    });
+  });
 });

@@ -27,18 +27,19 @@ const BASE_SPEC_SCHEMA = z.object({
     .string()
     .describe("Starting faction key: 'US', 'USSR', 'FIA', or a custom key."),
   type: z
-    .enum(["base", "major", "MOB", "controlPoint", "sourceBase", "harbor"])
+    .enum(["base", "major", "MOB", "controlPoint", "sourceBase", "harbor", "relay"])
     .optional()
     .describe(
       "Base type. 'base' (default) = standard contested base. 'major' = large base with CAH areas (harbour, port, airfield). " +
       "'MOB' = main operating base / HQ (no seizing, 3000 supplies, radio source). " +
       "'controlPoint' = lightweight capture point. 'sourceBase' = supply source only, not capturable. " +
-      "'harbor' = supply-income harbor (skipped in Bases.layer, uses own prefab family)."
+      "'harbor' = supply-income harbor (skipped in Bases.layer, uses own prefab family). " +
+      "'relay' = pre-placed always-on radio relay tower, not capturable, extends coverage into radio gaps (default range 3000m)."
     ),
   radioRange: z
     .number()
     .optional()
-    .describe("Radio antenna service range in meters (default 1470). Increase for MOBs on islands."),
+    .describe("Radio antenna service range in meters (default 1470, or 3000 for type='relay'). Increase for MOBs on islands."),
   patrolCount: z
     .number()
     .min(0)
@@ -55,9 +56,12 @@ export function registerScenarioCreate(server: McpServer, config: Config): void 
         "Generate a complete Conflict multiplayer scenario as up to 7 files: a mission header (.conf), a SubScene world stub (.ent), " +
         "and layer files (default.layer with game mode + managers, Bases.layer with all military bases, " +
         "CAH.layer with capture zones for major bases, Defenders.layer with patrol defenders, " +
-        "AmbientVehicles.layer with civilian vehicle spawns when civVehicleCount > 0). " +
+        "AmbientVehicles.layer with civilian vehicle spawns when civVehicleCount > 0, " +
+        "AmbientPatrols_SEEDING.layer with low-pop keep-alive patrols when seedingEnabled). " +
         "This matches the structure used by production Arma Reforger Workshop mods. " +
-        "Generates: GameMode_Seize entity, CampaignFactionManager, military bases with SCR_CampaignSeizingComponent + radio + patrol spawnpoints. " +
+        "Generates: GameMode_Seize entity, CampaignFactionManager, military bases with SCR_CampaignSeizingComponent + radio + patrol spawnpoints, " +
+        "optional pre-placed relay towers (base type='relay') to bridge radio coverage gaps between distant bases, " +
+        "and optional seeding mode (restricts players to MOB areas + fast-respawn AI patrols until enough players connect). " +
         "Known worlds: " + KNOWN_WORLDS.join(", ") + ". " +
         "For custom maps pass the full resource ref as worldName, e.g. '{GUID}worlds/MyMap.ent'. " +
         "After generating, open the .ent file in Workbench to snap entities to terrain.",
@@ -118,6 +122,24 @@ export function registerScenarioCreate(server: McpServer, config: Config): void 
           .max(50)
           .optional()
           .describe("Number of civilian ambient vehicle spawnpoints to place (default 0). Generates AmbientVehicles.layer when > 0."),
+        suppliesIncome: z
+          .number()
+          .optional()
+          .describe("Regular per-tick supply income for contested bases (default 50)."),
+        seedingEnabled: z
+          .boolean()
+          .optional()
+          .describe(
+            "Enable low-population seeding mode: restricts players to MOB areas via a restriction zone on each MOB " +
+            "and spawns fast-respawning AI patrols (AmbientPatrols_SEEDING.layer) until seedingThreshold players connect. " +
+            "One-way transition — never re-activates once crossed. Requires at least one MOB base."
+          ),
+        seedingThreshold: z
+          .number()
+          .min(1)
+          .max(128)
+          .optional()
+          .describe("Player count at which seeding mode permanently ends (default 12). Ignored unless seedingEnabled."),
         projectPath: z
           .string()
           .optional()
@@ -136,6 +158,9 @@ export function registerScenarioCreate(server: McpServer, config: Config): void 
       description,
       author,
       civVehicleCount,
+      suppliesIncome,
+      seedingEnabled,
+      seedingThreshold,
       projectPath,
     }) => {
       try {
@@ -152,6 +177,9 @@ export function registerScenarioCreate(server: McpServer, config: Config): void 
           description,
           author,
           civVehicleCount,
+          suppliesIncome,
+          seedingEnabled,
+          seedingThreshold,
         });
 
         const basePath = projectPath || config.projectPath;
@@ -167,6 +195,7 @@ export function registerScenarioCreate(server: McpServer, config: Config): void 
           const cahLayPath        = join(layersDir,   `CAH.layer`);
           const defendersLayPath  = join(layersDir,   `Defenders.layer`);
           const vehiclesLayPath   = join(layersDir,   `AmbientVehicles.layer`);
+          const seedingLayPath    = join(layersDir,   `AmbientPatrols_SEEDING.layer`);
 
           mkdirSync(missionsDir, { recursive: true });
           mkdirSync(worldsDir,   { recursive: true });
@@ -180,6 +209,7 @@ export function registerScenarioCreate(server: McpServer, config: Config): void 
           if (existsSync(defendersLayPath)) existing.push(`Worlds/${scenarioName}_Layers/Defenders.layer`);
           if (existsSync(cahLayPath))       existing.push(`Worlds/${scenarioName}_Layers/CAH.layer`);
           if (existsSync(vehiclesLayPath))  existing.push(`Worlds/${scenarioName}_Layers/AmbientVehicles.layer`);
+          if (existsSync(seedingLayPath))   existing.push(`Worlds/${scenarioName}_Layers/AmbientPatrols_SEEDING.layer`);
 
           if (existing.length > 0) {
             return {
@@ -206,6 +236,7 @@ export function registerScenarioCreate(server: McpServer, config: Config): void 
             writeFileSync(defendersLayPath, output.defendersLayer, "utf-8"); writtenPaths.push(defendersLayPath);
             if (output.cahLayer)             { writeFileSync(cahLayPath,      output.cahLayer,      "utf-8"); writtenPaths.push(cahLayPath); }
             if (output.ambientVehiclesLayer) { writeFileSync(vehiclesLayPath, output.ambientVehiclesLayer, "utf-8"); writtenPaths.push(vehiclesLayPath); }
+            if (output.seedingLayer)         { writeFileSync(seedingLayPath,  output.seedingLayer,  "utf-8"); writtenPaths.push(seedingLayPath); }
           } catch (writeErr) {
             // Rollback: remove any files we already wrote to avoid partial scenarios
             for (const p of writtenPaths) {
@@ -223,6 +254,7 @@ export function registerScenarioCreate(server: McpServer, config: Config): void 
             `  Worlds/${scenarioName}_Layers/Defenders.layer`,
             ...(output.cahLayer ? [`  Worlds/${scenarioName}_Layers/CAH.layer`] : []),
             ...(output.ambientVehiclesLayer ? [`  Worlds/${scenarioName}_Layers/AmbientVehicles.layer`] : []),
+            ...(output.seedingLayer ? [`  Worlds/${scenarioName}_Layers/AmbientPatrols_SEEDING.layer`] : []),
           ];
 
           return {
@@ -243,7 +275,7 @@ export function registerScenarioCreate(server: McpServer, config: Config): void 
                 `2. Select all base entities and use "Snap to Terrain" to fix Y positions.`,
                 `3. Adjust patrol spawnpoint positions around each base (currently offset ±30m).`,
                 `4. Add defender spawnpoints (SCR_DefenderSpawnerComponent) inside base buildings.`,
-                `5. Add ConflictRelayRadio entities between distant bases to extend radio coverage.`,
+                `5. If radio coverage has gaps between distant bases, add a base with type='relay' there (regenerate or hand-edit Bases.layer).`,
                 `6. Save and run a test with the scenario in the server browser.`,
               ].join("\n"),
             }],
@@ -284,6 +316,9 @@ export function registerScenarioCreate(server: McpServer, config: Config): void 
         }
         if (output.ambientVehiclesLayer) {
           parts.push(``, `**Worlds/${scenarioName}_Layers/AmbientVehicles.layer**`, `\`\`\``, output.ambientVehiclesLayer, `\`\`\``);
+        }
+        if (output.seedingLayer) {
+          parts.push(``, `**Worlds/${scenarioName}_Layers/AmbientPatrols_SEEDING.layer**`, `\`\`\``, output.seedingLayer, `\`\`\``);
         }
         parts.push(``, `Set ENFUSION_PROJECT_PATH to write files automatically.`);
         return {

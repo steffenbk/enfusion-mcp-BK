@@ -32,6 +32,10 @@ const PREFAB_CAH_MAJOR      = "{F4649500E51DF810}Prefabs/MP/Modes/CaptureAndHold
 const PREFAB_DEFEND_WP      = "{AAE8882E0DE0761A}Prefabs/AI/Waypoints/AIWaypoint_Defend_Hierarchy.et";
 // Harbor source base (T3 = large, most common in production mods)
 const PREFAB_HARBOR_T3      = "{0226331FB6A8249A}Prefabs/Systems/MilitaryBase/ConflictSourceBase_T3Harbor.et";
+// Seeding restriction zone — confines players to MOB area during low-pop seeding
+const PREFAB_SEEDING_ZONE   = "{801DADF0D6C316B9}PrefabsEditable/RestrictionZone/E_SeedingRestrictionZoneBase.et";
+// Seeding-only ambient patrol (fast respawn, stops once seeding ends)
+const PREFAB_PATROL_SEEDING = "{0E66F798F84EEB58}Prefabs/Systems/AmbientPatrol/IRON_AmbientPatrolSpawnpoint_Base_Seeding.et";
 
 // Component GUIDs inside ConflictMilitaryBase (from mod analysis)
 const CID_SEIZING   = "{5C66967235FBEEA3}";
@@ -74,8 +78,9 @@ export interface ConflictBaseSpec {
    * - "controlPoint" — lightweight control point objective
    * - "sourceBase" — supply source, not capturable
    * - "harbor" — supply-income harbor using ConflictSourceBase prefab family
+   * - "relay" — pre-placed always-on radio relay tower, not capturable, extends radio coverage
    */
-  type?: "base" | "major" | "MOB" | "controlPoint" | "sourceBase" | "harbor";
+  type?: "base" | "major" | "MOB" | "controlPoint" | "sourceBase" | "harbor" | "relay";
   /** Number of ambient patrol spawnpoints around this base (default 2, max 6) */
   patrolCount?: number;
   /** Radio antenna service range in meters (default 1470) */
@@ -88,6 +93,16 @@ export interface ConflictBaseSpec {
 }
 
 export interface ConflictScenarioOptions {
+  /**
+   * Enable low-population seeding mode. Restricts players to MOB areas and spawns
+   * fast-respawning AI patrols until enough players connect (one-way transition —
+   * never re-activates once the threshold is crossed).
+   */
+  seedingEnabled?: boolean;
+  /** Player count at which seeding mode permanently ends (default 12). Ignored unless seedingEnabled. */
+  seedingThreshold?: number;
+  /** Regular per-tick supply income for contested bases (default 50). */
+  suppliesIncome?: number;
   /** Display name of the scenario */
   scenarioName: string;
   /**
@@ -131,6 +146,8 @@ export interface ConflictScenarioOutput {
   defendersLayer: string;
   /** Content for Worlds/{scenarioName}_Layers/AmbientVehicles.layer — civilian vehicle spawns (only if civVehicleCount > 0) */
   ambientVehiclesLayer: string | null;
+  /** Content for Worlds/{scenarioName}_Layers/AmbientPatrols_SEEDING.layer — seeding-only AI patrols (only if seedingEnabled) */
+  seedingLayer: string | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -159,7 +176,7 @@ function buildMissionConf(opts: ConflictScenarioOptions, worldRef: string): stri
   }
 
   // Base whitelist — links .conf base names to world entities
-  const contestable = opts.bases.filter(b => b.type !== "sourceBase" && b.type !== "harbor");
+  const contestable = opts.bases.filter(b => b.type !== "sourceBase" && b.type !== "harbor" && b.type !== "relay");
   if (contestable.length > 0) {
     lines.push(` m_bCustomBaseWhitelist 1`);
     lines.push(` m_aCampaignCustomBaseList {`);
@@ -204,9 +221,13 @@ function buildDefaultLayer(opts: ConflictScenarioOptions): string {
   lines.push(` m_fAutoReloadTime 30`);
   lines.push(` m_iControlPointsThreshold ${threshold}`);
   lines.push(` m_fVictoryTimer 300`);
-  lines.push(` m_iRegularSuppliesIncome 50`);
+  lines.push(` m_iRegularSuppliesIncome ${opts.suppliesIncome ?? 50}`);
   lines.push(` m_bEstablishingBasesEnabled 0`);
   lines.push(` m_bHideBasesOutsideRadioRange 1`);
+  if (opts.seedingEnabled) {
+    lines.push(` m_bServerSeedingEnabled 1`);
+    lines.push(` m_iServerSeedingThreshold ${opts.seedingThreshold ?? 12}`);
+  }
   lines.push(`}`);
 
   lines.push(`SCR_CampaignFactionManager CampaignFactionManager1 : "${PREFAB_FACTION_MGR}" {`);
@@ -258,9 +279,33 @@ function buildBasesLayer(opts: ConflictScenarioOptions): string {
 
     const [bx, by, bz] = parsePos(base.position);
     const baseType = base.type ?? "base";
-    const radioRange = base.radioRange ?? 1470;
     const isMOB = baseType === "MOB";
     const isMajor = baseType === "major";
+    const isRelay = baseType === "relay";
+    const radioRange = base.radioRange ?? (isRelay ? 3000 : 1470);
+
+    if (isRelay) {
+      // Pre-placed always-on relay tower: not capturable, extends radio coverage only.
+      lines.push(` ${base.name} {`);
+      lines.push(`  components {`);
+      lines.push(`   SCR_CampaignMilitaryBaseComponent "${CID_BASE_COMP}" {`);
+      lines.push(`    m_iRadius 10`);
+      lines.push(`    m_bShowNotifications 0`);
+      lines.push(`    m_sBaseName "${base.name}"`);
+      lines.push(`    m_eType RELAY`);
+      lines.push(`   }`);
+      lines.push(`   SCR_CoverageRadioComponent "${CID_RADIO}" {`);
+      lines.push(`    Transceivers {`);
+      lines.push(`     RelayTransceiver "${CID_RELAY_TX}" {`);
+      lines.push(`      m_fTransmittingRange ${radioRange}`);
+      lines.push(`     }`);
+      lines.push(`    }`);
+      lines.push(`   }`);
+      lines.push(`  }`);
+      lines.push(`  coords ${fmtPos(bx, by, bz)}`);
+      lines.push(` }`);
+      continue;
+    }
 
     lines.push(` ${base.name} {`);
     lines.push(`  components {`);
@@ -327,6 +372,16 @@ function buildBasesLayer(opts: ConflictScenarioOptions): string {
       lines.push(`    coords 0 0 0`);
       lines.push(`   }`);
       lines.push(`  }`);
+
+      if (opts.seedingEnabled) {
+        lines.push(`  {`);
+        lines.push(`   IRON_SeedingRestrictionZoneEntity : "${PREFAB_SEEDING_ZONE}" {`);
+        lines.push(`    m_bAutoSizeToHQ 1`);
+        lines.push(`    m_iDistanceToHQ 2000`);
+        lines.push(`    coords 0 0 0`);
+        lines.push(`   }`);
+        lines.push(`  }`);
+      }
     }
 
     lines.push(` }`);
@@ -336,7 +391,7 @@ function buildBasesLayer(opts: ConflictScenarioOptions): string {
 
   // Ambient patrol spawnpoints (outside the $grp, after all bases)
   for (const base of opts.bases) {
-    if (base.type === "harbor") continue;
+    if (base.type === "harbor" || base.type === "relay") continue;
     const [bx, by, bz] = parsePos(base.position);
     const patrolCount = Math.min(Math.max(base.patrolCount ?? 2, 0), 6);
     const patrolOffsets = [
@@ -402,7 +457,7 @@ function buildDefendersLayer(opts: ConflictScenarioOptions): string {
   // Group by faction for cleaner layer output
   const factionGroups = new Map<string, ConflictBaseSpec[]>();
   for (const base of opts.bases) {
-    if (base.type === "MOB" || base.type === "harbor") continue;
+    if (base.type === "MOB" || base.type === "harbor" || base.type === "relay") continue;
     const list = factionGroups.get(base.faction) ?? [];
     list.push(base);
     factionGroups.set(base.faction, list);
@@ -486,12 +541,51 @@ function buildAmbientVehiclesLayer(opts: ConflictScenarioOptions): string | null
 }
 
 // ---------------------------------------------------------------------------
+// AmbientPatrols_SEEDING.layer — seeding-only AI patrols at each MOB
+// ---------------------------------------------------------------------------
+
+function buildSeedingLayer(opts: ConflictScenarioOptions): string | null {
+  if (!opts.seedingEnabled) return null;
+
+  const mobs = opts.bases.filter(b => b.type === "MOB");
+  if (mobs.length === 0) return null;
+
+  const lines: string[] = [];
+  lines.push(`$grp GenericEntity : "${PREFAB_PATROL_SEEDING}" {`);
+
+  const patrolOffsets = [[40, 0], [-40, 0]];
+  for (const base of mobs) {
+    const [bx, by, bz] = parsePos(base.position);
+    for (const [ox, oz] of patrolOffsets) {
+      lines.push(` {`);
+      lines.push(`  components {`);
+      lines.push(`   SCR_Iron_AmbientPatrolSpawnPointComponent_Seeding "${generateGuid()}" {`);
+      lines.push(`    m_bRespawnOnlyDuringSeeding 1`);
+      lines.push(`    m_iRespawnPeriod 90`);
+      lines.push(`   }`);
+      lines.push(`  }`);
+      lines.push(`  coords ${fmtPos(bx + ox, by, bz + oz)}`);
+      lines.push(`  {`);
+      lines.push(`   SCR_DefendWaypoint : "${PREFAB_DEFEND_WP}" {`);
+      lines.push(`    coords ${fmtPos(-ox, 0, -oz)}`);
+      lines.push(`    CompletionRadius 75`);
+      lines.push(`   }`);
+      lines.push(`  }`);
+      lines.push(` }`);
+    }
+  }
+
+  lines.push(`}`);
+  return lines.join("\n") + "\n";
+}
+
+// ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
 
 /**
  * Generate a complete Conflict multiplayer scenario.
- * Returns content for up to 6 files:
+ * Returns content for up to 7 files:
  *   - missionConf         → Missions/{scenarioName}.conf
  *   - worldEnt            → Worlds/{scenarioName}.ent  (SubScene stub)
  *   - defaultLayer        → Worlds/{scenarioName}_Layers/default.layer
@@ -499,6 +593,7 @@ function buildAmbientVehiclesLayer(opts: ConflictScenarioOptions): string | null
  *   - cahLayer            → Worlds/{scenarioName}_Layers/CAH.layer  (null if no major bases)
  *   - defendersLayer      → Worlds/{scenarioName}_Layers/Defenders.layer
  *   - ambientVehiclesLayer→ Worlds/{scenarioName}_Layers/AmbientVehicles.layer (null if civVehicleCount=0)
+ *   - seedingLayer        → Worlds/{scenarioName}_Layers/AmbientPatrols_SEEDING.layer (null unless seedingEnabled and a MOB exists)
  */
 export function generateConflictScenario(opts: ConflictScenarioOptions): ConflictScenarioOutput {
   if (opts.bases.length === 0) {
@@ -516,6 +611,7 @@ export function generateConflictScenario(opts: ConflictScenarioOptions): Conflic
     cahLayer:             buildCAHLayer(opts),
     defendersLayer:       buildDefendersLayer(opts),
     ambientVehiclesLayer: buildAmbientVehiclesLayer(opts),
+    seedingLayer:         buildSeedingLayer(opts),
   };
 }
 
