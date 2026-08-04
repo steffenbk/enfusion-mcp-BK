@@ -51,10 +51,45 @@
       "subdirectory": "Prefabs/Props/Destructible",
       "postCreateNotes": [
         "Set MeshObject.Object to intact prop model",
-        "Configure health and damage thresholds",
-        "Set up destroyed model or removal effect",
-        "Configure sound effects on destruction",
-        "Define debris spawn if applicable"
+        "Add RplComponent — SCR_DestructionMultiPhaseComponent requires it or the engine silently skips adding the destruction component",
+        "Configure m_aDamagePhases (SCR_DamagePhaseData: m_fPhaseHealth + m_PhaseModel swap) and m_fBaseHealth",
+        "Reference a matching HitZone_*.conf preset under \"Additional hit zones\" (e.g. HitZone_Wood_Planks.conf, HitZone_Metal_Light.conf) instead of authoring hit zones from scratch",
+        "Set m_DestroySpawnObjects (SCR_DebrisSpawnable/SCR_ParticleSpawnable) for the final destruction phase",
+        "Set m_bPassDamageToChildren 1 if this prop has separately-modeled attached sub-parts"
+      ]
+    },
+    {
+      "name": "interactive",
+      "description": "Pickup-able or usable props (ammo boxes, containers, gear) — adds inventory storage and an interact prompt",
+      "defaultParent": "Prefabs/Props/Core/Props_Base.et",
+      "subdirectory": "Prefabs/Props/Interactive",
+      "overrideComponents": [
+        {
+          "type": "MeshObject",
+          "properties": { "Object": "" },
+          "comment": "Path to prop .xob model"
+        },
+        {
+          "type": "RigidBody",
+          "properties": { "m_fMass": "1.0" },
+          "comment": "Mass in kg for physics simulation"
+        },
+        {
+          "type": "SCR_UniversalInventoryStorageComponent",
+          "properties": {},
+          "comment": "Add Attributes.SCR_ItemAttributeCollection.ItemDisplayName for the inventory UI, and PreviewRenderAttributes for the inventory preview icon framing"
+        },
+        {
+          "type": "ActionsManagerComponent",
+          "properties": {},
+          "comment": "Add an ActionContexts.UserActionContext with a Position (PointInfo Offset) — this is the world-space anchor for the interact prompt"
+        }
+      ],
+      "postCreateNotes": [
+        "Set MeshObject.Object to your prop model",
+        "If a closer vanilla base exists for this item family (e.g. AmmoBox_Base.et), inherit that instead of Props_Base.et directly",
+        "Without both SCR_UniversalInventoryStorageComponent and ActionsManagerComponent this is just decorative geometry — the character controller cannot interact with it",
+        "SCR_EditableEntityComponent is not used on individual props in vanilla — Game Master editability is wired at the composition/catalog level, not here"
       ]
     }
   ]
