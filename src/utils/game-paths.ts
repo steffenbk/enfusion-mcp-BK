@@ -59,6 +59,24 @@ export function resolveAddonDir(projectPath: string, modName?: string): string |
   return null;
 }
 
+const WORKBENCH_EXE_NAME = "ArmaReforgerWorkbenchSteamDiag.exe";
+const WORKBENCH_SUBDIR = "Workbench";
+
+/**
+ * Find the Workbench executable given the tools installation path.
+ * Checks the Workbench subdirectory first (standard Steam layout),
+ * then the root in case the config points directly to Workbench/.
+ */
+export function findWorkbenchExe(workbenchPath: string): string | null {
+  const subPath = join(workbenchPath, WORKBENCH_SUBDIR, WORKBENCH_EXE_NAME);
+  if (existsSync(subPath)) return subPath;
+
+  const rootPath = join(workbenchPath, WORKBENCH_EXE_NAME);
+  if (existsSync(rootPath)) return rootPath;
+
+  return null;
+}
+
 /** Find the first .gproj file in a directory. */
 export function findGproj(dir: string): string | null {
   try {

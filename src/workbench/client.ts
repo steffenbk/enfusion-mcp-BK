@@ -13,9 +13,10 @@ import { Socket } from "node:net";
 import { existsSync, mkdirSync, copyFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { spawn, execSync } from "node:child_process";
+import { spawn } from "node:child_process";
 import { encodeRequest, decodeResponse } from "./protocol.js";
 import { logger } from "../utils/logger.js";
+import { findWorkbenchExe } from "../utils/game-paths.js";
 import type { Config } from "../config.js";
 import { generateGproj } from "../templates/gproj.js";
 
@@ -28,8 +29,6 @@ const WORKBENCH_SUBDIR = "Workbench";
 const HANDLER_FOLDER = "EnfusionMCP";
 const LAUNCH_POLL_INTERVAL_MS = 3_000;
 const LAUNCH_TIMEOUT_MS = 90_000;
-/** Delay after killing Workbench before relaunching, to let the port release. */
-const KILL_SETTLE_MS = 3_000;
 /** How long to wait for Workbench to recompile handler scripts after installation. */
 const HANDLER_RECOMPILE_TIMEOUT_MS = 30_000;
 /** Interval between polls while waiting for handler script recompilation. */
@@ -62,6 +61,15 @@ export interface WorkbenchCallOptions {
   timeout?: number;
   /** Skip auto-launch on connection failure (used internally by ping). */
   skipAutoLaunch?: boolean;
+  /**
+   * Return a `status: "error"` response instead of throwing.
+   *
+   * Only for calls whose failure is genuinely optional — a secondary lookup the
+   * caller degrades gracefully around (e.g. reading a position to enrich a result
+   * that is still useful without it). Never use it for the primary action of a
+   * tool: that is exactly how a failed mutation gets reported as success.
+   */
+  tolerateErrorStatus?: boolean;
 }
 
 export class WorkbenchError extends Error {
@@ -105,11 +113,7 @@ export class WorkbenchClient {
     options: WorkbenchCallOptions = {}
   ): Promise<T> {
     try {
-      const result = await this.rawCall<T>(apiFunc, params, options);
-      this._state.connected = true;
-      this._state.lastUpdated = Date.now();
-      this.extractMode(result);
-      return result;
+      return this.finishCall(await this.rawCall<T>(apiFunc, params, options), options);
     } catch (err) {
       if (err instanceof WorkbenchError) {
         if (err.code === "CONNECTION_REFUSED" || err.code === "TIMEOUT" || err.code === "PROTOCOL_ERROR") {
@@ -120,28 +124,81 @@ export class WorkbenchClient {
             // Workbench not running — install handlers, launch, retry
             logger.info(`Workbench not running, auto-launching...`);
             await this.ensureRunning();
-            const result = await this.rawCall<T>(apiFunc, params, options);
-            this._state.connected = true;
-            this._state.lastUpdated = Date.now();
-            this.extractMode(result);
-            return result;
+            return this.finishCall(await this.rawCall<T>(apiFunc, params, options), options);
           }
-          if (err.code === "API_ERROR" && err.message.includes("Undefined API func")) {
+          if (
+            err.code === "API_ERROR" &&
+            (err.message.includes("Undefined API func") ||
+              err.message.includes("not existing Net API function"))
+          ) {
             // Workbench is running but our custom handler scripts aren't compiled.
             // This happens when the user opened Workbench manually, or when handlers
             // were cleaned up but Workbench kept running.
             logger.info(`Handler scripts not loaded in Workbench, recovering...`);
             await this.recoverMissingHandlers();
-            const result = await this.rawCall<T>(apiFunc, params, options);
-            this._state.connected = true;
-            this._state.lastUpdated = Date.now();
-            this.extractMode(result);
-            return result;
+            try {
+              return this.finishCall(await this.rawCall<T>(apiFunc, params, options), options);
+            } catch (retryErr) {
+              // Still unknown after a successful reinstall + recompile. Empirically
+              // this means the handler class is new since Workbench started:
+              // Workbench builds its NET API dispatch table at process start, so a
+              // live recompile updates existing handler bodies but never registers a
+              // new class. It is easy to misdiagnose because the file compiles
+              // cleanly and every previously-registered handler keeps working.
+              if (
+                retryErr instanceof WorkbenchError &&
+                (retryErr.message.includes("Undefined API func") ||
+                  retryErr.message.includes("not existing Net API function"))
+              ) {
+                throw new WorkbenchError(
+                  `Workbench does not expose "${apiFunc}" even after reinstalling and ` +
+                    `recompiling the handler scripts. Workbench registers NET API handlers ` +
+                    `when the process starts, so a handler class that is new since Workbench ` +
+                    `launched will not appear until Workbench is restarted — the script ` +
+                    `compiles cleanly and the other handlers keep working, so this does not ` +
+                    `look like a registration problem. Restart Workbench, then retry.`,
+                  "API_ERROR"
+                );
+              }
+              throw retryErr;
+            }
           }
         }
       }
       throw err;
     }
+  }
+
+  /**
+   * Record connection state from a successful transport round-trip, then surface an
+   * in-band handler failure as a thrown error.
+   *
+   * The NET API returns transport-level "Ok" even when the handler itself failed —
+   * 18 of the Enforce handlers report failure in-band by setting `status: "error"`
+   * and a human-readable `message`. Without this check that response was returned
+   * as if it had succeeded, so a tool would render "**Entity Modified**" over the
+   * top of "Entity not found". Throwing here routes it into each tool's existing
+   * catch block, which already reports it properly with `isError`.
+   *
+   * Every return path in call() goes through here so a retry path cannot skip it.
+   */
+  private finishCall<T>(result: T, options: WorkbenchCallOptions): T {
+    this._state.connected = true;
+    this._state.lastUpdated = Date.now();
+    this.extractMode(result);
+
+    if (!options.tolerateErrorStatus) {
+      const record = result as unknown as Record<string, unknown> | null;
+      if (record && record.status === "error") {
+        const message =
+          typeof record.message === "string" && record.message.trim() !== ""
+            ? record.message
+            : "Workbench handler reported an error without a message.";
+        throw new WorkbenchError(message, "API_ERROR");
+      }
+    }
+
+    return result;
   }
 
   /**
@@ -207,6 +264,37 @@ export class WorkbenchClient {
    * Deletes Scripts/WorkbenchGame/EnfusionMCP/ from the mod.
    * Safe to call even if scripts were never injected.
    */
+  /**
+   * Every addon under the project path that currently has handler scripts installed.
+   *
+   * Handlers get injected into whichever mod is open at the time, so over many
+   * sessions they accumulate across unrelated addons — and each copy ships with the
+   * user's mod if they publish it. Enumerating them is what makes a bulk cleanup
+   * possible; `diagnose()` reports the same list.
+   *
+   * Pure filesystem scan: no NET API call, safe to run with Workbench closed.
+   */
+  listInstalledHandlerMods(): Array<{ modDir: string; handlerDir: string; fileCount: number }> {
+    const installed: Array<{ modDir: string; handlerDir: string; fileCount: number }> = [];
+    if (!this.config?.projectPath || !existsSync(this.config.projectPath)) return installed;
+
+    try {
+      for (const entry of readdirSync(this.config.projectPath, { withFileTypes: true })) {
+        if (!entry.isDirectory()) continue;
+        if (entry.name === HANDLER_FOLDER) continue; // standalone addon, reported separately
+        const modDir = join(this.config.projectPath, entry.name);
+        const handlerDir = join(modDir, "Scripts", "WorkbenchGame", HANDLER_FOLDER);
+        if (existsSync(handlerDir)) {
+          const fileCount = readdirSync(handlerDir).filter((f) => f.endsWith(".c")).length;
+          installed.push({ modDir, handlerDir, fileCount });
+        }
+      }
+    } catch {
+      /* unreadable project dir — report what we have */
+    }
+    return installed;
+  }
+
   cleanupHandlerScripts(modDir: string): boolean {
     const handlerDir = resolve(modDir, "Scripts", "WorkbenchGame", HANDLER_FOLDER);
     logger.info(`Checking for handler scripts at: ${handlerDir}`);
@@ -242,7 +330,7 @@ export class WorkbenchClient {
     // Workbench exe
     let workbenchExe: DiagnosticReport["workbenchExe"] = null;
     if (this.config) {
-      const exePath = this.findWorkbenchExe();
+      const exePath = findWorkbenchExe(this.config!.workbenchPath);
       const candidate =
         exePath ??
         join(this.config.workbenchPath, WORKBENCH_SUBDIR, WORKBENCH_EXE);
@@ -278,20 +366,7 @@ export class WorkbenchClient {
     };
 
     // Scan project path for mods that have handler scripts installed
-    const installedMods: DiagnosticReport["installedMods"] = [];
-    if (this.config?.projectPath && existsSync(this.config.projectPath)) {
-      try {
-        for (const entry of readdirSync(this.config.projectPath, { withFileTypes: true })) {
-          if (!entry.isDirectory()) continue;
-          if (entry.name === HANDLER_FOLDER) continue; // standalone, covered above
-          const handlerDir = join(this.config.projectPath, entry.name, "Scripts", "WorkbenchGame", HANDLER_FOLDER);
-          if (existsSync(handlerDir)) {
-            const fileCount = readdirSync(handlerDir).filter((f) => f.endsWith(".c")).length;
-            installedMods.push({ modDir: join(this.config.projectPath, entry.name), handlerDir, fileCount });
-          }
-        }
-      } catch { /* ignore */ }
-    }
+    const installedMods: DiagnosticReport["installedMods"] = this.listInstalledHandlerMods();
 
     // --- NET API probe ---
     let netApi: DiagnosticReport["netApi"] = "refused";
@@ -396,8 +471,14 @@ export class WorkbenchClient {
 
     // Wait for Workbench to detect the new files and recompile scripts.
     // Workbench watches its script directories and recompiles automatically.
-    // Poll with our custom EMCP_WB_Ping handler — it only succeeds once
-    // the handler scripts are compiled and registered.
+    //
+    // The probe is EMCP_WB_Ping, which proves only that SOME handler responds.
+    // That is the right signal for the case this recovery exists for — handlers
+    // missing entirely, so Ping is missing too. It is NOT proof that the handler
+    // the caller wanted is registered: if Ping was already registered and only a
+    // NEWLY ADDED handler class is missing, this returns success on the first poll
+    // and the caller's retry then fails anyway. call() detects that and explains it
+    // rather than surfacing a bare "Undefined API func".
     logger.info("Handler scripts installed. Waiting for Workbench to recompile...");
     const deadline = Date.now() + HANDLER_RECOMPILE_TIMEOUT_MS;
     while (Date.now() < deadline) {
@@ -414,19 +495,6 @@ export class WorkbenchClient {
         `Workbench (Plugins > Reload Scripts) or restart Workbench.`,
       "LAUNCH_FAILED"
     );
-  }
-
-  /**
-   * Kill any running Workbench process. Windows-only (taskkill).
-   * Safe to call even if Workbench isn't running.
-   */
-  private killWorkbench(): void {
-    try {
-      execSync(`taskkill /IM ${WORKBENCH_EXE} /F`, { stdio: "ignore" });
-      logger.info("Killed running Workbench process.");
-    } catch {
-      // Process might not be running — ignore
-    }
   }
 
   private async launchWorkbench(gprojPath?: string): Promise<void> {
@@ -462,7 +530,7 @@ export class WorkbenchClient {
     }
 
     // 3. Find executable
-    const exePath = this.findWorkbenchExe();
+    const exePath = findWorkbenchExe(this.config!.workbenchPath);
     if (!exePath) {
       const wbPath = this.config?.workbenchPath ?? "(not configured)";
       throw new WorkbenchError(
@@ -532,17 +600,6 @@ export class WorkbenchClient {
       `Workbench launched but did not connect within ${LAUNCH_TIMEOUT_MS / 1000}s.\n\n${hint}`,
       "LAUNCH_FAILED"
     );
-  }
-
-  private findWorkbenchExe(): string | null {
-    if (!this.config) return null;
-    const subPath = join(this.config.workbenchPath, WORKBENCH_SUBDIR, WORKBENCH_EXE);
-    if (existsSync(subPath)) return subPath;
-
-    const rootPath = join(this.config.workbenchPath, WORKBENCH_EXE);
-    if (existsSync(rootPath)) return rootPath;
-
-    return null;
   }
 
   /**

@@ -146,8 +146,9 @@ describe("enfusion-text serializer", () => {
     });
     const text = serialize(node);
     expect(text).toContain("GameProject {");
-    expect(text).toContain('ID "TestMod"');
-    expect(text).toContain('GUID "AAAA0000BBBB1111"');
+    // Bare identifiers are emitted unquoted in Enfusion format
+    expect(text).toContain("ID TestMod");
+    expect(text).toContain("GUID AAAA0000BBBB1111");
     expect(text).toContain("}");
   });
 
@@ -337,5 +338,86 @@ describe("createNode / setProperty / getProperty helpers", () => {
     const parsed = parse(text);
     expect(parsed.id).toBe('has "quotes"');
     expect(parsed.inheritance).toBe('C:\\path\\to "base".et');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Round-trip fidelity against the shapes real game files actually use.
+//
+// Both bugs below silently LOST data when reading a real .et/.conf, which
+// matters because prefab (inspect/ancestry), mod and workshop_info all parse
+// real files. Verified against the extracted base game data.
+// ---------------------------------------------------------------------------
+describe("enfusion-text round-trip fidelity", () => {
+  const stable = (src: string) => {
+    const once = serialize(parse(src));
+    return { once, isStable: once === serialize(parse(once)) };
+  };
+
+  it("keeps every element of a numeric tuple", () => {
+    // `coords 0 0 0` previously parsed as `coords 0` — Y and Z silently dropped.
+    const { once, isStable } = stable("X { coords 0 0 0 }");
+    expect(once).toContain("coords 0 0 0");
+    expect(isStable).toBe(true);
+  });
+
+  it("keeps float and negative tuple elements", () => {
+    const { once, isStable } = stable("E { coords 2125.162 62.147 1627.029 angleY 90 }");
+    expect(once).toContain("coords 2125.162 62.147 1627.029");
+    expect(once).toContain("angleY 90");
+    expect(isStable).toBe(true);
+    expect(stable("X { Neg -1 -0.5 2 }").once).toContain("Neg -1 -0.5 2");
+  });
+
+  it("stops a tuple at the next key rather than swallowing it", () => {
+    const { once } = stable("X { Anchor 0 0 1 1 Size 100 1 }");
+    expect(once).toContain("Anchor 0 0 1 1");
+    expect(once).toContain("Size 100 1");
+  });
+
+  it("parses a quoted multi-word key with a bare value as a property", () => {
+    // `"Transmitting Range" 2000` was read as two loose values, losing the property.
+    const { once, isStable } = stable('R { ChannelFrequency 48000 "Transmitting Range" 2000 }');
+    expect(once).toContain("ChannelFrequency 48000");
+    expect(once).toContain('"Transmitting Range" 2000');
+    expect(isStable).toBe(true);
+  });
+
+  it("does not replay the value token after a quoted key follows it", () => {
+    // The rewind bug emitted a bogus `"48000" "Transmitting Range"` property.
+    const { once } = stable('R { ChannelFrequency 48000 "Transmitting Range" 2000 }');
+    expect(once).not.toContain('"48000"');
+  });
+
+  it("still treats a list of quoted GUIDs as values, not key/value pairs", () => {
+    const { once, isStable } = stable('X { Dependencies { "{AAAA0000BBBB1111}" "{CCCC2222DDDD3333}" } }');
+    expect(once).toContain('"{AAAA0000BBBB1111}"');
+    expect(once).toContain('"{CCCC2222DDDD3333}"');
+    expect(isStable).toBe(true);
+  });
+
+  it("round-trips a real vanilla prefab without losing its properties", () => {
+    const src = [
+      'Vehicle : "{38186F12F27A61C6}Prefabs/Vehicles/Wheeled/M923A1/M923A1_command_MERDC.et" {',
+      ' ID "5206D4E79715C115"',
+      ' components {',
+      '  BaseRadioComponent "{51EAE034CD7B7A2C}" {',
+      '   "Turned on" 0',
+      '   Transceivers {',
+      '    RelayTransceiver "{51EAE034C972A699}" {',
+      '     ChannelFrequency 48000',
+      '     "Transmitting Range" 2000',
+      '    }',
+      '   }',
+      '  }',
+      ' }',
+      ' coords 0 0 0',
+      '}',
+    ].join("\n");
+    const { once, isStable } = stable(src);
+    expect(isStable).toBe(true);
+    expect(once).toContain('"Transmitting Range" 2000');
+    expect(once).toContain("ChannelFrequency 48000");
+    expect(once).toContain("coords 0 0 0");
   });
 });

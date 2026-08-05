@@ -87,17 +87,81 @@ export function registerWbLaunch(
     "wb_cleanup",
     {
       description:
-        "Remove the temporary EnfusionMCP handler scripts from a mod's directory. " +
+        "Remove the temporary EnfusionMCP handler scripts from mod directories. " +
         "Deletes Scripts/WorkbenchGame/EnfusionMCP/ from the mod. " +
         "Call this after finishing Workbench work and before the user publishes their mod. " +
-        "Safe to call even if scripts were never installed.",
+        "Handlers are injected into whichever mod is open at the time, so they accumulate across " +
+        "unrelated addons over many sessions — call with NO arguments to list every addon that " +
+        "currently has them (safe, read-only), then pass all=true to clear them all, or modDir to " +
+        "clear just one. Safe to call even if scripts were never installed.",
       inputSchema: {
         modDir: z
           .string()
-          .describe("Path to the mod's root directory (the folder containing the .gproj file)."),
+          .optional()
+          .describe("Path to a single mod's root directory (the folder containing the .gproj file). Omit to list, or use with all=true to clear everything."),
+        all: z
+          .boolean()
+          .optional()
+          .describe("Remove handler scripts from EVERY addon that has them. Run with no arguments first to see the list."),
       },
     },
-    async ({ modDir }) => {
+    async ({ modDir, all }) => {
+      // No target named: report what is installed rather than guessing. Clearing 20+
+      // directories is not something to do implicitly off an empty call.
+      if (!modDir && !all) {
+        const installed = client.listInstalledHandlerMods();
+        if (installed.length === 0) {
+          return {
+            content: [{
+              type: "text" as const,
+              text: `**No handler scripts installed** in any addon under the configured project path. Nothing to clean.${formatConnectionStatus(client)}`,
+            }],
+          };
+        }
+        const lines = [
+          `**Handler scripts are installed in ${installed.length} addon${installed.length === 1 ? "" : "s"}**`,
+          ``,
+          `These are injected automatically so Workbench compiles the NET API handlers. They are`,
+          `harmless locally, but they ship with the mod if it is published.`,
+          ``,
+          ...installed.map((m) => `- \`${m.modDir}\` *(${m.fileCount} files)*`),
+          ``,
+          `Pass \`all: true\` to remove them from all ${installed.length}, or \`modDir\` for a single one.`,
+        ];
+        return { content: [{ type: "text" as const, text: lines.join("\n") + formatConnectionStatus(client) }] };
+      }
+
+      if (all) {
+        const installed = client.listInstalledHandlerMods();
+        if (installed.length === 0) {
+          return {
+            content: [{
+              type: "text" as const,
+              text: `**Nothing to clean** — no addon under the project path has handler scripts.${formatConnectionStatus(client)}`,
+            }],
+          };
+        }
+        const cleaned: string[] = [];
+        const failed: string[] = [];
+        for (const mod of installed) {
+          try {
+            if (client.cleanupHandlerScripts(mod.modDir)) cleaned.push(mod.modDir);
+          } catch (e) {
+            failed.push(`${mod.modDir} — ${e instanceof Error ? e.message : String(e)}`);
+          }
+        }
+        const lines = [`**Cleanup Complete** — handler scripts removed from ${cleaned.length} addon${cleaned.length === 1 ? "" : "s"}.`, ``];
+        lines.push(...cleaned.map((c) => `- \`${c}\``));
+        if (failed.length > 0) {
+          lines.push(``, `**Failed (${failed.length}):**`, ...failed.map((f) => `- ${f}`));
+        }
+        return {
+          content: [{ type: "text" as const, text: lines.join("\n") + formatConnectionStatus(client) }],
+          ...(failed.length > 0 ? { isError: true as const } : {}),
+        };
+      }
+
+      modDir = modDir as string;
       // Resolve to absolute path and validate
       const resolvedModDir = resolve(modDir);
       if (!existsSync(resolvedModDir)) {

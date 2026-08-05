@@ -438,7 +438,6 @@ export function registerWbEntityTools(server: McpServer, client: WorkbenchClient
           if (selected.length === 0) {
             return {
               content: [{ type: "text" as const, text: `**No entities selected.**${formatConnectionStatus(client)}` }],
-            isError: true,
             };
           }
           const lines = ["**Selected Entities**\n"];

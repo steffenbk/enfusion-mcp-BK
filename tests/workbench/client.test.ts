@@ -254,3 +254,85 @@ describe("WorkbenchClient", () => {
     expect(state.mode).toBe("unknown");
   });
 });
+
+// ---------------------------------------------------------------------------
+// In-band handler failures.
+//
+// The NET API returns transport-level "Ok" even when the handler itself failed:
+// 18 of the Enforce handlers report failure by setting `status: "error"` plus a
+// message. Before this was checked, a failed mutation came back looking like a
+// success and tools rendered "**Entity Modified**" over "Entity not found".
+// ---------------------------------------------------------------------------
+describe("WorkbenchClient in-band error status", () => {
+  let mock: ReturnType<typeof createMockWorkbench>;
+
+  afterEach(async () => {
+    if (mock) await mock.close();
+  });
+
+  it("throws WorkbenchError carrying the handler's message", async () => {
+    mock = createMockWorkbench(() => ({ status: "error", message: "Entity not found: Foo" }));
+    const client = new WorkbenchClient("127.0.0.1", mock.port);
+
+    await expect(
+      client.call("EMCP_WB_ModifyEntity", { name: "Foo" }, { skipAutoLaunch: true })
+    ).rejects.toThrow("Entity not found: Foo");
+  });
+
+  it("throws a WorkbenchError specifically, so tool catch blocks handle it", async () => {
+    mock = createMockWorkbench(() => ({ status: "error", message: "boom" }));
+    const client = new WorkbenchClient("127.0.0.1", mock.port);
+
+    await expect(
+      client.call("EMCP_WB_Anything", {}, { skipAutoLaunch: true })
+    ).rejects.toBeInstanceOf(WorkbenchError);
+  });
+
+  it("still throws when the handler omits a message", async () => {
+    mock = createMockWorkbench(() => ({ status: "error" }));
+    const client = new WorkbenchClient("127.0.0.1", mock.port);
+
+    await expect(
+      client.call("EMCP_WB_Anything", {}, { skipAutoLaunch: true })
+    ).rejects.toThrow(/without a message/);
+  });
+
+  it("returns the response untouched when tolerateErrorStatus is set", async () => {
+    mock = createMockWorkbench(() => ({ status: "error", message: "registration failed" }));
+    const client = new WorkbenchClient("127.0.0.1", mock.port);
+
+    const result = await client.call<{ status: string; message: string }>(
+      "EMCP_WB_Resources",
+      { action: "register" },
+      { skipAutoLaunch: true, tolerateErrorStatus: true }
+    );
+    expect(result.status).toBe("error");
+    expect(result.message).toBe("registration failed");
+  });
+
+  it("passes a successful response through unchanged", async () => {
+    mock = createMockWorkbench(() => ({ status: "ok", mode: "edit", value: 42 }));
+    const client = new WorkbenchClient("127.0.0.1", mock.port);
+
+    const result = await client.call<{ status: string; value: number }>(
+      "EMCP_WB_GetState",
+      {},
+      { skipAutoLaunch: true }
+    );
+    expect(result.status).toBe("ok");
+    expect(result.value).toBe(42);
+    expect(client.state.mode).toBe("edit");
+  });
+
+  it("does not treat a response without a status field as an error", async () => {
+    mock = createMockWorkbench(() => ({ entities: [], entityCount: 0 }));
+    const client = new WorkbenchClient("127.0.0.1", mock.port);
+
+    const result = await client.call<{ entityCount: number }>(
+      "EMCP_WB_ListEntities",
+      {},
+      { skipAutoLaunch: true }
+    );
+    expect(result.entityCount).toBe(0);
+  });
+});

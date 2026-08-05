@@ -1,6 +1,6 @@
 import { openSync, readSync, closeSync, readdirSync, existsSync } from "node:fs";
 import { join, extname } from "node:path";
-import { inflateRawSync } from "node:zlib";
+import { inflateRawSync, inflateSync } from "node:zlib";
 import { parsePakIndex, type PakIndex, type PakDirEntry, type PakFileEntry } from "./reader.js";
 import { logger } from "../utils/logger.js";
 
@@ -17,6 +17,8 @@ interface FileRef {
   pakPath: string;
   dataStart: number;
   entry: PakFileEntry;
+  /** Original-cased virtual path for display/enumeration. */
+  originalPath: string;
 }
 
 // ── PakVirtualFS ─────────────────────────────────────────────────────────────
@@ -124,11 +126,11 @@ export class PakVirtualFS {
     if (!dir) return [];
 
     const entries: VfsEntry[] = [];
-    for (const [name, child] of dir.children) {
+    for (const [, child] of dir.children) {
       if (child.kind === "dir") {
-        entries.push({ name, isDirectory: true, size: 0 });
+        entries.push({ name: child.name, isDirectory: true, size: 0 });
       } else {
-        entries.push({ name, isDirectory: false, size: child.decompressedLen });
+        entries.push({ name: child.name, isDirectory: false, size: child.decompressedLen });
       }
     }
     return entries;
@@ -152,13 +154,20 @@ export class PakVirtualFS {
       throw new Error(`File not found in pak: ${virtualPath}`);
     }
 
-    const { pakPath, dataStart, entry } = ref;
+    const { pakPath, entry } = ref;
     const readLen = entry.compressed ? entry.compressedLen : entry.decompressedLen;
 
     const fd = openSync(pakPath, "r");
     try {
       const buf = Buffer.alloc(readLen);
-      const position = dataStart + entry.offset;
+      // FILE-chunk offsets are ABSOLUTE positions in the .pak, not relative to the
+      // DATA payload — adding dataStart double-counted it and shifted every read.
+      // Measured against vanilla data.pak (dataStart 56): reading at
+      // dataStart + offset, 0 of 801 generated .c files began with their
+      // "/*\r\n=====" banner; reading at offset alone, 401 did (the rest simply do
+      // not use that banner). Before this, uncompressed reads returned content
+      // starting 56 bytes into the file — silently truncated, with no error.
+      const position = entry.offset;
       const bytesRead = readSync(fd, buf, 0, readLen, position);
       if (bytesRead < readLen) {
         throw new Error(
@@ -167,7 +176,26 @@ export class PakVirtualFS {
       }
 
       if (entry.compressed) {
-        return inflateRawSync(buf);
+        // Entries are ZLIB streams, not raw deflate: they start with a zlib header
+        // (0x78 0x9C on vanilla data.pak). inflateRawSync therefore failed on every
+        // compressed entry in every pak, with misleading errors like "invalid stored
+        // block lengths" that read like corrupt data rather than the wrong codec.
+        //
+        // zlib is tried first because that is what the game ships; raw deflate stays
+        // as a fallback so any headerless entry still decodes.
+        try {
+          return inflateSync(buf);
+        } catch (zlibErr) {
+          try {
+            return inflateRawSync(buf);
+          } catch {
+            throw new Error(
+              `Cannot decompress "${virtualPath}" from ${pakPath.split(/[\\/]/).pop()}: ` +
+                `tried zlib and raw deflate (${(zlibErr as Error).message}). The entry may use ` +
+                `an unknown compression, or be encrypted.`
+            );
+          }
+        }
       }
       return buf;
     } finally {
@@ -187,9 +215,9 @@ export class PakVirtualFS {
     return ref ? ref.entry.decompressedLen : -1;
   }
 
-  /** Get all file paths in the VFS (for building the asset search index). */
+  /** Get all file paths in the VFS (original casing, for building the asset search index). */
   allFilePaths(): string[] {
-    return Array.from(this.fileIndex.keys());
+    return Array.from(this.fileIndex.values()).map((ref) => ref.originalPath);
   }
 
   /** Get the number of indexed files. */
@@ -213,24 +241,26 @@ export class PakVirtualFS {
 
     for (const [name, child] of source.children) {
       const childPath = pathPrefix ? `${pathPrefix}/${name}` : name;
+      const key = name.toLowerCase();
 
       if (child.kind === "dir") {
         // Merge directories: create in target if missing, then recurse
-        let targetChild = target.children.get(name);
+        let targetChild = target.children.get(key);
         if (!targetChild || targetChild.kind !== "dir") {
           targetChild = { kind: "dir", name, children: new Map() };
-          target.children.set(name, targetChild);
+          target.children.set(key, targetChild);
         }
         count += this.mergeTree(targetChild, child, index, childPath);
       } else {
         // File: add to target and flat index (first pak wins)
         const norm = normalizePath(childPath);
         if (!this.fileIndex.has(norm)) {
-          target.children.set(name, child);
+          target.children.set(key, child);
           this.fileIndex.set(norm, {
             pakPath: index.pakPath,
             dataStart: index.dataStart,
             entry: child,
+            originalPath: childPath,
           });
           count++;
         }
@@ -265,5 +295,6 @@ function normalizePath(p: string): string {
   return p
     .replace(/\\/g, "/")
     .replace(/^\/+|\/+$/g, "")
-    .replace(/\/+/g, "/");
+    .replace(/\/+/g, "/")
+    .toLowerCase();
 }

@@ -96,9 +96,12 @@ export function registerWbEntityDuplicate(
       }
 
       // Step 1: Get the ancestor prefab path from Workbench
+      // Failure is handled explicitly below with a message naming the entity, which
+      // is more useful than the generic catch — hence tolerateErrorStatus.
       const ancestorResp = await client.call<{ status: string; message?: string; ancestorPath?: string }>(
         "EMCP_WB_Prefabs",
-        { action: "getAncestor", entityName }
+        { action: "getAncestor", entityName },
+        { tolerateErrorStatus: true }
       );
 
       if (ancestorResp.status !== "ok" || !ancestorResp.ancestorPath) {
@@ -151,10 +154,13 @@ export function registerWbEntityDuplicate(
 
       // Step 3: Register the file with Workbench → assigns new GUID via .meta
       if (!existsSync(absDestPath + ".meta")) {
+        // The prefab file is already written; a registration failure still leaves the
+        // user with recoverable work, so it reports how to finish manually rather than
+        // throwing. Handled explicitly below, hence tolerateErrorStatus.
         const regResp = await client.call<{ status: string; message?: string }>(
           "EMCP_WB_Resources",
           { action: "register", path: absDestPath, buildRuntime: false },
-          { timeout: 30000 }
+          { timeout: 30000, tolerateErrorStatus: true }
         );
 
         if (regResp.status !== "ok") {
@@ -198,7 +204,8 @@ export function registerWbEntityDuplicate(
       try {
         const posResp = await client.call<{ status: string; value?: string }>(
           "EMCP_WB_ModifyEntity",
-          { action: "getProperty", name: entityName, propertyKey: "coords" }
+          { action: "getProperty", name: entityName, propertyKey: "coords" },
+          { tolerateErrorStatus: true }
         );
         if (posResp.status === "ok" && posResp.value) {
           position = posResp.value;

@@ -45,7 +45,7 @@ Before writing any code, assess the scope of what the user is asking for. Think 
    - What it will look like when tested in-game
 4. Present this plan to the user and **wait for their input** before writing any code. They may want to reorder phases, cut features, or adjust scope.
 5. Once the user approves (or adjusts) the plan, build **only Phase 1**.
-6. After building Phase 1, use **project_write** to create a \`MODPLAN.md\` file in the project root with this exact structure:
+6. After building Phase 1, use **project** (action='write') to create a \`MODPLAN.md\` file in the project root with this exact structure:
 
 \`\`\`markdown
 # Mod Plan: [Mod Name]
@@ -107,13 +107,13 @@ If you cannot find a method via api_search, it probably does not exist. Do NOT w
 Any entity that should be visible in the game world MUST have a **MeshObject** component with its \`Object\` property set to an actual 3D model (\`.xob\` file) from the base game. Without this, the entity will be **completely invisible** — no model, no collision, nothing.
 
 You don't need to create custom models. Just borrow one from the base game that looks reasonable:
-- Use **api_search** or **project_browse** on the base Arma Reforger data to find \`.xob\` paths
+- Use **api_search** or **project** (action='browse') on the base Arma Reforger data to find \`.xob\` paths
 - Example paths (format: \`{GUID}path/to/model.xob\`):
   - Military barrel: \`{5F4C4181F065B447}Assets/Props/Military/Barrels/BarrelGreen_01.xob\`
   - Ammo crate: \`{1E648E8B6B28E837}Assets/Props/Military/AmmoBoxes/AmmoBox_545x39_60rnd.xob\`
   - Medical box: \`{D26ABAE8B017EC4E}Assets/Props/Military/CasualtyBag/CasualtyBag_01.xob\`
 - Pick something that vaguely fits the purpose — a healing station could use a medical box, a terminal could use a radio, etc.
-- After creating a prefab with **prefab_create**, use **project_read** + **project_write** to set the MeshObject \`Object\` property to a real model path
+- After creating a prefab with **prefab** (action='create'), use **project** (action='read') + **project** (action='write') to set the MeshObject \`Object\` property to a real model path
 
 This applies to ALL physical in-game objects: interactive props, spawn points with markers, placed items, vehicles, weapons, etc.
 
@@ -121,14 +121,14 @@ This applies to ALL physical in-game objects: interactive props, spawn points wi
 
 1. Use **api_search** to find the relevant Enfusion API classes AND verify that the methods you plan to use actually exist. Search every class you intend to call methods on. Do this BEFORE writing any scripts.
 
-2. Use **mod_create** to scaffold the addon project. Pick a good name, class prefix, and pattern based on the description.
+2. Use **mod** (action='create') to scaffold the addon project. Pick a good name, class prefix, and pattern based on the description.
 
 3. Use **script_create** for each script:
    - Correct scriptType (component, gamemode, action, modded, etc.)
    - Proper method stubs and description comments
    - ONLY call methods verified via api_search
 
-4. Use **prefab_create** for any prefabs needed (spawn points, entities, game mode, etc.)
+4. Use **prefab** (action='create') for any prefabs needed (spawn points, entities, game mode, etc.)
 
 5. Use **layout_create** for any UI layouts (hud, menu, dialog, list, custom).
 
@@ -136,13 +136,13 @@ This applies to ALL physical in-game objects: interactive props, spawn points wi
 
 7. Use **server_config** for a test server configuration if this is a multiplayer mod.
 
-8. Use **mod_validate** to check for structural issues.
+8. Use **mod** (action='validate') to check for structural issues.
 
 9. **Workbench Setup** (MANDATORY — do not skip, do not tell the user to do this):
    a. **wb_launch** with \`gprojPath\` set to the addon's .gproj file — this copies handler scripts into the mod, skips the launcher, and opens the project in the World Editor with full NET API access
    b. **wb_play** — This compiles ALL scripts (including the handler scripts) and enters game mode. This is the FIRST compilation step and MUST happen before wb_reload will work.
    c. **wb_stop** — Return to the World Editor after verifying the game launched successfully
-   d. If compilation failed (errors in the Workbench console), fix with **project_write**, then use **wb_reload** (target: "scripts") to recompile, and try **wb_play** again
+   d. If compilation failed (errors in the Workbench console), fix with **project** (action='write'), then use **wb_reload** (target: "scripts") to recompile, and try **wb_play** again
    e. **wb_resources** (action: "register") — Register every new prefab, config, and layout file
 
 10. **wb_play** again if needed for further testing. Use **wb_stop** to return to editor.

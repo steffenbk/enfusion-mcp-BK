@@ -11,6 +11,7 @@ import { registerConfigCreate } from "./tools/config-create.js";
 import { registerServerConfig } from "./tools/server-config.js";
 import { registerLayoutCreate } from "./tools/layout-create.js";
 import { registerLayoutRecipe } from "./tools/layout-recipe.js";
+import { registerMenuCreate } from "./tools/menu-create.js";
 import { registerGamemodeScaffold } from "./tools/gamemode-scaffold.js";
 import { registerCreateModPrompt } from "./prompts/create-mod.js";
 import { registerModifyModPrompt } from "./prompts/modify-mod.js";
@@ -28,6 +29,7 @@ import { registerWbEditorTools } from "./tools/wb-editor.js";
 import { registerWbExecuteAction } from "./tools/wb-execute-action.js";
 import { registerWbEntityTools } from "./tools/wb-entities.js";
 import { registerWbComponent } from "./tools/wb-components.js";
+import { registerWbReadProps } from "./tools/wb-read-props.js";
 import { registerWbTerrain } from "./tools/wb-terrain.js";
 import { registerWbLayers } from "./tools/wb-layers.js";
 import { registerWbResources } from "./tools/wb-resources.js";
@@ -72,6 +74,7 @@ export function registerTools(server: McpServer, config: Config): void {
   registerServerConfig(server, config);
   registerLayoutCreate(server, config);
   registerLayoutRecipe(server, config);
+  registerMenuCreate(server, config);
   registerGamemodeScaffold(server, config);
 
   // Workbench Live Control tools (Phase 4)
@@ -88,6 +91,7 @@ export function registerTools(server: McpServer, config: Config): void {
   registerWbExecuteAction(server, wbClient);
   registerWbEntityTools(server, wbClient);
   registerWbComponent(server, wbClient);
+  registerWbReadProps(server, wbClient);
   registerWbTerrain(server, wbClient);
   registerWbLayers(server, wbClient);
   registerWbResources(server, wbClient);

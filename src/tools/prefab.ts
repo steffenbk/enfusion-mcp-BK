@@ -14,8 +14,10 @@ import { recipeLoader } from "../templates/recipe-loader.js";
 import {
   walkChain,
   mergeAncestryComponents,
+  parseTopLevelComponents,
   type AncestorLevel,
 } from "../utils/prefab-ancestry.js";
+import { checkComponentDependencies } from "../utils/component-dependencies.js";
 import { validateFilename } from "../utils/safe-path.js";
 
 // ── Inspect helpers ────────────────────────────────────────────────────────────
@@ -39,6 +41,15 @@ function formatReport(
   }
 
   const merged = mergeAncestryComponents(levels);
+
+  const depWarnings = checkComponentDependencies(
+    Array.from(merged.values()).map(({ comp }) => comp)
+  );
+  if (depWarnings.length > 0) {
+    lines.push("");
+    lines.push("=== Component Dependency Warnings ===");
+    for (const w of depWarnings) lines.push(`  WARNING: ${w}`);
+  }
 
   lines.push("");
   lines.push("=== Merged Components ===");
@@ -78,7 +89,8 @@ export function registerPrefab(server: McpServer, config: Config): void {
         "Create or inspect Arma Reforger prefab (.et) files.\n\n" +
         "action=create: Create a new Entity Template (.et) prefab file for an Arma Reforger mod. Generates a properly structured prefab with components in valid Enfusion text serialization format. " +
         "When parentPrefab is provided, automatically resolves the full ancestor chain and pre-populates inherited components (set includeAncestry=false to skip). " +
-        "IMPORTANT: For 'interactive' and other visible prefabs, the MeshObject component MUST have its 'Object' property set to a base game .xob model path (e.g., '{5F4C4181F065B447}Assets/Props/Military/Barrels/BarrelGreen_01.xob') or the entity will be invisible in-game. Use api_search to find model paths.\n\n" +
+        "IMPORTANT: For 'interactive' and other visible prefabs, the MeshObject component MUST have its 'Object' property set to a base game .xob model path (e.g., '{5F4C4181F065B447}Assets/Props/Military/Barrels/BarrelGreen_01.xob') or the entity will be invisible in-game. Use api_search to find model paths. " +
+        "Both actions flag known hard component-dependency violations (e.g. a DamageManager component with no RplComponent or no HitZone, a WeaponComponent with no RigidBody) as warnings — see arma-knowledge component-anatomy-and-dependencies.md for the full rule set and for implicit (non-checkable) coupling like signal names, collider names, and bone PivotIDs that require manual review.\n\n" +
         "action=inspect: Inspect an Arma Reforger prefab (.et file) and its full inheritance chain. " +
         "Reads each ancestor prefab, parses all components, and returns a fully merged view " +
         "showing which ancestor each component comes from. " +
@@ -244,6 +256,14 @@ export function registerPrefab(server: McpServer, config: Config): void {
             ? "\n\nRequired follow-up:\n" + recipe.postCreateNotes.map((note) => `[ ] ${note}`).join("\n")
             : "";
 
+          // Check flattened component set against known hard dependency rules
+          const depWarnings = checkComponentDependencies(
+            Array.from(parseTopLevelComponents(content).values())
+          );
+          const depWarningsNote = depWarnings.length > 0
+            ? "\n\nComponent dependency warnings:\n" + depWarnings.map((w) => `  WARNING: ${w}`).join("\n")
+            : "";
+
           if (basePath) {
             const subdir = getPrefabSubdirectory(prefabType as PrefabType, variant as string | undefined);
             const filename = getPrefabFilename(name);
@@ -257,7 +277,7 @@ export function registerPrefab(server: McpServer, config: Config): void {
                 content: [
                   {
                     type: "text",
-                    text: `File already exists: ${subdir}/${filename}\n\nGenerated content (not written):\n\n\`\`\`\n${content}\n\`\`\`${checklist}${ancestryNote}`,
+                    text: `File already exists: ${subdir}/${filename}\n\nGenerated content (not written):\n\n\`\`\`\n${content}\n\`\`\`${checklist}${depWarningsNote}${ancestryNote}`,
                   },
                 ],
               };
@@ -270,7 +290,7 @@ export function registerPrefab(server: McpServer, config: Config): void {
               content: [
                 {
                   type: "text",
-                  text: `Prefab created: ${subdir}/${filename}\nType: ${prefabType}${variantTag}\n\n\`\`\`\n${content}\n\`\`\`${checklist}${ancestryNote}`,
+                  text: `Prefab created: ${subdir}/${filename}\nType: ${prefabType}${variantTag}\n\n\`\`\`\n${content}\n\`\`\`${checklist}${depWarningsNote}${ancestryNote}`,
                 },
               ],
             };
@@ -280,7 +300,7 @@ export function registerPrefab(server: McpServer, config: Config): void {
             content: [
               {
                 type: "text",
-                text: `Generated prefab (no project path configured — not written to disk):\n\n\`\`\`\n${content}\n\`\`\`${checklist}\n\nSet ENFUSION_PROJECT_PATH to write files automatically.${ancestryNote}`,
+                text: `Generated prefab (no project path configured — not written to disk):\n\n\`\`\`\n${content}\n\`\`\`${checklist}${depWarningsNote}\n\nSet ENFUSION_PROJECT_PATH to write files automatically.${ancestryNote}`,
               },
             ],
           };

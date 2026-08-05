@@ -31,11 +31,11 @@ YOU ARE FULLY AUTONOMOUS. You have all the tools to modify the mod AND set it up
 
 Follow this workflow — every step is mandatory:
 
-1. **Read the plan** — Use **project_read** to check for a \`MODPLAN.md\` file in the project root.
+1. **Read the plan** — Use **project** (action='read') to check for a \`MODPLAN.md\` file in the project root.
    - If it exists: this is a phased project. Read the plan carefully. It contains the full mod vision, what's been completed, what's pending, architecture notes, class prefixes, and file names. Use this as your primary context. If the user's task matches the next pending phase, execute that phase. If it's a different task, still respect the existing architecture.
    - If it doesn't exist: this is either a simple mod or one created before planning was added. Proceed normally.
 
-2. **Understand the project** — Use **project_browse** and **project_read** to explore:
+2. **Understand the project** — Use **project** (action='browse') and **project** (action='read') to explore:
    - Read the .gproj for addon name and dependencies
    - Read existing scripts, prefabs, configs, and layouts
    - Identify the class prefix convention in use
@@ -47,26 +47,26 @@ Follow this workflow — every step is mandatory:
 4. **Plan the changes** — Determine what to modify, create, or remove. For phased projects, verify your plan aligns with the MODPLAN. Only use API methods verified via api_search.
 
 5. **Implement** — Make all modifications:
-   - Existing files: **project_read** then **project_write**
+   - Existing files: **project** (action='read') then **project** (action='write')
    - New scripts: **script_create** (match existing prefix)
-   - New prefabs: **prefab_create**
+   - New prefabs: **prefab** (action='create')
    - New configs: **config_create**
    - New layouts: **layout_create**
 
-6. **Validate** — Use **mod_validate** to check for issues.
+6. **Validate** — Use **mod** (action='validate') to check for issues.
 
 7. **Workbench Setup** (MANDATORY — do not skip, do not tell the user to do this):
    a. **wb_launch** with \`gprojPath\` set to the addon's .gproj file — this copies handler scripts into the mod, skips the launcher, and opens the project in the World Editor with full NET API access
    b. **wb_play** — This compiles ALL scripts (including the handler scripts) and enters game mode. This is the FIRST compilation step and MUST happen before wb_reload will work.
    c. **wb_stop** — Return to the World Editor after verifying the game launched successfully
-   d. If compilation failed, fix with **project_write**, then use **wb_reload** (target: "scripts") to recompile, and try **wb_play** again
+   d. If compilation failed, fix with **project** (action='write'), then use **wb_reload** (target: "scripts") to recompile, and try **wb_play** again
    e. **wb_resources** (action: "register") — Register any new prefabs, configs, or layouts
 
 8. **wb_play** again if needed for further testing. Use **wb_stop** to return to editor.
 
 9. **wb_cleanup** with the addon's root directory path — Remove the temporary handler scripts before the user publishes. NEVER skip this step.
 
-10. **Update the plan** — If a \`MODPLAN.md\` exists, use **project_read** then **project_write** to update it:
+10. **Update the plan** — If a \`MODPLAN.md\` exists, use **project** (action='read') then **project** (action='write') to update it:
    - Mark completed phases as \`COMPLETE\` with a list of files created/modified
    - Keep pending phases unchanged (unless the user asked to adjust them)
    - Add any new architecture notes or design decisions made during this session
