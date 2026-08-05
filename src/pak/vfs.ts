@@ -154,13 +154,20 @@ export class PakVirtualFS {
       throw new Error(`File not found in pak: ${virtualPath}`);
     }
 
-    const { pakPath, dataStart, entry } = ref;
+    const { pakPath, entry } = ref;
     const readLen = entry.compressed ? entry.compressedLen : entry.decompressedLen;
 
     const fd = openSync(pakPath, "r");
     try {
       const buf = Buffer.alloc(readLen);
-      const position = dataStart + entry.offset;
+      // FILE-chunk offsets are ABSOLUTE positions in the .pak, not relative to the
+      // DATA payload — adding dataStart double-counted it and shifted every read.
+      // Measured against vanilla data.pak (dataStart 56): reading at
+      // dataStart + offset, 0 of 801 generated .c files began with their
+      // "/*\r\n=====" banner; reading at offset alone, 401 did (the rest simply do
+      // not use that banner). Before this, uncompressed reads returned content
+      // starting 56 bytes into the file — silently truncated, with no error.
+      const position = entry.offset;
       const bytesRead = readSync(fd, buf, 0, readLen, position);
       if (bytesRead < readLen) {
         throw new Error(
@@ -169,7 +176,20 @@ export class PakVirtualFS {
       }
 
       if (entry.compressed) {
-        return inflateRawSync(buf);
+        try {
+          return inflateRawSync(buf);
+        } catch {
+          // Every compressed entry in the vanilla paks fails to inflate at either
+          // candidate offset, across all file types — so the compressed payload is
+          // not raw deflate and its framing is not yet known. Surfacing that plainly
+          // beats a bare zlib "invalid block type", which reads like corruption.
+          throw new Error(
+            `Cannot decompress "${virtualPath}" from ${pakPath.split(/[\\/]/).pop()}: ` +
+              `its compressed format is not supported by this reader (only stored/uncompressed ` +
+              `pak entries can be read). Use the extracted game data instead — set ` +
+              `ENFUSION_EXTRACTED_PATH, or read the file from an unpacked dump.`
+          );
+        }
       }
       return buf;
     } finally {

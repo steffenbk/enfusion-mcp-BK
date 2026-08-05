@@ -13,7 +13,17 @@ function buildTestPak(files: Array<{ path: string; content: string; compress: bo
   interface TreeDir { name: string; children: Map<string, TreeDir | TreeFile> }
 
   const dataChunks: Buffer[] = [];
-  let dataOffset = 0;
+  // FILE-chunk offsets are ABSOLUTE positions in the .pak, so they are biased by
+  // the position where the DATA payload begins. This fixture previously started at
+  // 0 (offsets relative to the payload), which matched the old reader but not real
+  // paks — verified against vanilla data.pak, where reading at dataStart + offset
+  // returned content shifted 56 bytes into every file.
+  //
+  // 56 = FORM(4) + size(4) + PAC1(4) + HEAD(4) + size(4) + headPayload(0x1c) +
+  //      DATA(4) + size(4), i.e. the same layout this builder emits below, and the
+  //      same dataStart the real vanilla paks report.
+  const DATA_PAYLOAD_START = 56;
+  let dataOffset = DATA_PAYLOAD_START;
   const root: TreeDir = { name: "", children: new Map() };
 
   for (const file of files) {
