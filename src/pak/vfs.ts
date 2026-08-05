@@ -1,6 +1,6 @@
 import { openSync, readSync, closeSync, readdirSync, existsSync } from "node:fs";
 import { join, extname } from "node:path";
-import { inflateRawSync } from "node:zlib";
+import { inflateRawSync, inflateSync } from "node:zlib";
 import { parsePakIndex, type PakIndex, type PakDirEntry, type PakFileEntry } from "./reader.js";
 import { logger } from "../utils/logger.js";
 
@@ -176,19 +176,25 @@ export class PakVirtualFS {
       }
 
       if (entry.compressed) {
+        // Entries are ZLIB streams, not raw deflate: they start with a zlib header
+        // (0x78 0x9C on vanilla data.pak). inflateRawSync therefore failed on every
+        // compressed entry in every pak, with misleading errors like "invalid stored
+        // block lengths" that read like corrupt data rather than the wrong codec.
+        //
+        // zlib is tried first because that is what the game ships; raw deflate stays
+        // as a fallback so any headerless entry still decodes.
         try {
-          return inflateRawSync(buf);
-        } catch {
-          // Every compressed entry in the vanilla paks fails to inflate at either
-          // candidate offset, across all file types — so the compressed payload is
-          // not raw deflate and its framing is not yet known. Surfacing that plainly
-          // beats a bare zlib "invalid block type", which reads like corruption.
-          throw new Error(
-            `Cannot decompress "${virtualPath}" from ${pakPath.split(/[\\/]/).pop()}: ` +
-              `its compressed format is not supported by this reader (only stored/uncompressed ` +
-              `pak entries can be read). Use the extracted game data instead — set ` +
-              `ENFUSION_EXTRACTED_PATH, or read the file from an unpacked dump.`
-          );
+          return inflateSync(buf);
+        } catch (zlibErr) {
+          try {
+            return inflateRawSync(buf);
+          } catch {
+            throw new Error(
+              `Cannot decompress "${virtualPath}" from ${pakPath.split(/[\\/]/).pop()}: ` +
+                `tried zlib and raw deflate (${(zlibErr as Error).message}). The entry may use ` +
+                `an unknown compression, or be encrypted.`
+            );
+          }
         }
       }
       return buf;
