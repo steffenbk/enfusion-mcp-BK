@@ -37,6 +37,27 @@ const PREFAB_SEEDING_ZONE   = "{801DADF0D6C316B9}PrefabsEditable/RestrictionZone
 // Seeding-only ambient patrol (fast respawn, stops once seeding ends)
 const PREFAB_PATROL_SEEDING = "{0E66F798F84EEB58}Prefabs/Systems/AmbientPatrol/IRON_AmbientPatrolSpawnpoint_Base_Seeding.et";
 
+// NOTE ON PROPERTY NAMES — verified 2026-08-04 against the full vanilla script set
+// (all 6,495 .c files inside the base game .paks, read via the pak VFS).
+//
+// These properties this generator writes do NOT exist in vanilla Arma Reforger:
+//   m_fRadioAntennaServiceRange   m_bHideBasesOutsideRadioRange
+//   m_RequiredGroupTypes          m_bExcludeFromRandomization
+//   m_aCaptureAndHoldAreaNames    m_bRequiresCaptureAndHoldAreas
+//   m_iAreaThreshold              m_bServerSeedingEnabled
+//   m_iServerSeedingThreshold     m_bAutoSizeToHQ
+//   m_bRespawnOnlyDuringSeeding   m_iDistanceToHQ
+//
+// They are conventions of the Conflict MOD ecosystem (ConflictEscalation / IRON /
+// SeizeAMPSecure family) — m_fRadioAntennaServiceRange, for instance, is used in
+// SeizeEveronWestCoast's Base.layer. On a stock SCR_CampaignMilitaryBaseComponent
+// the engine ignores them silently.
+//
+// Kept because that ecosystem is what these scenarios are built for. Do not "fix"
+// them against the vanilla API — they are absent from it by design. Control check:
+// m_iRegularSuppliesIncome and m_bIsControlPoint ARE vanilla, both declared in
+// scripts/Game/Components/Locations/SCR_CampaignMilitaryBaseComponent.c.
+
 // Component GUIDs inside ConflictMilitaryBase (from mod analysis)
 const CID_SEIZING   = "{5C66967235FBEEA3}";
 const CID_RADIO     = "{5C669673C2A82A2B}";
