@@ -113,9 +113,37 @@ export function loadConfig(): Config {
     config.defaultMod = process.env.ENFUSION_DEFAULT_MOD;
   }
 
-  // Auto-derive gamePath from workbenchPath if not explicitly set
+  // Auto-derive gamePath from workbenchPath if not explicitly set.
+  //
+  // ENFUSION_WORKBENCH_PATH is accepted pointing either at the tools ROOT
+  // ("...\Arma Reforger Tools") or at its Workbench SUBDIRECTORY
+  // ("...\Arma Reforger Tools\Workbench") — findWorkbenchExe() deliberately
+  // supports both. A single fixed "../Arma Reforger" only works for the first:
+  // given the subdirectory form it resolves to
+  // "...\Arma Reforger Tools\Arma Reforger", which does not exist, and every
+  // base-game tool (asset_search, game_read, game_browse, game_duplicate) then
+  // silently searched a missing directory instead of reporting a bad path.
+  //
+  // So try both shapes and take the one that is actually on disk. If neither is,
+  // keep the one-level guess and warn — that keeps the previous behaviour for
+  // anyone relying on it while making the misconfiguration visible.
   if (!process.env.ENFUSION_GAME_PATH && config.workbenchPath !== DEFAULT_WORKBENCH_PATH) {
-    config.gamePath = resolve(config.workbenchPath, "..", "Arma Reforger");
+    const candidates = [
+      resolve(config.workbenchPath, "..", "Arma Reforger"),
+      resolve(config.workbenchPath, "..", "..", "Arma Reforger"),
+    ];
+    const resolved = candidates.find((p) => existsSync(p));
+    if (resolved) {
+      config.gamePath = resolved;
+    } else {
+      config.gamePath = candidates[0];
+      logger.warn(
+        `Could not locate the Arma Reforger game directory from ENFUSION_WORKBENCH_PATH ` +
+          `("${config.workbenchPath}"). Tried: ${candidates.join(" and ")}. ` +
+          `Base game tools (asset_search, game_read, game_browse) will not find anything — ` +
+          `set ENFUSION_GAME_PATH explicitly.`
+      );
+    }
   }
 
   // Auto-derive extractedPath from the conventional location beside the addons
