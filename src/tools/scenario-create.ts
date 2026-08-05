@@ -132,7 +132,12 @@ export function registerScenarioCreate(server: McpServer, config: Config): void 
           .describe(
             "Enable low-population seeding mode: restricts players to MOB areas via a restriction zone on each MOB " +
             "and spawns fast-respawning AI patrols (AmbientPatrols_SEEDING.layer) until seedingThreshold players connect. " +
-            "One-way transition — never re-activates once crossed. Requires at least one MOB base."
+            "One-way transition — never re-activates once crossed. Requires at least one MOB base. " +
+            "REQUIRES A THIRD-PARTY MOD: seeding is not vanilla. This emits prefab references " +
+            "(E_SeedingRestrictionZoneBase.et, IRON_AmbientPatrolSpawnpoint_Base_Seeding.et) and gamemode properties " +
+            "(m_bServerSeedingEnabled, m_iServerSeedingThreshold) that do not exist in the base game — they come from the " +
+            "ConflictEscalation / IRON seeding mod. Without it the references fail to resolve and the properties are " +
+            "silently ignored. Only enable if the user has that dependency or will add the properties via a modded class."
           ),
         seedingThreshold: z
           .number()
@@ -270,6 +275,23 @@ export function registerScenarioCreate(server: McpServer, config: Config): void 
                 `Factions: ${factions.join(", ")}`,
                 `Players: ${playerCount ?? 40}`,
                 ``,
+                ...(seedingEnabled
+                  ? [
+                      `WARNING — seeding requires a third-party dependency:`,
+                      `  Seeding is NOT vanilla. The generated files reference two prefabs that do not`,
+                      `  exist in the base game (E_SeedingRestrictionZoneBase.et,`,
+                      `  IRON_AmbientPatrolSpawnpoint_Base_Seeding.et) and set gamemode properties`,
+                      `  (m_bServerSeedingEnabled, m_iServerSeedingThreshold) that vanilla`,
+                      `  SCR_GameModeCampaign does not define.`,
+                      `  Without the ConflictEscalation / IRON seeding mod loaded, the prefab references`,
+                      `  fail to resolve and the properties are silently ignored — the scenario will`,
+                      `  otherwise load, but seeding will simply not happen.`,
+                      `  To use it: load that mod as a dependency, or add the two properties yourself`,
+                      `  via 'modded class SCR_GameModeCampaign' and supply your own restriction-zone`,
+                      `  and seeding-patrol prefabs.`,
+                      ``,
+                    ]
+                  : []),
                 `Next steps:`,
                 `1. Open Worlds/${scenarioName}.ent in Workbench.`,
                 `2. Select all base entities and use "Snap to Terrain" to fix Y positions.`,

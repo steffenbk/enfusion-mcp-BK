@@ -420,7 +420,9 @@ describe("generateConflictScenario", () => {
 
     it("defaults relay radio range to 3000", () => {
       const { basesLayer } = generateConflictScenario(opts);
-      expect(basesLayer).toContain("m_fTransmittingRange 3000");
+      // Vanilla writes the quoted multi-word key (CampaignMobileAssembly*.et);
+      // m_fTransmittingRange was silently ignored by the engine.
+      expect(basesLayer).toContain('"Transmitting Range" 3000');
     });
 
     it("respects an explicit radioRange override", () => {
@@ -429,7 +431,7 @@ describe("generateConflictScenario", () => {
         bases: [...MINIMAL_OPTS.bases, { name: "RelayTower", position: "1500 0 3000", faction: "US", type: "relay" as const, radioRange: 4500 }],
       };
       const { basesLayer } = generateConflictScenario(customOpts);
-      expect(basesLayer).toContain("m_fTransmittingRange 4500");
+      expect(basesLayer).toContain('"Transmitting Range" 4500');
     });
 
     it("excludes relay bases from the mission base whitelist", () => {

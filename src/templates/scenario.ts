@@ -297,7 +297,13 @@ function buildBasesLayer(opts: ConflictScenarioOptions): string {
       lines.push(`   SCR_CoverageRadioComponent "${CID_RADIO}" {`);
       lines.push(`    Transceivers {`);
       lines.push(`     RelayTransceiver "${CID_RELAY_TX}" {`);
-      lines.push(`      m_fTransmittingRange ${radioRange}`);
+      // "Transmitting Range" — a quoted multi-word key, NOT m_fTransmittingRange.
+      // RelayTransceiver is a native ScriptAndConfig whose range is exposed via
+      // GetRange()/SetRange() protos, so there is no m_f* script member to write.
+      // Verified against vanilla: Prefabs/MP/Campaign/Assets/CampaignMobileAssembly{East,West}.et
+      // both write `"Transmitting Range" 2000`. The old name was silently ignored,
+      // so every generated relay tower fell back to its default range.
+      lines.push(`      "Transmitting Range" ${radioRange}`);
       lines.push(`     }`);
       lines.push(`    }`);
       lines.push(`   }`);
