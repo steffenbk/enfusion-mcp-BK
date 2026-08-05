@@ -762,8 +762,7 @@ export function registerAnimationGraph(server: McpServer, config: Config): void 
         hasSteeringLinkage: z.boolean().default(false).describe("(author/setup) Add steering axis IK chains."),
         seatTypes: z.array(z.enum(["driver", "gunner", "commander", "passenger"])).default(["driver"]).describe("(author/setup) Seat types for the vehicle."),
         dialList: z.array(z.string()).default([]).describe("(author/setup) Variable names to use as dials (e.g. ['Engine_RPM', 'SPEED'])."),
-        outputPath: z.string().optional().describe("(author/setup) Destination folder within mod project (e.g. 'Assets/Vehicles/MyTruck/workspaces')."),
-        modName: z.string().optional().describe("(author/setup) Addon folder name. Uses default if omitted."),
+        outputPath: z.string().optional().describe("(author/setup) Destination folder within mod project (e.g. 'Assets/Vehicles/MyTruck/workspaces'). Defaults to 'Assets/Vehicles/<vehicleName>/workspaces'."),
         projectPath: z.string().optional().describe("(author/inspect/setup) Mod project root. Uses default if omitted."),
 
         // ── inspect params ──
@@ -794,6 +793,14 @@ export function registerAnimationGraph(server: McpServer, config: Config): void 
       },
     },
     async (opts) => {
+      // outputPath is optional in the schema but interpolated straight into the
+      // written path — omitting it used to produce a directory literally named
+      // "undefined" and still report success. Resolve it once, here, so every
+      // write path (author and setup) gets the same sane default.
+      if (!opts.outputPath && opts.vehicleName) {
+        opts.outputPath = `Assets/Vehicles/${opts.vehicleName}/workspaces`;
+      }
+
       // ── author handler ──────────────────────────────────────────────────────
       if (opts.action === "author") {
         const basePath = opts.projectPath || config.projectPath;

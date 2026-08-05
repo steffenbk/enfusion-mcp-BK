@@ -124,7 +124,7 @@ class EMCP_WB_Resources : NetApiHandler
 			// whose exact callback method signature is not publicly documented.
 			// Until the callback pattern is confirmed at runtime, return a helpful error.
 			resp.status = "error";
-			resp.message = "browse action not yet implemented: Workbench.SearchResources requires a WorkbenchSearchResourcesCallback subclass. Use wb_open_resource or project_browse instead.";
+			resp.message = "browse action not yet implemented: Workbench.SearchResources requires a WorkbenchSearchResourcesCallback subclass. Use asset_search to find resources, or project (action='browse') to list files on disk.";
 		}
 		else
 		{

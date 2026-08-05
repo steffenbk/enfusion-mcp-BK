@@ -267,10 +267,13 @@ export function registerGameDuplicate(
       // Register with Workbench to assign a new GUID (if requested)
       if (register) {
         try {
+          // The copy has already succeeded by this point — registration is a bonus
+          // step, so its failure is reported as a warning rather than failing the
+          // whole duplicate. Handled explicitly below, hence tolerateErrorStatus.
           const regResp = await client.call<{ status: string; message?: string }>(
             "EMCP_WB_Resources",
             { action: "register", path: absDestPath, buildRuntime: false },
-            { timeout: 30000 }
+            { timeout: 30000, tolerateErrorStatus: true }
           );
 
           const guidNote = regResp.status === "ok"
