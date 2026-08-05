@@ -69,6 +69,17 @@ interface Token {
   pos: number;
 }
 
+/**
+ * A bare token that is purely a number — the elements of a numeric tuple such as
+ * `coords 0 0 0` or `Color 1 0.5 0.25 1`. Deliberately strict: a property KEY is
+ * always an identifier starting with a letter, so it can never match this, which
+ * is what lets the tuple scan stop at the next key.
+ */
+const NUMERIC_TOKEN = /^-?\d+(\.\d+)?$/;
+
+/** A bare `{HEXGUID}` string — the shape used in dependency/value lists. */
+const GUID_VALUE = /^\{[0-9A-Fa-f]+\}$/;
+
 function tokenize(input: string): Token[] {
   const tokens: Token[] = [];
   let i = 0;
@@ -339,14 +350,42 @@ class Parser {
               const child = this.parseNode();
               node.children.push(child);
             } else {
-              // Ident Ident "string" without brace — unusual
-              // Treat first ident as key, rest as value
-              this.pos = saved2;
+              // Ident Ident "string" without brace, e.g.
+              //   ChannelFrequency 48000
+              //   "Transmitting Range" 2000
+              // The first two tokens are a complete key/value pair; the string
+              // belongs to the NEXT property and must be re-read.
+              //
+              // Rewinding to saved2 (which sits *before* ident2) replayed the value
+              // token, so `48000` was consumed twice and emitted a bogus
+              // `"48000" "Transmitting Range"` property, corrupting every following
+              // pair in the block. saved3 is the position just before the string,
+              // which is what this branch actually wants.
+              this.pos = saved3;
               node.properties.push({ key: identTok.value, value: ident2.value });
             }
           } else {
-            // Key BareValue — simple property with unquoted value
-            node.properties.push({ key: identTok.value, value: ident2.value });
+            // Key BareValue — simple property with unquoted value.
+            //
+            // Numeric tuples are written as a run of bare numbers after the key
+            // (`coords 0 0 0`, `Color 1 0.5 0.25 1`, `Anchor 0 0 1 1`). Taking only
+            // the first token silently dropped the rest — `coords 0 0 0` parsed as
+            // `coords 0`, losing Y and Z, and no real vanilla .et could round-trip.
+            // Greedily consume the whole numeric run: the next key is an identifier
+            // that does not look numeric, so it terminates the run naturally.
+            let value = ident2.value;
+            if (NUMERIC_TOKEN.test(value)) {
+              let lookahead = this.peek();
+              while (
+                lookahead &&
+                lookahead.type === TokenType.Identifier &&
+                NUMERIC_TOKEN.test(lookahead.value)
+              ) {
+                value += ` ${this.advance().value}`;
+                lookahead = this.peek();
+              }
+            }
+            node.properties.push({ key: identTok.value, value });
           }
         } else if (after.type === TokenType.OpenBrace) {
           // TypeName { ... } — child node with no ID
@@ -373,6 +412,36 @@ class Parser {
           if (this.pos > 0) this.pos--;
           const child = this.parseNode();
           node.children.push(child);
+        } else if (after && after.type === TokenType.Identifier) {
+          // "Quoted Key" bareValue — a multi-word property key. The game writes many
+          // of these: `"Transmitting Range" 2000`, `"Blend Mode" Additive`,
+          // `"Exact Font Size" 21`. Previously both tokens were pushed as loose
+          // values, so the property was lost and the file could not round-trip.
+          // Unambiguous: a standalone value list never has a bare word after it.
+          let value = this.advance().value;
+          if (NUMERIC_TOKEN.test(value)) {
+            let lookahead = this.peek();
+            while (
+              lookahead &&
+              lookahead.type === TokenType.Identifier &&
+              NUMERIC_TOKEN.test(lookahead.value)
+            ) {
+              value += ` ${this.advance().value}`;
+              lookahead = this.peek();
+            }
+          }
+          node.properties.push({ key: strTok.value, value, quoted: !NUMERIC_TOKEN.test(value) });
+        } else if (
+          after &&
+          after.type === TokenType.String &&
+          /\s/.test(strTok.value) &&
+          !GUID_VALUE.test(strTok.value)
+        ) {
+          // "Quoted Key" "quoted value" — e.g. `"Mask Mode" "Include Below"`.
+          // Genuinely ambiguous with a list of quoted values, so it is resolved
+          // narrowly: only a multi-word, non-GUID string is treated as a key. That
+          // keeps `Dependencies { "{GUID}" "{GUID}" }` parsing as a value list.
+          node.properties.push({ key: strTok.value, value: this.advance().value, quoted: true });
         } else {
           node.values.push(strTok.value);
         }
