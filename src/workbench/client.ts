@@ -136,7 +136,32 @@ export class WorkbenchClient {
             // were cleaned up but Workbench kept running.
             logger.info(`Handler scripts not loaded in Workbench, recovering...`);
             await this.recoverMissingHandlers();
-            return this.finishCall(await this.rawCall<T>(apiFunc, params, options), options);
+            try {
+              return this.finishCall(await this.rawCall<T>(apiFunc, params, options), options);
+            } catch (retryErr) {
+              // Still unknown after a successful reinstall + recompile. Empirically
+              // this means the handler class is new since Workbench started:
+              // Workbench builds its NET API dispatch table at process start, so a
+              // live recompile updates existing handler bodies but never registers a
+              // new class. It is easy to misdiagnose because the file compiles
+              // cleanly and every previously-registered handler keeps working.
+              if (
+                retryErr instanceof WorkbenchError &&
+                (retryErr.message.includes("Undefined API func") ||
+                  retryErr.message.includes("not existing Net API function"))
+              ) {
+                throw new WorkbenchError(
+                  `Workbench does not expose "${apiFunc}" even after reinstalling and ` +
+                    `recompiling the handler scripts. Workbench registers NET API handlers ` +
+                    `when the process starts, so a handler class that is new since Workbench ` +
+                    `launched will not appear until Workbench is restarted — the script ` +
+                    `compiles cleanly and the other handlers keep working, so this does not ` +
+                    `look like a registration problem. Restart Workbench, then retry.`,
+                  "API_ERROR"
+                );
+              }
+              throw retryErr;
+            }
           }
         }
       }
@@ -239,6 +264,37 @@ export class WorkbenchClient {
    * Deletes Scripts/WorkbenchGame/EnfusionMCP/ from the mod.
    * Safe to call even if scripts were never injected.
    */
+  /**
+   * Every addon under the project path that currently has handler scripts installed.
+   *
+   * Handlers get injected into whichever mod is open at the time, so over many
+   * sessions they accumulate across unrelated addons — and each copy ships with the
+   * user's mod if they publish it. Enumerating them is what makes a bulk cleanup
+   * possible; `diagnose()` reports the same list.
+   *
+   * Pure filesystem scan: no NET API call, safe to run with Workbench closed.
+   */
+  listInstalledHandlerMods(): Array<{ modDir: string; handlerDir: string; fileCount: number }> {
+    const installed: Array<{ modDir: string; handlerDir: string; fileCount: number }> = [];
+    if (!this.config?.projectPath || !existsSync(this.config.projectPath)) return installed;
+
+    try {
+      for (const entry of readdirSync(this.config.projectPath, { withFileTypes: true })) {
+        if (!entry.isDirectory()) continue;
+        if (entry.name === HANDLER_FOLDER) continue; // standalone addon, reported separately
+        const modDir = join(this.config.projectPath, entry.name);
+        const handlerDir = join(modDir, "Scripts", "WorkbenchGame", HANDLER_FOLDER);
+        if (existsSync(handlerDir)) {
+          const fileCount = readdirSync(handlerDir).filter((f) => f.endsWith(".c")).length;
+          installed.push({ modDir, handlerDir, fileCount });
+        }
+      }
+    } catch {
+      /* unreadable project dir — report what we have */
+    }
+    return installed;
+  }
+
   cleanupHandlerScripts(modDir: string): boolean {
     const handlerDir = resolve(modDir, "Scripts", "WorkbenchGame", HANDLER_FOLDER);
     logger.info(`Checking for handler scripts at: ${handlerDir}`);
@@ -310,20 +366,7 @@ export class WorkbenchClient {
     };
 
     // Scan project path for mods that have handler scripts installed
-    const installedMods: DiagnosticReport["installedMods"] = [];
-    if (this.config?.projectPath && existsSync(this.config.projectPath)) {
-      try {
-        for (const entry of readdirSync(this.config.projectPath, { withFileTypes: true })) {
-          if (!entry.isDirectory()) continue;
-          if (entry.name === HANDLER_FOLDER) continue; // standalone, covered above
-          const handlerDir = join(this.config.projectPath, entry.name, "Scripts", "WorkbenchGame", HANDLER_FOLDER);
-          if (existsSync(handlerDir)) {
-            const fileCount = readdirSync(handlerDir).filter((f) => f.endsWith(".c")).length;
-            installedMods.push({ modDir: join(this.config.projectPath, entry.name), handlerDir, fileCount });
-          }
-        }
-      } catch { /* ignore */ }
-    }
+    const installedMods: DiagnosticReport["installedMods"] = this.listInstalledHandlerMods();
 
     // --- NET API probe ---
     let netApi: DiagnosticReport["netApi"] = "refused";
@@ -428,8 +471,14 @@ export class WorkbenchClient {
 
     // Wait for Workbench to detect the new files and recompile scripts.
     // Workbench watches its script directories and recompiles automatically.
-    // Poll with our custom EMCP_WB_Ping handler — it only succeeds once
-    // the handler scripts are compiled and registered.
+    //
+    // The probe is EMCP_WB_Ping, which proves only that SOME handler responds.
+    // That is the right signal for the case this recovery exists for — handlers
+    // missing entirely, so Ping is missing too. It is NOT proof that the handler
+    // the caller wanted is registered: if Ping was already registered and only a
+    // NEWLY ADDED handler class is missing, this returns success on the first poll
+    // and the caller's retry then fails anyway. call() detects that and explains it
+    // rather than surfacing a bare "Undefined API func".
     logger.info("Handler scripts installed. Waiting for Workbench to recompile...");
     const deadline = Date.now() + HANDLER_RECOMPILE_TIMEOUT_MS;
     while (Date.now() < deadline) {
