@@ -1,11 +1,20 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { relative } from "node:path";
-import { readFileSync, existsSync, writeFileSync, mkdirSync } from "node:fs";
+import { relative, extname } from "node:path";
+import { readFileSync, existsSync, writeFileSync, mkdirSync, statSync } from "node:fs";
 import { dirname } from "node:path";
 import type { Config } from "../config.js";
 import { validateProjectPath } from "../utils/safe-path.js";
 import { listDirectory, formatSize } from "../utils/dir-listing.js";
+
+/** Extensions safe to read as text. Mirrors game_read's list. */
+const TEXT_EXTENSIONS = new Set([
+  ".c", ".et", ".conf", ".gproj", ".ent", ".layer", ".st",
+  ".layout", ".txt", ".json", ".xml", ".csv", ".md",
+]);
+
+/** Upper bound on a single read, matching game_read's 500 KB ceiling. */
+const MAX_READ_BYTES = 512_000;
 
 export function registerProject(server: McpServer, config: Config): void {
   server.registerTool(
@@ -121,6 +130,31 @@ export function registerProject(server: McpServer, config: Config): void {
           if (!existsSync(fullPath)) {
             return {
               content: [{ type: "text", text: `File not found: ${inputPath}` }],
+              isError: true,
+            };
+          }
+
+          // Guard binary and oversized files, matching game_read. Without this,
+          // reading a .xob/.edds returned megabytes of mojibake straight into
+          // context, and a large .c file could swamp it outright.
+          const ext = extname(fullPath).toLowerCase();
+          if (!TEXT_EXTENSIONS.has(ext)) {
+            return {
+              content: [{
+                type: "text",
+                text: `Binary or unsupported file type: ${inputPath} (${ext || "no extension"}). Only text files can be read (${[...TEXT_EXTENSIONS].join(", ")}).`,
+              }],
+              isError: true,
+            };
+          }
+
+          const size = statSync(fullPath).size;
+          if (size > MAX_READ_BYTES) {
+            return {
+              content: [{
+                type: "text",
+                text: `File too large: ${inputPath} is ${size.toLocaleString()} bytes (limit ${MAX_READ_BYTES.toLocaleString()}). Read it in parts with a more specific path, or open it directly.`,
+              }],
               isError: true,
             };
           }

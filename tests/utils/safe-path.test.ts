@@ -107,3 +107,50 @@ describe("safePath", () => {
     expect(() => safePath(base, "..")).toThrow("..");
   });
 });
+
+// ---------------------------------------------------------------------------
+// Windows path-normalisation hazards.
+//
+// These stay INSIDE the project, so a containment check alone passes them — but
+// they do not address the file the caller named.
+// ---------------------------------------------------------------------------
+describe("windows normalisation hazards", () => {
+  const BASE = process.platform === "win32" ? "C:\proj" : "/proj";
+
+  it("rejects a filename ending in a dot (Windows strips it, defeating overwrite guards)", () => {
+    // "foo.et." lands on "foo.et", so an existsSync check on the dotted name
+    // reports no collision and the real file is clobbered.
+    expect(() => validateFilename("foo.et.")).toThrow(/dot or space/);
+  });
+
+  it("rejects a filename ending in a space", () => {
+    expect(() => validateFilename("foo.et ")).toThrow(/dot or space/);
+  });
+
+  it("still accepts ordinary names with dots inside", () => {
+    expect(() => validateFilename("My.Prefab.et")).not.toThrow();
+    expect(() => validateFilename("name_1")).not.toThrow();
+  });
+
+  it("rejects a reserved device name nested in a sub-path", () => {
+    // Contained, but on Windows writes to the null device and the data vanishes.
+    expect(() => validateProjectPath(BASE, "sub/NUL.txt")).toThrow(/reserved device/i);
+    expect(() => validateProjectPath(BASE, "sub/CON")).toThrow(/reserved device/i);
+    expect(() => validateProjectPath(BASE, "a/b/COM1.c")).toThrow(/reserved device/i);
+  });
+
+  it("rejects a sub-path segment ending in a dot or space", () => {
+    expect(() => validateProjectPath(BASE, "sub./file.et")).toThrow(/dot or space/);
+    expect(() => validateProjectPath(BASE, "sub/file.et.")).toThrow(/dot or space/);
+  });
+
+  it("still accepts a normal nested project path", () => {
+    expect(() => validateProjectPath(BASE, "Scripts/Game/UI/Menu.c")).not.toThrow();
+    expect(() => validateProjectPath(BASE, "./Assets/My.Vehicle/file.et")).not.toThrow();
+  });
+
+  it("keeps blocking real traversal", () => {
+    expect(() => validateProjectPath(BASE, "../outside.txt")).toThrow();
+    expect(() => validateProjectPath(BASE, "sub/../../outside.txt")).toThrow();
+  });
+});

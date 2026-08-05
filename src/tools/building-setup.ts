@@ -1,7 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { randomBytes } from "node:crypto";
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { resolve, join } from "node:path";
 import type { Config } from "../config.js";
 
@@ -196,6 +196,9 @@ export function registerBuildingSetup(server: McpServer, config: Config): void {
 
       const partPrefabPaths = new Map<string, string>();
       const createdFiles: string[] = [];
+      // Existing files are never overwritten; they are reported so the caller knows
+      // the generated set is incomplete rather than assuming a clean write.
+      const skipped: string[] = [];
 
       // Create part prefabs
       for (const part of manifest.parts) {
@@ -216,9 +219,17 @@ export function registerBuildingSetup(server: McpServer, config: Config): void {
         lines.push(`[Part] ${part.name} -> ${slotType}${phaseInfo}`);
 
         if (!dryRun) {
-          mkdirSync(partDir, { recursive: true });
-          writeFileSync(partPath, partContent, "utf-8");
-          createdFiles.push(partPath);
+          // Every other generator in this repo refuses rather than overwriting
+          // (script_create, config_create, layout_create, menu_create, prefab, ...).
+          // This one wrote N part prefabs plus the structure unconditionally, so a
+          // re-run silently destroyed hand-edits made in Workbench since the export.
+          if (existsSync(partPath)) {
+            skipped.push(partPath);
+          } else {
+            mkdirSync(partDir, { recursive: true });
+            writeFileSync(partPath, partContent, "utf-8");
+            createdFiles.push(partPath);
+          }
         }
       }
 
@@ -235,9 +246,13 @@ export function registerBuildingSetup(server: McpServer, config: Config): void {
       lines.push(`[Building] ${manifest.building_name}.et`);
 
       if (!dryRun) {
-        mkdirSync(outDir, { recursive: true });
-        writeFileSync(buildingPath, buildingContent, "utf-8");
-        createdFiles.push(buildingPath);
+        if (existsSync(buildingPath)) {
+          skipped.push(buildingPath);
+        } else {
+          mkdirSync(outDir, { recursive: true });
+          writeFileSync(buildingPath, buildingContent, "utf-8");
+          createdFiles.push(buildingPath);
+        }
       }
 
       lines.push("");
@@ -245,6 +260,12 @@ export function registerBuildingSetup(server: McpServer, config: Config): void {
         lines.push("(dry run -- no files written)");
       } else {
         lines.push(`Created ${createdFiles.length} prefab files.`);
+        if (skipped.length > 0) {
+          lines.push("");
+          lines.push(`Skipped ${skipped.length} existing file(s) — NOT overwritten:`);
+          for (const s of skipped) lines.push(`  ${s}`);
+          lines.push("Delete them first, or set outputDir to a fresh folder, to regenerate.");
+        }
       }
 
       lines.push("");
