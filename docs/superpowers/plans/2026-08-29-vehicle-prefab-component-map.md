@@ -768,7 +768,10 @@ function fixtureReader(path: string): string | null {
   return existsSync(full) ? readFileSync(full, "utf8") : null;
 }
 
-const config = {} as Config;
+// Config has several required string/number fields this test never reads;
+// double-assertion is intentional (tsconfig.json type-checks tests/**/*, and
+// a direct `{} as Config` fails strict mode's overlap check).
+const config = {} as unknown as Config;
 
 describe("extractVehicle — S105", () => {
   const schema = extractVehicle("Prefabs/Vehicles/Wheeled/S105/S105_base.et", config, {
