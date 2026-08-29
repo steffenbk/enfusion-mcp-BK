@@ -1,0 +1,72 @@
+Vehicle : "{62F416029692CE40}Prefabs/Vehicles/Core/Wheeled_Base.et" {
+ ID "BBCBA43A9778AE21"
+ components {
+  ChimeraAIPathfindingComponent "{5676B7807269CA5B}" {
+   IgnoreFlags 0 0x10
+   "Turn radius" 10
+   TurnIgnoreFlags 0x8 0
+  }
+  SCR_EditableVehicleComponent "{50DEB7C26B5EB312}" {
+   m_UIInfo SCR_EditableVehicleUIInfo "{5298E609432D192D}" {
+   }
+  }
+  SCR_VehicleCameraDataComponent "{216DA82C75CDD94B}" {
+   m_fDist_Max 6
+   m_fDist_Min 4
+   m_fDist_Desired 5
+   m_fAngleFirstPerson 12
+  }
+  SCR_WheeledDamageManagerComponent "{141326E9FD94FE40}" {
+   "Additional hit zones" {
+    SCR_FlammableHitZone Hull {
+     MaxHealth 8000
+     DamageReduction 40
+     DamageThreshold 8
+    }
+   }
+   m_fMaxSharedDamageDistance 2.5
+  }
+  VehicleWheeledSimulation "{731B26FCA2F19855}" {
+   Simulation Wheeled "{4D8B26DEA5F25978}" {
+    Aerodynamics Aerodynamics "{5562A82E3F4CE5C2}" {
+     ReferenceArea 6
+    }
+    NoiseSteerSensitivity 0.6
+    RoughnessSensitivity 0.6
+   }
+  }
+  BaseVehicleNodeComponent "{20FB66C5B2237133}" {
+   components {
+    SCR_CarControllerComponent "{20FB66C5BC92275B}" {
+     MaxStartupTime 1.8
+     SteeringForwardSpeed {
+      0 21 2 18 16 24 40 21 60 18 80 12 100 3
+     }
+     SteeringBackwardSpeed {
+      0 21 2 18 16 33 40 40 60 41 80 35 100 26
+     }
+     SteeringCenterSpeed {
+      2 0 16 9 40 19 60 23
+     }
+    }
+   }
+  }
+  ChimeraAIVehicleControlComponent "{61C2E46781A66E82}" {
+   components {
+    AICarMovementComponent "{61C2E46796C28D80}" {
+     "Min Prediction Distance" 2.3
+     CruiseVehicleSpeedKmh 60
+     FrictionCoefficient 0.15
+     StopDistanceCoefficient 15
+     SteeringPIDOnWater 15 0 0
+     SteeringPID 15 0.08 0.5
+     ThrottlePID 5 0.1 0
+    }
+   }
+  }
+  SCR_VehiclePerceivableComponent "{566CD04B8A6107DD}" {
+   UnitType VehicleMedium
+  }
+ }
+ m_eVehicleType APC
+}

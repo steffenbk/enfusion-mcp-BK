@@ -1,0 +1,39 @@
+Vehicle : "{62F416029692CE40}Prefabs/Vehicles/Core/Wheeled_Base.et" {
+ ID "BBCBA43A9778AE21"
+ components {
+  ChimeraAIPathfindingComponent "{5676B7807269CA5B}" {
+   IgnoreFlags 0x1c 0
+   "Turn radius" 5
+   "Openness Check Cell Size" 2.5
+   "Openness Check Success Rate" 0.55
+   TurnIgnoreFlags 0x18 0
+  }
+  SCR_EditableVehicleComponent "{50DEB7C26B5EB312}" {
+   m_UIInfo SCR_EditableVehicleUIInfo "{5298E609432D192D}" {
+   }
+  }
+  SCR_VehicleCameraDataComponent "{216DA82C75CDD94B}" {
+   m_fAngleFirstPerson 12
+  }
+  SCR_WheeledDamageManagerComponent "{141326E9FD94FE40}" {
+   "Additional hit zones" {
+    SCR_FlammableHitZone Hull {
+     MaxHealth 2000
+     m_fIncendiaryReduction 2.5
+    }
+   }
+  }
+  ChimeraAIVehicleControlComponent "{61C2E46781A66E82}" {
+   components {
+    AICarMovementComponent "{61C2E46796C28D80}" {
+     CruiseVehicleSpeedKmh 60
+     FrictionCoefficient 0.15
+     StopDistanceCoefficient 17
+     SteeringPID 8 0.05 0.2
+     ThrottlePID 5 0.1 0
+    }
+   }
+  }
+ }
+ m_eVehicleType CAR
+}

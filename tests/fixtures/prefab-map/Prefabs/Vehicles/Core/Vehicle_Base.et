@@ -1,0 +1,188 @@
+Vehicle {
+ ID "BBCBA43A9778AE21"
+ components {
+  EventHandlerManagerComponent "{52CAB06F9C274D14}" {
+   EventHandlers {
+    BaseEventHandler "{56437C92FB0A6880}" {
+     EventName "OnCompartmentEntered"
+    }
+    BaseEventHandler "{56437C92FB9B4A7D}" {
+     EventName "OnCompartmentLeft"
+    }
+   }
+  }
+  SignalsManagerComponent "{B81364864E7D4F92}" {
+  }
+  AIKnowledgeComponent "{6120C53097494C76}" {
+  }
+  ChimeraAIPathfindingComponent "{5676B7807269CA5B}" {
+   NavmeshProject "BTRlike"
+   "Use Road Network" 1
+  }
+  ColliderHistoryComponent "{566B1CF0D1349A01}" {
+  }
+  ControllersManagerComponent "{3524A75DA7DAC1AD}" {
+  }
+  MeshObject "{51DAA09FEFBFC0E7}" {
+  }
+  RigidBody "{51DAA09FECF52BBF}" {
+   ResponseIndex "Vehicle"
+   ModelGeometry 1
+  }
+  SCR_AIVehicleUsageComponent "{60E4E37C467714E8}" {
+  }
+  SCR_BaseCompartmentManagerComponent "{20FB66C5DCB8DF72}" {
+  }
+  SCR_BaseLockComponent "{54D6FBC0EA806FE5}" {
+  }
+  SCR_EditableVehicleComponent "{50DEB7C26B5EB312}" : "{AC79C9DD1CF681B3}Prefabs/Editor/Components/Vehicle_SCR_EditableEntityComponent.ct" {
+   m_UIInfo SCR_EditableVehicleUIInfo "{5298E609432D192D}" {
+    m_EntityBudgetCost {
+     SCR_EntityBudgetValue "{6052A79ADDA6C7A8}" {
+      m_BudgetType VEHICLES
+      m_Value 1
+     }
+     SCR_EntityBudgetValue "{5EDC86E4AF8908B6}" {
+      m_BudgetType CAMPAIGN
+     }
+     SCR_EntityBudgetValue "{5EE71CA1677C234F}" {
+      m_BudgetType COOLDOWN
+      m_Value 1
+     }
+    }
+   }
+   m_bAutoRegister ALWAYS
+   m_vIconPos 0 1 0
+  }
+  SCR_FuelManagerComponent "{5622A70CD78A9E2C}" {
+   FuelNodes {
+    SCR_FuelNode "{5622A70CD4036C5A}" {
+     MaxFuel 40
+     m_fInitialFuelTankState 30
+    }
+   }
+  }
+  SCR_ImpactEffectComponent "{5EFCAAC9739EAE6E}" {
+   m_aDefaultParticles {
+    "{CD49B367ABBC3629}Particles/Blasts/Blast_tiny_solid.ptc" "{8EBF8E59595FEE07}Particles/Blasts/Blast_small_solid.ptc" "{221D90B0BA708D94}Particles/Blasts/Blast_medium_solid.ptc"
+   }
+   m_aWaterParticles {
+    "{9D503745552183CA}Particles/Blasts/Blast_small_water.ptc" "{17B0A4FD3711AACF}Particles/Blasts/Blast_medium_water.ptc" "{CE71E5096FB46F45}Particles/Blasts/Blast_big_water.ptc" "{A41454FFE3AC88A0}Particles/Blasts/Blast_huge_water.ptc"
+   }
+  }
+  SCR_PowerComponent "{55E90D989DD9B211}" {
+   Enabled 0
+  }
+  SCR_VehicleCameraDataComponent "{216DA82C75CDD94B}" {
+   m_fBobScale 0
+   m_fShakeScale 0
+   m_fDist_Max 15
+   m_fDist_Min 13
+   m_fDist_Desired 14
+   m_3rdPersonRollFactor 1
+   m_pCameraAlignData SCR_VehicleCameraAlignment "{531CBC8782122511}" {
+    m_bEnableGamepad 0
+   }
+   m_pPivot PointInfo "{6238F969181C2A2A}" {
+    Offset 0 0.5 0
+   }
+  }
+  SCR_VehicleDamageManagerComponent "{141326E9FD94FE40}" {
+   "Additional hit zones" {
+    SCR_FlammableHitZone Hull {
+     HZDefault 1
+     MaxHealth 1000
+     DamageReduction 10
+     DamageThreshold 2
+     "Melee multiplier" 0.01
+     "Kinetic multiplier" 0.01
+     "Fragmentation multiplier" 0
+     "Explosive multiplier" 0.33
+     "Incendiary multiplier" 0.7
+     "DamageState threshold" {
+      0.7 0.4 0.2
+     }
+     m_pDestructionHandler SCR_DestructionBaseHandler "{5584C42C773FDFBF}" {
+      m_iWreckDelay 250
+     }
+     m_sDestructionSoundEvent "SOUND_VEHICLE_DESTRUCTION"
+     m_sDestructionParticle "{5B42FC054E231C28}Particles/Vehicle/Vehicle_explosion_small_01.ptc"
+     m_eHitZoneGroup HULL
+     m_fIncendiaryReduction 3.5
+     m_fIncendiaryThreshold 0.1
+     m_fMinFireBurningTime 40
+     m_fMaxFireBurningTime 160
+     m_sDamagedParticle "{2AEA0DCC3EDDCCFB}Particles/Vehicle/Vehicle_smoke_damaged_low_01.ptc"
+     m_sDamagedParticleHeavy "{3F7B398D4D154CC9}Particles/Vehicle/Vehicle_smoke_damaged_medium_01.ptc"
+     m_sBurningParticle "{79DD3A5F1F3069CD}Particles/Vehicle/Vehicle_fire_engine_small.ptc"
+     m_sBurningGroundParticle "{A9259561960FD620}Particles/Vehicle/Vehicle_fire_ground_medium.ptc"
+     m_sFireStateSignal "EngineFireState"
+    }
+   }
+   CollisionVelocityThreshold 100000
+   "Heavy damage threshold" 200000
+   m_SecondaryExplosions SCR_SecondaryExplosions "{5E6D5DC3C4ED399A}" : "{35E9E298A6FC4085}Prefabs/Weapons/Core/Damage/SecondaryExplosions.conf" {
+   }
+   m_SecondaryFires SCR_SecondaryExplosions "{5E6D5DC3C388AA21}" : "{43047EEF7C62238B}Prefabs/Weapons/Core/Damage/SecondaryFires.conf" {
+   }
+   m_RepairConfig SCR_RepairConfig "{60B8D85543CD83C4}" : "{1F8D8C615B5EEAD6}Prefabs/Vehicles/Core/Configs/RepairSmokeHandlingConfig.conf" {
+   }
+   m_fOccupantsDamageSpeedThreshold 30
+   m_fOccupantsSpeedDeath 80
+   m_fVehicleDestroyDamage 10000
+  }
+  SCR_VehicleFactionAffiliationComponent "{5882CBD9AC741CEC}" {
+  }
+  SCR_VehicleSpawnProtectionComponent "{54D6FBC0CE49F6D9}" {
+  }
+  BaseFlattenGrassComponent "{55FCDD8048D3AE17}" {
+   ParametersCollection {
+    FlattenGrassParametersObject "{55FCDD804A371EA5}" {
+     SizeX 1
+     SizeZ 2.25
+     Shape "Rect"
+    }
+   }
+  }
+  SCR_VehiclePerceivableComponent "{566CD04B8A6107DD}" {
+   IlluminationLvPerLight 4
+   UnitType VehicleUnarmored
+   HornSoundPowerDb 70
+  }
+  SlotManagerComponent "{55BCE45E438E4CFF}" {
+   Slots {
+    SCR_SalvageVehicleSlotInfo VehicleSalvageActionEntity {
+    }
+   }
+  }
+  SCR_VehicleInventoryStorageManagerComponent "{591056FA3B752FE6}" {
+  }
+  ActionsManagerComponent "{C97BE5489221AE18}" {
+   additionalActions {
+    SCR_RefuelAtSupportStationAction "{5B02B547EDCF6F99}" : "{7891F1B10FA40962}Configs/Actions/SupportStationActions/Refuel/BaseRefuel.conf" {
+    }
+    SCR_ResourceEntityRefundAction "{5D5EC6128E6342C0}" : "{5AFBAF53711899E9}Configs/Resources/Supplies/Actions/Supplies_Entity_Refund.conf" {
+     Duration 1.5
+    }
+    SCR_RepairAtSupportStationAction "{5B02B547E8F16AF2}" : "{BCE2920FF24EE251}Configs/Actions/SupportStationActions/Repair/DriveTrain/Repair_DriveTrain.conf" {
+    }
+    SCR_RepairAtSupportStationAction "{5E20D2E3B055B082}" : "{E589495887384951}Configs/Actions/SupportStationActions/Repair/Hull/Repair_Hull.conf" {
+    }
+    SCR_RepairAtSupportStationAction "{5E1CB6DF63753AD9}" : "{34FDBD1B59844DAD}Configs/Actions/SupportStationActions/Repair/FuelTank/Repair_FuelTank.conf" {
+    }
+    SCR_RepairAtSupportStationAction "{5E3ACC1CF6F95044}" : "{6D2371E1DD804BA2}Configs/Actions/SupportStationActions/Repair/Engine/Repair_Engine.conf" {
+    }
+   }
+  }
+  VehicleGamepadEffectsManagerComponent "{61E2E297F9B95CA6}" {
+  }
+  NwkMovementComponent "{5D6CA5AFEC980F35}" {
+  }
+  RplComponent "{517AACDFA78F5EE7}" {
+   "Rpl State Override" Runtime
+   "Parent Node From Parent Entity" 0
+  }
+  Persistence "{6198FE31A13D07BF}" {
+  }
+ }
+}

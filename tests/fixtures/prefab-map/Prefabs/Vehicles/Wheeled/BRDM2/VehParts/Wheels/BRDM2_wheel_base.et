@@ -1,0 +1,18 @@
+GenericEntity : "{8DB4EEC64B2C8A08}Prefabs/Vehicles/Core/VehicleWheel_base.et" {
+ ID "4B42E71698F5739C"
+ components {
+  MeshObject "{4B42E716914465B9}" {
+   Object "{0AC5EA8FA30A3DF3}Assets/Vehicles/Wheeled/BTR70/VehParts/Wheels/BTR70_wheel_right_01.xob"
+  }
+  SCR_DamageManagerComponent "{3EBB276D48AFFF41}" {
+   "Additional hit zones" {
+    SCR_WheelHitZone Wheel : "{0DF9B2DD9FFFA2CF}Prefabs/Vehicles/Core/Configs/HitZones/Wheel_APC.conf" {
+     HZDefault 1
+     m_pDestructionHandler SCR_DestructionBaseHandler "{607E9339C2E9C060}" {
+      m_bAllowHideWreck 0
+     }
+    }
+   }
+  }
+ }
+}

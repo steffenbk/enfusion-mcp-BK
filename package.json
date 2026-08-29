@@ -14,6 +14,7 @@
     "scrape": "tsx scripts/scrape.ts",
     "scrape:remote": "tsx scripts/scrape.ts --source remote",
     "scrape:local": "tsx scripts/scrape.ts --source local",
+    "build:prefab-map": "tsx scripts/build-prefab-map.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "prepare": "npm run build"

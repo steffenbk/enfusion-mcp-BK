@@ -1,0 +1,270 @@
+Vehicle : "{4085446E2B406849}Prefabs/Vehicles/Core/Vehicle_Base.et" {
+ ID "BBCBA43A9778AE21"
+ components {
+  SCR_VehicleSoundComponent "{55C2E66AD4EF2CA6}" {
+   Filenames {
+    "{9DD9C6279F4489B4}Sounds/SupportStations/SupportStations_Vehicles.acp" "{1E4E57FCBAA4E206}Sounds/Vehicles/_SharedData/Vehicles_Wind_.acp" "{F41C3D53A2B69D85}Sounds/Vehicles/_SharedData/Destruction/Vehicles_Destruction_Fires.acp" "{BA8A5BD290F5FB34}Sounds/Vehicles/_SharedData/Destruction/Vehicles_Destruction.acp" "{D2DF25DD8B4A4B62}Sounds/Destruction/Multiphase/Destruction_Multiphase_Vehicle.acp" "{F1030E91E4B33E24}Sounds/Vehicles/_SharedData/WaterInteractions/Vehicles_WaterInteractions.acp"
+   }
+   ScriptCallbacks 1
+   DistanceManagement 0
+   IncludeInactive 1
+   m_aHitZoneStateSignalData {
+    SCR_HitZoneStateSignalData "{5E72C71D94477DBA}" {
+     m_sSignalName "EngineDamageState"
+     m_aHitZoneNames {
+      "Engine_01"
+     }
+    }
+    SCR_HitZoneStateSignalData "{5E72C71D96AACB05}" {
+     m_sSignalName "GearboxDamageState"
+     m_aHitZoneNames {
+      "Gearbox_01"
+     }
+    }
+   }
+  }
+  BaseLightManagerComponent "{51E210F17D2534F7}" {
+  }
+  ChimeraAIPathfindingComponent "{5676B7807269CA5B}" {
+   IgnoreFlags 16
+  }
+  SCR_AIVehicleUsageComponent "{60E4E37C467714E8}" {
+   m_eVehicleType GROUND_VEHICLE_WHEELED
+  }
+  SCR_BaseCompartmentManagerComponent "{20FB66C5DCB8DF72}" {
+   CompartmentSlots {
+    PilotCompartmentSlot PilotCompartment : "{FA11A8598F401058}Prefabs/Vehicles/Core/Configs/PilotCompartment_Base.conf" {
+     CompartmentAction SCR_GetInUserAction "{5086DB209BDE8253}" {
+     }
+     PassengerPositionInfo EntitySlotInfo "{A1CB25848A3D93A8}" {
+     }
+     UIInfo SCR_ActionUIInfo "{50870A1DC44BA836}" {
+      Name "#AR-VehiclePosition_Driver"
+      m_sIconName "mountAsDriverCommand"
+     }
+    }
+   }
+  }
+  SCR_EditableVehicleComponent "{50DEB7C26B5EB312}" {
+   m_UIInfo SCR_EditableVehicleUIInfo "{5298E609432D192D}" {
+   }
+  }
+  SCR_FuelConsumptionComponent "{512CC5B0F07DA8F9}" {
+  }
+  SCR_VehicleBuoyancyComponent "{5ECC936F0C77E390}" {
+   Buoyancy 0.5
+   HydrodynamicScaleLinear 4 4 4
+   SpeedToSteering 0.3
+  }
+  SCR_VehicleCameraDataComponent "{216DA82C75CDD94B}" {
+   m_fDist_Max 4.8
+   m_fDist_Min 3.2
+   m_fDist_Desired 4
+  }
+  SCR_VehicleDustPerWheel "{5476BC43E4910F64}" {
+   m_aWheels {
+    0 1 2 3
+   }
+   m_fDustStartSpeed 10
+   m_fDustTopSpeed 80
+  }
+  SCR_WheeledDamageManagerComponent "{141326E9FD94FE40}" {
+   "Additional hit zones" {
+    SCR_FlammableHitZone Hull {
+     MaxHealth 2000
+     m_pDestructionHandler SCR_DestructionBaseHandler "{5584C42C773FDFBF}" {
+     }
+    }
+   }
+  }
+  VehicleWheeledSimulation "{731B26FCA2F19855}" : "{A25CB790B888B786}Prefabs/Vehicles/Core/Components/VehicleWheeledSimulation_Base.ct" {
+   Simulation Wheeled "{4D8B26DEA5F25978}" {
+    LiquidsLayers "Liquids"
+   }
+  }
+  BaseVehicleNodeComponent "{20FB66C5B2237133}" {
+   components {
+    ControllersManagerComponent "{20FB66C5C1BE9DA0}" {
+    }
+    SCR_CarControllerComponent "{20FB66C5BC92275B}" : "{061B9A1CA3A75BE2}Prefabs/Vehicles/Core/Components/CarController_Base.ct" {
+    }
+    SCR_BaseHUDComponent "{37C2676694790BC7}" {
+     InfoDisplays {
+      SCR_InfoDisplay "{50E6E6F81354B90F}" {
+       InfoDisplays {
+        SCR_AnalogGauge "{50E6E9C4280A17FE}" {
+         InfoDisplays {
+          SCR_HandBrakeInfo "{5A76D388CCFA456A}" : "{7AFBF8F192B9E8F9}Configs/VehicleHUD/VehicleInfo_InGauge_Handbrake.conf" {
+          }
+          SCR_LightManagerInfo "{5A76D388C9EAFE6B}" : "{4D83CA1004337B6B}Configs/VehicleHUD/VehicleInfo_InGauge_LightsHead.conf" {
+          }
+          SCR_LightManagerInfo "{5A76D388C4B800AB}" : "{9F13049CE1FCB054}Configs/VehicleHUD/VehicleInfo_InGauge_LightsBeam.conf" {
+          }
+          SCR_LightManagerInfo "{5A76D388C254BF64}" : "{A2034850F85D14C3}Configs/VehicleHUD/VehicleInfo_InGauge_LightsDirLeft.conf" {
+          }
+          SCR_LightManagerInfo "{5A76D388C00C9187}" : "{0F439756AEDA85BC}Configs/VehicleHUD/VehicleInfo_InGauge_LightsDirRight.conf" {
+          }
+         }
+         m_sParentSlot "Slot-GaugeSpeed"
+         m_bAdaptiveOpacity 0
+         m_eShow IN_3RD_PERSON
+         m_sInterfaceSettingName "m_bShowVehicleInfo"
+         m_sInfoText "#AR-VehicleInfoLabel_Speed_UC"
+         m_sInfo2Text "#AR-VehicleInfo_KMH"
+        }
+        SCR_AnalogGauge "{50E6E9C42E916085}" {
+         InfoDisplays {
+          SCR_GearShiftInfo "{5A76D388D738902B}" : "{5424674A281109EB}Configs/VehicleHUD/VehicleInfo_InGauge_Gearshift.conf" {
+          }
+         }
+         m_sParentSlot "Slot-GaugeRPM"
+         m_bAdaptiveOpacity 0
+         m_eShow IN_3RD_PERSON
+         m_sInterfaceSettingName "m_bShowVehicleInfo"
+         m_sInfoText "#AR-VehicleInfoLabel_RPM_UC"
+         m_sInfo2Text "#AR-VehicleInfoMult_x1000"
+         m_fLabelValueMultiplier 0.001
+         m_fValueMax 7000
+         m_fSectionEveryNthValue 1000
+         m_iSectionSubdivisions 5
+         m_iLabelEveryNthSection 1
+         m_sSignalName "engineRPM"
+        }
+        SCR_AnalogGaugeSmall "{50E6F12BB4D36587}" {
+         m_sParentSlot "Slot-GaugeFuel"
+         m_bAdaptiveOpacity 0
+         m_eShow IN_3RD_PERSON
+         m_sInterfaceSettingName "m_bShowVehicleInfo"
+         m_fWidgetRange 140
+         m_fLabelValueMultiplier 0.02
+         m_bShowLabel0 0
+         m_bShowLabelMax 0
+         m_bShowLabelMin 0
+         m_fValueMax 40
+         m_fSectionEveryNthValue 20
+         m_sSignalName "fuel1"
+         m_sOverlay "SmallGaugeOverlay_Fuel"
+        }
+        SCR_HandBrakeInfo "{5A76D38944ABC993}" : "{DD279161CC88E212}Configs/VehicleHUD/VehicleInfo_Handbrake.conf" {
+        }
+        SCR_GearShiftInfo "{5A76D38943D54CC0}" : "{F3F80EDA76200300}Configs/VehicleHUD/VehicleInfo_Gearshift.conf" {
+        }
+        SCR_LightManagerInfo "{5A76D388B11B0BD0}" : "{BE090E579F4504F8}Configs/VehicleHUD/VehicleInfo_LightsDirLeft.conf" {
+        }
+        SCR_LightManagerInfo "{5A76D3888F5360E3}" : "{B86D420134EC0E32}Configs/VehicleHUD/VehicleInfo_LightsDirRight.conf" {
+        }
+        SCR_HitZoneInfo "{5A76D3888380F3AF}" : "{6AC1287B62EABC82}Configs/VehicleHUD/VehicleInfo_DmgHull.conf" {
+        }
+        SCR_FuelTankInfo "{5A76D3889E3461FF}" : "{6A4A0231B007E3BE}Configs/VehicleHUD/VehicleInfo_DmgFuelTank.conf" {
+        }
+        SCR_EngineHitZoneInfo "{5A76D3889CE315E7}" : "{350C6DFE37155A2F}Configs/VehicleHUD/VehicleInfo_DmgEngine.conf" {
+        }
+        SCR_GearboxHitZoneInfo "{5A76D3889A33D976}" : "{3EA94970C69C29C5}Configs/VehicleHUD/VehicleInfo_DmgGearbox.conf" {
+        }
+        SCR_WheelHitZoneInfo "{5B1AADC0234B185E}" : "{32CB0E58815B1E83}Configs/VehicleHUD/VehicleInfo_DmgWheels.conf" {
+        }
+        SCR_LightManagerInfoMulti "{5C86B47E6A990CAA}" {
+         m_bShowWhenCreated 0
+         m_sParentSlot "Slot-LightsHeadAndBeam"
+         m_bAdaptiveOpacity 0
+         m_eShow 7
+         m_sInterfaceSettingName "m_bShowVehicleInfo"
+         m_sIcon "veh_dipped_light"
+         m_aLights {
+          SCR_LightManagerInfoEntry "{5C86B47BA7615C71}" {
+           m_eLightType HiBeam
+           m_sIcon "veh_beam_light"
+           m_eColor BLUE
+          }
+          SCR_LightManagerInfoEntry "{5C86B47BA5941755}" {
+           m_eLightType Head
+           m_sIcon "veh_dipped_light"
+           m_eColor GREEN
+          }
+         }
+        }
+       }
+       m_LayoutPath "{7F1AEBBC1FAD35F5}UI/layouts/HUD/VehicleInfo/VehicleHUD_wheeled.layout"
+       m_sContentWidget "Content"
+       m_aHandlers {
+        SCR_InfoDisplaySlotHandler "{5D44B1985E1A845E}" {
+         m_bCanUpdate 1
+         m_sSlotName "Slot_Vehicle"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  ChimeraAIVehicleControlComponent "{61C2E46781A66E82}" {
+   components {
+    AICarMovementComponent "{61C2E46796C28D80}" {
+     "Min Speed" 6
+     "Max Stuck Time" 4
+     "Min Prediction Distance" 2
+     "Max Prediction Distance" 4
+     "Using Railroad" 0
+     MaxReverseTravelDistance 15
+     MaxSteeringChangeS 4
+     "Collision detection layers" 0
+     "Collision detection layers preset" "BasicVehicleObstacles"
+    }
+   }
+   Agenttemplate "{3C04D2994CF9F7EF}AI/AIAgents/ChimeraAIAgentVehicle.et"
+   EnableAI 0
+  }
+  SCR_VehiclePerceivableComponent "{566CD04B8A6107DD}" {
+   "Additional aim points" {
+    AimPoint "{5A448CE484C5A9D6}" : "{8FDC18C58ED37011}Prefabs/Vehicles/Core/Configs/AimPoints/AimPoint_Hull.conf" {
+     AimPointPosition PointInfo "{5A449D943A64878C}" {
+      Offset 0 1 0
+     }
+    }
+   }
+   SoundPowerRpmMultiplierDb 28
+  }
+  CarProcAnimComponent "{A201E6A6F82F2CDA}" {
+  }
+  ActionsManagerComponent "{C97BE5489221AE18}" {
+   ActionContexts {
+    UserActionContext "{60D889C6E33B775B}" {
+     UIInfo SCR_ActionContextUIInfo "{6132AA86406B866E}" : "{7CD00B230573CAC6}Prefabs/Vehicles/Core/Configs/Actions/ActionUIInfo/SCR_ActionContextUIInfo.conf" {
+     }
+     ContextName "Unflipper"
+     Position PointInfo "{60D88999DF1EB09C}" {
+      Offset 0 1 0
+     }
+     Radius 5
+     Height 0
+    }
+   }
+   additionalActions {
+    SCR_UnflipVehicleAction "{5C96333D28423C46}" : "{5B55474E37916C50}Prefabs/Vehicles/Core/Configs/UnflipPushVehicleAction.conf" {
+    }
+    SCR_UnflipVehicleAction "{5D5F64CA576C1D07}" : "{3F8FD242EAF765F9}Prefabs/Vehicles/Core/Configs/UnflipPullVehicleAction.conf" {
+    }
+    SCR_PushVehicleAction "{60DA85DB5FFC6E4F}" : "{CC50486DDD691603}Prefabs/Vehicles/Core/Configs/PushVehicleAction.conf" {
+    }
+    SCR_ToggleHandbrakeAction "{60DC8885D52C4097}" : "{7BD2343F494FF645}Prefabs/Vehicles/Core/Configs/ToggleHandBrakeFromOutsideAction.conf" {
+    }
+    SCR_ToggleHandbrakeAction "{60DE778F7045386D}" : "{42CDFCACBE35291A}Prefabs/Vehicles/Core/Configs/ToggleHandBrakeFromInsideAction.conf" {
+    }
+   }
+   AllowCrossHierarchy 1
+  }
+  VehicleAnimationComponent "{50B803EAA459B0AF}" {
+   AnimGraph "{66618A6A119CAD93}Assets/Vehicles/Wheeled/workspaces/Vehicles_Wheeled_Graph.agr"
+   AnimInstance "{DAA855714EBFE43E}Prefabs/Vehicles/Core/Vehicles_Base_Empty.asi"
+   AnimInjection AnimationAttachmentInfo "{50B803EA8AD25BC8}" {
+    AnimGraph "{66618A6A119CAD93}Assets/Vehicles/Wheeled/workspaces/Vehicles_Wheeled_Graph.agr"
+    AnimInstance "{C44A74EBEB5C50DB}Assets/Vehicles/Wheeled/workspaces/Player_Wheeled_UAZ.asi"
+    BindingName "Vehicle"
+   }
+   AutoVariablesBind 1
+   DeactivationDelay 2
+  }
+  NwkCarMovementComponent "{5D6CA5AFEC980F35}" {
+  }
+ }
+}

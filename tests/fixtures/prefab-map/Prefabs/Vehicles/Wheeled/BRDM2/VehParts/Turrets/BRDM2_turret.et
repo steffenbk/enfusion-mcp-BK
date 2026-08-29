@@ -1,0 +1,89 @@
+Turret : "{66596659FB0F645B}Prefabs/Vehicles/Wheeled/BTR70/VehParts/Turret/BTR70_Turret.et" {
+ ID "51ACD0965653D003"
+ components {
+  WeaponSoundComponent "{5EA8B9FA4D866B9F}" {
+   Filenames +{
+   }
+   IncludeInactive 1
+  }
+  SCR_BaseCompartmentManagerComponent "{51ACFBB07A14CFA6}" {
+   DoorInfoList {
+    CompartmentDoorReference "{61050A92F6BF6EFE}" {
+    }
+    CompartmentDoorReference "{61050A92F7AFA346}" {
+    }
+   }
+   CompartmentSlots {
+    TurretCompartmentSlot TurretCompartment {
+     CompartmentUniqueName "hatch_gunner"
+     CompartmentAction SCR_GetInUserAction "{5086CC2CFDD3A05A}" {
+      ParentContextList {
+       "hatch_commander_hole" "hatch_driver_hole"
+      }
+      "Sort Priority" 5
+     }
+     GetOutAction SCR_GetOutAction "{509D56664FF79DDB}" {
+      ParentContextList {
+       "hatch_commander_hole" "hatch_driver_hole"
+      }
+      "Sort Priority" 12
+     }
+     JumpOutAction SCR_JumpOutAction "{5D0B1D47DC1C5730}" {
+      "Sort Priority" 12
+     }
+     SwitchSeatAction SCR_SwitchSeatAction "{509D566648F37562}" {
+      "Sort Priority" 5
+     }
+     AdditionalActions {
+      SCR_RemoveCasualtyUserAction "{5D56867A46DBE769}" {
+       "Sort Priority" 4
+      }
+      SCR_RemoveCasualtyUserAction "{61089D59F48D7BD2}" {
+       ParentContextList {
+        "hatch_commander_hole" "hatch_driver_hole"
+       }
+       "Sort Priority" 4
+      }
+     }
+     m_DefaultOccupantData SCR_DefaultOccupantData "{59BA9CCCB82D651B}" {
+     }
+     m_vFreelookCameraNeckOffsetScale -1 0 0.8
+    }
+   }
+  }
+  TurretComponent "{1D3DA71B9107070D}" {
+   ikTargets {
+    AnimationIKTargetInfo "{61B2DE7EDA3ECBAC}" {
+     PositionInfo PointInfo "{61B2DE7ECED79051}" {
+     }
+    }
+   }
+  }
+  ActionsManagerComponent "{51ACD09C7181BA0B}" {
+   ActionContexts {
+    UserActionContext "{51ACFBB064390C6E}" {
+     Position PointInfo "{51ACFBB061993925}" {
+      Offset 0.194 0.1195 -0.068
+     }
+     Radius 0.5
+     Height 1.2
+    }
+   }
+  }
+  VehicleAnimationComponent "{54A4DD8233BC64D8}" {
+   AnimGraph "{B608F2C5747D0E93}Assets/Vehicles/Wheeled/BRDM2/workspaces/BRDM2.agr"
+   AnimInstance "{05F2FEB9929B3206}Assets/Vehicles/Wheeled/BRDM2/workspaces/BRDM2_vehicle.asi"
+   StartNode "VehicleMasterControl"
+   AnimVariables {
+    AnimationVariable "{61B2DE7ABA458F01}" {
+    }
+   }
+   AnimInjection AnimationAttachmentInfo "{54A4DD83C844F76B}" {
+    AnimGraph "{B608F2C5747D0E93}Assets/Vehicles/Wheeled/BRDM2/workspaces/BRDM2.agr"
+    AnimInstance "{971B16BB55C2F57A}Assets/Vehicles/Wheeled/BRDM2/workspaces/BRDM2_player.asi"
+   }
+   BindWithInjection 1
+   DeactivationDelay 2
+  }
+ }
+}

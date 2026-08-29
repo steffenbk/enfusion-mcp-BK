@@ -63,3 +63,18 @@ export interface BoneSurface {
   bone: string;
   sites: BoneSite[];
 }
+
+/** The complete derived map for one vehicle. */
+export interface VehicleSchema {
+  /** Short name, e.g. "S105". */
+  vehicle: string;
+  /** Corpus-relative path of the leaf prefab. */
+  rootPath: string;
+  /** Inheritance chain, oldest ancestor first, leaf last. */
+  chain: string[];
+  components: ResolvedComponent[];
+  references: ReferenceEdge[];
+  boneSurface: BoneSurface[];
+  /** Content the parser could not turn into properties. Must be empty. */
+  unparsed: { path: string; reason: string }[];
+}
