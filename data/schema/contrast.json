@@ -1,0 +1,1893 @@
+{
+  "sharedComponents": [
+    "AIKnowledgeComponent",
+    "ActionsManagerComponent",
+    "BaseFlattenGrassComponent",
+    "BaseLightManagerComponent",
+    "BaseVehicleNodeComponent",
+    "CarProcAnimComponent",
+    "ChimeraAIPathfindingComponent",
+    "ChimeraAIVehicleControlComponent",
+    "ColliderHistoryComponent",
+    "ControllersManagerComponent",
+    "EventHandlerManagerComponent",
+    "MeshObject",
+    "NwkCarMovementComponent",
+    "NwkMovementComponent",
+    "Persistence",
+    "RigidBody",
+    "RplComponent",
+    "SCR_AIVehicleUsageComponent",
+    "SCR_BaseCompartmentManagerComponent",
+    "SCR_BaseLockComponent",
+    "SCR_EditableVehicleComponent",
+    "SCR_FuelConsumptionComponent",
+    "SCR_FuelManagerComponent",
+    "SCR_ImpactEffectComponent",
+    "SCR_MotorExhaustEffectGeneralComponent",
+    "SCR_PowerComponent",
+    "SCR_ResourceComponent",
+    "SCR_UniversalInventoryStorageComponent",
+    "SCR_VehicleBuoyancyComponent",
+    "SCR_VehicleCameraDataComponent",
+    "SCR_VehicleDamageManagerComponent",
+    "SCR_VehicleDustPerWheel",
+    "SCR_VehicleFactionAffiliationComponent",
+    "SCR_VehicleInventoryStorageManagerComponent",
+    "SCR_VehiclePerceivableComponent",
+    "SCR_VehicleSoundComponent",
+    "SCR_VehicleSpawnProtectionComponent",
+    "SCR_WheeledDamageManagerComponent",
+    "SignalsManagerComponent",
+    "SlotManagerComponent",
+    "VehicleAnimationComponent",
+    "VehicleGamepadEffectsManagerComponent",
+    "VehicleLightPortalComponent",
+    "VehicleWheeledSimulation"
+  ],
+  "onlyInA": [],
+  "onlyInB": [
+    {
+      "component": "Hierarchy",
+      "detail": "only on BRDM2"
+    }
+  ],
+  "divergentProperties": [
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[0].ContextName",
+      "valueA": "Unflipper",
+      "valueB": "hatch_driver"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[0].Position[0].Offset",
+      "valueA": "0 0.8 0",
+      "valueB": "-0.465 -0.0123 0"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[0].Radius",
+      "valueA": "5",
+      "valueB": "0.2"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[0].[value][0]",
+      "valueA": "{6132AA86406B866E}",
+      "valueB": "{6264A107FF5D4D3A}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[10].ContextName",
+      "valueA": "wheel_l02",
+      "valueB": "fuel_cap_r"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[10].Position[0].Angles",
+      "valueA": "0 -90 0",
+      "valueB": "0 180 0"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[10].Position[0].Offset",
+      "valueA": "-0.1 0 0",
+      "valueB": "0.5822 1.545 -2.6568"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[10].[value][0]",
+      "valueA": "{610A7E943A37F045}",
+      "valueB": "{6264A107F4DB3231}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[11].ContextName",
+      "valueA": "wheel_r02",
+      "valueB": "engine_lid"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[11].Position[0].Angles",
+      "valueA": "0 90 0",
+      "valueB": "0 -90 0"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[11].Position[0].Offset",
+      "valueA": "0.1 0 0",
+      "valueB": "-0.896 1.673 -1.371"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[11].[value][0]",
+      "valueA": "{610A7E943672C676}",
+      "valueB": "{6264A107F2B1EAD8}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[12].ContextName",
+      "valueA": "driver",
+      "valueB": "wheel_l01"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[12].Position[0].Offset",
+      "valueA": "-0.4 0.5502 0.18",
+      "valueB": "-0.18 0 0"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[12].[value][0]",
+      "valueA": "{610A7E9434E4DD56}",
+      "valueB": "{6264A107CE5D6BDE}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[13].ContextName",
+      "valueA": "passenger_r01",
+      "valueB": "wheel_r01"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[13].Position[0].Offset",
+      "valueA": "0.4 0.5173 0.2478",
+      "valueB": "0.18 0 0"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[13].[value][0]",
+      "valueA": "{610A7E94319A5074}",
+      "valueB": "{6264A107D5758621}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[14].ContextName",
+      "valueA": "passenger_l02",
+      "valueB": "wheel_l02"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[14].Position[0].Offset",
+      "valueA": "-0.3481 0.5345 -0.5914",
+      "valueB": "-0.18 0 0"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[14].[value][0]",
+      "valueA": "{610A7E940DF65174}",
+      "valueB": "{6264A107D89A6B09}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[15].ContextName",
+      "valueA": "passenger_r02",
+      "valueB": "wheel_r02"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[15].Position[0].Offset",
+      "valueA": "0.3313 0.5812 -0.5769",
+      "valueB": "0.18 0 0"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[15].[value][0]",
+      "valueA": "{610A7E940A2E0002}",
+      "valueB": "{6264A107DA566A66}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[16].Position[0].Angles",
+      "valueA": "0 180 0",
+      "valueB": "90 -161.16522 161.18852"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[16].Radius",
+      "valueA": "0.05",
+      "valueB": "0.1"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[16].[value][0]",
+      "valueA": "{610A7E9406F7938A}",
+      "valueB": "{6264A107DDBC555B}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[17].Position[0].Angles",
+      "valueA": "60 -90 0",
+      "valueB": "45 100 150"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[17].Position[0].Offset",
+      "valueA": "0 0.6031 0.4",
+      "valueB": "0 0.04 0.4"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[17].Radius",
+      "valueA": "0.2",
+      "valueB": "0.25"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[17].[value][0]",
+      "valueA": "{610A7E9402102F4A}",
+      "valueB": "{6264A107C0F479F0}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[18].ContextName",
+      "valueA": "handbrake_openDoor",
+      "valueB": "horn"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[18].Radius",
+      "valueA": "0.2",
+      "valueB": "0.1"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[19].ContextName",
+      "valueA": "light_switch",
+      "valueB": "windshield_cover_handle_l"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[19].Position[0].Angles",
+      "valueA": "0 180 0",
+      "valueB": "0 120 0"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[19].Position[0].Offset",
+      "valueA": "-0.4755 0.8408 0.7315",
+      "valueB": "0 0.01 -0.14"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[19].Radius",
+      "valueA": "0.05",
+      "valueB": "0.1"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[19].[value][0]",
+      "valueA": "{610A7E941F3D2DC9}",
+      "valueB": "{6264A107C8188B09}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[1].ContextName",
+      "valueA": "door_l01",
+      "valueB": "hatch_driver_int"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[1].Position[0].Angles",
+      "valueA": "90 90 0",
+      "valueB": "0 180 0"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[1].Position[0].PivotID",
+      "valueA": "v_door_L01_handle",
+      "valueB": "v_driver_hatch_handle"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[1].Radius",
+      "valueA": "0.5",
+      "valueB": "0.15"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[1].[value][0]",
+      "valueA": "{610A7E8FEA84009E}",
+      "valueB": "{6264A107EEC2B61C}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[20].ContextName",
+      "valueA": "light_hazard_switch",
+      "valueB": "windshield_cover_handle_r"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[20].Position[0].Offset",
+      "valueA": "0.0483 0.9196 0.7348",
+      "valueB": "0 -0.01 -0.14"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[20].[value][0]",
+      "valueA": "{610A7E941B1A22A0}",
+      "valueB": "{6264A107CA4FBBDB}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[21].ContextName",
+      "valueA": "wipers_switch",
+      "valueB": "driver"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[21].Position[0].Offset",
+      "valueA": "-0.1794 0.9037 0.6536",
+      "valueB": "0 0.1 0"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[22].ContextName",
+      "valueA": "horn",
+      "valueB": "commander"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[22].Position[0].Offset",
+      "valueA": "-0.5354 0.9107 0.6534",
+      "valueB": "0 0.1 0"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[22].[value][0]",
+      "valueA": "{610A7E941534BFBB}",
+      "valueB": "{6264A10797F712A7}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[23].ContextName",
+      "valueA": "window_crank_l01",
+      "valueB": "passenger"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[23].Position[0].Angles",
+      "valueA": "0 90 0",
+      "valueB": "0 80 0"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[23].Position[0].Offset",
+      "valueA": "-0.71 0.78 0.64",
+      "valueB": "-0.1382 0.9562 0.8924"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[23].[value][0]",
+      "valueA": "{610A7E94116ABF03}",
+      "valueB": "{6264A10795A1CC71}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[24].ContextName",
+      "valueA": "window_crank_r01",
+      "valueB": "light_cabin_switch"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[24].[value][0]",
+      "valueA": "{610A7E946F9219FC}",
+      "valueB": "{6264A107E7E9E1CF}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[25].ContextName",
+      "valueA": "window_crank_l02",
+      "valueB": "light_switch"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[25].Position[0].Angles",
+      "valueA": "0 90 0",
+      "valueB": "90 -90 -180"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[25].[value][0]",
+      "valueA": "{610A7E946B32BB2A}",
+      "valueB": "{6264A107C3B183BE}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[26].ContextName",
+      "valueA": "window_crank_r02",
+      "valueB": "light_turn_signal_switch"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[26].Position[0].Offset",
+      "valueA": "0.71 0.78 -0.24",
+      "valueB": "-0.106 0 0.4087"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[26].Radius",
+      "valueA": "0.1",
+      "valueB": "0.2"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[26].[value][0]",
+      "valueA": "{610A7E9468DFD42D}",
+      "valueB": "{6264A107E4FA58DB}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[27].ContextName",
+      "valueA": "door_l01_int",
+      "valueB": "bumper_Front"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[27].Position[0].Angles",
+      "valueA": "-90 0 90",
+      "valueB": "0 0 90"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[27].Position[0].PivotID",
+      "valueA": "v_door_L01_handle_interior",
+      "valueB": "Scene_Root"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[27].[value][0]",
+      "valueA": "{610A7E9464416632}",
+      "valueB": "{629CB461B184D433}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[28].ContextName",
+      "valueA": "door_l01_int_handle",
+      "valueB": "bumper_Rear"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[28].Height",
+      "valueA": "0",
+      "valueB": "2.2"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[28].Position[0].Angles",
+      "valueA": "-90 0 90",
+      "valueB": "0 180 90"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[28].Position[0].Offset",
+      "valueA": "-0.0591 0 -0.1648",
+      "valueB": "0 1.0407 -2.7135"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[28].Position[0].PivotID",
+      "valueA": "v_door_L01_handle_interior",
+      "valueB": "Scene_Root"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[2].ContextName",
+      "valueA": "door_r01",
+      "valueB": "hatch_driver_hole"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[2].Position[0].Offset",
+      "valueA": "-0.3283 0 0",
+      "valueB": "-0.3943 1.9955 1.3288"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[2].Radius",
+      "valueA": "0.5",
+      "valueB": "0.2"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[3].ContextName",
+      "valueA": "door_l02",
+      "valueB": "hatch_driver_getOut"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[3].Position[0].Angles",
+      "valueA": "90 90 0",
+      "valueB": "0 0 90"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[3].Position[0].Offset",
+      "valueA": "0.3391 0 0",
+      "valueB": "-0.2927 1.9542 1.6277"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[3].Radius",
+      "valueA": "0.5",
+      "valueB": "0.1"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[4].ContextName",
+      "valueA": "door_r02",
+      "valueB": "hatch_commander"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[4].Position[0].Offset",
+      "valueA": "-0.3745 0 0",
+      "valueB": "0.4774 0.0154 0"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[4].Position[0].PivotID",
+      "valueA": "v_door_R02_handle",
+      "valueB": "v_commander_hatch"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[4].Radius",
+      "valueA": "0.5",
+      "valueB": "0.2"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[4].[value][0]",
+      "valueA": "{610A7E942C9BF36A}",
+      "valueB": "{6264A107FC0A9CFC}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[5].ContextName",
+      "valueA": "fuel_cap",
+      "valueB": "hatch_commander_int"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[5].Position[0].Angles",
+      "valueA": "15 90 0",
+      "valueB": "0 180 0"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[5].Position[0].Offset",
+      "valueA": "0.7528 0.8621 -1.4524",
+      "valueB": "-0.0361 -0.0006 0"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[5].Radius",
+      "valueA": "0.15",
+      "valueB": "0.2"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[5].[value][0]",
+      "valueA": "{610A7E94299839A6}",
+      "valueB": "{6264A107EBE8005B}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[6].ContextName",
+      "valueA": "hood_front",
+      "valueB": "hatch_commander_hole"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[6].Position[0].Offset",
+      "valueA": "0 0.9174 1.7993",
+      "valueB": "0.349 2.0066 1.2555"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[7].ContextName",
+      "valueA": "hood_rear",
+      "valueB": "hatch_commander_getOut"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[7].Position[0].Angles",
+      "valueA": "0 180 0",
+      "valueB": "0 0 90"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[7].Position[0].Offset",
+      "valueA": "0 1 -2",
+      "valueB": "0.349 1.9435 1.6151"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[8].ContextName",
+      "valueA": "wheel_l01",
+      "valueB": "turret_01"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[8].Position[0].Offset",
+      "valueA": "-0.1 0 0",
+      "valueB": "0 0.38 0"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[8].Position[0].PivotID",
+      "valueA": "wheel_L_01",
+      "valueB": "v_turret_01"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[8].[value][0]",
+      "valueA": "{610A7E9420D2A3EA}",
+      "valueB": "{6264A107FABE08E1}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[9].ContextName",
+      "valueA": "wheel_r01",
+      "valueB": "fuel_cap_l"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[9].Position[0].Angles",
+      "valueA": "0 90 0",
+      "valueB": "0 180 0"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[9].Position[0].Offset",
+      "valueA": "0.1 0 0",
+      "valueB": "-0.5822 1.545 -2.6568"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "ActionContexts[0].UserActionContext[9].[value][0]",
+      "valueA": "{610A7E943DAF41E7}",
+      "valueB": "{6264A107F7EB05AE}"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "additionalActions[0].SCR_OpenVehicleStorageAction[0].ParentContextList[0].[value][0]",
+      "valueA": "hood_front",
+      "valueB": "hatch_commander_hole"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "additionalActions[0].SCR_PushVehicleAction[0].ParentContextList[0].[value][0]",
+      "valueA": "push_front",
+      "valueB": "bumper_Front"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "additionalActions[0].SCR_PushVehicleAction[0].ParentContextList[0].[value][1]",
+      "valueA": "hood_rear",
+      "valueB": "bumper_Rear"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "additionalActions[0].SCR_RepairAtSupportStationAction[0].ParentContextList[0].[value][0]",
+      "valueA": "hood_rear",
+      "valueB": "engine_lid"
+    },
+    {
+      "component": "ActionsManagerComponent",
+      "propertyPath": "additionalActions[0].SCR_RepairAtSupportStationAction[1].ParentContextList[0].[value][0]",
+      "valueA": "hood_rear",
+      "valueB": "engine_lid"
+    },
+    {
+      "component": "BaseFlattenGrassComponent",
+      "propertyPath": "ParametersCollection[0].FlattenGrassParametersObject[0].SizeX",
+      "valueA": "2.25",
+      "valueB": "1.5"
+    },
+    {
+      "component": "BaseFlattenGrassComponent",
+      "propertyPath": "ParametersCollection[0].FlattenGrassParametersObject[0].SizeZ",
+      "valueA": "5",
+      "valueB": "3.7"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot",
+      "valueA": "RRLicenseplate",
+      "valueB": "RFIndicator"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[0].Prefab",
+      "valueA": "{DD7ED81DD3E185E1}Prefabs/Vehicles/Wheeled/S105/Lights/LFIndicator_S105_ES.et",
+      "valueB": "{6C171C08CCDBD5EF}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Indicator_Front_L.et"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[1].Prefab",
+      "valueA": "{ABE953BABBD9D03D}Prefabs/Vehicles/Wheeled/S105/Lights/RFIndicator_S105_ES.et",
+      "valueB": "{110FF0F0A948E976}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Indicator_Front_R.et"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[0].Prefab",
+      "valueA": "{B0E4C27145922CEB}Prefabs/Vehicles/Wheeled/S105/Lights/LHeadlight_S105_ES.et",
+      "valueB": "{F9F1CE6E96B490DC}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Headlight_R.et"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[1].Prefab",
+      "valueA": "{D954BC246984D47B}Prefabs/Vehicles/Wheeled/S105/Lights/RHeadlight_S105_ES.et",
+      "valueB": "{745E9D1D034C9092}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Headlight_L.et"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightAction[0].SCR_LightsHazardUserAction[0].ParentContextList[0].[value][0]",
+      "valueA": "light_hazard_switch",
+      "valueB": "light_turn_signal_switch"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightAction[0].SCR_LightsHiBeamsUserAction[0].ParentContextList[0].[value][0]",
+      "valueA": "horn",
+      "valueB": "light_switch"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[0].LightPositionInfo[0].Angles",
+      "valueA": "-25 -3 0",
+      "valueB": "-30 0 0"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[0].LightPositionInfo[0].Offset",
+      "valueA": "-0.4723 0.642 2.0839",
+      "valueB": "0.1896 0.0219 0.0161"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[0].LightPrefab",
+      "valueA": "{81A6265F2FA55A08}Prefabs/Vehicles/Wheeled/S105/Lights/VehicleLight_Head_S105.et",
+      "valueB": "{B873C5C657A2F600}Prefabs/Vehicles/Wheeled/BTR70/Lights/BTR70_VehicleLight_Head_Small_L.et"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[0].ParentSurface",
+      "valueA": "LHeadlight",
+      "valueB": "LHeadlight_01"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[10].LightPositionInfo[0].Angles",
+      "valueA": "0 90 0",
+      "valueB": "0 0 0"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[10].ParentSurface",
+      "valueA": "RSIndicator",
+      "valueB": "RBrake"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[11].ParentSurface",
+      "valueA": "RRIndicator",
+      "valueB": "LFIndicator"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[12].LightPositionInfo[0].Offset",
+      "valueA": "-0.6027 0.7614 -2.122",
+      "valueB": "-0.1772 0.143 -5.2528"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[12].ParentSurface",
+      "valueA": "LRearlight",
+      "valueB": "LBrake"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[13].ParentSurface",
+      "valueA": "RRearlight",
+      "valueB": "RFIndicator"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[14].LightPositionInfo[0].Offset",
+      "valueA": "-0.3929 0.6743 -2.1303",
+      "valueB": "0.1772 0.143 -5.2528"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[14].ParentSurface",
+      "valueA": "LReverselight",
+      "valueB": "RBrake"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[1].LightPositionInfo[0].Angles",
+      "valueA": "-23 10 0",
+      "valueB": "-30 0 0"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[1].LightPositionInfo[0].Offset",
+      "valueA": "0.4732 0.642 2.1",
+      "valueB": "-0.1896 0.0203 0.0151"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[1].LightPrefab",
+      "valueA": "{81A6265F2FA55A08}Prefabs/Vehicles/Wheeled/S105/Lights/VehicleLight_Head_S105.et",
+      "valueB": "{CBF41E77F99E1510}Prefabs/Vehicles/Wheeled/BTR70/Lights/BTR70_VehicleLight_Head_Small_R.et"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[1].ParentSurface",
+      "valueA": "RHeadlight",
+      "valueB": "RHeadlight_01"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[2].LightPositionInfo[0].Angles",
+      "valueA": "-18 -3 0",
+      "valueB": "-18 0 0"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[2].LightPositionInfo[0].Offset",
+      "valueA": "-0.4732 0.6766 2.1",
+      "valueB": "0.1896 0.0233 0.0118"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[2].ParentSurface",
+      "valueA": "LHeadlight",
+      "valueB": "LHeadlight_01"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[3].LightPositionInfo[0].Angles",
+      "valueA": "-18 10 0",
+      "valueB": "-18 0 0"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[3].LightPositionInfo[0].Offset",
+      "valueA": "0.4732 0.6766 2.1",
+      "valueB": "-0.0948 0.0777 -0.022"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[3].ParentSurface",
+      "valueA": "RHeadlight",
+      "valueB": "RHeadlight_01"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[4].LightPositionInfo[0].Offset",
+      "valueA": "-0.4426 0.7656 -2.1602",
+      "valueB": "0.3264 -0.3601 0.4579"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[4].ParentSurface",
+      "valueA": "LBrakeLight",
+      "valueB": "INTLight"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[5].LightPositionInfo[0].Offset",
+      "valueA": "0.4426 0.7656 -2.1602",
+      "valueB": "-0.6394 1.4844 2.062"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[5].ParentSurface",
+      "valueA": "RBrakeLight",
+      "valueB": "INTLight"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[6].LightPositionInfo[0].Angles",
+      "valueA": "0 -40 0",
+      "valueB": "-90 -116.56499 -63.4349"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[6].LightPositionInfo[0].Offset",
+      "valueA": "-0.7019 0.6757 2.0241",
+      "valueB": "0.4743 1.9183 0.6443"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[6].ParentSurface",
+      "valueA": "LFIndicator",
+      "valueB": "INTLight"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[7].LightPositionInfo[0].Angles",
+      "valueA": "0 -90 0",
+      "valueB": "0 0 0"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[7].ParentSurface",
+      "valueA": "LSIndicator",
+      "valueB": "LBrake"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[8].LightPositionInfo[0].Angles",
+      "valueA": "0 180 0",
+      "valueB": "0 0 0"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[8].ParentSurface",
+      "valueA": "LRIndicator",
+      "valueB": "RBrake"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[9].LightPositionInfo[0].Angles",
+      "valueA": "0 40 0",
+      "valueB": "0 0 0"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "LightSlots[0].SCR_LightSlot[9].ParentSurface",
+      "valueA": "RFIndicator",
+      "valueB": "LBrake"
+    },
+    {
+      "component": "BaseVehicleNodeComponent",
+      "propertyPath": "components[0].SCR_BaseHUDComponent[0].InfoDisplays[0].SCR_InfoDisplay[0].InfoDisplays[0].SCR_AnalogGauge[0].m_sInfo2Text",
+      "valueA": "#AR-VehicleInfo_KMH",
+      "valueB": "#AR-VehicleInfoMult_x100"
+    },
+    {
+      "component": "BaseVehicleNodeComponent",
+      "propertyPath": "components[0].SCR_CarControllerComponent[0].AirIntakes[0].PointInfo[0].Offset",
+      "valueA": "0 0.849 -1.686",
+      "valueB": "0 1.862 -1.8431"
+    },
+    {
+      "component": "BaseVehicleNodeComponent",
+      "propertyPath": "components[0].SCR_CarControllerComponent[0].ClutchCoupleRpm",
+      "valueA": "3100",
+      "valueB": "1300"
+    },
+    {
+      "component": "BaseVehicleNodeComponent",
+      "propertyPath": "components[0].SCR_CarControllerComponent[0].ClutchCoupleTime",
+      "valueA": "0.85",
+      "valueB": "0.55"
+    },
+    {
+      "component": "BaseVehicleNodeComponent",
+      "propertyPath": "components[0].SCR_CarControllerComponent[0].ClutchFeedbackRpm",
+      "valueA": "850",
+      "valueB": "1100"
+    },
+    {
+      "component": "BaseVehicleNodeComponent",
+      "propertyPath": "components[0].SCR_CarControllerComponent[0].ClutchUncoupleRpm",
+      "valueA": "950",
+      "valueB": "1000"
+    },
+    {
+      "component": "BaseVehicleNodeComponent",
+      "propertyPath": "components[0].SCR_CarControllerComponent[0].ClutchUncoupleTime",
+      "valueA": "0.45",
+      "valueB": "0.35"
+    },
+    {
+      "component": "BaseVehicleNodeComponent",
+      "propertyPath": "components[0].SCR_CarControllerComponent[0].DownShiftFactor",
+      "valueA": "0.8",
+      "valueB": "1.7"
+    },
+    {
+      "component": "BaseVehicleNodeComponent",
+      "propertyPath": "components[0].SCR_CarControllerComponent[0].DownShiftRpm",
+      "valueA": "2100",
+      "valueB": "1250"
+    },
+    {
+      "component": "BaseVehicleNodeComponent",
+      "propertyPath": "components[0].SCR_CarControllerComponent[0].Latency",
+      "valueA": "0.5",
+      "valueB": "1"
+    },
+    {
+      "component": "BaseVehicleNodeComponent",
+      "propertyPath": "components[0].SCR_CarControllerComponent[0].UpShiftFactor",
+      "valueA": "1.4",
+      "valueB": "2"
+    },
+    {
+      "component": "ChimeraAIPathfindingComponent",
+      "propertyPath": "IgnoreFlags",
+      "valueA": "0x1c",
+      "valueB": "0"
+    },
+    {
+      "component": "ChimeraAIVehicleControlComponent",
+      "propertyPath": "components[0].AICarMovementComponent[0].FrictionCoefficient",
+      "valueA": "0.12",
+      "valueB": "0.15"
+    },
+    {
+      "component": "ChimeraAIVehicleControlComponent",
+      "propertyPath": "components[0].AICarMovementComponent[0].Min Prediction Distance",
+      "valueA": "2",
+      "valueB": "2.3"
+    },
+    {
+      "component": "ChimeraAIVehicleControlComponent",
+      "propertyPath": "components[0].AICarMovementComponent[0].SteeringPID",
+      "valueA": "8 0.05 0.2",
+      "valueB": "12 0.05 0.5"
+    },
+    {
+      "component": "ChimeraAIVehicleControlComponent",
+      "propertyPath": "components[0].AICarMovementComponent[0].StopDistanceCoefficient",
+      "valueA": "17",
+      "valueB": "15"
+    },
+    {
+      "component": "MeshObject",
+      "propertyPath": "Object",
+      "valueA": "{C60D4F567F0A950D}Assets/Vehicles/Wheeled/S105/S105_base.xob",
+      "valueB": "{E1C4AFAABBCD61C5}Assets/Vehicles/Wheeled/BRDM2/BRDM2_base.xob"
+    },
+    {
+      "component": "RigidBody",
+      "propertyPath": "CenterOfMass",
+      "valueA": "0 0.725 -0.13",
+      "valueB": "0 1.067 -0.05"
+    },
+    {
+      "component": "RigidBody",
+      "propertyPath": "Mass",
+      "valueA": "1018",
+      "valueB": "5540"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].PilotCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][0]",
+      "valueA": "door_l01",
+      "valueB": "hatch_driver_hole"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].PilotCompartmentSlot[0].BaseCoverage",
+      "valueA": "0.3",
+      "valueB": "0.4"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].PilotCompartmentSlot[0].CompartmentAction[0].ParentContextList[0].[value][0]",
+      "valueA": "door_l01",
+      "valueB": "hatch_driver_hole"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].PilotCompartmentSlot[0].GetOutAction[0].ParentContextList[0].[value][0]",
+      "valueA": "door_l01_int",
+      "valueB": "hatch_driver_int"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].PilotCompartmentSlot[0].SwitchSeatAction[0].Sort Priority",
+      "valueA": "9",
+      "valueB": "1"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].PilotCompartmentSlot[0].m_DefaultOccupantData[0].m_sDefaultOccupantPrefab",
+      "valueA": "{22E43956740A6794}Prefabs/Characters/Factions/CIV/GenericCivilians/Character_CIV_Randomized.et",
+      "valueB": "{9FFEF10757E742EB}Prefabs/Characters/Factions/OPFOR/USSR_Army/Character_USSR_Crew.et"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "DoorInfoList[0].CompartmentDoorInfo[0].CloseDoorAction[0].ParentContextList[0].[value][0]",
+      "valueA": "door_l01",
+      "valueB": "hatch_commander"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "DoorInfoList[0].CompartmentDoorInfo[0].CloseDoorAction[0].ParentContextList[0].[value][1]",
+      "valueA": "door_l01_int_handle",
+      "valueB": "hatch_commander_int"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "DoorInfoList[0].CompartmentDoorInfo[0].CloseDoorAction[0].VisibilityRange",
+      "valueA": "1.8",
+      "valueB": "1.4"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "DoorInfoList[0].CompartmentDoorInfo[0].ContextName",
+      "valueA": "door_l01",
+      "valueB": "hatch_commander"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "DoorInfoList[0].CompartmentDoorInfo[0].EntryPositionInfo[0].PivotID",
+      "valueA": "driver_getIn",
+      "valueB": "codriver_getin"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "DoorInfoList[0].CompartmentDoorInfo[0].ExitPositionInfo[0].PivotID",
+      "valueA": "driver_idle",
+      "valueB": "codriver_idle"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "DoorInfoList[0].CompartmentDoorInfo[0].ExitTeleportPositionInfo[0].Offset",
+      "valueA": "0 0.4 0.3",
+      "valueB": "0.2 0.1 0.8"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "DoorInfoList[0].CompartmentDoorInfo[0].ExitTeleportPositionInfo[0].PivotID",
+      "valueA": "driver_getIn",
+      "valueB": "codriver_getin"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "DoorInfoList[0].CompartmentDoorInfo[0].OpenDoorAction[0].ParentContextList[0].[value][0]",
+      "valueA": "door_l01",
+      "valueB": "hatch_commander_int"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "DoorInfoList[0].CompartmentDoorInfo[0].OpenDoorAction[0].ParentContextList[0].[value][1]",
+      "valueA": "door_l01_int",
+      "valueB": "hatch_commander"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "DoorInfoList[0].CompartmentDoorInfo[0].OpenDoorAction[0].VisibilityRange",
+      "valueA": "1.8",
+      "valueB": "1.4"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "DoorInfoList[0].CompartmentDoorInfo[1].ContextName",
+      "valueA": "door_r01",
+      "valueB": "windshield_cover_handle_l"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "DoorInfoList[0].CompartmentDoorInfo[2].ContextName",
+      "valueA": "door_l02",
+      "valueB": "windshield_cover_handle_r"
+    },
+    {
+      "component": "SCR_EditableVehicleComponent",
+      "propertyPath": "m_UIInfo[0].Icon",
+      "valueA": "{98682B2FC86F87A4}UI/Textures/Editor/EditableEntities/Vehicles/EditableEntity_Vehicle_Civilian.edds",
+      "valueB": "{95F49CBE9FF7A0CB}UI/Textures/Editor/EditableEntities/Vehicles/EditableEntity_Vehicle_Apc.edds"
+    },
+    {
+      "component": "SCR_EditableVehicleComponent",
+      "propertyPath": "m_UIInfo[0].Name",
+      "valueA": "#AR-Vehicle_Skoda105_Name",
+      "valueB": "#AR-Vehicle_BRDM2_Name"
+    },
+    {
+      "component": "SCR_EditableVehicleComponent",
+      "propertyPath": "m_UIInfo[0].m_EntityBudgetCost[0].SCR_EntityBudgetValue[0].m_Value",
+      "valueA": "40",
+      "valueB": "975"
+    },
+    {
+      "component": "SCR_EditableVehicleComponent",
+      "propertyPath": "m_UIInfo[0].m_EntityBudgetCost[0].SCR_EntityBudgetValue[1].m_BudgetType",
+      "valueA": "CAMPAIGN",
+      "valueB": "RANK_SERGEANT"
+    },
+    {
+      "component": "SCR_EditableVehicleComponent",
+      "propertyPath": "m_UIInfo[0].m_Image",
+      "valueA": "{7E17FA6991D555E1}UI/Textures/EditorPreviews/Vehicles/Wheeled/S105/S105.edds",
+      "valueB": "{A7878584D7CCA4F2}UI/Textures/EditorPreviews/Vehicles/Wheeled/BRDM2/BRDM2.edds"
+    },
+    {
+      "component": "SCR_EditableVehicleComponent",
+      "propertyPath": "m_UIInfo[0].m_aCrewEntityBudgetCost[0].SCR_EntityBudgetValue[0].m_Value",
+      "valueA": "1",
+      "valueB": "3"
+    },
+    {
+      "component": "SCR_EditableVehicleComponent",
+      "propertyPath": "m_UIInfo[0].m_aPassengerEntityBudgetCost[0].SCR_EntityBudgetValue[0].m_Value",
+      "valueA": "3",
+      "valueB": "1"
+    },
+    {
+      "component": "SCR_FuelConsumptionComponent",
+      "propertyPath": "m_fFuelConsumption",
+      "valueA": "6.7",
+      "valueB": "48.53"
+    },
+    {
+      "component": "SCR_FuelConsumptionComponent",
+      "propertyPath": "m_fFuelConsumptionIdle",
+      "valueA": "0.33",
+      "valueB": "2"
+    },
+    {
+      "component": "SCR_FuelManagerComponent",
+      "propertyPath": "FuelNodes[0].SCR_FuelNode[0].MaxFuel",
+      "valueA": "38",
+      "valueB": "145"
+    },
+    {
+      "component": "SCR_FuelManagerComponent",
+      "propertyPath": "FuelNodes[0].SCR_FuelNode[0].m_fInitialFuelTankState",
+      "valueA": "28.5",
+      "valueB": "108.75"
+    },
+    {
+      "component": "SCR_MotorExhaustEffectGeneralComponent",
+      "propertyPath": "EffectPosition[0].Offset",
+      "valueA": "-0.2812 0.303 -2.0801",
+      "valueB": "-0.8159 -2.7109 1.026"
+    },
+    {
+      "component": "SCR_MotorExhaustEffectGeneralComponent",
+      "propertyPath": "MaxRPM",
+      "valueA": "8000",
+      "valueB": "5000"
+    },
+    {
+      "component": "SCR_MotorExhaustEffectGeneralComponent",
+      "propertyPath": "ParticleEffect",
+      "valueA": "{94A1A377C5D9AA63}Particles/Vehicle/Vehicle_smoke_car_exhaust_petrol_normal.ptc",
+      "valueB": "{C57B89E2540B470E}Particles/Vehicle/Vehicle_smoke_BRDM_exhaust_normal_01.ptc"
+    },
+    {
+      "component": "SCR_MotorExhaustEffectGeneralComponent",
+      "propertyPath": "m_sDamagedParticle",
+      "valueA": "{2C84C53C8CA4BF86}Particles/Vehicle/Vehicle_smoke_car_exhaust_petrol_damage.ptc",
+      "valueB": "{02BF90A475C4012B}Particles/Vehicle/Vehicle_smoke_BRDM_exhaust_damaged_01.ptc"
+    },
+    {
+      "component": "SCR_ResourceComponent",
+      "propertyPath": "m_aContainers[0].SCR_ResourceContainer[0].m_fResourceValueMax",
+      "valueA": "0",
+      "valueB": "120"
+    },
+    {
+      "component": "SCR_UniversalInventoryStorageComponent",
+      "propertyPath": "MaxCumulativeVolume",
+      "valueA": "50000",
+      "valueB": "100000"
+    },
+    {
+      "component": "SCR_UniversalInventoryStorageComponent",
+      "propertyPath": "MaxItemSize",
+      "valueA": "50 200 50",
+      "valueB": "200 200 200"
+    },
+    {
+      "component": "SCR_UniversalInventoryStorageComponent",
+      "propertyPath": "MultiSlots[0].MultiSlotConfiguration[0].NumSlots",
+      "valueA": "2",
+      "valueB": "4"
+    },
+    {
+      "component": "SCR_UniversalInventoryStorageComponent",
+      "propertyPath": "m_fMaxWeight",
+      "valueA": "400",
+      "valueB": "1000"
+    },
+    {
+      "component": "SCR_VehicleBuoyancyComponent",
+      "propertyPath": "Buoyancy",
+      "valueA": "0.5",
+      "valueB": "0.8"
+    },
+    {
+      "component": "SCR_VehicleBuoyancyComponent",
+      "propertyPath": "HydrodynamicScaleLinear",
+      "valueA": "4 4 4",
+      "valueB": "4 4 1"
+    },
+    {
+      "component": "SCR_VehicleCameraDataComponent",
+      "propertyPath": "m_fAngleFirstPerson",
+      "valueA": "0",
+      "valueB": "12"
+    },
+    {
+      "component": "SCR_VehicleCameraDataComponent",
+      "propertyPath": "m_fDist_Desired",
+      "valueA": "3.7",
+      "valueB": "5"
+    },
+    {
+      "component": "SCR_VehicleCameraDataComponent",
+      "propertyPath": "m_fDist_Max",
+      "valueA": "4",
+      "valueB": "6"
+    },
+    {
+      "component": "SCR_VehicleCameraDataComponent",
+      "propertyPath": "m_fDist_Min",
+      "valueA": "3.4",
+      "valueB": "4"
+    },
+    {
+      "component": "SCR_VehicleCameraDataComponent",
+      "propertyPath": "m_fHeight",
+      "valueA": "0.25",
+      "valueB": "1.3"
+    },
+    {
+      "component": "SCR_VehiclePerceivableComponent",
+      "propertyPath": "Additional aim points[0].AimPoint[0].AimPointPosition[0].Offset",
+      "valueA": "0 1 0",
+      "valueB": "0 1.3135 0"
+    },
+    {
+      "component": "SCR_VehiclePerceivableComponent",
+      "propertyPath": "UnitType",
+      "valueA": "VehicleUnarmored",
+      "valueB": "VehicleMedium"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value][0]",
+      "valueA": "{78D17C431FB48D80}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Engine.acp",
+      "valueB": "{994DA84C543C990A}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Animations.acp"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value][1]",
+      "valueA": "{83A4DC7A729443E3}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Dampers.acp",
+      "valueB": "{5B2A3941F79B5F0F}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Engine.acp"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value][2]",
+      "valueA": "{54BB1291AEFD577B}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Animations.acp",
+      "valueB": "{B992B5065A62F9CA}Sounds/Vehicles/_SharedData/Crashes/APC/Vehicles_Crashes_APC.acp"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value][3]",
+      "valueA": "{847E37181C9AD2C2}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Horn.acp",
+      "valueB": "{738A0D5186BB9C88}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Dampers.acp"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value][4]",
+      "valueA": "{0E29FA31A7D0A498}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Rain.acp",
+      "valueB": "{93AE33FE9A760A78}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Horn.acp"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value][5]",
+      "valueA": "{465B31754AAAE693}Sounds/Vehicles/_SharedData/Crashes/Cars/Vehicles_Crashes_Cars.acp",
+      "valueB": "{19F9FED7213C7C22}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Rain.acp"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "SoundPoints[0].SoundPointInfo[0].Offset",
+      "valueA": "-0.3 0.3 -1.8",
+      "valueB": "-0.03 1.7 1.8"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "SoundPoints[0].SoundPointInfo[1].Offset",
+      "valueA": "0 0.7 -1.9",
+      "valueB": "0.03 1.7 1.8"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "SoundPoints[0].SoundPointInfo[2].Offset",
+      "valueA": "0 1.3 1.3",
+      "valueB": "0 1.5 -1.1"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "SoundPoints[0].SoundPointInfo[3].Offset",
+      "valueA": "0 0.85 -0.5",
+      "valueB": "0 1.3 2.5"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "SoundPoints[0].SoundPointInfo[4].Offset",
+      "valueA": "0 0.3 -0.5",
+      "valueB": "0 1.5 -2.5"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "SoundPoints[0].SoundPointInfo[5].Offset",
+      "valueA": "0 0.7 1.5",
+      "valueB": "0 1.8 -1.3"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Wheels[0].VehicleWheelSound[0].Filename",
+      "valueA": "{2BCF079BE7DAC5C5}Sounds/Vehicles/Wheeled/UAZ469/Vehicles_UAZ469_Wheel_l_1.acp",
+      "valueB": "{A9997E455F672798}Sounds/Vehicles/Wheeled/BTR70/Vehicles_BTR70_Wheel_l_1.acp"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Wheels[0].VehicleWheelSound[0].SoundPoint[0].PivotID",
+      "valueA": "v_wheel_L01",
+      "valueB": "v_wheel_l01"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Wheels[0].VehicleWheelSound[1].Filename",
+      "valueA": "{1C2FDC4C67124098}Sounds/Vehicles/Wheeled/UAZ469/Vehicles_UAZ469_Wheel_r_1.acp",
+      "valueB": "{5CEAEF266CBBF0F1}Sounds/Vehicles/Wheeled/BTR70/Vehicles_BTR70_Wheel_r_1.acp"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Wheels[0].VehicleWheelSound[1].SoundPoint[0].PivotID",
+      "valueA": "v_wheel_R01",
+      "valueB": "v_wheel_r01"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Wheels[0].VehicleWheelSound[2].Filename",
+      "valueA": "{B827A85D27A89C77}Sounds/Vehicles/Wheeled/UAZ469/Vehicles_UAZ469_Wheel_l_2.acp",
+      "valueB": "{A764EF8E1EAC175A}Sounds/Vehicles/Wheeled/BTR70/Vehicles_BTR70_Wheel_l_2.acp"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Wheels[0].VehicleWheelSound[2].SoundPoint[0].PivotID",
+      "valueA": "v_wheel_L02",
+      "valueB": "v_wheel_l03"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Wheels[0].VehicleWheelSound[3].Filename",
+      "valueA": "{853165D57AF57108}Sounds/Vehicles/Wheeled/UAZ469/Vehicles_UAZ469_Wheel_r_2.acp",
+      "valueB": "{C5F456BF715CC161}Sounds/Vehicles/Wheeled/BTR70/Vehicles_BTR70_Wheel_r_2.acp"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Wheels[0].VehicleWheelSound[3].SoundPoint[0].PivotID",
+      "valueA": "v_wheel_R02",
+      "valueB": "v_wheel_r03"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "m_aHitZoneStateSignalData[0].SCR_HitZoneStateSignalData[0].m_aHitZoneNames[0].[value][0]",
+      "valueA": "Engine_01",
+      "valueB": "Engine"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "m_aHitZoneStateSignalData[0].SCR_HitZoneStateSignalData[1].m_aHitZoneNames[0].[value][0]",
+      "valueA": "Gearbox_01",
+      "valueB": "Gearbox"
+    },
+    {
+      "component": "SCR_WheeledDamageManagerComponent",
+      "propertyPath": "Additional hit zones[0].SCR_BatteryHitZone",
+      "valueA": "Battery_01",
+      "valueB": "Battery"
+    },
+    {
+      "component": "SCR_WheeledDamageManagerComponent",
+      "propertyPath": "Additional hit zones[0].SCR_EngineHitZone",
+      "valueA": "Engine_01",
+      "valueB": "Engine"
+    },
+    {
+      "component": "SCR_WheeledDamageManagerComponent",
+      "propertyPath": "Additional hit zones[0].SCR_FlammableHitZone[0].MaxHealth",
+      "valueA": "2000",
+      "valueB": "8000"
+    },
+    {
+      "component": "SCR_WheeledDamageManagerComponent",
+      "propertyPath": "Additional hit zones[0].SCR_FlammableHitZone[0].m_pDestructionHandler[0].m_sWreckModel",
+      "valueA": "{F5D0E394B0A19D3F}Assets/Vehicles/Wheeled/S105/S105_wreck.xob",
+      "valueB": "{69236B18F51452EC}Assets/Vehicles/Wheeled/BRDM2/BRDM2_wreck.xob"
+    },
+    {
+      "component": "SCR_WheeledDamageManagerComponent",
+      "propertyPath": "Additional hit zones[0].SCR_FuelHitZone",
+      "valueA": "FuelTank_01",
+      "valueB": "FuelTank_02"
+    },
+    {
+      "component": "SCR_WheeledDamageManagerComponent",
+      "propertyPath": "Additional hit zones[0].SCR_GearboxHitZone",
+      "valueA": "Driveshaft_02",
+      "valueB": "Gearbox"
+    },
+    {
+      "component": "SCR_WheeledDamageManagerComponent",
+      "propertyPath": "m_fVehicleDestroyDamage",
+      "valueA": "4801",
+      "valueB": "14804"
+    },
+    {
+      "component": "SCR_WheeledDamageManagerComponent",
+      "propertyPath": "m_vFrontalImpact",
+      "valueA": "0 0.494 2.2",
+      "valueB": "0 1.362 3.047"
+    },
+    {
+      "component": "SlotManagerComponent",
+      "propertyPath": "Slots[0].EntitySlotInfo[0].Offset",
+      "valueA": "0 0 0.1",
+      "valueB": "0 -0.15 -0.48"
+    },
+    {
+      "component": "SlotManagerComponent",
+      "propertyPath": "Slots[0].EntitySlotInfo[0].Prefab",
+      "valueA": "{BA0014C1F45843D7}Prefabs/Vehicles/Wheeled/S105/VehParts/S105_shadow.et",
+      "valueB": "{2F062E6D1509E40E}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/BRDM2_shadow.et"
+    },
+    {
+      "component": "SlotManagerComponent",
+      "propertyPath": "Slots[0].RegisteringComponentSlotInfo[0].Prefab",
+      "valueA": "{9F45FDCE32FE84E8}Prefabs/Vehicles/Wheeled/S105/Dst/S105_window_front.et",
+      "valueB": "{28E2AD864580E3BE}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Turrets/BRDM2_turret.et"
+    },
+    {
+      "component": "SlotManagerComponent",
+      "propertyPath": "Slots[0].RegisteringComponentSlotInfo[1].Prefab",
+      "valueA": "{DB7A70A0695A0DB9}Prefabs/Vehicles/Wheeled/S105/Dst/S105_window_back.et",
+      "valueB": "{5362959329019A8B}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Turrets/BRDM2_turret_commander.et"
+    },
+    {
+      "component": "SlotManagerComponent",
+      "propertyPath": "Slots[0].RegisteringComponentSlotInfo[2].Prefab",
+      "valueA": "{34701EE14D09E574}Prefabs/Vehicles/Wheeled/S105/Dst/S105_window_lf.et",
+      "valueB": "{1952B947F101CFCA}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Magazines/VehPart_BRDM2_AmmoStorage_PKMT_KVPT.et"
+    },
+    {
+      "component": "SlotManagerComponent",
+      "propertyPath": "Slots[0].SCR_SalvageVehicleSlotInfo[0].Offset",
+      "valueA": "0 0.9513 2.0488",
+      "valueB": "0 1.4082 2.7483"
+    },
+    {
+      "component": "SlotManagerComponent",
+      "propertyPath": "Slots[0].SCR_WheelSlotInfo[0].PivotID",
+      "valueA": "v_wheel_L01",
+      "valueB": "v_Tire_small_01"
+    },
+    {
+      "component": "SlotManagerComponent",
+      "propertyPath": "Slots[0].SCR_WheelSlotInfo[0].Prefab",
+      "valueA": "{B74A05B4FBC742C6}Prefabs/Vehicles/Wheeled/S105/VehParts/Wheels/S105_wheel_01.et",
+      "valueB": "{89E4CB2B181DB28C}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Wheels/BRDM2_wheel_Small.et"
+    },
+    {
+      "component": "SlotManagerComponent",
+      "propertyPath": "Slots[0].SCR_WheelSlotInfo[1].PivotID",
+      "valueA": "v_wheel_L02",
+      "valueB": "v_Tire_small_02"
+    },
+    {
+      "component": "SlotManagerComponent",
+      "propertyPath": "Slots[0].SCR_WheelSlotInfo[1].Prefab",
+      "valueA": "{B74A05B4FBC742C6}Prefabs/Vehicles/Wheeled/S105/VehParts/Wheels/S105_wheel_01.et",
+      "valueB": "{89E4CB2B181DB28C}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Wheels/BRDM2_wheel_Small.et"
+    },
+    {
+      "component": "SlotManagerComponent",
+      "propertyPath": "Slots[0].SCR_WheelSlotInfo[2].PivotID",
+      "valueA": "v_wheel_R01",
+      "valueB": "v_wheel_L01"
+    },
+    {
+      "component": "SlotManagerComponent",
+      "propertyPath": "Slots[0].SCR_WheelSlotInfo[2].Prefab",
+      "valueA": "{B74A05B4FBC742C6}Prefabs/Vehicles/Wheeled/S105/VehParts/Wheels/S105_wheel_01.et",
+      "valueB": "{B4743DC7327148B1}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Wheels/BRDM2_wheel_L01.et"
+    },
+    {
+      "component": "SlotManagerComponent",
+      "propertyPath": "Slots[0].SCR_WheelSlotInfo[2].m_iWheelIndex",
+      "valueA": "1",
+      "valueB": "0"
+    },
+    {
+      "component": "SlotManagerComponent",
+      "propertyPath": "Slots[0].SCR_WheelSlotInfo[3].PivotID",
+      "valueA": "v_wheel_R02",
+      "valueB": "v_wheel_R01"
+    },
+    {
+      "component": "SlotManagerComponent",
+      "propertyPath": "Slots[0].SCR_WheelSlotInfo[3].Prefab",
+      "valueA": "{B74A05B4FBC742C6}Prefabs/Vehicles/Wheeled/S105/VehParts/Wheels/S105_wheel_01.et",
+      "valueB": "{218531A8F51A30DD}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Wheels/BRDM2_wheel_R01.et"
+    },
+    {
+      "component": "SlotManagerComponent",
+      "propertyPath": "Slots[0].SCR_WheelSlotInfo[3].m_iWheelIndex",
+      "valueA": "3",
+      "valueB": "1"
+    },
+    {
+      "component": "VehicleAnimationComponent",
+      "propertyPath": "AnimGraph",
+      "valueA": "{9185B1D81B8B7C42}Assets/Vehicles/Wheeled/S105/workspace/S105.agr",
+      "valueB": "{B608F2C5747D0E93}Assets/Vehicles/Wheeled/BRDM2/workspaces/BRDM2.agr"
+    },
+    {
+      "component": "VehicleAnimationComponent",
+      "propertyPath": "AnimInjection[0].AnimGraph",
+      "valueA": "{9185B1D81B8B7C42}Assets/Vehicles/Wheeled/S105/workspace/S105.agr",
+      "valueB": "{B608F2C5747D0E93}Assets/Vehicles/Wheeled/BRDM2/workspaces/BRDM2.agr"
+    },
+    {
+      "component": "VehicleAnimationComponent",
+      "propertyPath": "AnimInjection[0].AnimInstance",
+      "valueA": "{A4FDBB70631E83F6}Assets/Vehicles/Wheeled/S105/workspace/S105_player.asi",
+      "valueB": "{971B16BB55C2F57A}Assets/Vehicles/Wheeled/BRDM2/workspaces/BRDM2_player.asi"
+    },
+    {
+      "component": "VehicleAnimationComponent",
+      "propertyPath": "AnimInstance",
+      "valueA": "{8E099EB305F16B82}Assets/Vehicles/Wheeled/S105/workspace/S105_vehicle.asi",
+      "valueB": "{05F2FEB9929B3206}Assets/Vehicles/Wheeled/BRDM2/workspaces/BRDM2_vehicle.asi"
+    },
+    {
+      "component": "VehicleLightPortalComponent",
+      "propertyPath": "PortalInfoList[0].AnimVehicleLightPortal[0].ContextName",
+      "valueA": "Door_L01",
+      "valueB": "hatch_driver"
+    },
+    {
+      "component": "VehicleLightPortalComponent",
+      "propertyPath": "PortalInfoList[0].AnimVehicleLightPortal[0].PortalPositionInfo[0].Offset",
+      "valueA": "-0.7 1 0.14",
+      "valueB": "-0.37 1.9 1.3"
+    },
+    {
+      "component": "VehicleLightPortalComponent",
+      "propertyPath": "PortalInfoList[0].AnimVehicleLightPortal[1].ContextName",
+      "valueA": "Door_R01",
+      "valueB": "hatch_commander"
+    },
+    {
+      "component": "VehicleLightPortalComponent",
+      "propertyPath": "PortalInfoList[0].AnimVehicleLightPortal[1].PortalPositionInfo[0].Offset",
+      "valueA": "0.7 1 0.14",
+      "valueB": "0.37 1.9 1.3"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimGraph",
+      "valueA": "{9185B1D81B8B7C42}Assets/Vehicles/Wheeled/S105/workspace/S105.agr",
+      "valueB": "{B608F2C5747D0E93}Assets/Vehicles/Wheeled/BRDM2/workspaces/BRDM2.agr"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimInstance",
+      "valueA": "{8E099EB305F16B82}Assets/Vehicles/Wheeled/S105/workspace/S105_vehicle.asi",
+      "valueB": "{05F2FEB9929B3206}Assets/Vehicles/Wheeled/BRDM2/workspaces/BRDM2_vehicle.asi"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimVariables[0].AnimationVariable[13].SignalName",
+      "valueA": "engineRPM",
+      "valueB": "rotation4"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimVariables[0].AnimationVariable[13].VariableName",
+      "valueA": "ENGINE_RPM_delay",
+      "valueB": "smallWheel_1"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimVariables[0].AnimationVariable[14].SignalName",
+      "valueA": "engineRPM",
+      "valueB": "rotation5"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimVariables[0].AnimationVariable[14].VariableName",
+      "valueA": "ENGINE_RPM_delay2",
+      "valueB": "smallWheel_4"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimVariables[0].AnimationVariable[1].SignalName",
+      "valueA": "steering0",
+      "valueB": "suspension0"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimVariables[0].AnimationVariable[1].VariableName",
+      "valueA": "steering",
+      "valueB": "suspension_0"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimVariables[0].AnimationVariable[2].SignalName",
+      "valueA": "fuel1",
+      "valueB": "suspension1"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimVariables[0].AnimationVariable[2].VariableName",
+      "valueA": "FUEL",
+      "valueB": "suspension_1"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimVariables[0].AnimationVariable[3].SignalName",
+      "valueA": "speed",
+      "valueB": "suspension2"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimVariables[0].AnimationVariable[3].VariableName",
+      "valueA": "SPEED",
+      "valueB": "suspension_2"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimVariables[0].AnimationVariable[4].SignalName",
+      "valueA": "engineRPM",
+      "valueB": "suspension3"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimVariables[0].AnimationVariable[4].VariableName",
+      "valueA": "ENGINE_RPM_0",
+      "valueB": "suspension_3"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimVariables[0].AnimationVariable[5].SignalName",
+      "valueA": "suspension0",
+      "valueB": "suspension4"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimVariables[0].AnimationVariable[5].VariableName",
+      "valueA": "suspension_0",
+      "valueB": "small_suspension_1"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimVariables[0].AnimationVariable[6].SignalName",
+      "valueA": "suspension1",
+      "valueB": "suspension6"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimVariables[0].AnimationVariable[6].VariableName",
+      "valueA": "suspension_1",
+      "valueB": "small_suspension_2"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimVariables[0].AnimationVariable[7].SignalName",
+      "valueA": "suspension2",
+      "valueB": "suspension5"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimVariables[0].AnimationVariable[7].VariableName",
+      "valueA": "suspension_2",
+      "valueB": "small_suspension_4"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimVariables[0].AnimationVariable[8].SignalName",
+      "valueA": "suspension3",
+      "valueB": "suspension7"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].AnimVariables[0].AnimationVariable[8].VariableName",
+      "valueA": "suspension_3",
+      "valueB": "small_suspension_3"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].VehicleParts[0].VehiclePartAnimation[0].StartNode",
+      "valueA": "eco_body_out",
+      "valueB": "eco_chassis_out_BRDM2"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Animation[0].VehicleParts[0].VehiclePartAnimation[1].StartNode",
+      "valueA": "eco_chassis_out",
+      "valueB": "eco_body_out_BRDM"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Simulation[0].Aerodynamics[0].DragCoefficient",
+      "valueA": "0.24",
+      "valueB": "0.18"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Simulation[0].Aerodynamics[0].ReferenceArea",
+      "valueA": "1.25",
+      "valueB": "1.85"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Simulation[0].Axles[0].Axle[0].[value][2]",
+      "valueA": "{4D8B26DFFD85E58F}",
+      "valueB": "{55A54B49B3B43E77}"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Simulation[0].Axles[0].Axle[1].TorqueShare",
+      "valueA": "1",
+      "valueB": "0.5"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Simulation[0].Axles[0].Axle[1].[value][2]",
+      "valueA": "{4D8B26DF33F76974}",
+      "valueB": "{55A54B49B6930E8E}"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Simulation[0].Clutch[0].MaxClutchTorque",
+      "valueA": "130",
+      "valueB": "600"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Simulation[0].Gearbox[0].Output",
+      "valueA": "Diff_02",
+      "valueB": "Diff_C"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Simulation[0].Gearbox[0].Reverse",
+      "valueA": "3.27",
+      "valueB": "7.77"
+    },
+    {
+      "component": "VehicleWheeledSimulation",
+      "propertyPath": "Simulation[0].[value][0]",
+      "valueA": "{54D561D473F27BA1}",
+      "valueB": "{72F8E7631D0D6953}"
+    }
+  ]
+}

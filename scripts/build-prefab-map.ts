@@ -5,6 +5,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { loadConfig } from "../src/config.js";
 import { extractVehicle } from "../src/prefab-map/extract.js";
+import { contrastVehicles } from "../src/prefab-map/contrast.js";
 
 const VEHICLES: { name: string; path: string }[] = [
   { name: "s105", path: "Prefabs/Vehicles/Wheeled/S105/S105_base.et" },
@@ -31,6 +32,8 @@ const corpusConfig = { ...config, projectPath: "" };
 const outDir = resolve("data/schema");
 mkdirSync(outDir, { recursive: true });
 
+const built = new Map<string, ReturnType<typeof extractVehicle>>();
+
 for (const { name, path } of VEHICLES) {
   const schema = extractVehicle(path, corpusConfig);
   if (schema.unparsed.length > 0) {
@@ -38,6 +41,7 @@ for (const { name, path } of VEHICLES) {
     for (const u of schema.unparsed) console.error(`  ${u.path}: ${u.reason}`);
     process.exit(1);
   }
+  built.set(name, schema);
   const file = resolve(outDir, `${name}.json`);
   writeFileSync(file, `${JSON.stringify(schema, null, 2)}\n`, "utf8");
   console.log(
@@ -45,3 +49,11 @@ for (const { name, path } of VEHICLES) {
       `${schema.boneSurface.length} bones, ${schema.references.length} references -> ${file}`,
   );
 }
+
+const contrast = contrastVehicles(built.get("s105")!, built.get("brdm2")!);
+const contrastFile = resolve(outDir, "contrast.json");
+writeFileSync(contrastFile, `${JSON.stringify(contrast, null, 2)}\n`, "utf8");
+console.log(
+  `contrast: ${contrast.sharedComponents.length} shared, ` +
+    `${contrast.onlyInA.length} S105-only, ${contrast.onlyInB.length} BRDM2-only -> ${contrastFile}`,
+);
