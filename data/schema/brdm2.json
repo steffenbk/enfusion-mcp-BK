@@ -154,21 +154,14 @@
       "introducedBy": "Prefabs/Vehicles/Core/Vehicle_Base.et",
       "properties": [
         {
-          "path": "CompartmentSlots[0].PilotCompartmentSlot",
-          "value": "PilotCompartment",
-          "nodeType": "CompartmentSlots",
-          "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et",
-          "overrides": []
-        },
-        {
-          "path": "CompartmentSlots[0].{FA11A8598F401058}Prefabs/Vehicles/Core/Configs/PilotCompartment_Base.conf[0].UIInfo[0].Name",
+          "path": "CompartmentSlots[0].PilotCompartmentSlot[0].UIInfo[0].Name",
           "value": "#AR-VehiclePosition_Driver",
           "nodeType": "UIInfo",
           "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{FA11A8598F401058}Prefabs/Vehicles/Core/Configs/PilotCompartment_Base.conf[0].UIInfo[0].m_sIconName",
+          "path": "CompartmentSlots[0].PilotCompartmentSlot[0].UIInfo[0].m_sIconName",
           "value": "mountAsDriverCommand",
           "nodeType": "UIInfo",
           "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et",
@@ -787,20 +780,6 @@
           "path": "CompartmentSlots[0].PilotCompartmentSlot[0].DoorInfoList[0].[value][0]",
           "value": "0",
           "nodeType": "DoorInfoList",
-          "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
-          "overrides": []
-        },
-        {
-          "path": "CompartmentSlots[0].PilotCompartmentSlot[0].UIInfo[0].Name",
-          "value": "#AR-VehiclePosition_Driver",
-          "nodeType": "UIInfo",
-          "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
-          "overrides": []
-        },
-        {
-          "path": "CompartmentSlots[0].PilotCompartmentSlot[0].UIInfo[0].m_sIconName",
-          "value": "mountAsDriverCommand",
-          "nodeType": "UIInfo",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
@@ -4090,75 +4069,45 @@
         },
         {
           "path": "Filenames[0].[value][0]",
-          "value": "{994DA84C543C990A}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Animations.acp",
+          "value": "{9DD9C6279F4489B4}Sounds/SupportStations/SupportStations_Vehicles.acp",
           "nodeType": "Filenames",
-          "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
-          "overrides": [
-            {
-              "value": "{9DD9C6279F4489B4}Sounds/SupportStations/SupportStations_Vehicles.acp",
-              "from": "Prefabs/Vehicles/Core/Wheeled_Base.et"
-            }
-          ]
+          "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et",
+          "overrides": []
         },
         {
           "path": "Filenames[0].[value][1]",
-          "value": "{5B2A3941F79B5F0F}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Engine.acp",
+          "value": "{1E4E57FCBAA4E206}Sounds/Vehicles/_SharedData/Vehicles_Wind_.acp",
           "nodeType": "Filenames",
-          "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
-          "overrides": [
-            {
-              "value": "{1E4E57FCBAA4E206}Sounds/Vehicles/_SharedData/Vehicles_Wind_.acp",
-              "from": "Prefabs/Vehicles/Core/Wheeled_Base.et"
-            }
-          ]
+          "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et",
+          "overrides": []
         },
         {
           "path": "Filenames[0].[value][2]",
-          "value": "{B992B5065A62F9CA}Sounds/Vehicles/_SharedData/Crashes/APC/Vehicles_Crashes_APC.acp",
+          "value": "{F41C3D53A2B69D85}Sounds/Vehicles/_SharedData/Destruction/Vehicles_Destruction_Fires.acp",
           "nodeType": "Filenames",
-          "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
-          "overrides": [
-            {
-              "value": "{F41C3D53A2B69D85}Sounds/Vehicles/_SharedData/Destruction/Vehicles_Destruction_Fires.acp",
-              "from": "Prefabs/Vehicles/Core/Wheeled_Base.et"
-            }
-          ]
+          "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et",
+          "overrides": []
         },
         {
           "path": "Filenames[0].[value][3]",
-          "value": "{738A0D5186BB9C88}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Dampers.acp",
+          "value": "{BA8A5BD290F5FB34}Sounds/Vehicles/_SharedData/Destruction/Vehicles_Destruction.acp",
           "nodeType": "Filenames",
-          "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
-          "overrides": [
-            {
-              "value": "{BA8A5BD290F5FB34}Sounds/Vehicles/_SharedData/Destruction/Vehicles_Destruction.acp",
-              "from": "Prefabs/Vehicles/Core/Wheeled_Base.et"
-            }
-          ]
+          "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et",
+          "overrides": []
         },
         {
           "path": "Filenames[0].[value][4]",
-          "value": "{93AE33FE9A760A78}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Horn.acp",
+          "value": "{D2DF25DD8B4A4B62}Sounds/Destruction/Multiphase/Destruction_Multiphase_Vehicle.acp",
           "nodeType": "Filenames",
-          "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
-          "overrides": [
-            {
-              "value": "{D2DF25DD8B4A4B62}Sounds/Destruction/Multiphase/Destruction_Multiphase_Vehicle.acp",
-              "from": "Prefabs/Vehicles/Core/Wheeled_Base.et"
-            }
-          ]
+          "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et",
+          "overrides": []
         },
         {
           "path": "Filenames[0].[value][5]",
-          "value": "{19F9FED7213C7C22}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Rain.acp",
+          "value": "{F1030E91E4B33E24}Sounds/Vehicles/_SharedData/WaterInteractions/Vehicles_WaterInteractions.acp",
           "nodeType": "Filenames",
-          "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
-          "overrides": [
-            {
-              "value": "{F1030E91E4B33E24}Sounds/Vehicles/_SharedData/WaterInteractions/Vehicles_WaterInteractions.acp",
-              "from": "Prefabs/Vehicles/Core/Wheeled_Base.et"
-            }
-          ]
+          "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et",
+          "overrides": []
         },
         {
           "path": "m_aHitZoneStateSignalData[0].SCR_HitZoneStateSignalData[0].m_sSignalName",
@@ -4199,7 +4148,49 @@
           ]
         },
         {
-          "path": "Filenames[0].[value][6]",
+          "path": "Filenames[0].[value:{994DA84C543C990A}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Animations.acp]",
+          "value": "{994DA84C543C990A}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Animations.acp",
+          "nodeType": "Filenames",
+          "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
+          "overrides": []
+        },
+        {
+          "path": "Filenames[0].[value:{5B2A3941F79B5F0F}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Engine.acp]",
+          "value": "{5B2A3941F79B5F0F}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Engine.acp",
+          "nodeType": "Filenames",
+          "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
+          "overrides": []
+        },
+        {
+          "path": "Filenames[0].[value:{B992B5065A62F9CA}Sounds/Vehicles/_SharedData/Crashes/APC/Vehicles_Crashes_APC.acp]",
+          "value": "{B992B5065A62F9CA}Sounds/Vehicles/_SharedData/Crashes/APC/Vehicles_Crashes_APC.acp",
+          "nodeType": "Filenames",
+          "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
+          "overrides": []
+        },
+        {
+          "path": "Filenames[0].[value:{738A0D5186BB9C88}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Dampers.acp]",
+          "value": "{738A0D5186BB9C88}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Dampers.acp",
+          "nodeType": "Filenames",
+          "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
+          "overrides": []
+        },
+        {
+          "path": "Filenames[0].[value:{93AE33FE9A760A78}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Horn.acp]",
+          "value": "{93AE33FE9A760A78}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Horn.acp",
+          "nodeType": "Filenames",
+          "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
+          "overrides": []
+        },
+        {
+          "path": "Filenames[0].[value:{19F9FED7213C7C22}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Rain.acp]",
+          "value": "{19F9FED7213C7C22}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Rain.acp",
+          "nodeType": "Filenames",
+          "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
+          "overrides": []
+        },
+        {
+          "path": "Filenames[0].[value:{E58AD1E99CBDA918}Sounds/Vehicles/Wheeled/BTR70/Vehicles_BTR70_Hatch.acp]",
           "value": "{E58AD1E99CBDA918}Sounds/Vehicles/Wheeled/BTR70/Vehicles_BTR70_Hatch.acp",
           "nodeType": "Filenames",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
@@ -4792,290 +4783,247 @@
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot",
-          "value": "RFIndicator",
-          "nodeType": "EmissiveSurfaceSlots",
-          "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
-          "overrides": [
-            {
-              "value": "LHeadlight_02",
-              "from": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
-            },
-            {
-              "value": "RHeadlight_02",
-              "from": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
-            },
-            {
-              "value": "RHeadlight_01",
-              "from": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
-            },
-            {
-              "value": "LHeadlight_01",
-              "from": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
-            },
-            {
-              "value": "LBrake",
-              "from": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
-            },
-            {
-              "value": "RBrake",
-              "from": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
-            },
-            {
-              "value": "LFIndicator",
-              "from": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
-            }
-          ]
-        },
-        {
-          "path": "EmissiveSurfaceSlots[0].EmissiveLightSurfaceSlot",
-          "value": "INTLight",
-          "nodeType": "EmissiveSurfaceSlots",
-          "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
-          "overrides": []
-        },
-        {
-          "path": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[0].PivotID",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[0].PivotID",
           "value": "Light_Front_L",
-          "nodeType": "{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[0].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[0].Prefab",
           "value": "{3739B2EC7FC93AE2}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Headlight_L02.et.et",
-          "nodeType": "{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[0].LightType",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[0].LightType",
           "value": "0x200",
-          "nodeType": "{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[0].0",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[0].0",
           "value": "LightSide",
-          "nodeType": "{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[1].PivotID",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[1].PivotID",
           "value": "Light_Front_R",
-          "nodeType": "{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[1].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[1].Prefab",
           "value": "{5BF7183DEB9F5B86}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Headlight_R02.et.et",
-          "nodeType": "{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[1].LightType",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[1].LightType",
           "value": "0x200",
-          "nodeType": "{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[1].0",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[1].0",
           "value": "LightSide",
-          "nodeType": "{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[0].PivotID",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[2].PivotID",
           "value": "Light_Front_R",
-          "nodeType": "{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[0].Offset",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[2].Offset",
           "value": "-0.1883 0.0299 0",
-          "nodeType": "{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[0].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[2].Prefab",
           "value": "{F9F1CE6E96B490DC}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Headlight_R.et",
-          "nodeType": "{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[0].LightSide",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[2].LightSide",
           "value": "0",
-          "nodeType": "{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[0].EmissiveOnMultiplier",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[2].EmissiveOnMultiplier",
           "value": "10",
-          "nodeType": "{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[1].PivotID",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[3].PivotID",
           "value": "Light_Front_L",
-          "nodeType": "{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[1].Offset",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[3].Offset",
           "value": "0.1883 0.0299 0",
-          "nodeType": "{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[1].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[3].Prefab",
           "value": "{745E9D1D034C9092}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Headlight_L.et",
-          "nodeType": "{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[1].LightSide",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[3].LightSide",
           "value": "1",
-          "nodeType": "{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[1].EmissiveOnMultiplier",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[3].EmissiveOnMultiplier",
           "value": "10",
-          "nodeType": "{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[0].PivotID",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[4].PivotID",
           "value": "Light_back_L",
-          "nodeType": "{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[0].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[4].Prefab",
           "value": "{994D087B2DE3F762}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Back_light_L.et",
-          "nodeType": "{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[0].LightSide",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[4].LightSide",
           "value": "0",
-          "nodeType": "{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[0].EmissiveOnMultiplier",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[4].EmissiveOnMultiplier",
           "value": "5",
-          "nodeType": "{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[1].PivotID",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[5].PivotID",
           "value": "Light_back_R",
-          "nodeType": "{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[1].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[5].Prefab",
           "value": "{E455E4834870CBFB}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Back_light_R.et",
-          "nodeType": "{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[1].LightSide",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[5].LightSide",
           "value": "0",
-          "nodeType": "{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[1].EmissiveOnMultiplier",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[5].EmissiveOnMultiplier",
           "value": "5",
-          "nodeType": "{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[0].PivotID",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[6].PivotID",
           "value": "Indicator_Front_L",
-          "nodeType": "{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[0].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[6].Prefab",
           "value": "{6C171C08CCDBD5EF}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Indicator_Front_L.et",
-          "nodeType": "{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[0].LightSide",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[6].LightSide",
           "value": "0",
-          "nodeType": "{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[1].PivotID",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[7].PivotID",
           "value": "Indicator_Front_R",
-          "nodeType": "{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[1].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[7].Prefab",
           "value": "{110FF0F0A948E976}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Indicator_Front_R.et",
-          "nodeType": "{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[1].LightSide",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[7].LightSide",
           "value": "1",
-          "nodeType": "{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{3D89FA31E5926C94}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Interior.conf[0].PivotID",
+          "path": "EmissiveSurfaceSlots[0].EmissiveLightSurfaceSlot[0].PivotID",
           "value": "int_Light_socket",
-          "nodeType": "{3D89FA31E5926C94}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Interior.conf",
+          "nodeType": "EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{3D89FA31E5926C94}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Interior.conf[0].Angles",
+          "path": "EmissiveSurfaceSlots[0].EmissiveLightSurfaceSlot[0].Angles",
           "value": "-90 0 0",
-          "nodeType": "{3D89FA31E5926C94}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Interior.conf",
+          "nodeType": "EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{3D89FA31E5926C94}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Interior.conf[0].Prefab",
+          "path": "EmissiveSurfaceSlots[0].EmissiveLightSurfaceSlot[0].Prefab",
           "value": "{17DFEB266261EEFB}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_INT_BRDM2_Light.et",
-          "nodeType": "{3D89FA31E5926C94}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Interior.conf",
+          "nodeType": "EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
@@ -5405,39 +5353,6 @@
           "overrides": []
         },
         {
-          "path": "Additional hit zones[0].SCR_EngineHitZone",
-          "value": "Engine",
-          "nodeType": "Additional hit zones",
-          "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
-          "overrides": []
-        },
-        {
-          "path": "Additional hit zones[0].SCR_BatteryHitZone",
-          "value": "Battery",
-          "nodeType": "Additional hit zones",
-          "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
-          "overrides": []
-        },
-        {
-          "path": "Additional hit zones[0].SCR_GearboxHitZone",
-          "value": "Gearbox",
-          "nodeType": "Additional hit zones",
-          "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
-          "overrides": []
-        },
-        {
-          "path": "Additional hit zones[0].SCR_FuelHitZone",
-          "value": "FuelTank_02",
-          "nodeType": "Additional hit zones",
-          "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
-          "overrides": [
-            {
-              "value": "FuelTank_01",
-              "from": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
-            }
-          ]
-        },
-        {
           "path": "Additional hit zones[0].SCR_FlammableHitZone[0].m_sDestructionParticle",
           "value": "{D200383E5A515C2B}Particles/Vehicle/Vehicle_explosion_BTR70_01.ptc",
           "nodeType": "SCR_FlammableHitZone",
@@ -5501,77 +5416,77 @@
           "overrides": []
         },
         {
-          "path": "Additional hit zones[0].{6B37047F22EFB1B8}Prefabs/Vehicles/Core/Configs/HitZones/Engine_APC.conf[0].ColliderNames[0].[value][0]",
+          "path": "Additional hit zones[0].SCR_EngineHitZone[0].ColliderNames[0].[value][0]",
           "value": "UCX_FG_Engine",
           "nodeType": "ColliderNames",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "Additional hit zones[0].{9A01A1755D987A76}Prefabs/Vehicles/Core/Configs/HitZones/Battery_APC.conf[0].ColliderNames[0].[value][0]",
+          "path": "Additional hit zones[0].SCR_BatteryHitZone[0].ColliderNames[0].[value][0]",
           "value": "UBX_FG_Battery",
           "nodeType": "ColliderNames",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "Additional hit zones[0].{743AF1385C5293C5}Prefabs/Vehicles/Core/Configs/HitZones/Gearbox_APC.conf[0].ColliderNames[0].[value][0]",
+          "path": "Additional hit zones[0].SCR_GearboxHitZone[0].ColliderNames[0].[value][0]",
           "value": "UCX_FG_Gearbox",
           "nodeType": "ColliderNames",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "Additional hit zones[0].{743AF1385C5293C5}Prefabs/Vehicles/Core/Configs/HitZones/Gearbox_APC.conf[0].ColliderNames[0].[value][1]",
+          "path": "Additional hit zones[0].SCR_GearboxHitZone[0].ColliderNames[0].[value][1]",
           "value": "UCL_FG_driveshaft_01",
           "nodeType": "ColliderNames",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "Additional hit zones[0].{743AF1385C5293C5}Prefabs/Vehicles/Core/Configs/HitZones/Gearbox_APC.conf[0].ColliderNames[0].[value][2]",
+          "path": "Additional hit zones[0].SCR_GearboxHitZone[0].ColliderNames[0].[value][2]",
           "value": "UCL_FG_driveshaft_02",
           "nodeType": "ColliderNames",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "Additional hit zones[0].{743AF1385C5293C5}Prefabs/Vehicles/Core/Configs/HitZones/Gearbox_APC.conf[0].ColliderNames[0].[value][3]",
+          "path": "Additional hit zones[0].SCR_GearboxHitZone[0].ColliderNames[0].[value][3]",
           "value": "UCL_FG_driveshaft_03",
           "nodeType": "ColliderNames",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "Additional hit zones[0].{743AF1385C5293C5}Prefabs/Vehicles/Core/Configs/HitZones/Gearbox_APC.conf[0].ColliderNames[0].[value][4]",
+          "path": "Additional hit zones[0].SCR_GearboxHitZone[0].ColliderNames[0].[value][4]",
           "value": "UCX_FG_differential_01",
           "nodeType": "ColliderNames",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "Additional hit zones[0].{743AF1385C5293C5}Prefabs/Vehicles/Core/Configs/HitZones/Gearbox_APC.conf[0].ColliderNames[0].[value][5]",
+          "path": "Additional hit zones[0].SCR_GearboxHitZone[0].ColliderNames[0].[value][5]",
           "value": "UCX_FG_differential_02",
           "nodeType": "ColliderNames",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "Additional hit zones[0].{A56FA93D1A62497D}Prefabs/Vehicles/Core/Configs/HitZones/FuelTank_APC.conf[0].ColliderNames[0].[value][0]",
+          "path": "Additional hit zones[0].SCR_FuelHitZone[0].ColliderNames[0].[value][0]",
           "value": "UCX_FG_FuelTank_L",
           "nodeType": "ColliderNames",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "Additional hit zones[0].{A56FA93D1A62497D}Prefabs/Vehicles/Core/Configs/HitZones/FuelTank_APC.conf[1].m_iFuelTankID",
+          "path": "Additional hit zones[0].SCR_FuelHitZone[1].m_iFuelTankID",
           "value": "2",
-          "nodeType": "{A56FA93D1A62497D}Prefabs/Vehicles/Core/Configs/HitZones/FuelTank_APC.conf",
+          "nodeType": "SCR_FuelHitZone",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
           "overrides": []
         },
         {
-          "path": "Additional hit zones[0].{A56FA93D1A62497D}Prefabs/Vehicles/Core/Configs/HitZones/FuelTank_APC.conf[1].ColliderNames[0].[value][0]",
+          "path": "Additional hit zones[0].SCR_FuelHitZone[1].ColliderNames[0].[value][0]",
           "value": "UCX_FG_FuelTank_R",
           "nodeType": "ColliderNames",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et",
@@ -8003,47 +7918,89 @@
       "component": "SCR_VehicleSoundComponent",
       "propertyPath": "Filenames[0].[value][0]",
       "kind": "resource",
+      "target": "Sounds/SupportStations/SupportStations_Vehicles.acp",
+      "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value][1]",
+      "kind": "resource",
+      "target": "Sounds/Vehicles/_SharedData/Vehicles_Wind_.acp",
+      "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value][2]",
+      "kind": "resource",
+      "target": "Sounds/Vehicles/_SharedData/Destruction/Vehicles_Destruction_Fires.acp",
+      "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value][3]",
+      "kind": "resource",
+      "target": "Sounds/Vehicles/_SharedData/Destruction/Vehicles_Destruction.acp",
+      "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value][4]",
+      "kind": "resource",
+      "target": "Sounds/Destruction/Multiphase/Destruction_Multiphase_Vehicle.acp",
+      "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value][5]",
+      "kind": "resource",
+      "target": "Sounds/Vehicles/_SharedData/WaterInteractions/Vehicles_WaterInteractions.acp",
+      "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value:{994DA84C543C990A}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Animations.acp]",
+      "kind": "resource",
       "target": "Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Animations.acp",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "SCR_VehicleSoundComponent",
-      "propertyPath": "Filenames[0].[value][1]",
+      "propertyPath": "Filenames[0].[value:{5B2A3941F79B5F0F}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Engine.acp]",
       "kind": "resource",
       "target": "Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Engine.acp",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "SCR_VehicleSoundComponent",
-      "propertyPath": "Filenames[0].[value][2]",
+      "propertyPath": "Filenames[0].[value:{B992B5065A62F9CA}Sounds/Vehicles/_SharedData/Crashes/APC/Vehicles_Crashes_APC.acp]",
       "kind": "resource",
       "target": "Sounds/Vehicles/_SharedData/Crashes/APC/Vehicles_Crashes_APC.acp",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "SCR_VehicleSoundComponent",
-      "propertyPath": "Filenames[0].[value][3]",
+      "propertyPath": "Filenames[0].[value:{738A0D5186BB9C88}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Dampers.acp]",
       "kind": "resource",
       "target": "Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Dampers.acp",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "SCR_VehicleSoundComponent",
-      "propertyPath": "Filenames[0].[value][4]",
+      "propertyPath": "Filenames[0].[value:{93AE33FE9A760A78}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Horn.acp]",
       "kind": "resource",
       "target": "Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Horn.acp",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "SCR_VehicleSoundComponent",
-      "propertyPath": "Filenames[0].[value][5]",
+      "propertyPath": "Filenames[0].[value:{19F9FED7213C7C22}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Rain.acp]",
       "kind": "resource",
       "target": "Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Rain.acp",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "SCR_VehicleSoundComponent",
-      "propertyPath": "Filenames[0].[value][6]",
+      "propertyPath": "Filenames[0].[value:{E58AD1E99CBDA918}Sounds/Vehicles/Wheeled/BTR70/Vehicles_BTR70_Hatch.acp]",
       "kind": "resource",
       "target": "Sounds/Vehicles/Wheeled/BTR70/Vehicles_BTR70_Hatch.acp",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
@@ -8253,126 +8210,126 @@
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[0].PivotID",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[0].PivotID",
       "kind": "bone",
       "target": "Light_Front_L",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[0].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[0].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Headlight_L02.et.et",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[1].PivotID",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[1].PivotID",
       "kind": "bone",
       "target": "Light_Front_R",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[1].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[1].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Headlight_R02.et.et",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[0].PivotID",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[2].PivotID",
       "kind": "bone",
       "target": "Light_Front_R",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[0].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[2].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Headlight_R.et",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[1].PivotID",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[3].PivotID",
       "kind": "bone",
       "target": "Light_Front_L",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[1].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[3].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Headlight_L.et",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[0].PivotID",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[4].PivotID",
       "kind": "bone",
       "target": "Light_back_L",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[0].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[4].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Back_light_L.et",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[1].PivotID",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[5].PivotID",
       "kind": "bone",
       "target": "Light_back_R",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[1].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[5].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Back_light_R.et",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[0].PivotID",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[6].PivotID",
       "kind": "bone",
       "target": "Indicator_Front_L",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[0].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[6].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Indicator_Front_L.et",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[1].PivotID",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[7].PivotID",
       "kind": "bone",
       "target": "Indicator_Front_R",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[1].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[7].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Indicator_Front_R.et",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{3D89FA31E5926C94}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Interior.conf[0].PivotID",
+      "propertyPath": "EmissiveSurfaceSlots[0].EmissiveLightSurfaceSlot[0].PivotID",
       "kind": "bone",
       "target": "int_Light_socket",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{3D89FA31E5926C94}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Interior.conf[0].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].EmissiveLightSurfaceSlot[0].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_INT_BRDM2_Light.et",
       "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
@@ -8562,7 +8519,7 @@
         },
         {
           "component": "BaseLightManagerComponent",
-          "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[0].PivotID",
+          "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[6].PivotID",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
         }
       ]
@@ -8587,7 +8544,7 @@
         },
         {
           "component": "BaseLightManagerComponent",
-          "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[1].PivotID",
+          "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[7].PivotID",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
         }
       ]
@@ -8607,12 +8564,12 @@
         },
         {
           "component": "BaseLightManagerComponent",
-          "propertyPath": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[0].PivotID",
+          "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[0].PivotID",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
         },
         {
           "component": "BaseLightManagerComponent",
-          "propertyPath": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[1].PivotID",
+          "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[3].PivotID",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
         }
       ]
@@ -8627,12 +8584,12 @@
         },
         {
           "component": "BaseLightManagerComponent",
-          "propertyPath": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[1].PivotID",
+          "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[1].PivotID",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
         },
         {
           "component": "BaseLightManagerComponent",
-          "propertyPath": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[0].PivotID",
+          "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[2].PivotID",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
         }
       ]
@@ -8652,7 +8609,7 @@
         },
         {
           "component": "BaseLightManagerComponent",
-          "propertyPath": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[0].PivotID",
+          "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[4].PivotID",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
         }
       ]
@@ -8672,7 +8629,7 @@
         },
         {
           "component": "BaseLightManagerComponent",
-          "propertyPath": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[1].PivotID",
+          "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[5].PivotID",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
         }
       ]
@@ -8777,7 +8734,7 @@
       "sites": [
         {
           "component": "BaseLightManagerComponent",
-          "propertyPath": "EmissiveSurfaceSlots[0].{3D89FA31E5926C94}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Interior.conf[0].PivotID",
+          "propertyPath": "EmissiveSurfaceSlots[0].EmissiveLightSurfaceSlot[0].PivotID",
           "setBy": "Prefabs/Vehicles/Wheeled/BRDM2/BRDM2_base.et"
         }
       ]

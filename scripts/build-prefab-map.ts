@@ -5,6 +5,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { loadConfig } from "../src/config.js";
 import { extractVehicle } from "../src/prefab-map/extract.js";
+import { findSelfOverrides } from "../src/prefab-map/chain-merge.js";
 import { contrastVehicles } from "../src/prefab-map/contrast.js";
 import { buildCitationIndex } from "../src/prefab-map/citations.js";
 import { generateVehicleDoc } from "../src/prefab-map/docgen.js";
@@ -43,6 +44,19 @@ for (const { name, path } of VEHICLES) {
     for (const u of schema.unparsed) console.error(`  ${u.path}: ${u.reason}`);
     process.exit(1);
   }
+
+  // A same-file "override" is never legitimate chain inheritance — it means two
+  // distinct source declarations collided onto one property path within a single
+  // component's own flatten, and one of them was silently discarded. Refusing to
+  // write a schema this could produce is the gate that would have caught the
+  // sibling-block collapse bug before it ever reached a committed schema.
+  const selfOverrides = findSelfOverrides(schema.components);
+  if (selfOverrides.length > 0) {
+    console.error(`${name}: ${selfOverrides.length} same-file self-override(s) — refusing to write a corrupted schema`);
+    for (const s of selfOverrides) console.error(`  ${s.component} :: ${s.path} (${s.from})`);
+    process.exit(1);
+  }
+
   built.set(name, schema);
   const file = resolve(outDir, `${name}.json`);
   writeFileSync(file, `${JSON.stringify(schema, null, 2)}\n`, "utf8");

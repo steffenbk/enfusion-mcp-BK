@@ -396,6 +396,88 @@ describe("enfusion-text round-trip fidelity", () => {
     expect(isStable).toBe(true);
   });
 
+  it("keeps sibling `Ident Ident : \"parent\" { }` blocks distinct instead of collapsing them", () => {
+    // CargoCompartmentSlot Passenger_r01 : "{GUID}CargoCompartment_Base.conf" { A 1 }
+    // CargoCompartmentSlot Passenger_l02 : "{GUID}CargoCompartment_Base.conf" { A 2 }
+    // Two identifiers then a colon had no lookahead branch: the colon was
+    // silently skipped as an unexpected token, then the following string was
+    // misparsed as a bare type name, collapsing every sibling with the same
+    // parent config into one bogus property + one wrongly-typed child.
+    const src = [
+      "Root {",
+      " CompartmentSlots {",
+      '  CargoCompartmentSlot Passenger_r01 : "{9BD4548866DA1807}Cfg.conf" {',
+      "   A 1",
+      "  }",
+      '  CargoCompartmentSlot Passenger_l02 : "{9BD4548866DA1807}Cfg.conf" {',
+      "   A 2",
+      "  }",
+      " }",
+      "}",
+    ].join("\n");
+    const node = parse(src);
+    const slots = node.children.find((c) => c.type === "CompartmentSlots");
+    expect(slots).toBeDefined();
+    expect(slots!.properties).toEqual([]);
+    expect(slots!.children).toHaveLength(2);
+    expect(slots!.children.map((c) => c.type)).toEqual([
+      "CargoCompartmentSlot",
+      "CargoCompartmentSlot",
+    ]);
+    expect(slots!.children.map((c) => c.id)).toEqual(["Passenger_r01", "Passenger_l02"]);
+    expect(slots!.children.map((c) => c.inheritance)).toEqual([
+      "{9BD4548866DA1807}Cfg.conf",
+      "{9BD4548866DA1807}Cfg.conf",
+    ]);
+    expect(getProperty(slots!.children[0], "A")).toBe("1");
+    expect(getProperty(slots!.children[1], "A")).toBe("2");
+  });
+
+  it("round-trips three real sibling compartment slots sharing one parent config", () => {
+    const src = [
+      "Root {",
+      " CompartmentSlots {",
+      '  CargoCompartmentSlot Passenger_r01 : "{9BD4548866DA1807}Cfg.conf" { A 1 }',
+      '  CargoCompartmentSlot Passenger_l02 : "{9BD4548866DA1807}Cfg.conf" { A 2 }',
+      '  CargoCompartmentSlot Passenger_r02 : "{9BD4548866DA1807}Cfg.conf" { A 3 }',
+      " }",
+      "}",
+    ].join("\n");
+    const { isStable } = stable(src);
+    expect(isStable).toBe(true);
+    const node = parse(src);
+    const slots = node.children.find((c) => c.type === "CompartmentSlots")!;
+    expect(slots.children).toHaveLength(3);
+  });
+
+  it("parses `Key + { ... }` as an append-modified node, not a plain replace", () => {
+    // Filenames + { ... } means "add these to whatever the parent already
+    // declared", not "replace the parent's list". The `+` was previously an
+    // unrecognized character the tokenizer silently dropped.
+    const src = ['X {', ' Filenames + {', '  "a" "b"', ' }', '}'].join("\n");
+    const node = parse(src);
+    const filenames = node.children.find((c) => c.type === "Filenames");
+    expect(filenames).toBeDefined();
+    expect(filenames!.append).toBe(true);
+    expect(filenames!.values).toEqual(["a", "b"]);
+  });
+
+  it("does not set append on a plain `Key { ... }` node", () => {
+    const node = parse('X {\n Filenames {\n  "a"\n }\n}');
+    const filenames = node.children.find((c) => c.type === "Filenames")!;
+    expect(filenames.append).toBeUndefined();
+  });
+
+  it("round-trips a `+`-modified node back through parse/serialize", () => {
+    const src = ['X {', ' Filenames + {', '  "a" "b"', ' }', '}'].join("\n");
+    const once = serialize(parse(src));
+    expect(once).toContain("Filenames + {");
+    const reparsed = parse(once);
+    const filenames = reparsed.children.find((c) => c.type === "Filenames")!;
+    expect(filenames.append).toBe(true);
+    expect(filenames.values).toEqual(["a", "b"]);
+  });
+
   it("round-trips a real vanilla prefab without losing its properties", () => {
     const src = [
       'Vehicle : "{38186F12F27A61C6}Prefabs/Vehicles/Wheeled/M923A1/M923A1_command_MERDC.et" {',

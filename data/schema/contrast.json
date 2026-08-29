@@ -538,102 +538,82 @@
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[2].LightSide",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[10].LightSide",
       "detail": "only on S105's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[2].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[10].Prefab",
       "detail": "only on S105's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[3].LightSide",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[11].LightSide",
       "detail": "only on S105's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[3].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[11].Prefab",
       "detail": "only on S105's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[4].LightSide",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[12].Prefab",
       "detail": "only on S105's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[4].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[13].Prefab",
       "detail": "only on S105's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[5].LightSide",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[14].Prefab",
       "detail": "only on S105's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[5].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[14].RegisterDamage",
       "detail": "only on S105's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{1A2A10B920F60975}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Brake.conf[0].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[15].LightType",
       "detail": "only on S105's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{1A2A10B920F60975}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Brake.conf[1].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[15].Prefab",
       "detail": "only on S105's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{47BE09BAE9B2A809}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Reverse.conf[0].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[15].RegisterDamage",
       "detail": "only on S105's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{47BE09BAE9B2A809}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Reverse.conf[1].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[15].[value][0]",
       "detail": "only on S105's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{8D4594D6FD4FDCAB}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail.conf[0].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[8].LightSide",
       "detail": "only on S105's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{8D4594D6FD4FDCAB}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail.conf[1].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[8].Prefab",
       "detail": "only on S105's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{D4CF44F1616BC6F6}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Licenseplate.conf[0].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[9].LightSide",
       "detail": "only on S105's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{D4CF44F1616BC6F6}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Licenseplate.conf[0].RegisterDamage",
-      "detail": "only on S105's BaseLightManagerComponent"
-    },
-    {
-      "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{D4CF44F1616BC6F6}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Licenseplate.conf[1].LightType",
-      "detail": "only on S105's BaseLightManagerComponent"
-    },
-    {
-      "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{D4CF44F1616BC6F6}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Licenseplate.conf[1].Prefab",
-      "detail": "only on S105's BaseLightManagerComponent"
-    },
-    {
-      "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{D4CF44F1616BC6F6}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Licenseplate.conf[1].RegisterDamage",
-      "detail": "only on S105's BaseLightManagerComponent"
-    },
-    {
-      "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{D4CF44F1616BC6F6}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Licenseplate.conf[1].[value][0]",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[9].Prefab",
       "detail": "only on S105's BaseLightManagerComponent"
     },
     {
@@ -868,7 +848,347 @@
     },
     {
       "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].UIInfo",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].VisibilityRange",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].DoorInfoList[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].JumpOutAction[0].Sort Priority",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].JumpOutAction[0].UIInfo",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].JumpOutAction[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].ParentContextList[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].Sort Priority",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][1]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].Sort Priority",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].VisibilityRange",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].BaseCoverage",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].CompartmentAction[0].ParentContextList[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].CompartmentAction[0].ParentContextList[0].[value][1]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].CompartmentAction[0].Sort Priority",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].CompartmentAction[0].UIInfo",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].CompartmentAction[0].VisibilityRange",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].CompartmentAction[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].ContextName",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].DoorInfoList[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].GetOutAction[0].ParentContextList[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].GetOutAction[0].Sort Priority",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].GetOutAction[0].UIInfo",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].GetOutAction[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].JumpOutAction[0].Sort Priority",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].JumpOutAction[0].UIInfo",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].JumpOutAction[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].PassengerPositionInfo[0].PivotID",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].SeatType",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].SwitchSeatAction[0].ParentContextList[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].SwitchSeatAction[0].Sort Priority",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].SwitchSeatAction[0].UIInfo",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].SwitchSeatAction[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].UIInfo[0].m_sIconName",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].m_DefaultOccupantData[0].m_sDefaultOccupantPrefab",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].ParentContextList[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].Sort Priority",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].UIInfo",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][1]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].Sort Priority",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].VisibilityRange",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].BaseCoverage",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].CompartmentAction[0].ParentContextList[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].CompartmentAction[0].ParentContextList[0].[value][1]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].CompartmentAction[0].Sort Priority",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].CompartmentAction[0].UIInfo",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].CompartmentAction[0].VisibilityRange",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].CompartmentAction[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].ContextName",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].DoorInfoList[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].GetOutAction[0].ParentContextList[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].GetOutAction[0].Sort Priority",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].GetOutAction[0].UIInfo",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].GetOutAction[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].JumpOutAction[0].Sort Priority",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].JumpOutAction[0].UIInfo",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].JumpOutAction[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].PassengerPositionInfo[0].PivotID",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].SeatType",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].SwitchSeatAction[0].ParentContextList[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].SwitchSeatAction[0].Sort Priority",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].SwitchSeatAction[0].UIInfo",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].SwitchSeatAction[0].[value][0]",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].UIInfo[0].m_sIconName",
+      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].m_DefaultOccupantData[0].m_sDefaultOccupantPrefab",
       "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
     },
     {
@@ -889,476 +1209,6 @@
     {
       "component": "SCR_BaseCompartmentManagerComponent",
       "propertyPath": "CompartmentSlots[0].PilotCompartmentSlot[0].CompartmentAction[0].VisibilityRange",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].ParentContextList[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].Sort Priority",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].UIInfo",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][1]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].Sort Priority",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].VisibilityRange",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].BaseCoverage",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].CompartmentAction[0].ParentContextList[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].CompartmentAction[0].ParentContextList[0].[value][1]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].CompartmentAction[0].Sort Priority",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].CompartmentAction[0].UIInfo",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].CompartmentAction[0].VisibilityRange",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].CompartmentAction[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].ContextName",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].DoorInfoList[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].GetOutAction[0].ParentContextList[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].GetOutAction[0].Sort Priority",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].GetOutAction[0].UIInfo",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].GetOutAction[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].JumpOutAction[0].Sort Priority",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].JumpOutAction[0].UIInfo",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].JumpOutAction[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].PassengerPositionInfo[0].PivotID",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].SeatType",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].SwitchSeatAction[0].ParentContextList[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].SwitchSeatAction[0].Sort Priority",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].SwitchSeatAction[0].UIInfo",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].SwitchSeatAction[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].UIInfo[0].m_sIconName",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].m_DefaultOccupantData[0].m_sDefaultOccupantPrefab",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].ParentContextList[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].Sort Priority",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][1]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].Sort Priority",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].VisibilityRange",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].BaseCoverage",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].CompartmentAction[0].ParentContextList[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].CompartmentAction[0].ParentContextList[0].[value][1]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].CompartmentAction[0].Sort Priority",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].CompartmentAction[0].UIInfo",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].CompartmentAction[0].VisibilityRange",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].CompartmentAction[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].ContextName",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].DoorInfoList[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].GetOutAction[0].ParentContextList[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].GetOutAction[0].Sort Priority",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].GetOutAction[0].UIInfo",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].GetOutAction[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].JumpOutAction[0].Sort Priority",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].JumpOutAction[0].UIInfo",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].JumpOutAction[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].PassengerPositionInfo[0].PivotID",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].SeatType",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].SwitchSeatAction[0].ParentContextList[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].SwitchSeatAction[0].Sort Priority",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].SwitchSeatAction[0].UIInfo",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].SwitchSeatAction[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].UIInfo[0].m_sIconName",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].m_DefaultOccupantData[0].m_sDefaultOccupantPrefab",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].ParentContextList[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].Sort Priority",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].UIInfo",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][1]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].Sort Priority",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].VisibilityRange",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].BaseCoverage",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].CompartmentAction[0].ParentContextList[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].CompartmentAction[0].ParentContextList[0].[value][1]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].CompartmentAction[0].Sort Priority",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].CompartmentAction[0].UIInfo",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].CompartmentAction[0].VisibilityRange",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].CompartmentAction[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].ContextName",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].DoorInfoList[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].GetOutAction[0].ParentContextList[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].GetOutAction[0].Sort Priority",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].GetOutAction[0].UIInfo",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].GetOutAction[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].JumpOutAction[0].Sort Priority",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].JumpOutAction[0].UIInfo",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].JumpOutAction[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].PassengerPositionInfo[0].PivotID",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].SeatType",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].SwitchSeatAction[0].ParentContextList[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].SwitchSeatAction[0].Sort Priority",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].SwitchSeatAction[0].UIInfo",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].SwitchSeatAction[0].[value][0]",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].UIInfo[0].m_sIconName",
-      "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].m_DefaultOccupantData[0].m_sDefaultOccupantPrefab",
       "detail": "only on S105's SCR_BaseCompartmentManagerComponent"
     },
     {
@@ -1773,6 +1623,36 @@
     },
     {
       "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value:{0E29FA31A7D0A498}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Rain.acp]",
+      "detail": "only on S105's SCR_VehicleSoundComponent"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value:{465B31754AAAE693}Sounds/Vehicles/_SharedData/Crashes/Cars/Vehicles_Crashes_Cars.acp]",
+      "detail": "only on S105's SCR_VehicleSoundComponent"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value:{54BB1291AEFD577B}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Animations.acp]",
+      "detail": "only on S105's SCR_VehicleSoundComponent"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value:{78D17C431FB48D80}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Engine.acp]",
+      "detail": "only on S105's SCR_VehicleSoundComponent"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value:{83A4DC7A729443E3}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Dampers.acp]",
+      "detail": "only on S105's SCR_VehicleSoundComponent"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value:{847E37181C9AD2C2}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Horn.acp]",
+      "detail": "only on S105's SCR_VehicleSoundComponent"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
       "propertyPath": "SoundPoints[0].SoundPointInfo[0].Angles",
       "detail": "only on S105's SCR_VehicleSoundComponent"
     },
@@ -1793,37 +1673,17 @@
     },
     {
       "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].{22263F96C865C75B}Prefabs/Vehicles/Core/Configs/HitZones/FuelTank.conf[0].ColliderNames[0].[value][0]",
+      "propertyPath": "Additional hit zones[0].SCR_FuelHitZone[0].m_SecondaryExplosionPoint[0].Offset",
       "detail": "only on S105's SCR_WheeledDamageManagerComponent"
     },
     {
       "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].{22263F96C865C75B}Prefabs/Vehicles/Core/Configs/HitZones/FuelTank.conf[0].m_SecondaryExplosionPoint[0].Offset",
+      "propertyPath": "Additional hit zones[0].SCR_GearboxHitZone[1].ColliderNames[0].[value][0]",
       "detail": "only on S105's SCR_WheeledDamageManagerComponent"
     },
     {
       "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].{2F51AF4F556FBFEF}Prefabs/Vehicles/Core/Configs/HitZones/Gearbox.conf[0].ColliderNames[0].[value][0]",
-      "detail": "only on S105's SCR_WheeledDamageManagerComponent"
-    },
-    {
-      "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].{674473A7B9DC24C9}Prefabs/Vehicles/Core/Configs/HitZones/Transmission.conf[0].ColliderNames[0].[value][0]",
-      "detail": "only on S105's SCR_WheeledDamageManagerComponent"
-    },
-    {
-      "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].{674473A7B9DC24C9}Prefabs/Vehicles/Core/Configs/HitZones/Transmission.conf[1].ColliderNames[0].[value][0]",
-      "detail": "only on S105's SCR_WheeledDamageManagerComponent"
-    },
-    {
-      "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].{AA309D7C68080A94}Prefabs/Vehicles/Core/Configs/HitZones/Battery.conf[0].ColliderNames[0].[value][0]",
-      "detail": "only on S105's SCR_WheeledDamageManagerComponent"
-    },
-    {
-      "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].{CDE33036D78FCB99}Prefabs/Vehicles/Core/Configs/HitZones/Engine.conf[0].ColliderNames[0].[value][0]",
+      "propertyPath": "Additional hit zones[0].SCR_GearboxHitZone[2].ColliderNames[0].[value][0]",
       "detail": "only on S105's SCR_WheeledDamageManagerComponent"
     },
     {
@@ -1913,12 +1773,27 @@
     },
     {
       "component": "SlotManagerComponent",
-      "propertyPath": "Slots[0].RegisteringComponentSlotInfo",
+      "propertyPath": "Slots[0].RegisteringComponentSlotInfo[0].DisablePhysicsInteraction",
       "detail": "only on S105's SlotManagerComponent"
     },
     {
       "component": "SlotManagerComponent",
-      "propertyPath": "Slots[0].RegisteringComponentSlotInfo[0].DisablePhysicsInteraction",
+      "propertyPath": "Slots[0].RegisteringComponentSlotInfo[10].Angles",
+      "detail": "only on S105's SlotManagerComponent"
+    },
+    {
+      "component": "SlotManagerComponent",
+      "propertyPath": "Slots[0].RegisteringComponentSlotInfo[10].Offset",
+      "detail": "only on S105's SlotManagerComponent"
+    },
+    {
+      "component": "SlotManagerComponent",
+      "propertyPath": "Slots[0].RegisteringComponentSlotInfo[11].Angles",
+      "detail": "only on S105's SlotManagerComponent"
+    },
+    {
+      "component": "SlotManagerComponent",
+      "propertyPath": "Slots[0].RegisteringComponentSlotInfo[11].Offset",
       "detail": "only on S105's SlotManagerComponent"
     },
     {
@@ -2119,26 +1994,6 @@
     {
       "component": "SlotManagerComponent",
       "propertyPath": "Slots[0].SCR_WheelSlotInfo[3].DisablePhysicsInteraction",
-      "detail": "only on S105's SlotManagerComponent"
-    },
-    {
-      "component": "SlotManagerComponent",
-      "propertyPath": "Slots[0].{AB7358254CD2CA54}Prefabs/Vehicles/Generic/VehParts/LicensePlate_01/LicensePlate_01.conf[0].Angles",
-      "detail": "only on S105's SlotManagerComponent"
-    },
-    {
-      "component": "SlotManagerComponent",
-      "propertyPath": "Slots[0].{AB7358254CD2CA54}Prefabs/Vehicles/Generic/VehParts/LicensePlate_01/LicensePlate_01.conf[0].Offset",
-      "detail": "only on S105's SlotManagerComponent"
-    },
-    {
-      "component": "SlotManagerComponent",
-      "propertyPath": "Slots[0].{AB7358254CD2CA54}Prefabs/Vehicles/Generic/VehParts/LicensePlate_01/LicensePlate_01.conf[1].Angles",
-      "detail": "only on S105's SlotManagerComponent"
-    },
-    {
-      "component": "SlotManagerComponent",
-      "propertyPath": "Slots[0].{AB7358254CD2CA54}Prefabs/Vehicles/Generic/VehParts/LicensePlate_01/LicensePlate_01.conf[1].Offset",
       "detail": "only on S105's SlotManagerComponent"
     },
     {
@@ -2755,152 +2610,127 @@
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].EmissiveLightSurfaceSlot",
+      "propertyPath": "EmissiveSurfaceSlots[0].EmissiveLightSurfaceSlot[0].Angles",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[0].EmissiveOnMultiplier",
+      "propertyPath": "EmissiveSurfaceSlots[0].EmissiveLightSurfaceSlot[0].PivotID",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[0].LightSide",
+      "propertyPath": "EmissiveSurfaceSlots[0].EmissiveLightSurfaceSlot[0].Prefab",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[0].PivotID",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[0].0",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[0].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[0].LightType",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[1].EmissiveOnMultiplier",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[0].PivotID",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[1].LightSide",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[1].0",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[1].PivotID",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[1].LightType",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{0B8CAB3404576928}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail_CombiLight.conf[1].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[1].PivotID",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[0].PivotID",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[2].EmissiveOnMultiplier",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[1].PivotID",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[2].LightSide",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[0].EmissiveOnMultiplier",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[2].Offset",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[0].LightSide",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[2].PivotID",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[0].Offset",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[3].EmissiveOnMultiplier",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[0].PivotID",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[3].LightSide",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[1].EmissiveOnMultiplier",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[3].Offset",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[1].LightSide",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[3].PivotID",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[1].Offset",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[4].EmissiveOnMultiplier",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[1].PivotID",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[4].LightSide",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{3D89FA31E5926C94}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Interior.conf[0].Angles",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[4].PivotID",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{3D89FA31E5926C94}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Interior.conf[0].PivotID",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[5].EmissiveOnMultiplier",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{3D89FA31E5926C94}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Interior.conf[0].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[5].LightSide",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[0].0",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[5].PivotID",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[0].LightType",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[6].PivotID",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[0].PivotID",
-      "detail": "only on BRDM2's BaseLightManagerComponent"
-    },
-    {
-      "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[0].Prefab",
-      "detail": "only on BRDM2's BaseLightManagerComponent"
-    },
-    {
-      "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[1].0",
-      "detail": "only on BRDM2's BaseLightManagerComponent"
-    },
-    {
-      "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[1].LightType",
-      "detail": "only on BRDM2's BaseLightManagerComponent"
-    },
-    {
-      "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[1].PivotID",
-      "detail": "only on BRDM2's BaseLightManagerComponent"
-    },
-    {
-      "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{7EC8EDAB11457582}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Blackout.conf[1].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[7].PivotID",
       "detail": "only on BRDM2's BaseLightManagerComponent"
     },
     {
@@ -3269,16 +3099,6 @@
     },
     {
       "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].ParentContextList[0].[value][0]",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].Sort Priority",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
       "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].UIInfo[0].Name",
       "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
     },
@@ -3299,21 +3119,6 @@
     },
     {
       "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][0]",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][1]",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].Sort Priority",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
       "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].UIInfo[0].Name",
       "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
     },
@@ -3329,47 +3134,7 @@
     },
     {
       "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].BaseCoverage",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
       "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].CompartmentAction[0].CanAggregate",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].CompartmentAction[0].ParentContextList[0].[value][0]",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].CompartmentAction[0].ParentContextList[0].[value][1]",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].CompartmentAction[0].Sort Priority",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].CompartmentAction[0].UIInfo",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].CompartmentAction[0].VisibilityRange",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].CompartmentAction[0].[value][0]",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].ContextName",
       "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
     },
     {
@@ -3380,11 +3145,6 @@
     {
       "component": "SCR_BaseCompartmentManagerComponent",
       "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].ForcedFreeLook",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].GetOutAction[0].ParentContextList[0].[value][0]",
       "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
     },
     {
@@ -3404,31 +3164,6 @@
     },
     {
       "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].GetOutAction[0].Sort Priority",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].GetOutAction[0].UIInfo",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].GetOutAction[0].[value][0]",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].PassengerPositionInfo[0].PivotID",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].SeatType",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
       "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].SkipCharacterDoorAnimationsFromSeat",
       "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
     },
@@ -3439,42 +3174,12 @@
     },
     {
       "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].SwitchSeatAction[0].ParentContextList[0].[value][0]",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].SwitchSeatAction[0].Sort Priority",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].SwitchSeatAction[0].UIInfo",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
       "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].SwitchSeatAction[0].VisibilityRange",
       "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
     },
     {
       "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].SwitchSeatAction[0].[value][0]",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
       "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].UIInfo[0].Name",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].UIInfo[0].m_sIconName",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].m_DefaultOccupantData[0].m_sDefaultOccupantPrefab",
       "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
     },
     {
@@ -3515,16 +3220,6 @@
     {
       "component": "SCR_BaseCompartmentManagerComponent",
       "propertyPath": "CompartmentSlots[0].PilotCompartmentSlot[0].SwitchSeatAction[0].VisibilityRange",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].PilotCompartmentSlot[0].UIInfo[0].Name",
-      "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
-    },
-    {
-      "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].PilotCompartmentSlot[0].UIInfo[0].m_sIconName",
       "detail": "only on BRDM2's SCR_BaseCompartmentManagerComponent"
     },
     {
@@ -4009,7 +3704,37 @@
     },
     {
       "component": "SCR_VehicleSoundComponent",
-      "propertyPath": "Filenames[0].[value][6]",
+      "propertyPath": "Filenames[0].[value:{19F9FED7213C7C22}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Rain.acp]",
+      "detail": "only on BRDM2's SCR_VehicleSoundComponent"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value:{5B2A3941F79B5F0F}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Engine.acp]",
+      "detail": "only on BRDM2's SCR_VehicleSoundComponent"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value:{738A0D5186BB9C88}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Dampers.acp]",
+      "detail": "only on BRDM2's SCR_VehicleSoundComponent"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value:{93AE33FE9A760A78}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Horn.acp]",
+      "detail": "only on BRDM2's SCR_VehicleSoundComponent"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value:{994DA84C543C990A}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Animations.acp]",
+      "detail": "only on BRDM2's SCR_VehicleSoundComponent"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value:{B992B5065A62F9CA}Sounds/Vehicles/_SharedData/Crashes/APC/Vehicles_Crashes_APC.acp]",
+      "detail": "only on BRDM2's SCR_VehicleSoundComponent"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value:{E58AD1E99CBDA918}Sounds/Vehicles/Wheeled/BTR70/Vehicles_BTR70_Hatch.acp]",
       "detail": "only on BRDM2's SCR_VehicleSoundComponent"
     },
     {
@@ -4064,57 +3789,37 @@
     },
     {
       "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].{6B37047F22EFB1B8}Prefabs/Vehicles/Core/Configs/HitZones/Engine_APC.conf[0].ColliderNames[0].[value][0]",
+      "propertyPath": "Additional hit zones[0].SCR_FuelHitZone[1].ColliderNames[0].[value][0]",
       "detail": "only on BRDM2's SCR_WheeledDamageManagerComponent"
     },
     {
       "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].{743AF1385C5293C5}Prefabs/Vehicles/Core/Configs/HitZones/Gearbox_APC.conf[0].ColliderNames[0].[value][0]",
+      "propertyPath": "Additional hit zones[0].SCR_FuelHitZone[1].m_iFuelTankID",
       "detail": "only on BRDM2's SCR_WheeledDamageManagerComponent"
     },
     {
       "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].{743AF1385C5293C5}Prefabs/Vehicles/Core/Configs/HitZones/Gearbox_APC.conf[0].ColliderNames[0].[value][1]",
+      "propertyPath": "Additional hit zones[0].SCR_GearboxHitZone[0].ColliderNames[0].[value][1]",
       "detail": "only on BRDM2's SCR_WheeledDamageManagerComponent"
     },
     {
       "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].{743AF1385C5293C5}Prefabs/Vehicles/Core/Configs/HitZones/Gearbox_APC.conf[0].ColliderNames[0].[value][2]",
+      "propertyPath": "Additional hit zones[0].SCR_GearboxHitZone[0].ColliderNames[0].[value][2]",
       "detail": "only on BRDM2's SCR_WheeledDamageManagerComponent"
     },
     {
       "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].{743AF1385C5293C5}Prefabs/Vehicles/Core/Configs/HitZones/Gearbox_APC.conf[0].ColliderNames[0].[value][3]",
+      "propertyPath": "Additional hit zones[0].SCR_GearboxHitZone[0].ColliderNames[0].[value][3]",
       "detail": "only on BRDM2's SCR_WheeledDamageManagerComponent"
     },
     {
       "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].{743AF1385C5293C5}Prefabs/Vehicles/Core/Configs/HitZones/Gearbox_APC.conf[0].ColliderNames[0].[value][4]",
+      "propertyPath": "Additional hit zones[0].SCR_GearboxHitZone[0].ColliderNames[0].[value][4]",
       "detail": "only on BRDM2's SCR_WheeledDamageManagerComponent"
     },
     {
       "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].{743AF1385C5293C5}Prefabs/Vehicles/Core/Configs/HitZones/Gearbox_APC.conf[0].ColliderNames[0].[value][5]",
-      "detail": "only on BRDM2's SCR_WheeledDamageManagerComponent"
-    },
-    {
-      "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].{9A01A1755D987A76}Prefabs/Vehicles/Core/Configs/HitZones/Battery_APC.conf[0].ColliderNames[0].[value][0]",
-      "detail": "only on BRDM2's SCR_WheeledDamageManagerComponent"
-    },
-    {
-      "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].{A56FA93D1A62497D}Prefabs/Vehicles/Core/Configs/HitZones/FuelTank_APC.conf[0].ColliderNames[0].[value][0]",
-      "detail": "only on BRDM2's SCR_WheeledDamageManagerComponent"
-    },
-    {
-      "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].{A56FA93D1A62497D}Prefabs/Vehicles/Core/Configs/HitZones/FuelTank_APC.conf[1].ColliderNames[0].[value][0]",
-      "detail": "only on BRDM2's SCR_WheeledDamageManagerComponent"
-    },
-    {
-      "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].{A56FA93D1A62497D}Prefabs/Vehicles/Core/Configs/HitZones/FuelTank_APC.conf[1].m_iFuelTankID",
+      "propertyPath": "Additional hit zones[0].SCR_GearboxHitZone[0].ColliderNames[0].[value][5]",
       "detail": "only on BRDM2's SCR_WheeledDamageManagerComponent"
     },
     {
@@ -5251,33 +4956,51 @@
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot",
-      "valueA": "RRLicenseplate",
-      "valueB": "RFIndicator"
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[0].Prefab",
+      "valueA": "{B0E4C27145922CEB}Prefabs/Vehicles/Wheeled/S105/Lights/LHeadlight_S105_ES.et",
+      "valueB": "{3739B2EC7FC93AE2}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Headlight_L02.et.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[0].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[1].Prefab",
+      "valueA": "{D954BC246984D47B}Prefabs/Vehicles/Wheeled/S105/Lights/RHeadlight_S105_ES.et",
+      "valueB": "{5BF7183DEB9F5B86}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Headlight_R02.et.et"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[2].Prefab",
+      "valueA": "{7796859BBDCF8CA1}Prefabs/Vehicles/Wheeled/S105/Lights/LBrakelight_S105_ES.et",
+      "valueB": "{F9F1CE6E96B490DC}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Headlight_R.et"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[3].Prefab",
+      "valueA": "{01010E3CD5F7D97D}Prefabs/Vehicles/Wheeled/S105/Lights/RBrakelight_S105_ES.et",
+      "valueB": "{745E9D1D034C9092}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Headlight_L.et"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[4].Prefab",
+      "valueA": "{23883E0CDEFACD81}Prefabs/Vehicles/Wheeled/S105/Lights/LReverselight_S105_ES.et",
+      "valueB": "{994D087B2DE3F762}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Back_light_L.et"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[5].Prefab",
+      "valueA": "{A10CCE7B9470A354}Prefabs/Vehicles/Wheeled/S105/Lights/RReverselight_S105_ES.et",
+      "valueB": "{E455E4834870CBFB}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Back_light_R.et"
+    },
+    {
+      "component": "BaseLightManagerComponent",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[6].Prefab",
       "valueA": "{DD7ED81DD3E185E1}Prefabs/Vehicles/Wheeled/S105/Lights/LFIndicator_S105_ES.et",
       "valueB": "{6C171C08CCDBD5EF}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Indicator_Front_L.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[1].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[7].Prefab",
       "valueA": "{ABE953BABBD9D03D}Prefabs/Vehicles/Wheeled/S105/Lights/RFIndicator_S105_ES.et",
       "valueB": "{110FF0F0A948E976}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Indicator_Front_R.et"
-    },
-    {
-      "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[0].Prefab",
-      "valueA": "{B0E4C27145922CEB}Prefabs/Vehicles/Wheeled/S105/Lights/LHeadlight_S105_ES.et",
-      "valueB": "{F9F1CE6E96B490DC}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Headlight_R.et"
-    },
-    {
-      "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[1].Prefab",
-      "valueA": "{D954BC246984D47B}Prefabs/Vehicles/Wheeled/S105/Lights/RHeadlight_S105_ES.et",
-      "valueB": "{745E9D1D034C9092}Prefabs/Vehicles/Wheeled/BRDM2/VehParts/Lights/VehPart_ES_BRDM2_Headlight_L.et"
     },
     {
       "component": "BaseLightManagerComponent",
@@ -5617,6 +5340,108 @@
     },
     {
       "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].ParentContextList[0].[value][0]",
+      "valueA": "passenger_r01",
+      "valueB": "passenger"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][0]",
+      "valueA": "door_r01",
+      "valueB": "hatch_driver_hole"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][1]",
+      "valueA": "passenger_r01",
+      "valueB": "hatch_commander_hole"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].BaseCoverage",
+      "valueA": "0.3",
+      "valueB": "0.4"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].CompartmentAction[0].ParentContextList[0].[value][0]",
+      "valueA": "door_r01",
+      "valueB": "hatch_driver_hole"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].CompartmentAction[0].ParentContextList[0].[value][1]",
+      "valueA": "passenger_r01",
+      "valueB": "hatch_commander_hole"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].CompartmentAction[0].VisibilityRange",
+      "valueA": "1.5",
+      "valueB": "1.2"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].CompartmentAction[0].[value][0]",
+      "valueA": "{5086CC2FC26F3322}",
+      "valueB": "{6264A101D770A218}"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].ContextName",
+      "valueA": "passenger_r01",
+      "valueB": "Passenger"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].GetOutAction[0].ParentContextList[0].[value][0]",
+      "valueA": "door_r01_int",
+      "valueB": "hatch_driver_int"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].GetOutAction[0].[value][0]",
+      "valueA": "{509D56665C8E044F}",
+      "valueB": "{6264A1078B84F4AA}"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].PassengerPositionInfo[0].PivotID",
+      "valueA": "codriver_idle",
+      "valueB": "passenger_idle"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].SeatType",
+      "valueA": "1",
+      "valueB": "4"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].SwitchSeatAction[0].ParentContextList[0].[value][0]",
+      "valueA": "passenger_r01",
+      "valueB": "passenger"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].SwitchSeatAction[0].Sort Priority",
+      "valueA": "9",
+      "valueB": "12"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].SwitchSeatAction[0].[value][0]",
+      "valueA": "{509D56666CE81B88}",
+      "valueB": "{6264A107B0CE25FE}"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].m_DefaultOccupantData[0].m_sDefaultOccupantPrefab",
+      "valueA": "{22E43956740A6794}Prefabs/Characters/Factions/CIV/GenericCivilians/Character_CIV_Randomized.et",
+      "valueB": "{9FFEF10757E742EB}Prefabs/Characters/Factions/OPFOR/USSR_Army/Character_USSR_Crew.et"
+    },
+    {
+      "component": "SCR_BaseCompartmentManagerComponent",
       "propertyPath": "CompartmentSlots[0].PilotCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][0]",
       "valueA": "door_l01",
       "valueB": "hatch_driver_hole"
@@ -5905,42 +5730,6 @@
     },
     {
       "component": "SCR_VehicleSoundComponent",
-      "propertyPath": "Filenames[0].[value][0]",
-      "valueA": "{78D17C431FB48D80}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Engine.acp",
-      "valueB": "{994DA84C543C990A}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Animations.acp"
-    },
-    {
-      "component": "SCR_VehicleSoundComponent",
-      "propertyPath": "Filenames[0].[value][1]",
-      "valueA": "{83A4DC7A729443E3}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Dampers.acp",
-      "valueB": "{5B2A3941F79B5F0F}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Engine.acp"
-    },
-    {
-      "component": "SCR_VehicleSoundComponent",
-      "propertyPath": "Filenames[0].[value][2]",
-      "valueA": "{54BB1291AEFD577B}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Animations.acp",
-      "valueB": "{B992B5065A62F9CA}Sounds/Vehicles/_SharedData/Crashes/APC/Vehicles_Crashes_APC.acp"
-    },
-    {
-      "component": "SCR_VehicleSoundComponent",
-      "propertyPath": "Filenames[0].[value][3]",
-      "valueA": "{847E37181C9AD2C2}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Horn.acp",
-      "valueB": "{738A0D5186BB9C88}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Dampers.acp"
-    },
-    {
-      "component": "SCR_VehicleSoundComponent",
-      "propertyPath": "Filenames[0].[value][4]",
-      "valueA": "{0E29FA31A7D0A498}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Rain.acp",
-      "valueB": "{93AE33FE9A760A78}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Horn.acp"
-    },
-    {
-      "component": "SCR_VehicleSoundComponent",
-      "propertyPath": "Filenames[0].[value][5]",
-      "valueA": "{465B31754AAAE693}Sounds/Vehicles/_SharedData/Crashes/Cars/Vehicles_Crashes_Cars.acp",
-      "valueB": "{19F9FED7213C7C22}Sounds/Vehicles/Wheeled/BRDM2/Vehicles_BRDM2_Rain.acp"
-    },
-    {
-      "component": "SCR_VehicleSoundComponent",
       "propertyPath": "SoundPoints[0].SoundPointInfo[0].Offset",
       "valueA": "-0.3 0.3 -1.8",
       "valueB": "-0.03 1.7 1.8"
@@ -6037,15 +5826,9 @@
     },
     {
       "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].SCR_BatteryHitZone",
-      "valueA": "Battery_01",
-      "valueB": "Battery"
-    },
-    {
-      "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].SCR_EngineHitZone",
-      "valueA": "Engine_01",
-      "valueB": "Engine"
+      "propertyPath": "Additional hit zones[0].SCR_EngineHitZone[0].ColliderNames[0].[value][0]",
+      "valueA": "UBX_FG_Engine",
+      "valueB": "UCX_FG_Engine"
     },
     {
       "component": "SCR_WheeledDamageManagerComponent",
@@ -6061,15 +5844,9 @@
     },
     {
       "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].SCR_FuelHitZone",
-      "valueA": "FuelTank_01",
-      "valueB": "FuelTank_02"
-    },
-    {
-      "component": "SCR_WheeledDamageManagerComponent",
-      "propertyPath": "Additional hit zones[0].SCR_GearboxHitZone",
-      "valueA": "Driveshaft_02",
-      "valueB": "Gearbox"
+      "propertyPath": "Additional hit zones[0].SCR_FuelHitZone[0].ColliderNames[0].[value][0]",
+      "valueA": "UBX_FG_FuelTank",
+      "valueB": "UCX_FG_FuelTank_L"
     },
     {
       "component": "SCR_WheeledDamageManagerComponent",

@@ -63,4 +63,32 @@ describe("flattenComponent", () => {
     expect(leaves.map((l) => l.path)).toEqual(["[value][0]", "[value][1]"]);
     expect(leaves[1].value).toBe("{5B2A3941F79B5F0F}Sounds/B.acp");
   });
+
+  it("keys an append-modified value list by content, not position", () => {
+    // `Filenames + { ... }` means these entries are additional to whatever the
+    // parent chain already declared, not a positional replacement of it. Two
+    // components declaring different `Filenames + {...}` lists must never
+    // collide on `[value][0]`, `[value][1]`, etc. — each distinct value gets
+    // its own path so chain-merge treats it as a new entry, not an override.
+    const node = parse(`X {
+ Filenames + {
+  "{994DA84C543C990A}Sounds/A.acp" "{5B2A3941F79B5F0F}Sounds/B.acp"
+ }
+}`);
+    const leaves = flattenComponent(node);
+    expect(leaves.map((l) => l.path)).toEqual([
+      'Filenames[0].[value:{994DA84C543C990A}Sounds/A.acp]',
+      'Filenames[0].[value:{5B2A3941F79B5F0F}Sounds/B.acp]',
+    ]);
+  });
+
+  it("keeps a plain (non-append) value list positionally indexed", () => {
+    const node = parse(`X {
+ Filenames {
+  "{994DA84C543C990A}Sounds/A.acp"
+ }
+}`);
+    const leaves = flattenComponent(node);
+    expect(leaves.map((l) => l.path)).toEqual(["Filenames[0].[value][0]"]);
+  });
 });

@@ -37,6 +37,14 @@ export interface EnfusionNode {
   className?: string;
   /** Parent reference after ":" (e.g., "{GUID}path/to/parent.et") */
   inheritance?: string;
+  /**
+   * True when this node was declared with the `+` modifier before its opening
+   * brace (e.g. `Filenames + { ... }`). Enfusion uses this to mean "add these
+   * to whatever the parent chain already declared under this key" rather than
+   * "replace it" — consumers that merge inheritance chains need to treat an
+   * append node's contents as additive, not a positional/full override.
+   */
+  append?: boolean;
   /** Key-value properties */
   properties: EnfusionProperty[];
   /** Standalone quoted values (e.g., dependency GUIDs in Dependencies block) */
@@ -61,6 +69,7 @@ enum TokenType {
   OpenBrace,  // {
   CloseBrace, // }
   Colon,      // :
+  Plus,       // + (array-append modifier, e.g. `Filenames + { ... }`)
 }
 
 interface Token {
@@ -141,6 +150,12 @@ function tokenize(input: string): Token[] {
 
     if (ch === ":") {
       tokens.push({ type: TokenType.Colon, value: ":", pos: i });
+      i++;
+      continue;
+    }
+
+    if (ch === "+") {
+      tokens.push({ type: TokenType.Plus, value: "+", pos: i });
       i++;
       continue;
     }
@@ -266,6 +281,14 @@ class Parser {
       node.inheritance = inhTok.value;
     }
 
+    // Optional append modifier: "+" immediately before the opening brace
+    // (e.g. `Filenames + { ... }`).
+    next = this.peek();
+    if (next && next.type === TokenType.Plus) {
+      this.advance(); // consume "+"
+      node.append = true;
+    }
+
     // Opening brace
     this.expect(TokenType.OpenBrace);
 
@@ -364,6 +387,20 @@ class Parser {
               this.pos = saved3;
               node.properties.push({ key: identTok.value, value: ident2.value });
             }
+          } else if (afterIdent2 && afterIdent2.type === TokenType.Colon) {
+            // TypeName SubId : "parent" { ... } — child node with a bare-word
+            // ID and inheritance, e.g.
+            //   CargoCompartmentSlot Passenger_r01 : "{GUID}CargoCompartment_Base.conf" { ... }
+            // The colon after a bare-word ID had no lookahead branch here: it
+            // fell through to "Key BareValue" below, which consumed identTok
+            // and ident2 as a property pair and left the colon as an
+            // unexpected token for the outer loop to skip — silently merging
+            // every sibling that shared the same parent config into the last
+            // one's body, keyed by the parent path instead of the sibling's
+            // own ID.
+            this.pos = saved;
+            const child = this.parseNode();
+            node.children.push(child);
           } else {
             // Key BareValue — simple property with unquoted value.
             //
@@ -394,6 +431,12 @@ class Parser {
           node.children.push(child);
         } else if (after.type === TokenType.Colon) {
           // TypeName : "parent" { ... } — child node with inheritance
+          this.pos = saved;
+          const child = this.parseNode();
+          node.children.push(child);
+        } else if (after.type === TokenType.Plus) {
+          // TypeName + { ... } — child node whose contents append to the
+          // inherited value rather than replacing it (e.g. `Filenames + { ... }`).
           this.pos = saved;
           const child = this.parseNode();
           node.children.push(child);
@@ -504,6 +547,11 @@ function serializeNode(node: EnfusionNode, indent: number): string {
   // Inheritance
   if (node.inheritance !== undefined) {
     header += ` : "${escapeString(node.inheritance)}"`;
+  }
+
+  // Append modifier
+  if (node.append === true) {
+    header += " +";
   }
 
   // If raw content is provided, re-indent it to match the target depth and emit

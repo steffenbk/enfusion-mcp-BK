@@ -7,7 +7,14 @@ import type { PropertyLeaf } from "./types.js";
  *
  * Repeated sibling blocks of the same type are indexed (`Wheels[0]`, `Wheels[1]`)
  * so two wheels with the same structure stay distinguishable. Standalone quoted
- * values (Enfusion arrays such as `Filenames`) land under `[value][n]`.
+ * values (Enfusion arrays such as `Filenames`) land under `[value][n]` — except
+ * inside a `+`-modified node (`Filenames + { ... }`), where they are keyed by
+ * their own content (`[value:<content>]`) instead. An append node's entries are
+ * additions to whatever the parent chain already declared under the same key,
+ * not a positional replacement of it; content-keying makes chain-merge treat
+ * each distinct value as its own property rather than overriding the parent's
+ * list entry-by-index, which silently dropped every inherited entry beyond the
+ * shorter of the two lists.
  *
  * Values are copied verbatim — shipped assets contain load-bearing typos in bone
  * names and correcting them would break the very lookups this map exists to check.
@@ -37,7 +44,8 @@ function walk(
   }
 
   node.values.forEach((v, i) => {
-    out.push(leaf(join(prefix, `[value][${i}]`), v, nodeType));
+    const key = node.append === true ? `[value:${v}]` : `[value][${i}]`;
+    out.push(leaf(join(prefix, key), v, nodeType));
   });
 
   // Index children by type so repeated siblings get stable distinct paths.

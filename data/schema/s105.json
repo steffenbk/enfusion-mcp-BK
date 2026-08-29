@@ -191,21 +191,14 @@
       "introducedBy": "Prefabs/Vehicles/Core/Vehicle_Base.et",
       "properties": [
         {
-          "path": "CompartmentSlots[0].PilotCompartmentSlot",
-          "value": "PilotCompartment",
-          "nodeType": "CompartmentSlots",
-          "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et",
-          "overrides": []
-        },
-        {
-          "path": "CompartmentSlots[0].{FA11A8598F401058}Prefabs/Vehicles/Core/Configs/PilotCompartment_Base.conf[0].UIInfo[0].Name",
+          "path": "CompartmentSlots[0].PilotCompartmentSlot[0].UIInfo[0].Name",
           "value": "#AR-VehiclePosition_Driver",
           "nodeType": "UIInfo",
           "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{FA11A8598F401058}Prefabs/Vehicles/Core/Configs/PilotCompartment_Base.conf[0].UIInfo[0].m_sIconName",
+          "path": "CompartmentSlots[0].PilotCompartmentSlot[0].UIInfo[0].m_sIconName",
           "value": "mountAsDriverCommand",
           "nodeType": "UIInfo",
           "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et",
@@ -807,22 +800,6 @@
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].CargoCompartmentSlot",
-          "value": "Passenger_r02",
-          "nodeType": "CompartmentSlots",
-          "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
-          "overrides": [
-            {
-              "value": "Passenger_r01",
-              "from": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
-            },
-            {
-              "value": "Passenger_l02",
-              "from": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
-            }
-          ]
-        },
-        {
           "path": "CompartmentSlots[0].PilotCompartmentSlot[0].BaseCoverage",
           "value": "0.3",
           "nodeType": "PilotCompartmentSlot",
@@ -956,658 +933,658 @@
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].SeatType",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].SeatType",
           "value": "1",
-          "nodeType": "{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf",
+          "nodeType": "CargoCompartmentSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].BaseCoverage",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].BaseCoverage",
           "value": "0.3",
-          "nodeType": "{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf",
+          "nodeType": "CargoCompartmentSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].ContextName",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].ContextName",
           "value": "passenger_r01",
-          "nodeType": "{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf",
+          "nodeType": "CargoCompartmentSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].CompartmentAction[0].UIInfo",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].CompartmentAction[0].UIInfo",
           "value": "SCR_ActionUIInfo",
           "nodeType": "CompartmentAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].CompartmentAction[0].VisibilityRange",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].CompartmentAction[0].VisibilityRange",
           "value": "1.5",
           "nodeType": "CompartmentAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].CompartmentAction[0].Sort Priority",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].CompartmentAction[0].Sort Priority",
           "value": "9",
           "nodeType": "CompartmentAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].CompartmentAction[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].CompartmentAction[0].[value][0]",
           "value": "{5086CC2FC26F3322}",
           "nodeType": "CompartmentAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].CompartmentAction[0].ParentContextList[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].CompartmentAction[0].ParentContextList[0].[value][0]",
           "value": "door_r01",
           "nodeType": "ParentContextList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].CompartmentAction[0].ParentContextList[0].[value][1]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].CompartmentAction[0].ParentContextList[0].[value][1]",
           "value": "passenger_r01",
           "nodeType": "ParentContextList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].GetOutAction[0].UIInfo",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].GetOutAction[0].UIInfo",
           "value": "SCR_ActionUIInfo",
           "nodeType": "GetOutAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].GetOutAction[0].Sort Priority",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].GetOutAction[0].Sort Priority",
           "value": "12",
           "nodeType": "GetOutAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].GetOutAction[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].GetOutAction[0].[value][0]",
           "value": "{509D56665C8E044F}",
           "nodeType": "GetOutAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].GetOutAction[0].ParentContextList[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].GetOutAction[0].ParentContextList[0].[value][0]",
           "value": "door_r01_int",
           "nodeType": "ParentContextList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].JumpOutAction[0].UIInfo",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].JumpOutAction[0].UIInfo",
           "value": "SCR_ActionUIInfo",
           "nodeType": "JumpOutAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].JumpOutAction[0].Sort Priority",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].JumpOutAction[0].Sort Priority",
           "value": "12",
           "nodeType": "JumpOutAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].JumpOutAction[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].JumpOutAction[0].[value][0]",
           "value": "{5D0B1D4714B59342}",
           "nodeType": "JumpOutAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].SwitchSeatAction[0].UIInfo",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].SwitchSeatAction[0].UIInfo",
           "value": "SCR_ActionUIInfo",
           "nodeType": "SwitchSeatAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].SwitchSeatAction[0].Sort Priority",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].SwitchSeatAction[0].Sort Priority",
           "value": "9",
           "nodeType": "SwitchSeatAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].SwitchSeatAction[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].SwitchSeatAction[0].[value][0]",
           "value": "{509D56666CE81B88}",
           "nodeType": "SwitchSeatAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].SwitchSeatAction[0].ParentContextList[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].SwitchSeatAction[0].ParentContextList[0].[value][0]",
           "value": "passenger_r01",
           "nodeType": "ParentContextList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].UIInfo",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].UIInfo",
           "value": "SCR_ActionUIInfo",
           "nodeType": "SCR_RemoveCasualtyUserAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].Sort Priority",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].Sort Priority",
           "value": "8",
           "nodeType": "SCR_RemoveCasualtyUserAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].[value][0]",
           "value": "{5D528255C71C9310}",
           "nodeType": "SCR_RemoveCasualtyUserAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].ParentContextList[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].ParentContextList[0].[value][0]",
           "value": "passenger_r01",
           "nodeType": "ParentContextList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].VisibilityRange",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].VisibilityRange",
           "value": "1.5",
           "nodeType": "SCR_RemoveCasualtyUserAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].Sort Priority",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].Sort Priority",
           "value": "8",
           "nodeType": "SCR_RemoveCasualtyUserAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][0]",
           "value": "door_r01",
           "nodeType": "ParentContextList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][1]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][1]",
           "value": "passenger_r01",
           "nodeType": "ParentContextList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].PassengerPositionInfo[0].PivotID",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].PassengerPositionInfo[0].PivotID",
           "value": "codriver_idle",
           "nodeType": "PassengerPositionInfo",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].DoorInfoList[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].DoorInfoList[0].[value][0]",
           "value": "1",
           "nodeType": "DoorInfoList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].UIInfo[0].m_sIconName",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].UIInfo[0].m_sIconName",
           "value": "passenger",
           "nodeType": "UIInfo",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].m_DefaultOccupantData[0].m_sDefaultOccupantPrefab",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[0].m_DefaultOccupantData[0].m_sDefaultOccupantPrefab",
           "value": "{22E43956740A6794}Prefabs/Characters/Factions/CIV/GenericCivilians/Character_CIV_Randomized.et",
           "nodeType": "m_DefaultOccupantData",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].SeatType",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].SeatType",
           "value": "2",
-          "nodeType": "{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf",
+          "nodeType": "CargoCompartmentSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].BaseCoverage",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].BaseCoverage",
           "value": "0.3",
-          "nodeType": "{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf",
+          "nodeType": "CargoCompartmentSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].ContextName",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].ContextName",
           "value": "passenger_l02",
-          "nodeType": "{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf",
+          "nodeType": "CargoCompartmentSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].CompartmentAction[0].UIInfo",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].CompartmentAction[0].UIInfo",
           "value": "SCR_ActionUIInfo",
           "nodeType": "CompartmentAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].CompartmentAction[0].VisibilityRange",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].CompartmentAction[0].VisibilityRange",
           "value": "1.5",
           "nodeType": "CompartmentAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].CompartmentAction[0].Sort Priority",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].CompartmentAction[0].Sort Priority",
           "value": "9",
           "nodeType": "CompartmentAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].CompartmentAction[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].CompartmentAction[0].[value][0]",
           "value": "{5086CC2FC26F3322}",
           "nodeType": "CompartmentAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].CompartmentAction[0].ParentContextList[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].CompartmentAction[0].ParentContextList[0].[value][0]",
           "value": "door_l02",
           "nodeType": "ParentContextList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].CompartmentAction[0].ParentContextList[0].[value][1]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].CompartmentAction[0].ParentContextList[0].[value][1]",
           "value": "passenger_l02",
           "nodeType": "ParentContextList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].GetOutAction[0].UIInfo",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].GetOutAction[0].UIInfo",
           "value": "SCR_ActionUIInfo",
           "nodeType": "GetOutAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].GetOutAction[0].Sort Priority",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].GetOutAction[0].Sort Priority",
           "value": "12",
           "nodeType": "GetOutAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].GetOutAction[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].GetOutAction[0].[value][0]",
           "value": "{509D56665C8E044F}",
           "nodeType": "GetOutAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].GetOutAction[0].ParentContextList[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].GetOutAction[0].ParentContextList[0].[value][0]",
           "value": "door_l02_int",
           "nodeType": "ParentContextList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].JumpOutAction[0].UIInfo",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].JumpOutAction[0].UIInfo",
           "value": "SCR_ActionUIInfo",
           "nodeType": "JumpOutAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].JumpOutAction[0].Sort Priority",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].JumpOutAction[0].Sort Priority",
           "value": "12",
           "nodeType": "JumpOutAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].JumpOutAction[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].JumpOutAction[0].[value][0]",
           "value": "{5D0B1D4714B59342}",
           "nodeType": "JumpOutAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].SwitchSeatAction[0].UIInfo",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].SwitchSeatAction[0].UIInfo",
           "value": "SCR_ActionUIInfo",
           "nodeType": "SwitchSeatAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].SwitchSeatAction[0].Sort Priority",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].SwitchSeatAction[0].Sort Priority",
           "value": "9",
           "nodeType": "SwitchSeatAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].SwitchSeatAction[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].SwitchSeatAction[0].[value][0]",
           "value": "{509D56666CE81B88}",
           "nodeType": "SwitchSeatAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].SwitchSeatAction[0].ParentContextList[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].SwitchSeatAction[0].ParentContextList[0].[value][0]",
           "value": "passenger_l02",
           "nodeType": "ParentContextList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].Sort Priority",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].Sort Priority",
           "value": "8",
           "nodeType": "SCR_RemoveCasualtyUserAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].ParentContextList[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].ParentContextList[0].[value][0]",
           "value": "passenger_l02",
           "nodeType": "ParentContextList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].VisibilityRange",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].VisibilityRange",
           "value": "1.5",
           "nodeType": "SCR_RemoveCasualtyUserAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].Sort Priority",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].Sort Priority",
           "value": "8",
           "nodeType": "SCR_RemoveCasualtyUserAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][0]",
           "value": "door_l02",
           "nodeType": "ParentContextList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][1]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][1]",
           "value": "passenger_l02",
           "nodeType": "ParentContextList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].PassengerPositionInfo[0].PivotID",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].PassengerPositionInfo[0].PivotID",
           "value": "passangerL_idle",
           "nodeType": "PassengerPositionInfo",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].DoorInfoList[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].DoorInfoList[0].[value][0]",
           "value": "2",
           "nodeType": "DoorInfoList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].UIInfo[0].m_sIconName",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].UIInfo[0].m_sIconName",
           "value": "passenger",
           "nodeType": "UIInfo",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].m_DefaultOccupantData[0].m_sDefaultOccupantPrefab",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[1].m_DefaultOccupantData[0].m_sDefaultOccupantPrefab",
           "value": "{22E43956740A6794}Prefabs/Characters/Factions/CIV/GenericCivilians/Character_CIV_Randomized.et",
           "nodeType": "m_DefaultOccupantData",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].SeatType",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].SeatType",
           "value": "3",
-          "nodeType": "{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf",
+          "nodeType": "CargoCompartmentSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].BaseCoverage",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].BaseCoverage",
           "value": "0.3",
-          "nodeType": "{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf",
+          "nodeType": "CargoCompartmentSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].ContextName",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].ContextName",
           "value": "passenger_r02",
-          "nodeType": "{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf",
+          "nodeType": "CargoCompartmentSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].CompartmentAction[0].UIInfo",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].CompartmentAction[0].UIInfo",
           "value": "SCR_ActionUIInfo",
           "nodeType": "CompartmentAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].CompartmentAction[0].VisibilityRange",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].CompartmentAction[0].VisibilityRange",
           "value": "1.5",
           "nodeType": "CompartmentAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].CompartmentAction[0].Sort Priority",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].CompartmentAction[0].Sort Priority",
           "value": "9",
           "nodeType": "CompartmentAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].CompartmentAction[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].CompartmentAction[0].[value][0]",
           "value": "{5086CC2FC26F3322}",
           "nodeType": "CompartmentAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].CompartmentAction[0].ParentContextList[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].CompartmentAction[0].ParentContextList[0].[value][0]",
           "value": "door_r02",
           "nodeType": "ParentContextList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].CompartmentAction[0].ParentContextList[0].[value][1]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].CompartmentAction[0].ParentContextList[0].[value][1]",
           "value": "passenger_r02",
           "nodeType": "ParentContextList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].GetOutAction[0].UIInfo",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].GetOutAction[0].UIInfo",
           "value": "SCR_ActionUIInfo",
           "nodeType": "GetOutAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].GetOutAction[0].Sort Priority",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].GetOutAction[0].Sort Priority",
           "value": "12",
           "nodeType": "GetOutAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].GetOutAction[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].GetOutAction[0].[value][0]",
           "value": "{509D56665C8E044F}",
           "nodeType": "GetOutAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].GetOutAction[0].ParentContextList[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].GetOutAction[0].ParentContextList[0].[value][0]",
           "value": "door_r02_int",
           "nodeType": "ParentContextList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].JumpOutAction[0].UIInfo",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].JumpOutAction[0].UIInfo",
           "value": "SCR_ActionUIInfo",
           "nodeType": "JumpOutAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].JumpOutAction[0].Sort Priority",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].JumpOutAction[0].Sort Priority",
           "value": "12",
           "nodeType": "JumpOutAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].JumpOutAction[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].JumpOutAction[0].[value][0]",
           "value": "{5D0B1D4714B59342}",
           "nodeType": "JumpOutAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].SwitchSeatAction[0].UIInfo",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].SwitchSeatAction[0].UIInfo",
           "value": "SCR_ActionUIInfo",
           "nodeType": "SwitchSeatAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].SwitchSeatAction[0].Sort Priority",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].SwitchSeatAction[0].Sort Priority",
           "value": "9",
           "nodeType": "SwitchSeatAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].SwitchSeatAction[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].SwitchSeatAction[0].[value][0]",
           "value": "{509D56666CE81B88}",
           "nodeType": "SwitchSeatAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].SwitchSeatAction[0].ParentContextList[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].SwitchSeatAction[0].ParentContextList[0].[value][0]",
           "value": "passenger_r02",
           "nodeType": "ParentContextList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].UIInfo",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].UIInfo",
           "value": "SCR_ActionUIInfo",
           "nodeType": "SCR_RemoveCasualtyUserAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].Sort Priority",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].Sort Priority",
           "value": "8",
           "nodeType": "SCR_RemoveCasualtyUserAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].[value][0]",
           "value": "{5D528255C71C9310}",
           "nodeType": "SCR_RemoveCasualtyUserAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].ParentContextList[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[0].ParentContextList[0].[value][0]",
           "value": "passenger_r02",
           "nodeType": "ParentContextList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].VisibilityRange",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].VisibilityRange",
           "value": "1.5",
           "nodeType": "SCR_RemoveCasualtyUserAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].Sort Priority",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].Sort Priority",
           "value": "8",
           "nodeType": "SCR_RemoveCasualtyUserAction",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][0]",
           "value": "door_r02",
           "nodeType": "ParentContextList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][1]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].AdditionalActions[0].SCR_RemoveCasualtyUserAction[1].ParentContextList[0].[value][1]",
           "value": "passenger_r02",
           "nodeType": "ParentContextList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].PassengerPositionInfo[0].PivotID",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].PassengerPositionInfo[0].PivotID",
           "value": "passangerR_idle",
           "nodeType": "PassengerPositionInfo",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].DoorInfoList[0].[value][0]",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].DoorInfoList[0].[value][0]",
           "value": "3",
           "nodeType": "DoorInfoList",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].UIInfo[0].m_sIconName",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].UIInfo[0].m_sIconName",
           "value": "passenger",
           "nodeType": "UIInfo",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].m_DefaultOccupantData[0].m_sDefaultOccupantPrefab",
+          "path": "CompartmentSlots[0].CargoCompartmentSlot[2].m_DefaultOccupantData[0].m_sDefaultOccupantPrefab",
           "value": "{22E43956740A6794}Prefabs/Characters/Factions/CIV/GenericCivilians/Character_CIV_Randomized.et",
           "nodeType": "m_DefaultOccupantData",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
@@ -2295,18 +2272,6 @@
       "introducedBy": "Prefabs/Vehicles/Core/Vehicle_Base.et",
       "properties": [
         {
-          "path": "Slots[0].RegisteringComponentSlotInfo",
-          "value": "LicensePlate_back",
-          "nodeType": "Slots",
-          "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
-          "overrides": [
-            {
-              "value": "LicensePlate_front",
-              "from": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
-            }
-          ]
-        },
-        {
           "path": "Slots[0].SCR_SalvageVehicleSlotInfo[0].Offset",
           "value": "0 0.9513 2.0488",
           "nodeType": "SCR_SalvageVehicleSlotInfo",
@@ -2860,30 +2825,30 @@
           "overrides": []
         },
         {
-          "path": "Slots[0].{AB7358254CD2CA54}Prefabs/Vehicles/Generic/VehParts/LicensePlate_01/LicensePlate_01.conf[0].Offset",
+          "path": "Slots[0].RegisteringComponentSlotInfo[10].Offset",
           "value": "0 0.4194 2.1901",
-          "nodeType": "{AB7358254CD2CA54}Prefabs/Vehicles/Generic/VehParts/LicensePlate_01/LicensePlate_01.conf",
+          "nodeType": "RegisteringComponentSlotInfo",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "Slots[0].{AB7358254CD2CA54}Prefabs/Vehicles/Generic/VehParts/LicensePlate_01/LicensePlate_01.conf[0].Angles",
+          "path": "Slots[0].RegisteringComponentSlotInfo[10].Angles",
           "value": "2.5 0 0",
-          "nodeType": "{AB7358254CD2CA54}Prefabs/Vehicles/Generic/VehParts/LicensePlate_01/LicensePlate_01.conf",
+          "nodeType": "RegisteringComponentSlotInfo",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "Slots[0].{AB7358254CD2CA54}Prefabs/Vehicles/Generic/VehParts/LicensePlate_01/LicensePlate_01.conf[1].Offset",
+          "path": "Slots[0].RegisteringComponentSlotInfo[11].Offset",
           "value": "0 0.7429 -2.1131",
-          "nodeType": "{AB7358254CD2CA54}Prefabs/Vehicles/Generic/VehParts/LicensePlate_01/LicensePlate_01.conf",
+          "nodeType": "RegisteringComponentSlotInfo",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "Slots[0].{AB7358254CD2CA54}Prefabs/Vehicles/Generic/VehParts/LicensePlate_01/LicensePlate_01.conf[1].Angles",
+          "path": "Slots[0].RegisteringComponentSlotInfo[11].Angles",
           "value": "0 180 0",
-          "nodeType": "{AB7358254CD2CA54}Prefabs/Vehicles/Generic/VehParts/LicensePlate_01/LicensePlate_01.conf",
+          "nodeType": "RegisteringComponentSlotInfo",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         }
@@ -4690,75 +4655,45 @@
         },
         {
           "path": "Filenames[0].[value][0]",
-          "value": "{78D17C431FB48D80}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Engine.acp",
+          "value": "{9DD9C6279F4489B4}Sounds/SupportStations/SupportStations_Vehicles.acp",
           "nodeType": "Filenames",
-          "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
-          "overrides": [
-            {
-              "value": "{9DD9C6279F4489B4}Sounds/SupportStations/SupportStations_Vehicles.acp",
-              "from": "Prefabs/Vehicles/Core/Wheeled_Base.et"
-            }
-          ]
+          "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et",
+          "overrides": []
         },
         {
           "path": "Filenames[0].[value][1]",
-          "value": "{83A4DC7A729443E3}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Dampers.acp",
+          "value": "{1E4E57FCBAA4E206}Sounds/Vehicles/_SharedData/Vehicles_Wind_.acp",
           "nodeType": "Filenames",
-          "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
-          "overrides": [
-            {
-              "value": "{1E4E57FCBAA4E206}Sounds/Vehicles/_SharedData/Vehicles_Wind_.acp",
-              "from": "Prefabs/Vehicles/Core/Wheeled_Base.et"
-            }
-          ]
+          "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et",
+          "overrides": []
         },
         {
           "path": "Filenames[0].[value][2]",
-          "value": "{54BB1291AEFD577B}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Animations.acp",
+          "value": "{F41C3D53A2B69D85}Sounds/Vehicles/_SharedData/Destruction/Vehicles_Destruction_Fires.acp",
           "nodeType": "Filenames",
-          "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
-          "overrides": [
-            {
-              "value": "{F41C3D53A2B69D85}Sounds/Vehicles/_SharedData/Destruction/Vehicles_Destruction_Fires.acp",
-              "from": "Prefabs/Vehicles/Core/Wheeled_Base.et"
-            }
-          ]
+          "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et",
+          "overrides": []
         },
         {
           "path": "Filenames[0].[value][3]",
-          "value": "{847E37181C9AD2C2}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Horn.acp",
+          "value": "{BA8A5BD290F5FB34}Sounds/Vehicles/_SharedData/Destruction/Vehicles_Destruction.acp",
           "nodeType": "Filenames",
-          "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
-          "overrides": [
-            {
-              "value": "{BA8A5BD290F5FB34}Sounds/Vehicles/_SharedData/Destruction/Vehicles_Destruction.acp",
-              "from": "Prefabs/Vehicles/Core/Wheeled_Base.et"
-            }
-          ]
+          "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et",
+          "overrides": []
         },
         {
           "path": "Filenames[0].[value][4]",
-          "value": "{0E29FA31A7D0A498}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Rain.acp",
+          "value": "{D2DF25DD8B4A4B62}Sounds/Destruction/Multiphase/Destruction_Multiphase_Vehicle.acp",
           "nodeType": "Filenames",
-          "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
-          "overrides": [
-            {
-              "value": "{D2DF25DD8B4A4B62}Sounds/Destruction/Multiphase/Destruction_Multiphase_Vehicle.acp",
-              "from": "Prefabs/Vehicles/Core/Wheeled_Base.et"
-            }
-          ]
+          "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et",
+          "overrides": []
         },
         {
           "path": "Filenames[0].[value][5]",
-          "value": "{465B31754AAAE693}Sounds/Vehicles/_SharedData/Crashes/Cars/Vehicles_Crashes_Cars.acp",
+          "value": "{F1030E91E4B33E24}Sounds/Vehicles/_SharedData/WaterInteractions/Vehicles_WaterInteractions.acp",
           "nodeType": "Filenames",
-          "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
-          "overrides": [
-            {
-              "value": "{F1030E91E4B33E24}Sounds/Vehicles/_SharedData/WaterInteractions/Vehicles_WaterInteractions.acp",
-              "from": "Prefabs/Vehicles/Core/Wheeled_Base.et"
-            }
-          ]
+          "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et",
+          "overrides": []
         },
         {
           "path": "m_aHitZoneStateSignalData[0].SCR_HitZoneStateSignalData[0].m_sSignalName",
@@ -4786,6 +4721,48 @@
           "value": "Gearbox_01",
           "nodeType": "m_aHitZoneNames",
           "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et",
+          "overrides": []
+        },
+        {
+          "path": "Filenames[0].[value:{78D17C431FB48D80}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Engine.acp]",
+          "value": "{78D17C431FB48D80}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Engine.acp",
+          "nodeType": "Filenames",
+          "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
+          "overrides": []
+        },
+        {
+          "path": "Filenames[0].[value:{83A4DC7A729443E3}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Dampers.acp]",
+          "value": "{83A4DC7A729443E3}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Dampers.acp",
+          "nodeType": "Filenames",
+          "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
+          "overrides": []
+        },
+        {
+          "path": "Filenames[0].[value:{54BB1291AEFD577B}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Animations.acp]",
+          "value": "{54BB1291AEFD577B}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Animations.acp",
+          "nodeType": "Filenames",
+          "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
+          "overrides": []
+        },
+        {
+          "path": "Filenames[0].[value:{847E37181C9AD2C2}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Horn.acp]",
+          "value": "{847E37181C9AD2C2}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Horn.acp",
+          "nodeType": "Filenames",
+          "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
+          "overrides": []
+        },
+        {
+          "path": "Filenames[0].[value:{0E29FA31A7D0A498}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Rain.acp]",
+          "value": "{0E29FA31A7D0A498}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Rain.acp",
+          "nodeType": "Filenames",
+          "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
+          "overrides": []
+        },
+        {
+          "path": "Filenames[0].[value:{465B31754AAAE693}Sounds/Vehicles/_SharedData/Crashes/Cars/Vehicles_Crashes_Cars.acp]",
+          "value": "{465B31754AAAE693}Sounds/Vehicles/_SharedData/Crashes/Cars/Vehicles_Crashes_Cars.acp",
+          "nodeType": "Filenames",
+          "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
@@ -5250,252 +5227,184 @@
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot",
-          "value": "RRLicenseplate",
-          "nodeType": "EmissiveSurfaceSlots",
-          "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
-          "overrides": [
-            {
-              "value": "LHeadlight",
-              "from": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
-            },
-            {
-              "value": "RHeadlight",
-              "from": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
-            },
-            {
-              "value": "LBrakeLight",
-              "from": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
-            },
-            {
-              "value": "RBrakeLight",
-              "from": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
-            },
-            {
-              "value": "LReverselight",
-              "from": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
-            },
-            {
-              "value": "RReverselight",
-              "from": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
-            },
-            {
-              "value": "LFIndicator",
-              "from": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
-            },
-            {
-              "value": "RFIndicator",
-              "from": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
-            },
-            {
-              "value": "LSIndicator",
-              "from": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
-            },
-            {
-              "value": "RSIndicator",
-              "from": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
-            },
-            {
-              "value": "LRIndicator",
-              "from": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
-            },
-            {
-              "value": "RRIndicator",
-              "from": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
-            },
-            {
-              "value": "LRearlight",
-              "from": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
-            },
-            {
-              "value": "RRearlight",
-              "from": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
-            },
-            {
-              "value": "LRLicenseplate",
-              "from": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
-            }
-          ]
-        },
-        {
-          "path": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[0].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[0].Prefab",
           "value": "{B0E4C27145922CEB}Prefabs/Vehicles/Wheeled/S105/Lights/LHeadlight_S105_ES.et",
-          "nodeType": "{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[1].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[1].Prefab",
           "value": "{D954BC246984D47B}Prefabs/Vehicles/Wheeled/S105/Lights/RHeadlight_S105_ES.et",
-          "nodeType": "{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{1A2A10B920F60975}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Brake.conf[0].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[2].Prefab",
           "value": "{7796859BBDCF8CA1}Prefabs/Vehicles/Wheeled/S105/Lights/LBrakelight_S105_ES.et",
-          "nodeType": "{1A2A10B920F60975}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Brake.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{1A2A10B920F60975}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Brake.conf[1].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[3].Prefab",
           "value": "{01010E3CD5F7D97D}Prefabs/Vehicles/Wheeled/S105/Lights/RBrakelight_S105_ES.et",
-          "nodeType": "{1A2A10B920F60975}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Brake.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{47BE09BAE9B2A809}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Reverse.conf[0].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[4].Prefab",
           "value": "{23883E0CDEFACD81}Prefabs/Vehicles/Wheeled/S105/Lights/LReverselight_S105_ES.et",
-          "nodeType": "{47BE09BAE9B2A809}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Reverse.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{47BE09BAE9B2A809}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Reverse.conf[1].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[5].Prefab",
           "value": "{A10CCE7B9470A354}Prefabs/Vehicles/Wheeled/S105/Lights/RReverselight_S105_ES.et",
-          "nodeType": "{47BE09BAE9B2A809}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Reverse.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[0].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[6].Prefab",
           "value": "{DD7ED81DD3E185E1}Prefabs/Vehicles/Wheeled/S105/Lights/LFIndicator_S105_ES.et",
-          "nodeType": "{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[0].LightSide",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[6].LightSide",
           "value": "0",
-          "nodeType": "{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[1].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[7].Prefab",
           "value": "{ABE953BABBD9D03D}Prefabs/Vehicles/Wheeled/S105/Lights/RFIndicator_S105_ES.et",
-          "nodeType": "{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[1].LightSide",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[7].LightSide",
           "value": "1",
-          "nodeType": "{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[2].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[8].Prefab",
           "value": "{68093B9D4BD653CD}Prefabs/Vehicles/Wheeled/S105/Lights/LSIndicator_S105_ES.et",
-          "nodeType": "{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[2].LightSide",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[8].LightSide",
           "value": "0",
-          "nodeType": "{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[3].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[9].Prefab",
           "value": "{1E9EB03A23EE0611}Prefabs/Vehicles/Wheeled/S105/Lights/RSIndicator_S105_ES.et",
-          "nodeType": "{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[3].LightSide",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[9].LightSide",
           "value": "1",
-          "nodeType": "{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[4].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[10].Prefab",
           "value": "{520ED322835CC770}Prefabs/Vehicles/Wheeled/S105/Lights/LRIndicator_S105_ES.et",
-          "nodeType": "{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[4].LightSide",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[10].LightSide",
           "value": "0",
-          "nodeType": "{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[5].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[11].Prefab",
           "value": "{24995885EB6492AC}Prefabs/Vehicles/Wheeled/S105/Lights/RRIndicator_S105_ES.et",
-          "nodeType": "{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[5].LightSide",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[11].LightSide",
           "value": "1",
-          "nodeType": "{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{8D4594D6FD4FDCAB}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail.conf[0].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[12].Prefab",
           "value": "{4DE8C9CD1D33F387}Prefabs/Vehicles/Wheeled/S105/Lights/LRearlight_S105_ES.et",
-          "nodeType": "{8D4594D6FD4FDCAB}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{8D4594D6FD4FDCAB}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail.conf[1].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[13].Prefab",
           "value": "{2458B79831250B17}Prefabs/Vehicles/Wheeled/S105/Lights/RRearlight_S105_ES.et",
-          "nodeType": "{8D4594D6FD4FDCAB}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{D4CF44F1616BC6F6}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Licenseplate.conf[0].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[14].Prefab",
           "value": "{5F01975DDF65C26E}Prefabs/Vehicles/Wheeled/S105/Lights/LRLicenseplate_S105_ES.et",
-          "nodeType": "{D4CF44F1616BC6F6}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Licenseplate.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{D4CF44F1616BC6F6}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Licenseplate.conf[0].RegisterDamage",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[14].RegisterDamage",
           "value": "1",
-          "nodeType": "{D4CF44F1616BC6F6}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Licenseplate.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{D4CF44F1616BC6F6}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Licenseplate.conf[1].Prefab",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[15].Prefab",
           "value": "{A8EAC6007BED0E85}Prefabs/Vehicles/Wheeled/S105/Lights/RRLicenseplate_S105_ES.et",
-          "nodeType": "{D4CF44F1616BC6F6}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Licenseplate.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{D4CF44F1616BC6F6}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Licenseplate.conf[1].RegisterDamage",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[15].RegisterDamage",
           "value": "1",
-          "nodeType": "{D4CF44F1616BC6F6}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Licenseplate.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{D4CF44F1616BC6F6}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Licenseplate.conf[1].LightType",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[15].LightType",
           "value": "0",
-          "nodeType": "{D4CF44F1616BC6F6}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Licenseplate.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "EmissiveSurfaceSlots[0].{D4CF44F1616BC6F6}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Licenseplate.conf[1].[value][0]",
+          "path": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[15].[value][0]",
           "value": "0x2",
-          "nodeType": "{D4CF44F1616BC6F6}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Licenseplate.conf",
+          "nodeType": "SCR_EmissiveLightSurfaceSlot",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
@@ -5700,43 +5609,6 @@
           "overrides": []
         },
         {
-          "path": "Additional hit zones[0].SCR_EngineHitZone",
-          "value": "Engine_01",
-          "nodeType": "Additional hit zones",
-          "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
-          "overrides": []
-        },
-        {
-          "path": "Additional hit zones[0].SCR_FuelHitZone",
-          "value": "FuelTank_01",
-          "nodeType": "Additional hit zones",
-          "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
-          "overrides": []
-        },
-        {
-          "path": "Additional hit zones[0].SCR_GearboxHitZone",
-          "value": "Driveshaft_02",
-          "nodeType": "Additional hit zones",
-          "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
-          "overrides": [
-            {
-              "value": "Gearbox_01",
-              "from": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
-            },
-            {
-              "value": "Driveshaft_01",
-              "from": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
-            }
-          ]
-        },
-        {
-          "path": "Additional hit zones[0].SCR_BatteryHitZone",
-          "value": "Battery_01",
-          "nodeType": "Additional hit zones",
-          "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
-          "overrides": []
-        },
-        {
           "path": "Additional hit zones[0].SCR_FlammableHitZone[0].Incendiary multiplier",
           "value": "1",
           "nodeType": "SCR_FlammableHitZone",
@@ -5751,49 +5623,49 @@
           "overrides": []
         },
         {
-          "path": "Additional hit zones[0].{CDE33036D78FCB99}Prefabs/Vehicles/Core/Configs/HitZones/Engine.conf[0].ColliderNames[0].[value][0]",
+          "path": "Additional hit zones[0].SCR_EngineHitZone[0].ColliderNames[0].[value][0]",
           "value": "UBX_FG_Engine",
           "nodeType": "ColliderNames",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "Additional hit zones[0].{22263F96C865C75B}Prefabs/Vehicles/Core/Configs/HitZones/FuelTank.conf[0].ColliderNames[0].[value][0]",
+          "path": "Additional hit zones[0].SCR_FuelHitZone[0].ColliderNames[0].[value][0]",
           "value": "UBX_FG_FuelTank",
           "nodeType": "ColliderNames",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "Additional hit zones[0].{22263F96C865C75B}Prefabs/Vehicles/Core/Configs/HitZones/FuelTank.conf[0].m_SecondaryExplosionPoint[0].Offset",
+          "path": "Additional hit zones[0].SCR_FuelHitZone[0].m_SecondaryExplosionPoint[0].Offset",
           "value": "0 0.4 -0.7",
           "nodeType": "m_SecondaryExplosionPoint",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "Additional hit zones[0].{2F51AF4F556FBFEF}Prefabs/Vehicles/Core/Configs/HitZones/Gearbox.conf[0].ColliderNames[0].[value][0]",
+          "path": "Additional hit zones[0].SCR_GearboxHitZone[0].ColliderNames[0].[value][0]",
           "value": "UCX_FG_Gearbox",
           "nodeType": "ColliderNames",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "Additional hit zones[0].{674473A7B9DC24C9}Prefabs/Vehicles/Core/Configs/HitZones/Transmission.conf[0].ColliderNames[0].[value][0]",
+          "path": "Additional hit zones[0].SCR_GearboxHitZone[1].ColliderNames[0].[value][0]",
           "value": "UCL_FG_Driveshaft01",
           "nodeType": "ColliderNames",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "Additional hit zones[0].{674473A7B9DC24C9}Prefabs/Vehicles/Core/Configs/HitZones/Transmission.conf[1].ColliderNames[0].[value][0]",
+          "path": "Additional hit zones[0].SCR_GearboxHitZone[2].ColliderNames[0].[value][0]",
           "value": "UCL_FG_Driveshaft02",
           "nodeType": "ColliderNames",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
           "overrides": []
         },
         {
-          "path": "Additional hit zones[0].{AA309D7C68080A94}Prefabs/Vehicles/Core/Configs/HitZones/Battery.conf[0].ColliderNames[0].[value][0]",
+          "path": "Additional hit zones[0].SCR_BatteryHitZone[0].ColliderNames[0].[value][0]",
           "value": "UBX_FG_Battery",
           "nodeType": "ColliderNames",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
@@ -7427,42 +7299,42 @@
     },
     {
       "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].PassengerPositionInfo[0].PivotID",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].PassengerPositionInfo[0].PivotID",
       "kind": "bone",
       "target": "codriver_idle",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].m_DefaultOccupantData[0].m_sDefaultOccupantPrefab",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].m_DefaultOccupantData[0].m_sDefaultOccupantPrefab",
       "kind": "prefab",
       "target": "Prefabs/Characters/Factions/CIV/GenericCivilians/Character_CIV_Randomized.et",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].PassengerPositionInfo[0].PivotID",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].PassengerPositionInfo[0].PivotID",
       "kind": "bone",
       "target": "passangerL_idle",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].m_DefaultOccupantData[0].m_sDefaultOccupantPrefab",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].m_DefaultOccupantData[0].m_sDefaultOccupantPrefab",
       "kind": "prefab",
       "target": "Prefabs/Characters/Factions/CIV/GenericCivilians/Character_CIV_Randomized.et",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].PassengerPositionInfo[0].PivotID",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].PassengerPositionInfo[0].PivotID",
       "kind": "bone",
       "target": "passangerR_idle",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "SCR_BaseCompartmentManagerComponent",
-      "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].m_DefaultOccupantData[0].m_sDefaultOccupantPrefab",
+      "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].m_DefaultOccupantData[0].m_sDefaultOccupantPrefab",
       "kind": "prefab",
       "target": "Prefabs/Characters/Factions/CIV/GenericCivilians/Character_CIV_Randomized.et",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
@@ -7898,40 +7770,82 @@
       "component": "SCR_VehicleSoundComponent",
       "propertyPath": "Filenames[0].[value][0]",
       "kind": "resource",
+      "target": "Sounds/SupportStations/SupportStations_Vehicles.acp",
+      "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value][1]",
+      "kind": "resource",
+      "target": "Sounds/Vehicles/_SharedData/Vehicles_Wind_.acp",
+      "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value][2]",
+      "kind": "resource",
+      "target": "Sounds/Vehicles/_SharedData/Destruction/Vehicles_Destruction_Fires.acp",
+      "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value][3]",
+      "kind": "resource",
+      "target": "Sounds/Vehicles/_SharedData/Destruction/Vehicles_Destruction.acp",
+      "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value][4]",
+      "kind": "resource",
+      "target": "Sounds/Destruction/Multiphase/Destruction_Multiphase_Vehicle.acp",
+      "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value][5]",
+      "kind": "resource",
+      "target": "Sounds/Vehicles/_SharedData/WaterInteractions/Vehicles_WaterInteractions.acp",
+      "setBy": "Prefabs/Vehicles/Core/Wheeled_Base.et"
+    },
+    {
+      "component": "SCR_VehicleSoundComponent",
+      "propertyPath": "Filenames[0].[value:{78D17C431FB48D80}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Engine.acp]",
+      "kind": "resource",
       "target": "Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Engine.acp",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "SCR_VehicleSoundComponent",
-      "propertyPath": "Filenames[0].[value][1]",
+      "propertyPath": "Filenames[0].[value:{83A4DC7A729443E3}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Dampers.acp]",
       "kind": "resource",
       "target": "Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Dampers.acp",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "SCR_VehicleSoundComponent",
-      "propertyPath": "Filenames[0].[value][2]",
+      "propertyPath": "Filenames[0].[value:{54BB1291AEFD577B}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Animations.acp]",
       "kind": "resource",
       "target": "Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Animations.acp",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "SCR_VehicleSoundComponent",
-      "propertyPath": "Filenames[0].[value][3]",
+      "propertyPath": "Filenames[0].[value:{847E37181C9AD2C2}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Horn.acp]",
       "kind": "resource",
       "target": "Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Horn.acp",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "SCR_VehicleSoundComponent",
-      "propertyPath": "Filenames[0].[value][4]",
+      "propertyPath": "Filenames[0].[value:{0E29FA31A7D0A498}Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Rain.acp]",
       "kind": "resource",
       "target": "Sounds/Vehicles/Wheeled/S105/Vehicles_S105_Rain.acp",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "SCR_VehicleSoundComponent",
-      "propertyPath": "Filenames[0].[value][5]",
+      "propertyPath": "Filenames[0].[value:{465B31754AAAE693}Sounds/Vehicles/_SharedData/Crashes/Cars/Vehicles_Crashes_Cars.acp]",
       "kind": "resource",
       "target": "Sounds/Vehicles/_SharedData/Crashes/Cars/Vehicles_Crashes_Cars.acp",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
@@ -8015,112 +7929,112 @@
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[0].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[0].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/S105/Lights/LHeadlight_S105_ES.et",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{2C912F36CA088618}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Head.conf[1].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[1].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/S105/Lights/RHeadlight_S105_ES.et",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{1A2A10B920F60975}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Brake.conf[0].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[2].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/S105/Lights/LBrakelight_S105_ES.et",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{1A2A10B920F60975}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Brake.conf[1].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[3].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/S105/Lights/RBrakelight_S105_ES.et",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{47BE09BAE9B2A809}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Reverse.conf[0].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[4].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/S105/Lights/LReverselight_S105_ES.et",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{47BE09BAE9B2A809}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Reverse.conf[1].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[5].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/S105/Lights/RReverselight_S105_ES.et",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[0].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[6].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/S105/Lights/LFIndicator_S105_ES.et",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[1].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[7].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/S105/Lights/RFIndicator_S105_ES.et",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[2].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[8].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/S105/Lights/LSIndicator_S105_ES.et",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[3].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[9].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/S105/Lights/RSIndicator_S105_ES.et",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[4].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[10].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/S105/Lights/LRIndicator_S105_ES.et",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{12FA8C2355FF7275}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Indicator.conf[5].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[11].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/S105/Lights/RRIndicator_S105_ES.et",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{8D4594D6FD4FDCAB}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail.conf[0].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[12].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/S105/Lights/LRearlight_S105_ES.et",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{8D4594D6FD4FDCAB}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Tail.conf[1].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[13].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/S105/Lights/RRearlight_S105_ES.et",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{D4CF44F1616BC6F6}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Licenseplate.conf[0].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[14].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/S105/Lights/LRLicenseplate_S105_ES.et",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
     },
     {
       "component": "BaseLightManagerComponent",
-      "propertyPath": "EmissiveSurfaceSlots[0].{D4CF44F1616BC6F6}Prefabs/Vehicles/Core/EmissiveSurfaces/EmissiveSurface_Licenseplate.conf[1].Prefab",
+      "propertyPath": "EmissiveSurfaceSlots[0].SCR_EmissiveLightSurfaceSlot[15].Prefab",
       "kind": "prefab",
       "target": "Prefabs/Vehicles/Wheeled/S105/Lights/RRLicenseplate_S105_ES.et",
       "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
@@ -8257,7 +8171,7 @@
         },
         {
           "component": "SCR_BaseCompartmentManagerComponent",
-          "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[0].PassengerPositionInfo[0].PivotID",
+          "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[0].PassengerPositionInfo[0].PivotID",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
         }
       ]
@@ -8317,7 +8231,7 @@
         },
         {
           "component": "SCR_BaseCompartmentManagerComponent",
-          "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[1].PassengerPositionInfo[0].PivotID",
+          "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[1].PassengerPositionInfo[0].PivotID",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
         }
       ]
@@ -8347,7 +8261,7 @@
         },
         {
           "component": "SCR_BaseCompartmentManagerComponent",
-          "propertyPath": "CompartmentSlots[0].{9BD4548866DA1807}Prefabs/Vehicles/Core/Configs/CargoCompartment_Base.conf[2].PassengerPositionInfo[0].PivotID",
+          "propertyPath": "CompartmentSlots[0].CargoCompartmentSlot[2].PassengerPositionInfo[0].PivotID",
           "setBy": "Prefabs/Vehicles/Wheeled/S105/S105_base.et"
         }
       ]
