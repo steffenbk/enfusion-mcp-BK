@@ -39,3 +39,27 @@ export interface ChainLevelInput {
   path: string;
   components: { typeName: string; node: EnfusionNode }[];
 }
+
+export type ReferenceKind = "bone" | "prefab" | "resource";
+
+/** A property value that points outside the component. */
+export interface ReferenceEdge {
+  component: string;
+  propertyPath: PropertyPath;
+  kind: ReferenceKind;
+  target: string;
+  setBy: string;
+}
+
+/** One place a bone name is referenced from. */
+export interface BoneSite {
+  component: string;
+  propertyPath: PropertyPath;
+  setBy: string;
+}
+
+/** Every bone the prefab expects, with all sites referencing it. */
+export interface BoneSurface {
+  bone: string;
+  sites: BoneSite[];
+}
