@@ -66,7 +66,7 @@ export function generateVehicleDoc(
       if (pc.source !== null) notes.push(`${pc.description} (tier 2)`);
       const pn = observations[`${component.typeName}#${prop.path}`];
       if (pn !== undefined) notes.push(`${pn} (tier 3)`);
-      if (notes.length === 0) notes.push(UNDOCUMENTED);
+      if (pc.source === null && pn === undefined) notes.push(UNDOCUMENTED);
       out.push(
         `| \`${prop.path}\` | \`${prop.value}\` | \`${short(prop.setBy)}\` | ${notes.join("; ")} |`,
       );

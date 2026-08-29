@@ -101,4 +101,34 @@ describe("generateVehicleDoc", () => {
       generateVehicleDoc(schema, citations, {}),
     );
   });
+
+  it("stamps UNDOCUMENTED on an overridden property with no citation or observation", () => {
+    // Regression: the override note must not suppress the UNDOCUMENTED stamp.
+    // A property can have overrides AND be undocumented at the same time — both
+    // facts are real and must both appear.
+    const overriddenUncitedSchema: VehicleSchema = {
+      ...schema,
+      components: [
+        {
+          typeName: "VehicleWheeledSimulation",
+          introducedBy: "Prefabs/Vehicles/Core/Vehicle_Base.et",
+          properties: [
+            {
+              path: "SomeEngineOnlyField",
+              value: "1",
+              setBy: "Prefabs/Vehicles/Wheeled/S105/S105_base.et",
+              overrides: [{ value: "0", from: "Prefabs/Vehicles/Core/Vehicle_Base.et" }],
+            },
+          ],
+        },
+      ],
+    };
+    const doc = generateVehicleDoc(overriddenUncitedSchema, citations, {});
+    const row = doc
+      .split("\n")
+      .find((line) => line.includes("SomeEngineOnlyField"));
+    expect(row).toBeDefined();
+    expect(row).toContain("overrides 0");
+    expect(row).toContain(UNDOCUMENTED);
+  });
 });
