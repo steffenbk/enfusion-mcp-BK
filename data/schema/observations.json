@@ -1,0 +1,3 @@
+{
+  "_README": "Tier-3 observations: what actually breaks in-engine when a property is wrong. Hand-maintained. Keys are '<ComponentName>' or '<ComponentName>#<propertyPath>'. Never generated, never overwritten by npm run build:prefab-map. Delete the _README key only if it ever collides with a real component name."
+}

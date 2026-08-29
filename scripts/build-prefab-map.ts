@@ -1,11 +1,13 @@
 // scripts/build-prefab-map.ts
 // Regenerates data/schema/*.json from the live extracted corpus.
 // Run: npm run build:prefab-map
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { loadConfig } from "../src/config.js";
 import { extractVehicle } from "../src/prefab-map/extract.js";
 import { contrastVehicles } from "../src/prefab-map/contrast.js";
+import { buildCitationIndex } from "../src/prefab-map/citations.js";
+import { generateVehicleDoc } from "../src/prefab-map/docgen.js";
 
 const VEHICLES: { name: string; path: string }[] = [
   { name: "s105", path: "Prefabs/Vehicles/Wheeled/S105/S105_base.et" },
@@ -57,3 +59,25 @@ console.log(
   `contrast: ${contrast.sharedComponents.length} shared, ` +
     `${contrast.onlyInA.length} S105-only, ${contrast.onlyInB.length} BRDM2-only -> ${contrastFile}`,
 );
+
+const KB_DIR = "C:/Users/Steffen/.claude/arma-knowledge/patterns/Vehicles_And_Physics";
+
+const api = JSON.parse(readFileSync(resolve("data/api/arma-classes.json"), "utf8"));
+const citations = buildCitationIndex(api);
+const observations = JSON.parse(
+  readFileSync(resolve("data/schema/observations.json"), "utf8"),
+);
+
+for (const [name, schema] of built) {
+  const doc = generateVehicleDoc(schema, citations, observations);
+  const file = resolve(KB_DIR, `${name}-component-map.md`);
+  writeFileSync(file, doc, "utf8");
+  const lines = doc.split("\n").length;
+  console.log(`${name} doc: ${lines} lines -> ${file}`);
+  if (lines > 800) {
+    console.warn(
+      `  ${name}-component-map.md exceeds 800 lines. Repo convention: split into a ` +
+        `subfolder with a local INDEX.md and point the main INDEX.md row at it.`,
+    );
+  }
+}
