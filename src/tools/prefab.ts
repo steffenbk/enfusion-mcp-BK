@@ -19,6 +19,8 @@ import {
 } from "../utils/prefab-ancestry.js";
 import { checkComponentDependencies } from "../utils/component-dependencies.js";
 import { validateFilename } from "../utils/safe-path.js";
+import { extractVehicle } from "../prefab-map/extract.js";
+import { diffAgainstRig, formatDiffReport } from "../prefab-map/diff.js";
 
 // ── Inspect helpers ────────────────────────────────────────────────────────────
 
@@ -98,8 +100,9 @@ export function registerPrefab(server: McpServer, config: Config): void {
         "Use this to understand the complete component set of a prefab, including all " +
         "inherited values not visible in the prefab file itself.",
       inputSchema: {
-        action: z.enum(["create", "inspect"]).describe(
-          "Action to perform: 'create' to generate a new prefab file, 'inspect' to view the full inheritance chain of an existing prefab."
+        action: z.enum(["create", "inspect", "check-bones"]).describe(
+          "Action to perform: 'create' to generate a new prefab file, 'inspect' to view the full inheritance chain of an existing prefab, " +
+          "'check-bones' to check a prefab's bone references (PivotIDs etc.) against a rig's real bone list and report dangling references."
         ),
         // create params
         name: z
@@ -172,6 +175,15 @@ export function registerPrefab(server: McpServer, config: Config): void {
         include_raw: z.boolean().default(false).describe(
           "(inspect) Include the full raw .et text for each ancestor at the bottom of the report."
         ),
+        // check-bones params
+        boneNames: z
+          .array(z.string())
+          .optional()
+          .describe(
+            "(check-bones) The rig's real bone names, e.g. read from the target mesh's skeleton. " +
+            "This tool does not read mesh files itself — supply the bone list from whatever read " +
+            "the .xob/.txo skeleton."
+          ),
         // shared params
         projectPath: z
           .string()
@@ -310,6 +322,36 @@ export function registerPrefab(server: McpServer, config: Config): void {
             content: [{ type: "text", text: `Error creating prefab: ${msg}` }],
             isError: true,
           };
+        }
+      }
+
+      if (action === "check-bones") {
+        const { path: inputPath, boneNames, projectPath } = params;
+
+        if (!inputPath) {
+          return {
+            content: [{ type: "text", text: "check-bones requires 'path' — the .et prefab to check." }],
+          };
+        }
+        if (!boneNames || boneNames.length === 0) {
+          return {
+            content: [{
+              type: "text",
+              text:
+                "check-bones requires 'boneNames' — the rig's real bone names (e.g. read from the " +
+                "target mesh's .xob/.txo skeleton). Refusing to check with no bone list: every " +
+                "reference would look dangling.",
+            }],
+          };
+        }
+
+        try {
+          const schema = extractVehicle(inputPath, config, { projectPath });
+          const report = diffAgainstRig(schema, boneNames, { leafPath: schema.rootPath });
+          return { content: [{ type: "text", text: formatDiffReport(report, schema.vehicle) }] };
+        } catch (e) {
+          const msg = e instanceof Error ? e.message : String(e);
+          return { content: [{ type: "text", text: `Error: ${msg}` }], isError: true };
         }
       }
 

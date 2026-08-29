@@ -73,3 +73,47 @@ export function diffAgainstRig(
     unreferencedRigBones: boneNames.filter((b) => !referenced.has(b)),
   };
 }
+
+/** Render a diff report as the text an MCP client shows the user. */
+export function formatDiffReport(report: DiffReport, vehicle: string): string {
+  const lines: string[] = [`Bone reference check: ${vehicle}`, ""];
+
+  if (report.danglingBones.length === 0) {
+    lines.push("OK — no dangling bone references. Every referenced bone exists on the rig.");
+  } else {
+    lines.push(
+      `${report.danglingBones.length} dangling bone reference(s) — these name bones the rig ` +
+        `does not have. The engine will not error; the affected feature silently does nothing.`,
+      "",
+    );
+    for (const d of report.danglingBones) {
+      lines.push(`  ${d.bone} — ${d.sites.length} site(s):`);
+      for (const s of d.sites) {
+        lines.push(`    ${s.component} ${s.propertyPath} (set by ${s.setBy})`);
+      }
+    }
+  }
+
+  if (report.inheritedUnadjusted.length > 0) {
+    lines.push(
+      "",
+      `${report.inheritedUnadjusted.length} of those are inherited and never repointed — ` +
+        `the donor's value survived the duplication:`,
+      "",
+    );
+    for (const i of report.inheritedUnadjusted) {
+      lines.push(`  ${i.bone} — still set by ${i.setBy}`);
+    }
+  }
+
+  if (report.unreferencedRigBones.length > 0) {
+    lines.push(
+      "",
+      `${report.unreferencedRigBones.length} rig bone(s) nothing references (informational — ` +
+        `deform-only bones are legitimately unreferenced):`,
+      `  ${report.unreferencedRigBones.join(", ")}`,
+    );
+  }
+
+  return lines.join("\n");
+}
