@@ -2,6 +2,8 @@
 // Shared types for the vehicle prefab component map.
 // See docs/superpowers/specs/2026-08-29-vehicle-prefab-component-map-design.md
 
+import type { EnfusionNode } from "../formats/enfusion-text.js";
+
 /** Dotted property path within a component. Repeated sibling blocks are indexed. */
 export type PropertyPath = string;
 
@@ -11,4 +13,29 @@ export interface PropertyLeaf {
   value: string;
   /** Block type name, when the leaf sits inside a typed sub-block. */
   nodeType?: string;
+}
+
+/** A property value after chain resolution, with provenance. */
+export interface ResolvedProperty {
+  path: PropertyPath;
+  value: string;
+  nodeType?: string;
+  /** The `.et` file whose value won. */
+  setBy: string;
+  /** Values this one shadowed, oldest ancestor first. */
+  overrides: { value: string; from: string }[];
+}
+
+/** A component after chain resolution. */
+export interface ResolvedComponent {
+  typeName: string;
+  properties: ResolvedProperty[];
+  /** The `.et` file that first declared this component. */
+  introducedBy: string;
+}
+
+/** One level of an inheritance chain, oldest ancestor first. */
+export interface ChainLevelInput {
+  path: string;
+  components: { typeName: string; node: EnfusionNode }[];
 }
