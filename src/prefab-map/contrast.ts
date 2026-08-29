@@ -43,6 +43,15 @@ export function contrastVehicles(a: VehicleSchema, b: VehicleSchema): Contrast {
     }
     shared.push(name);
     divergent.push(...diffProperties(name, ca, cb));
+    const { onlyInA: propOnlyA, onlyInB: propOnlyB } = diffPropertyPresence(
+      name,
+      ca,
+      cb,
+      a.vehicle,
+      b.vehicle,
+    );
+    onlyInA.push(...propOnlyA);
+    onlyInB.push(...propOnlyB);
   }
 
   for (const [name] of mb) {
@@ -52,10 +61,21 @@ export function contrastVehicles(a: VehicleSchema, b: VehicleSchema): Contrast {
   const byComponent = (x: { component: string }, y: { component: string }) =>
     x.component < y.component ? -1 : x.component > y.component ? 1 : 0;
 
+  // Component-level entries (no propertyPath) sort before property-level entries
+  // for the same component.
+  const byEntry = (x: ContrastEntry, y: ContrastEntry) => {
+    const c = byComponent(x, y);
+    if (c !== 0) return c;
+    if (x.propertyPath === undefined && y.propertyPath === undefined) return 0;
+    if (x.propertyPath === undefined) return -1;
+    if (y.propertyPath === undefined) return 1;
+    return x.propertyPath < y.propertyPath ? -1 : x.propertyPath > y.propertyPath ? 1 : 0;
+  };
+
   return {
     sharedComponents: shared.sort(),
-    onlyInA: onlyInA.sort(byComponent),
-    onlyInB: onlyInB.sort(byComponent),
+    onlyInA: onlyInA.sort(byEntry),
+    onlyInB: onlyInB.sort(byEntry),
     divergentProperties: divergent.sort(
       (x, y) => byComponent(x, y) || (x.propertyPath < y.propertyPath ? -1 : 1),
     ),
@@ -76,4 +96,43 @@ function diffProperties(
     }
   }
   return out;
+}
+
+/**
+ * For a shared component, find properties present on only one side: a path
+ * that exists in A's copy of the component but not in B's, and vice versa.
+ */
+function diffPropertyPresence(
+  component: string,
+  ca: ResolvedComponent,
+  cb: ResolvedComponent,
+  vehicleA: string,
+  vehicleB: string,
+): { onlyInA: ContrastEntry[]; onlyInB: ContrastEntry[] } {
+  const pathsA = new Set(ca.properties.map((p) => p.path));
+  const pathsB = new Set(cb.properties.map((p) => p.path));
+
+  const onlyInA: ContrastEntry[] = [];
+  const onlyInB: ContrastEntry[] = [];
+
+  for (const pa of ca.properties) {
+    if (!pathsB.has(pa.path)) {
+      onlyInA.push({
+        component,
+        propertyPath: pa.path,
+        detail: `only on ${vehicleA}'s ${component}`,
+      });
+    }
+  }
+  for (const pb of cb.properties) {
+    if (!pathsA.has(pb.path)) {
+      onlyInB.push({
+        component,
+        propertyPath: pb.path,
+        detail: `only on ${vehicleB}'s ${component}`,
+      });
+    }
+  }
+
+  return { onlyInA, onlyInB };
 }

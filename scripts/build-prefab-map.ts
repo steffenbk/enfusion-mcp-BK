@@ -62,22 +62,28 @@ console.log(
 
 const KB_DIR = "C:/Users/Steffen/.claude/arma-knowledge/patterns/Vehicles_And_Physics";
 
-const api = JSON.parse(readFileSync(resolve("data/api/arma-classes.json"), "utf8"));
-const citations = buildCitationIndex(api);
-const observations = JSON.parse(
-  readFileSync(resolve("data/schema/observations.json"), "utf8"),
-);
+if (process.argv.includes("--write-kb")) {
+  mkdirSync(KB_DIR, { recursive: true });
 
-for (const [name, schema] of built) {
-  const doc = generateVehicleDoc(schema, citations, observations);
-  const file = resolve(KB_DIR, `${name}-component-map.md`);
-  writeFileSync(file, doc, "utf8");
-  const lines = doc.split("\n").length;
-  console.log(`${name} doc: ${lines} lines -> ${file}`);
-  if (lines > 800) {
-    console.warn(
-      `  ${name}-component-map.md exceeds 800 lines. Repo convention: split into a ` +
-        `subfolder with a local INDEX.md and point the main INDEX.md row at it.`,
-    );
+  const api = JSON.parse(readFileSync(resolve("data/api/arma-classes.json"), "utf8"));
+  const citations = buildCitationIndex(api);
+  const observations = JSON.parse(
+    readFileSync(resolve("data/schema/observations.json"), "utf8"),
+  );
+
+  for (const [name, schema] of built) {
+    const doc = generateVehicleDoc(schema, citations, observations);
+    const file = resolve(KB_DIR, `${name}-component-map.md`);
+    writeFileSync(file, doc, "utf8");
+    const lines = doc.split("\n").length;
+    console.log(`${name} doc: ${lines} lines -> ${file}`);
+    if (lines > 800) {
+      console.warn(
+        `  ${name}-component-map.md exceeds 800 lines. Repo convention: split into a ` +
+          `subfolder with a local INDEX.md and point the main INDEX.md row at it.`,
+      );
+    }
   }
+} else {
+  console.log(`KB docs not written — pass --write-kb to write into ${KB_DIR}`);
 }

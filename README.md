@@ -99,6 +99,7 @@ Work without Workbench running — API search, mod scaffolding, code generation,
 | `game_browse` | Browse base game files — loose files and `.pak` archives transparently |
 | `game_read` | Read base game files — scripts, prefabs, configs from loose files or `.pak` |
 | `prefab_inspect` | Inspect a prefab's full inheritance chain — merges all components across ancestors, showing which level each value comes from. Solves the problem of `.et` files only showing overrides. |
+| `prefab_check-bones` | Check a prefab's bone/PivotID references against a rig's real bone list and report dangling references, listing every site that references each one. |
 | `asset_search` | Search game assets by name across loose files and `.pak` archives |
 | `project_browse` | List files in a mod project directory |
 | `project_read` | Read any project file |
@@ -185,6 +186,7 @@ git clone https://github.com/steffenbk/enfusion-mcp-BK.git
 cd enfusion-mcp-BK
 npm install
 npm run scrape   # Build API index from Workbench docs
+npm run build:prefab-map  # Regenerate data/schema/*.json vehicle component maps
 npm run build
 npm test         # 187 tests
 ```

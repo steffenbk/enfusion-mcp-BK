@@ -63,4 +63,48 @@ describe("contrastVehicles", () => {
       "ZComponent",
     ]);
   });
+
+  describe("property-level onlyInA/onlyInB", () => {
+    const withExtraA = schema("S105", [
+      comp("RigidBody", [
+        ["Mass", "1200"],
+        ["OnlyOnA", "civ"],
+      ]),
+    ]);
+    const withExtraB = schema("BRDM2", [
+      comp("RigidBody", [
+        ["Mass", "1200"],
+        ["OnlyOnB", "mil"],
+      ]),
+    ]);
+
+    it("lists a property present on A's shared component but absent from B's as onlyInA", () => {
+      const c = contrastVehicles(withExtraA, withExtraB);
+      expect(c.onlyInA).toContainEqual(
+        expect.objectContaining({ component: "RigidBody", propertyPath: "OnlyOnA" }),
+      );
+    });
+
+    it("lists a property present on B's shared component but absent from A's as onlyInB", () => {
+      const c = contrastVehicles(withExtraA, withExtraB);
+      expect(c.onlyInB).toContainEqual(
+        expect.objectContaining({ component: "RigidBody", propertyPath: "OnlyOnB" }),
+      );
+    });
+
+    it("does not report a shared property with an identical value in onlyInA/onlyInB", () => {
+      const c = contrastVehicles(withExtraA, withExtraB);
+      const allEntries = [...c.onlyInA, ...c.onlyInB];
+      expect(allEntries.find((e) => e.propertyPath === "Mass")).toBeUndefined();
+    });
+
+    it("keeps component-level entries (no propertyPath) distinct from property-level ones", () => {
+      const c = contrastVehicles(a, b);
+      // SCR_VehicleSoundComponent only exists on A entirely (no shared component) —
+      // its onlyInA entry is component-level, not property-level.
+      const componentLevel = c.onlyInA.find((e) => e.component === "SCR_VehicleSoundComponent");
+      expect(componentLevel).toBeDefined();
+      expect(componentLevel!.propertyPath).toBeUndefined();
+    });
+  });
 });
